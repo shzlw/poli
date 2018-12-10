@@ -1,0 +1,8 @@
+.idea/
+*.iml
+target/
+.settings/org.eclipse.jdt.core.prefs
+.classpath
+.project
+log/
+node_modules/
