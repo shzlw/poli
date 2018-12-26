@@ -1,8 +1,10 @@
 
 import React, { Component } from 'react';
 
-import { Drawer, Button } from 'antd';
-import { Link } from "react-router-dom";
+import { Drawer } from 'antd';
+import { Route, Link } from "react-router-dom";
+import EditDataSource from './EditDataSource';
+
 
 class DataSources extends Component {
 
@@ -24,12 +26,19 @@ class DataSources extends Component {
     return (
       <div>
         <h1>Data Sources</h1>
-        <Button type="primary" onClick={this.showDrawer}>
+        <button onClick={this.showDrawer}>
           Add
-        </Button>
-        <Button type="primary">
+        </button>
+        <button>
+          <Link to="/datasources/new">New</Link>
+        </button>
+        <button>
           <Link to="/datasources/edit/1">Edit</Link>
-        </Button>
+        </button>
+
+        <Route path="/datasources/new" component={EditDataSource} />
+        <Route path="/datasources/edit/:id" component={EditDataSource} />
+
         <Drawer
           title="Basic Drawer"
           placement="right"

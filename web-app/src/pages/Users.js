@@ -1,12 +1,12 @@
 
 import React, { Component } from 'react';
 
-class Workbooks extends Component {
+class Users extends Component {
 
   render() {
     return (
       <div>
-        <h1>Workbooks</h1>
+        <h1>Users</h1>
         <button>Add</button>
         <div>
           <div>public</div>
@@ -17,4 +17,4 @@ class Workbooks extends Component {
   }
 }
 
-export default Workbooks;
+export default Users;

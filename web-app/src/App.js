@@ -5,10 +5,8 @@ import { Route, Link } from "react-router-dom";
 import { Menu } from 'antd';
 
 import DataSources from './pages/DataSources';
-import Workbooks from './pages/Workbooks';
-import EditDataSource from './pages/EditDataSource';
-
-
+import Dashboard from './pages/Dashboards';
+import Users from './pages/Users';
 
 class App extends Component {
   constructor(props) {
@@ -36,16 +34,18 @@ class App extends Component {
             <Menu.Item key="datasources">
               <Link to="/datasources/">Data Sources</Link>
             </Menu.Item>
-            <Menu.Item key="workbooks">
-              <Link to="/workbooks/">Workbooks</Link>
+            <Menu.Item key="dashboards">
+              <Link to="/dashboards/">Dashboards</Link>
+            </Menu.Item>
+            <Menu.Item key="users">
+              <Link to="/users/">Users</Link>
             </Menu.Item>
           </Menu>
         </div>
         <div className="content">
           <Route path="/datasources" component={DataSources} />
-          <Route path="/datasources/new" component={EditDataSource} />
-          <Route path="/datasources/edit/:id" component={EditDataSource} />
-          <Route path="/workbooks" component={Workbooks} />
+          <Route path="/dashboards" component={Dashboard} />
+          <Route path="/users" component={Users} />
         </div>
       </div>
     );
