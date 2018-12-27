@@ -7,6 +7,7 @@ import { Menu } from 'antd';
 import DataSources from './pages/DataSources';
 import Dashboard from './pages/Dashboards';
 import Users from './pages/Users';
+import Test from './pages/Test';
 
 class App extends Component {
   constructor(props) {
@@ -40,12 +41,16 @@ class App extends Component {
             <Menu.Item key="users">
               <Link to="/users/">Users</Link>
             </Menu.Item>
+            <Menu.Item key="test">
+              <Link to="/test/">Test</Link>
+            </Menu.Item>
           </Menu>
         </div>
         <div className="content">
           <Route path="/datasources" component={DataSources} />
           <Route path="/dashboards" component={Dashboard} />
           <Route path="/users" component={Users} />
+          <Route path="/test" component={Test} />
         </div>
       </div>
     );

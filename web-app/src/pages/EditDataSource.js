@@ -4,10 +4,7 @@ import { Select, Button } from 'antd';
 
 class EditDataSource extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = this.initialState;
-  }
+  state = this.initialState;
 
   get initialState() {
     return {
