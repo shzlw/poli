@@ -1,13 +1,12 @@
 {
-  "name": "web-app",
+  "name": "poli-web-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^3.11.6",
     "axios": "^0.18.0",
     "react": "^16.6.3",
+    "react-ace": "^6.3.2",
     "react-dom": "^16.6.3",
-    "react-grid-layout": "^0.16.6",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1"
   },

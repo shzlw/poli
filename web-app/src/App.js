@@ -2,19 +2,22 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { Route, Link } from "react-router-dom";
-import { Menu } from 'antd';
-
-import DataSources from './pages/DataSources';
-import Dashboard from './pages/Dashboards';
-import Users from './pages/Users';
-import Test from './pages/Test';
+import Overview from './views/Overview';
+import DataSources from './views/DataSources';
+import Boards from './views/Boards';
+import Test from './views/Test';
+import EditDataSource from './views/EditDataSource';
+import Editboard from './views/EditBoard';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'datasources'
+      current: 'overview'
     }
+  }
+
+  componentDidMount() {
   }
 
   handleClick = (e) => {
@@ -27,34 +30,23 @@ class App extends Component {
     return (
       <div className="app">
         <div className="nav">
-          <Menu
-            onClick={this.handleClick}
-            selectedKeys={[this.state.current]}
-            mode="horizontal"
-          >
-            <Menu.Item key="datasources">
-              <Link to="/datasources/">Data Sources</Link>
-            </Menu.Item>
-            <Menu.Item key="dashboards">
-              <Link to="/dashboards/">Dashboards</Link>
-            </Menu.Item>
-            <Menu.Item key="users">
-              <Link to="/users/">Users</Link>
-            </Menu.Item>
-            <Menu.Item key="test">
-              <Link to="/test/">Test</Link>
-            </Menu.Item>
-          </Menu>
+          <Link to="/overview">Overview</Link>
+          <Link to="/datasources">Data Sources</Link>
+          <Link to="/boards">Boards</Link>
+          <Link to="/test">Test</Link>
         </div>
         <div className="content">
-          <Route path="/datasources" component={DataSources} />
-          <Route path="/dashboards" component={Dashboard} />
-          <Route path="/users" component={Users} />
-          <Route path="/test" component={Test} />
+          <Route exact path="/" component={Overview} />
+          <Route exact path="/overview" component={Overview} />
+          <Route exact path="/datasources" component={DataSources} />
+          <Route exact path="/boards" component={Boards} />
+          <Route exact path="/test" component={Test} />
+          <Route exact path="/datasources/new" component={EditDataSource} />
+          <Route exact path="/datasources/edit/:id" component={EditDataSource} />
+          <Route exact path="/board/edit" component={Editboard} />
         </div>
       </div>
     );
   }
 }
-
 export default App;

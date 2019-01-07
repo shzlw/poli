@@ -1,1 +1,1 @@
-java -jar target\poli-1.0.0.jar
+java -jar target/poli-0.1.0.jar

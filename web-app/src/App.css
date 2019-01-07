@@ -1,6 +1,4 @@
 
-@import '~antd/dist/antd.css';
-
 html,
 body,
 .app {
@@ -21,9 +19,34 @@ body,
   height: 600px;
 }
 
+.wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
 .testGrid {
   border: 1px solid green;
   height: 100%;
   width: 100%;
   overflow: auto;
 }
+
+.right-drawer {
+  display: none;
+  border: 2px solid blue;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+

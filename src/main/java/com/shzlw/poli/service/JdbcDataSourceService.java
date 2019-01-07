@@ -23,7 +23,7 @@ public class JdbcDataSourceService {
 
     public void save(JdbcDataSource dataSource) {
         HikariDataSource hds = new HikariDataSource();
-        hds.setJdbcUrl(dataSource.getUrl());
+        hds.setJdbcUrl(dataSource.getConnectionUrl());
         hds.setUsername(dataSource.getUsername());
         hds.setPassword(dataSource.getPassword());
         dataSourcesCache.put(dataSource.getName(), hds);
