@@ -20,7 +20,7 @@ import com.shzlw.poli.util.RawStringDeserialzier;
 public class Filter {
 
     private long id;
-    private long boardId;
+    private long dashboardId;
 
     /**
      * json column
@@ -37,12 +37,12 @@ public class Filter {
         this.id = id;
     }
 
-    public long getBoardId() {
-        return boardId;
+    public long getDashboardId() {
+        return dashboardId;
     }
 
-    public void setBoardId(long boardId) {
-        this.boardId = boardId;
+    public void setDashboardId(long dashboardId) {
+        this.dashboardId = dashboardId;
     }
 
     @JsonRawValue

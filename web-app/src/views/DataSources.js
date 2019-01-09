@@ -1,11 +1,9 @@
 
 import React, { Component } from 'react';
 
-import { Route, Link } from "react-router-dom";
-import EditDataSource from './EditDataSource';
-
+import { Link } from "react-router-dom";
 import axios from 'axios';
-
+import * as webApi from '../api/WebApi';
 
 class DataSources extends Component {
 
@@ -24,32 +22,16 @@ class DataSources extends Component {
 
   componentDidMount() {
     // Fetch all datasources
-    this.fetchDataSources();
+    this.initData();
+    
   }
 
-  fetchDataSources = () => {
-    axios.get('/ws/jdbcdatasource')
-      .then(res => {
-        const jdbcDataSources = res.data;
-        this.setState({ 
-          jdbcDataSources: jdbcDataSources 
-        });
-      });
+  async initData() {
+    const jdbcDataSources = webApi.fetchDataSources();
+    this.setState({ 
+      jdbcDataSources: jdbcDataSources 
+    });
   }
-
-  
-
-  showDrawer = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  onClose = () => {
-    this.setState({
-      visible: false,
-    });
-  };
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -95,6 +77,13 @@ class DataSources extends Component {
       });
   }
 
+  ping = (id) => {
+    axios.get(`/ws/jdbcdatasource/ping/${id}`)
+      .then(res => {
+        console.log('ping', res.data);
+      });
+  }
+
   render() {
 
     const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
@@ -106,6 +95,7 @@ class DataSources extends Component {
         <td>{ds.ping}</td>
         <td><button onClick={() => this.update(ds)}>update</button></td>
         <td><button onClick={() => this.delete(ds.id)}>delete</button></td>
+        <td><button onClick={() => this.ping(ds.id)}>ping</button></td>
       </tr>
     );
 

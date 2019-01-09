@@ -13,7 +13,7 @@ IF NOT EXISTS p_datasource (
 );
 
 CREATE TABLE
-IF NOT EXISTS p_board (
+IF NOT EXISTS p_dashboard (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     width INTEGER,
@@ -23,7 +23,7 @@ IF NOT EXISTS p_board (
 CREATE TABLE
 IF NOT EXISTS p_filter (
     id INTEGER NOT NULL PRIMARY KEY,
-    board_id INTEGER NOT NULL,
+    dashboard_id INTEGER NOT NULL,
     data TEXT NOT NULL,
     FOREIGN KEY (board_id) REFERENCES p_board(id)
 );

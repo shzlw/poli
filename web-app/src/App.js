@@ -4,10 +4,10 @@ import './App.css';
 import { Route, Link } from "react-router-dom";
 import Overview from './views/Overview';
 import DataSources from './views/DataSources';
-import Boards from './views/Boards';
+import Dashboards from './views/Dashboards';
 import Test from './views/Test';
 import EditDataSource from './views/EditDataSource';
-import Editboard from './views/EditBoard';
+import EditDashboard from './views/EditDashboard';
 
 class App extends Component {
   constructor(props) {
@@ -32,18 +32,19 @@ class App extends Component {
         <div className="nav">
           <Link to="/overview">Overview</Link>
           <Link to="/datasources">Data Sources</Link>
-          <Link to="/boards">Boards</Link>
+          <Link to="/dashboards">Dashboards</Link>
           <Link to="/test">Test</Link>
         </div>
         <div className="content">
           <Route exact path="/" component={Overview} />
           <Route exact path="/overview" component={Overview} />
           <Route exact path="/datasources" component={DataSources} />
-          <Route exact path="/boards" component={Boards} />
+          <Route exact path="/dashboards" component={Dashboards} />
           <Route exact path="/test" component={Test} />
           <Route exact path="/datasources/new" component={EditDataSource} />
           <Route exact path="/datasources/edit/:id" component={EditDataSource} />
-          <Route exact path="/board/edit" component={Editboard} />
+          <Route exact path="/dashboard/new" component={EditDashboard} />
+          <Route exact path="/dashboard/edit/:id" component={EditDashboard} />
         </div>
       </div>
     );

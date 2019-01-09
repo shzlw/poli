@@ -1,9 +1,7 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.dao.mapper.BoardMapper;
-import com.shzlw.poli.dao.mapper.JdbcDataSourceMapper;
-import com.shzlw.poli.model.Board;
-import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.dao.mapper.DashboardRowMapper;
+import com.shzlw.poli.model.Dashboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,35 +14,35 @@ import java.sql.Statement;
 import java.util.List;
 
 @Repository
-public class BoardDao {
+public class DashboardDao {
 
     @Autowired
     JdbcTemplate jt;
 
-    public List<Board> fetchAll() {
-        String sql = "SELECT id, name, width, height FROM p_board";
-        List<Board> boards = jt.query(sql, new Object[] { }, new BoardMapper());
-        return boards;
+    public List<Dashboard> fetchAll() {
+        String sql = "SELECT id, name, width, height FROM p_dashboard";
+        List<Dashboard> dashboards = jt.query(sql, new Object[] { }, new DashboardRowMapper());
+        return dashboards;
     }
 
-    public Board fetchById(long id) {
-        String sql = "SELECT id, name, width, height FROM p_board WHERE id=?";
+    public Dashboard fetchById(long id) {
+        String sql = "SELECT id, name, width, height FROM p_dashboard WHERE id=?";
         try {
-            Board d = (Board) jt.queryForObject(sql, new Object[]{ id }, new BoardMapper());
+            Dashboard d = (Dashboard) jt.queryForObject(sql, new Object[]{ id }, new DashboardRowMapper());
             return d;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public long add(Board b) {
+    public long add(Dashboard d) {
         String sql = "INSERT INTO p_board(name, width, height) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, b.getName());
-            ps.setInt(2, b.getWidth());
-            ps.setInt(3, b.getHeight());
+            ps.setString(1, d.getName());
+            ps.setInt(2, d.getWidth());
+            ps.setInt(3, d.getHeight());
             return ps;
         }, keyHolder);
 
@@ -52,7 +50,7 @@ public class BoardDao {
     }
 
     public int delete(long id) {
-        String sql = "DELETE FROM p_board WHERE id=?";
+        String sql = "DELETE FROM p_dashboard WHERE id=?";
         return jt.update(sql, new Object[]{ id });
     }
 }

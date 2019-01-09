@@ -2,9 +2,9 @@ package com.shzlw.poli.model;
 
 import java.util.List;
 
-public class Board {
+public class Dashboard {
 
-    public static final String TABLE = "p_board";
+    public static final String TABLE = "p_dashboard";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String WIDTH = "width";
@@ -16,7 +16,7 @@ public class Board {
     private int height;
 
     private List<Filter> filters;
-    private List<Card> cards;
+    private List<Widget> widgets;
 
     public long getId() {
         return id;
@@ -58,11 +58,31 @@ public class Board {
         this.filters = filters;
     }
 
-    public List<Card> getCards() {
-        return cards;
+    public static String getTABLE() {
+        return TABLE;
     }
 
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
+    public static String getID() {
+        return ID;
+    }
+
+    public static String getNAME() {
+        return NAME;
+    }
+
+    public static String getWIDTH() {
+        return WIDTH;
+    }
+
+    public static String getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public List<Widget> getWidgets() {
+        return widgets;
+    }
+
+    public void setWidgets(List<Widget> widgets) {
+        this.widgets = widgets;
     }
 }

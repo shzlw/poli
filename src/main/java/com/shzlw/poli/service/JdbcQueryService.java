@@ -19,6 +19,19 @@ public class JdbcQueryService {
         return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
     }
 
+    public String ping(JdbcDataSource ds) {
+        try (Connection con = getConnectionByType(ds);
+             PreparedStatement ps = con.prepareStatement(ds.getPing());
+             ResultSet rs = ps.executeQuery();) {
+            while (rs.next()) {
+                break;
+            }
+            return "GOOD";
+        } catch (Exception e) {
+            return "ERROR: " + e.getClass().getCanonicalName() + ": "+  e.getMessage();
+        }
+    }
+
     public String fetchCsvByQuery(JdbcDataSource ds, String sql) {
 
         try (Connection con = getConnectionByType(ds);

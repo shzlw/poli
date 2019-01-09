@@ -1,16 +1,12 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.BoardDao;
 import com.shzlw.poli.dao.FilterDao;
-import com.shzlw.poli.model.Board;
 import com.shzlw.poli.model.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/ws/filter")

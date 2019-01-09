@@ -1,6 +1,6 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.dao.mapper.JdbcDataSourceMapper;
+import com.shzlw.poli.dao.mapper.JdbcDataSourceRowMapper;
 import com.shzlw.poli.model.JdbcDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,14 +21,14 @@ public class JdbcDataSourceDao {
 
     public List<JdbcDataSource> fetchAll() {
         String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource";
-        List<JdbcDataSource> jdbcDataSources = jt.query(sql, new Object[] { }, new JdbcDataSourceMapper());
+        List<JdbcDataSource> jdbcDataSources = jt.query(sql, new Object[] { }, new JdbcDataSourceRowMapper());
         return jdbcDataSources;
     }
 
     public JdbcDataSource fetchById(long id) {
         String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource WHERE id=?";
         try {
-            JdbcDataSource d = (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceMapper());
+            JdbcDataSource d = (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
             return d;
         } catch (EmptyResultDataAccessException e) {
             return null;

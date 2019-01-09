@@ -49,4 +49,10 @@ public class JdbcDataSourceWs {
         jdbcDataSourceDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
+
+    @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public String ping(@PathVariable("id") long id) {
+        return "good";
+    }
 }

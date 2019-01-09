@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/ws/card")
-public class CardWs {
+@RequestMapping("/ws/widget")
+public class WidgetWs {
 
     /**
      * View board

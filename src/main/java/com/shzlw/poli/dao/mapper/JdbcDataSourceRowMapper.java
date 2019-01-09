@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JdbcDataSourceMapper implements RowMapper<JdbcDataSource> {
+public class JdbcDataSourceRowMapper implements RowMapper<JdbcDataSource> {
 
     @Override
     public JdbcDataSource mapRow(ResultSet rs, int i) throws SQLException {
