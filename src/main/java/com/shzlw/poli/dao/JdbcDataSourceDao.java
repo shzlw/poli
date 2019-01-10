@@ -21,15 +21,13 @@ public class JdbcDataSourceDao {
 
     public List<JdbcDataSource> fetchAll() {
         String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource";
-        List<JdbcDataSource> jdbcDataSources = jt.query(sql, new Object[] { }, new JdbcDataSourceRowMapper());
-        return jdbcDataSources;
+        return jt.query(sql, new Object[] {}, new JdbcDataSourceRowMapper());
     }
 
     public JdbcDataSource fetchById(long id) {
         String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource WHERE id=?";
         try {
-            JdbcDataSource d = (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
-            return d;
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

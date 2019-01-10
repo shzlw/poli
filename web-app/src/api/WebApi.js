@@ -14,6 +14,7 @@ export const fetchDashboardById = async (id) => {
   return await get(`/ws/dashboard/${id}`);
 }
 
+
 const get = async (url) => {
   try {
     const response = await axios.get(url);

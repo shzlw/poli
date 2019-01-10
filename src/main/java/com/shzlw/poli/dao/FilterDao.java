@@ -21,26 +21,25 @@ public class FilterDao {
 
     public List<Filter> fetchAllByDashboardId(long dashboardId) {
         String sql = "SELECT id, data FROM p_filter WHERE dashboard_id=?";
-        List<Filter> filters = jt.query(sql, new Object[] { dashboardId }, new FilterRowMapper());
-        return filters;
+        return jt.query(sql, new Object[] { dashboardId }, new FilterRowMapper());
     }
 
     public Filter fetchById(long id) {
         String sql = "SELECT id, data FROM p_filter WHERE id=?";
         try {
-            Filter d = (Filter) jt.queryForObject(sql, new Object[]{ id }, new FilterRowMapper());
-            return d;
+            return jt.queryForObject(sql, new Object[]{ id }, new FilterRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
     public long add(Filter f) {
-        String sql = "INSERT INTO p_filter(data) VALUES(?)";
+        String sql = "INSERT INTO p_filter(dashboard_id, data) VALUES(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, f.getData());
+            ps.setLong(1, f.getDashboardId());
+            ps.setString(2, f.getData());
             return ps;
         }, keyHolder);
 

@@ -2,8 +2,10 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.DashboardDao;
 import com.shzlw.poli.dao.FilterDao;
+import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Filter;
+import com.shzlw.poli.model.Widget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,10 @@ public class DashboardWs {
     @Autowired
     FilterDao filterDao;
 
+    @Autowired
+    WidgetDao widgetDao;
+
+
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Dashboard> all() {
@@ -33,7 +39,9 @@ public class DashboardWs {
     public Dashboard one(@PathVariable("id") long id) {
         Dashboard dashboard = dashboardDao.fetchById(id);
         List<Filter> filters = filterDao.fetchAllByDashboardId(id);
+        List<Widget> widgets = widgetDao.fetchAllByDashboardId(id);
         dashboard.setFilters(filters);
+        dashboard.setWidgets(widgets);
         return dashboard;
     }
 

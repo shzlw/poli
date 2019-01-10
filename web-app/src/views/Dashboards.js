@@ -16,7 +16,7 @@ class Dashboard extends Component {
   }
 
   fetchBoards = () => {
-    axios.get('/ws/dashboards')
+    axios.get('/ws/dashboard')
       .then(res => {
         const dashboards = res.data;
         this.setState({ 
@@ -56,7 +56,7 @@ class Dashboard extends Component {
       <div>
         Board
         <button onClick={this.jump}>Overview</button>
-        <button onClick={() => this.props.history.push('/board/new')}>New</button>
+        <button onClick={() => this.props.history.push('/dashboard/new')}>New</button>
 
         <table>
           <thead>

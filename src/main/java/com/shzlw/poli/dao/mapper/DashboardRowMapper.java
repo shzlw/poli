@@ -10,11 +10,11 @@ public class DashboardRowMapper implements RowMapper<Dashboard> {
 
     @Override
     public Dashboard mapRow(ResultSet rs, int i) throws SQLException {
-        Dashboard b = new Dashboard();
-        b.setId(rs.getLong(Dashboard.ID));
-        b.setName(rs.getString(Dashboard.NAME));
-        b.setWidth(rs.getInt(Dashboard.WIDTH));
-        b.setHeight(rs.getInt(Dashboard.HEIGHT));
-        return null;
+        Dashboard d = new Dashboard();
+        d.setId(rs.getLong(Dashboard.ID));
+        d.setName(rs.getString(Dashboard.NAME));
+        d.setWidth(rs.getInt(Dashboard.WIDTH));
+        d.setHeight(rs.getInt(Dashboard.HEIGHT));
+        return d;
     }
 }

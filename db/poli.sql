@@ -1,5 +1,7 @@
 
 DROP TABLE IF EXISTS p_datasource;
+DROP TABLE IF EXISTS p_filter;
+DROP TABLE IF EXISTS p_dashboard;
 
 CREATE TABLE
 IF NOT EXISTS p_datasource (
@@ -25,6 +27,16 @@ IF NOT EXISTS p_filter (
     id INTEGER NOT NULL PRIMARY KEY,
     dashboard_id INTEGER NOT NULL,
     data TEXT NOT NULL,
-    FOREIGN KEY (board_id) REFERENCES p_board(id)
+    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id)
+);
+
+CREATE TABLE
+IF NOT EXISTS p_widget (
+    id INTEGER NOT NULL PRIMARY KEY,
+    dashboard_id INTEGER NOT NULL,
+    datasource_id INTEGER NOT NULL,
+    data TEXT NOT NULL,
+    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
+    FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );
 

@@ -1,5 +1,9 @@
 package com.shzlw.poli.model;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.shzlw.poli.util.RawStringDeserialzier;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,51 +105,13 @@ public class Widget {
         this.columns = columns;
     }
 
+    @JsonRawValue
     public String getData() {
         return data;
     }
 
+    @JsonDeserialize(using = RawStringDeserialzier.class)
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getSqlQuery() {
-        return sqlQuery;
-    }
-
-    public void setSqlQuery(String sqlQuery) {
-        this.sqlQuery = sqlQuery;
-    }
-
-    public String getFilterParams() {
-        return filterParams;
-    }
-
-    public void setFilterParams(String filterParams) {
-        this.filterParams = filterParams;
-    }
-
-    public String getChartType() {
-        return chartType;
-    }
-
-    public void setChartType(String chartType) {
-        this.chartType = chartType;
-    }
-
-    public String getChartOptions() {
-        return chartOptions;
-    }
-
-    public void setChartOptions(String chartOptions) {
-        this.chartOptions = chartOptions;
-    }
-
-    public String getQueryResult() {
-        return queryResult;
-    }
-
-    public void setQueryResult(String queryResult) {
-        this.queryResult = queryResult;
     }
 }

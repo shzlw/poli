@@ -13,6 +13,6 @@ public class FilterRowMapper implements RowMapper<Filter> {
         Filter f = new Filter();
         f.setId(rs.getLong("id"));
         f.setData(rs.getString("data"));
-        return null;
+        return f;
     }
 }

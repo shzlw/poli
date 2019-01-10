@@ -15,7 +15,8 @@ class EditDashboard extends Component {
     widgets: [],
     filters: [],
     slicer: {},
-    showAddFilter: false
+    showAddFilter: false,
+    jdbcDataSourceId: 1
   };
 
   componentDidMount() {
@@ -32,19 +33,30 @@ class EditDashboard extends Component {
   }
 
   async initData(dashboardId) {
-    const jdbcDataSources = webApi.fetchDataSources();
+    const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
     });
 
     if (dashboardId !== undefined) {
-      const dashboard = webApi.fetchDashboardById(dashboardId);
+      const dashboard = await webApi.fetchDashboardById(dashboardId);
+      const filters = dashboard.filters;
+      const widgets = dashboard.widgets;
+      console.log('filters', filters);
       this.setState({ 
         dashboardId: dashboardId,
-        filters: dashboard.filters,
-        widgets: dashboard.widgets
+        filters: filters,
+        widgets: widgets
       });
     }    
+  }
+
+  initFilter() {
+
+  }
+
+  initWidget() {
+
   }
 
   handleInputChange = (event) => {
@@ -72,9 +84,6 @@ class EditDashboard extends Component {
       });
   }
 
-  addCard = () => {
-
-  }
 
   addFilter = () => {
     this.setState({
@@ -98,9 +107,42 @@ class EditDashboard extends Component {
       });
   }
 
+  saveWidget = (event) => {
+    event.preventDefault();
+    const widget = {
+      dashboardId: this.state.dashboardId,
+      jdbcDataSourceId: this.state.jdbcDataSourceId,
+      data: {
+        sqlQuery: 'select * from page'
+      }
+    };
+
+    axios.post('/ws/widget', widget)
+      .then(res => {
+      });
+  }
+
   render() {
 
     const filterDrawerClass = this.state.showAddFilter ? 'right-drawer display-block' : 'right-drawer display-none';
+
+    const filterItems = this.state.filters.map((filter, index) => 
+      <div key={index}>
+        {filter.dashboardId} - {filter.data.type} - {filter.data.sqlQuery}
+      </div>
+    );
+
+    const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
+      <div key={index}>
+        {ds.id} - {ds.name}
+      </div>
+    );
+
+    const widgetItems = this.state.widgets.map((w, index) => 
+      <div key={index}>
+        {w.id} - {w.data.sqlQuery}
+      </div>
+    );
 
     return (
       <div>
@@ -119,20 +161,23 @@ class EditDashboard extends Component {
           <button onClick={this.saveDashboard}>Save</button>
         </div>
 
+        <div>
+          <h5>Datasources</h5>
+          {jdbcDataSourceItems}
+        </div>
 
         <div>
           <h5>Widgets</h5>
-          <button onClick={this.addCard}>add card</button>
+          <button onClick={this.saveWidget}>save Widget</button>
           <div>
-            {this.state.widgets}
+            {widgetItems}
           </div>
         </div>
         <div>
           <h5>Filters</h5>
           <button onClick={this.addFilter}>add filter</button>
-          <div>
-            {this.state.filters}
-          </div>
+
+          {filterItems}
         </div>
         
         <div className={filterDrawerClass}>

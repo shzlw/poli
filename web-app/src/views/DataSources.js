@@ -27,7 +27,7 @@ class DataSources extends Component {
   }
 
   async initData() {
-    const jdbcDataSources = webApi.fetchDataSources();
+    const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
     });
@@ -56,8 +56,7 @@ class DataSources extends Component {
 
     axios.post('/ws/jdbcdatasource', ds)
       .then(res => {
-        this.onClose();
-        this.fetchDataSources();
+        this.initData();
       });
   }
 
@@ -65,7 +64,7 @@ class DataSources extends Component {
     console.log('update', ds);
     axios.put('/ws/jdbcdatasource', ds)
       .then(res => {
-        this.fetchDataSources();
+        this.initData();
       });
   }
 
@@ -73,7 +72,7 @@ class DataSources extends Component {
     console.log('delete', id);
     axios.delete('/ws/jdbcdatasource/' + id)
       .then(res => {
-        this.fetchDataSources();
+        this.initData();
       });
   }
 
