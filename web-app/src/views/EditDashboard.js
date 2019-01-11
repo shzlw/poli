@@ -5,6 +5,7 @@ import axios from 'axios';
 import * as webApi from '../api/WebApi';
 
 
+
 class EditDashboard extends Component {
 
   state = { 
@@ -48,15 +49,38 @@ class EditDashboard extends Component {
         filters: filters,
         widgets: widgets
       });
+
+      this.initWidgets();
     }    
   }
 
-  initFilter() {
-
+  initFilters() {
+    const filters = this.state.filters;
+    for (let i = 0; i < filters.length; i++) {
+      const filter = filters[i];
+      if (filter.type === 'slicer') {
+        axios.get('/ws/filter/run/' + filter.id)
+          .then(res => {
+          });
+      }
+    }
   }
 
-  initWidget() {
-
+  initWidgets() {
+    const widgets = this.state.widgets;
+    for (let i = 0; i < widgets.length; i++) {
+      const widget = widgets[i];
+      axios.get('/ws/widget/query/' + widget.id)
+        .then(res => {
+          const result = res.data;
+          const index = widgets.findIndex(w => w.id === result.id);
+          const newWidgets = [...this.state.widgets];
+          newWidgets[index].queryResult = result.data;
+          this.setState({
+            widgets: newWidgets
+          });
+        });
+    }
   }
 
   handleInputChange = (event) => {
@@ -85,10 +109,14 @@ class EditDashboard extends Component {
   }
 
 
-  addFilter = () => {
+  togglerFilter = () => {
     this.setState({
       showAddFilter: !this.state.showAddFilter
     })
+  }
+
+  applyFilters = () => {
+
   }
 
   saveFilter = (event) => {
@@ -140,7 +168,7 @@ class EditDashboard extends Component {
 
     const widgetItems = this.state.widgets.map((w, index) => 
       <div key={index}>
-        {w.id} - {w.data.sqlQuery}
+        {w.id} - {w.data.sqlQuery} - {w.queryResult}
       </div>
     );
 
@@ -175,7 +203,7 @@ class EditDashboard extends Component {
         </div>
         <div>
           <h5>Filters</h5>
-          <button onClick={this.addFilter}>add filter</button>
+          <button onClick={this.togglerFilter}>Toggler filter</button>
 
           {filterItems}
         </div>

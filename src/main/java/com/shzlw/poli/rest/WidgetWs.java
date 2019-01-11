@@ -1,7 +1,11 @@
 package com.shzlw.poli.rest;
 
+import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.dao.WidgetDao;
+import com.shzlw.poli.dto.QueryResult;
+import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,12 @@ public class WidgetWs {
 
     @Autowired
     WidgetDao widgetDao;
+
+    @Autowired
+    JdbcDataSourceDao jdbcDataSourceDao;
+
+    @Autowired
+    JdbcQueryService jdbcQueryService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -42,7 +52,11 @@ public class WidgetWs {
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
-    public void runQuery() {
-
+    @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
+    public QueryResult runQuery(@PathVariable("id") long id) {
+        String sql = "select * from page";
+        JdbcDataSource ds = jdbcDataSourceDao.fetchByWidgetId(id);
+        String data = jdbcQueryService.fetchJsonByQuery(ds, sql);
+        return new QueryResult(id, data);
     }
 }

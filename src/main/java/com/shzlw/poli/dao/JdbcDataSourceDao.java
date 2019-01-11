@@ -67,4 +67,15 @@ public class JdbcDataSourceDao {
         String sql = "DELETE FROM p_datasource WHERE id=?";
         return jt.update(sql, new Object[]{ id });
     }
+
+    public JdbcDataSource fetchByWidgetId(long id) {
+        String sql = "SELECT d.id, d.name, d.connection_url, d.username, d.type, d.ping "
+                    + "FROM p_datasource d, p_widget w "
+                    + "WHERE w.id = ? AND d.id = w.datasource_id";
+        try {
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

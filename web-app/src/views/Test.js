@@ -5,7 +5,27 @@ import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 
+import Select from 'react-select';
+
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+];
+
 class Test extends React.PureComponent {
+
+  state = {
+    selectedOption: null,
+    data: [
+      {firstName: 'a1', lastName: 'b1'},
+      {firstName: 'a2', lastName: 'b2'},
+      {firstName: 'a3', lastName: 'b3'}
+    ]
+  }
 
   onChange = (newValue) => {
     console.log('change',newValue);
@@ -15,7 +35,15 @@ class Test extends React.PureComponent {
     console.log('submit', );
   }
 
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  }
+
   render() {
+    const { selectedOption } = this.state;
+    const { data } = this.state;
+
     return (
       <div>
         <AceEditor
@@ -38,6 +66,27 @@ class Test extends React.PureComponent {
             }}
           />
           <button onClick={this.submit}>Submit</button>
+
+          <Select
+            value={selectedOption}
+            onChange={this.handleChange}
+            options={options}
+          />
+
+          <ReactTable
+            data={data}
+            columns={[
+              {
+                Header: "First Name",
+                accessor: "firstName"
+              },
+              {
+                Header: "Last Name",
+                accessor: "lastName"
+              },
+            ]}
+            defaultPageSize={10}
+          />
       </div>
     )
   }

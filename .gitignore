@@ -5,4 +5,4 @@ target/
 .classpath
 .project
 log/
-node_modules/
+jdbc-drivers/*
