@@ -7,8 +7,10 @@ import 'brace/theme/xcode';
 
 import Select from 'react-select';
 
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+
+import GridLayout from '../components/GridLayout';
 
 const options = [
   { value: 'chocolate', label: 'Chocolate' },
@@ -87,6 +89,8 @@ class Test extends React.PureComponent {
             ]}
             defaultPageSize={10}
           />
+
+          <GridLayout />
       </div>
     )
   }

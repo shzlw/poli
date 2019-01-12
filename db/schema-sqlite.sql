@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS p_widget;
 DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_filter;
 DROP TABLE IF EXISTS p_dashboard;

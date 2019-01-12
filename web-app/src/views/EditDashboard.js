@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import * as webApi from '../api/WebApi';
 
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 
 class EditDashboard extends Component {
@@ -75,7 +77,7 @@ class EditDashboard extends Component {
           const result = res.data;
           const index = widgets.findIndex(w => w.id === result.id);
           const newWidgets = [...this.state.widgets];
-          newWidgets[index].queryResult = result.data;
+          newWidgets[index].queryResult = JSON.parse(result.data);
           this.setState({
             widgets: newWidgets
           });
@@ -162,13 +164,37 @@ class EditDashboard extends Component {
 
     const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
       <div key={index}>
-        {ds.id} - {ds.name}
+        {ds.id} - {ds.name} - {ds.username}
       </div>
     );
 
     const widgetItems = this.state.widgets.map((w, index) => 
       <div key={index}>
-        {w.id} - {w.data.sqlQuery} - {w.queryResult}
+        {w.id} - {w.data.sqlQuery}
+        <div>
+          <ReactTable
+            data={w.queryResult}
+            columns={[
+              {
+                Header: "page_id",
+                accessor: "page_id"
+              },
+              {
+                Header: "account_key",
+                accessor: "account_key"
+              },
+              {
+                Header: "name",
+                accessor: "name"
+              },
+              {
+                Header: "description",
+                accessor: "description"
+              },
+            ]}
+            defaultPageSize={10}
+          />
+        </div>
       </div>
     );
 

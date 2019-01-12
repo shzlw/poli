@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
@@ -69,11 +70,21 @@ public class JdbcDataSourceDao {
     }
 
     public JdbcDataSource fetchByWidgetId(long id) {
-        String sql = "SELECT d.id, d.name, d.connection_url, d.username, d.type, d.ping "
+        String sql = "SELECT d.id, d.name, d.connection_url, d.username, d.password, d.type, d.ping "
                     + "FROM p_datasource d, p_widget w "
                     + "WHERE w.id = ? AND d.id = w.datasource_id";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, (ResultSet rs, int i) -> {
+                JdbcDataSource ds = new JdbcDataSource();
+                ds.setId(rs.getLong(JdbcDataSource.ID));
+                ds.setName(rs.getString(JdbcDataSource.NAME));
+                ds.setConnectionUrl(rs.getString(JdbcDataSource.CONNECTION_URL));
+                ds.setUsername(rs.getString(JdbcDataSource.USERNAME));
+                ds.setPassword(rs.getString(JdbcDataSource.PASSWORD));
+                ds.setType(rs.getString(JdbcDataSource.TYPE));
+                ds.setPing(rs.getString(JdbcDataSource.PING));
+                return ds;
+            });
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
