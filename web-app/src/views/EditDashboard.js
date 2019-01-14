@@ -7,6 +7,11 @@ import * as webApi from '../api/WebApi';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
+import QuerySlicer from "../components/QuerySlicer";
+import NumberRange from "../components/NumberRange";
+
+import EditFilter from "./EditFilter";
+import EditWidget from "./EditWidget";
 
 class EditDashboard extends Component {
 
@@ -19,7 +24,9 @@ class EditDashboard extends Component {
     filters: [],
     slicer: {},
     showAddFilter: false,
-    jdbcDataSourceId: 1
+    jdbcDataSourceId: 1,
+    showEditFilter: false,
+    EditFilterId: null
   };
 
   componentDidMount() {
@@ -32,7 +39,7 @@ class EditDashboard extends Component {
     this.setState({
       mode: mode
     });
-    this.initData(dashboardId);
+    // this.initData(dashboardId);
   }
 
   async initData(dashboardId) {
@@ -111,26 +118,62 @@ class EditDashboard extends Component {
   }
 
 
-  togglerFilter = () => {
-    this.setState({
-      showAddFilter: !this.state.showAddFilter
-    })
-  }
-
   applyFilters = () => {
 
   }
 
+  buildFilterPanel = () => {
+    const filterPanel = [];
+    const filters = this.state.filters;
+    for (let i = 0; i < filters.length; i++) {
+      const filter = filters[i];
+      if (filter.type === 'slicer') {
+        filterPanel.push(<QuerySlicer key={i} data={this.state.querySlicerData} onApply={this.onApply} />);
+      } else if (filter.type === 'number-range') {
+        filterPanel.push(<NumberRange key={i} />);
+      } else if (filter.type === 'date-range') {
+
+      }
+    }
+    return filterPanel;
+  }
+
   saveFilter = (event) => {
     event.preventDefault();
+
+    const type = 'slicer';
+    const dataSourceId = 1;
     const dashboardId = this.state.dashboardId;
     const filter = {
-      dashboardId: dashboardId,
-      data: {
-        type: 'slicer',
-        sqlQuery: 'select name from page group by name;'
-      }
+      type: type,
+      dataSourceId: dataSourceId,
+      dashboardId: dashboardId
     };
+    switch (type) {
+      case 'slicer':
+        filter.data = {
+          sqlQuery: 'select name from page group by name',
+          columnParam: ':columnB'
+        };
+        break;
+      case 'number-range':
+        filter.data = {
+          minParam: ':p1',
+          maxParam: ':p2',
+          minDefault: 0,
+          maxDefault: 100,
+          minValue: 0,
+          maxValue: 100
+        };
+        break;
+      case 'date-range':
+        filter.data = {
+          startParam: ':p1',
+          endParam: ':p2'
+        };
+        break;
+      default:
+    }
 
     axios.post('/ws/filter', filter)
       .then(res => {
@@ -152,13 +195,26 @@ class EditDashboard extends Component {
       });
   }
 
+  showEditFilter = (id) => {
+    console.log(id);
+    this.setState({
+      showEditFilter: !this.state.showEditFilter,
+      EditFilterId: id
+    })
+  }
+
+  showEditWidget = () => {
+
+  }
+
   render() {
 
-    const filterDrawerClass = this.state.showAddFilter ? 'right-drawer display-block' : 'right-drawer display-none';
+    const filterDrawerClass = this.state.showEditFilter ? 'right-drawer display-block' : 'right-drawer display-none';
 
     const filterItems = this.state.filters.map((filter, index) => 
       <div key={index}>
         {filter.dashboardId} - {filter.data.type} - {filter.data.sqlQuery}
+        <button onClick={() => this.showEditFilter(filter.id)}>Update Filter</button>
       </div>
     );
 
@@ -199,7 +255,7 @@ class EditDashboard extends Component {
     );
 
     return (
-      <div>
+      <div className="panel">
         <h3>Edit Board</h3>
         <div>
           <h4>Board - id: {this.state.dashboardId}</h4>
@@ -216,27 +272,29 @@ class EditDashboard extends Component {
         </div>
 
         <div>
-          <h5>Datasources</h5>
-          {jdbcDataSourceItems}
-        </div>
-
-        <div>
           <h5>Widgets</h5>
           <button onClick={this.saveWidget}>save Widget</button>
           <div>
             {widgetItems}
           </div>
         </div>
+
         <div>
           <h5>Filters</h5>
-          <button onClick={this.togglerFilter}>Toggler filter</button>
-
           {filterItems}
         </div>
-        
-        <div className={filterDrawerClass}>
+
+        <div>
           <h5>Add Filter</h5>
-          <button onClick={this.saveFilter}>save filter</button>
+          <button onClick={() => this.showEditFilter(null)}>Add Filter</button>
+          <div className={filterDrawerClass}>
+            <EditFilter filterId={this.state.EditFilterId} />
+          </div>
+        </div>
+
+        <div>
+          <h5>Add widget</h5>
+          <EditWidget />
         </div>
         
       </div>

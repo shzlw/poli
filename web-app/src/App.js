@@ -13,7 +13,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'overview'
+      current: 'overview',
+      menuMin: ''
     }
   }
 
@@ -26,16 +27,43 @@ class App extends Component {
     });
   }
 
+  toggleMenu = () => {
+    const menuMin = this.state.menuMin === '' ? 'menu-min' : '';
+    this.setState({
+      menuMin: menuMin
+    });
+  }
+
   render() {
     return (
-      <div className="app">
-        <div className="nav">
-          <Link to="/overview">Overview</Link>
-          <Link to="/datasources">Data Sources</Link>
-          <Link to="/dashboards">Dashboards</Link>
-          <Link to="/test">Test</Link>
+      <div className="App">
+        <div className="Nav">
+          <div className="Nav_title">
+          </div>
+          <div className="Nav_menu">
+            <ul className="menu">
+              <li>
+                <Link to="/overview">Overview</Link>
+              </li>
+              <li>
+                <Link to="/datasources">Data Sources</Link>
+              </li>
+              <li>
+                <Link to="/dashboards">Dashboards</Link>
+              </li>
+              <li>
+                <Link to="/test">Test</Link>
+              </li>
+            </ul>
+            <div className="Nav__toggle-menu">
+              <div onClick={this.toggleMenu}>toggle</div>
+            </div>
+          </div>
         </div>
-        <div className="content">
+        <div className={`Status_bar ${this.state.menuMin}`}>
+          account, logout
+        </div>
+        <div className={`Content ${this.state.menuMin}`}>
           <Route exact path="/" component={Overview} />
           <Route exact path="/overview" component={Overview} />
           <Route exact path="/datasources" component={DataSources} />
