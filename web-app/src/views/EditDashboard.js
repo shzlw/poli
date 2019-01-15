@@ -26,7 +26,7 @@ class EditDashboard extends Component {
     showAddFilter: false,
     jdbcDataSourceId: 1,
     showEditFilter: false,
-    EditFilterId: null
+    editFilterId: null
   };
 
   componentDidMount() {
@@ -39,7 +39,7 @@ class EditDashboard extends Component {
     this.setState({
       mode: mode
     });
-    // this.initData(dashboardId);
+    this.initData(dashboardId);
   }
 
   async initData(dashboardId) {
@@ -196,11 +196,11 @@ class EditDashboard extends Component {
   }
 
   showEditFilter = (id) => {
-    console.log(id);
-    this.setState({
-      showEditFilter: !this.state.showEditFilter,
-      EditFilterId: id
-    })
+    console.log('showEditFilter', id);
+    this.setState(prevState => ({
+      showEditFilter: !prevState.showEditFilter,
+      editFilterId: id
+    }));    
   }
 
   showEditWidget = () => {
@@ -215,12 +215,6 @@ class EditDashboard extends Component {
       <div key={index}>
         {filter.dashboardId} - {filter.data.type} - {filter.data.sqlQuery}
         <button onClick={() => this.showEditFilter(filter.id)}>Update Filter</button>
-      </div>
-    );
-
-    const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
-      <div key={index}>
-        {ds.id} - {ds.name} - {ds.username}
       </div>
     );
 
@@ -288,7 +282,7 @@ class EditDashboard extends Component {
           <h5>Add Filter</h5>
           <button onClick={() => this.showEditFilter(null)}>Add Filter</button>
           <div className={filterDrawerClass}>
-            <EditFilter filterId={this.state.EditFilterId} />
+            <EditFilter filterId={this.state.editFilterId} />
           </div>
         </div>
 

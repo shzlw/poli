@@ -18,6 +18,7 @@ class DataSources extends Component {
     password: '',
     type: '',
     ping: '',
+    showDrawer: false
   };
 
   componentDidMount() {
@@ -62,6 +63,7 @@ class DataSources extends Component {
 
   update = (ds) => {
     console.log('update', ds);
+
     axios.put('/ws/jdbcdatasource', ds)
       .then(res => {
         this.initData();
@@ -83,7 +85,27 @@ class DataSources extends Component {
       });
   }
 
+  showDrawer = (ds) => {
+    if (ds !== null) {
+      this.setState({
+        id: ds.id,
+        connectionUrl: ds.connectionUrl,
+        username: ds.username,
+        password: ds.password,
+        name: ds.name,
+        type: ds.type,
+        ping: ds.ping
+      });
+    }
+    
+    this.setState(prevState => ({
+      showDrawer: !prevState.showDrawer
+    })); 
+  }
+
   render() {
+
+    const filterDrawerClass = this.state.showDrawer ? 'right-drawer display-block' : 'right-drawer display-none';
 
     const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
       <tr key={index}>
@@ -92,7 +114,7 @@ class DataSources extends Component {
         <td>{ds.type}</td>
         <td>{ds.username}</td>
         <td>{ds.ping}</td>
-        <td><button onClick={() => this.update(ds)}>update</button></td>
+        <td><button onClick={() => this.showDrawer(ds)}>update</button></td>
         <td><button onClick={() => this.delete(ds.id)}>delete</button></td>
         <td><button onClick={() => this.ping(ds.id)}>ping</button></td>
       </tr>
@@ -113,7 +135,7 @@ class DataSources extends Component {
           </table>
 
         </div>
-        <button onClick={this.showDrawer}>
+        <button onClick={() => this.showDrawer(null)}>
           Add
         </button>
         <button>
@@ -123,7 +145,7 @@ class DataSources extends Component {
           <Link to="/datasources/edit/1">Edit</Link>
         </button>
 
-        <div>
+        <div className={filterDrawerClass}>
           <form>
             <label>Name</label>
             <input 

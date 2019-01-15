@@ -2,12 +2,30 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
 import * as webApi from '../api/WebApi';
+import axios from 'axios';
 
 const options = [
   { value: 'slicer', label: 'Slicer' },
   { value: 'number-range', label: 'Number Range' },
   { value: 'date-range', label: 'Date Range' }
 ];
+
+/**
+ * 
+ * filter.data = {
+          sqlQuery: 'select name from page group by name',
+          display: 'column a',
+          columns: [{
+              name: 'a',
+              param: ':column a'
+            },
+            {
+              name: 'b',
+              param: ':column b'
+            }
+          ]
+        };
+ */
 
 class EditFilter extends Component {
 
@@ -16,7 +34,7 @@ class EditFilter extends Component {
     console.log('EditFilter', this.props);
     this.state = {
       jdbcDataSources: [],
-      id: 0,
+      id: this.props.filterId,
       label: '',
       selectedType : {},
       querySlicerSqlQuery: '',
@@ -25,8 +43,26 @@ class EditFilter extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+    console.log('componentDidMount', this.props);
     this.initData();
+
+    if (this.props.filterId !== null) {
+      axios.get('/ws/filter/' + this.props.filterId)
+        .then(res => {
+          const filter = res.data;
+          console.log('fetch', filter);
+          if (filter.type === 'slicer') {
+            const data = JSON.parse(filter.data);
+            this.setState({
+              selectedType: {value: 'slicer', label: 'Slicer'},
+              querySlicerSqlQuery: data.sqlQuery,
+              querySlicerColumnParam: data.columnParam
+            });
+          }
+
+          
+        });
+    }
   }
 
   async initData() {
@@ -100,6 +136,10 @@ class EditFilter extends Component {
       default:
     }
 
+    axios.post('/ws/filter', filter)
+      .then(res => {
+      });
+
     console.log('state', this.state);
   }
 
@@ -142,7 +182,7 @@ class EditFilter extends Component {
     }
 
     return (
-      <div>
+      <div key={this.props.filterId}>
         <h3>EditFilter</h3>
         <label>Data Sources</label>
         <br/>
