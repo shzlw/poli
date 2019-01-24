@@ -8,17 +8,15 @@ import * as webApi from '../api/WebApi';
 class DataSources extends Component {
 
   state = { 
-    visible: false,
     jdbcDataSources: [],
-    mode: '',
-    id: 0,
+    showEditPanel: false,
+    id: null,
     name: '',
     connectionUrl: '',
     username: '',
     password: '',
     type: '',
-    ping: '',
-    showDrawer: false
+    ping: ''
   };
 
   componentDidMount() {
@@ -85,7 +83,19 @@ class DataSources extends Component {
       });
   }
 
-  showDrawer = (ds) => {
+  clearEditPanel = () => {
+    this.setState({
+      id: null,
+      connectionUrl: '',
+      username: '',
+      password: '',
+      name: '',
+      type: '',
+      ping: ''
+    });
+  }
+
+  showEditPanel = (ds) => {
     if (ds !== null) {
       this.setState({
         id: ds.id,
@@ -96,16 +106,22 @@ class DataSources extends Component {
         type: ds.type,
         ping: ds.ping
       });
+    } else {
+      this.clearEditPanel();
     }
     
     this.setState(prevState => ({
-      showDrawer: !prevState.showDrawer
+      showEditPanel: !prevState.showEditPanel
     })); 
+  }
+
+  showDeletePanel = () => {
+
   }
 
   render() {
 
-    const filterDrawerClass = this.state.showDrawer ? 'right-drawer display-block' : 'right-drawer display-none';
+    const filterDrawerClass = this.state.showEditPanel ? 'right-drawer display-block' : 'right-drawer display-none';
 
     const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
       <tr key={index}>
@@ -114,11 +130,13 @@ class DataSources extends Component {
         <td>{ds.type}</td>
         <td>{ds.username}</td>
         <td>{ds.ping}</td>
-        <td><button onClick={() => this.showDrawer(ds)}>update</button></td>
+        <td><button onClick={() => this.showEditPanel(ds)}>update</button></td>
         <td><button onClick={() => this.delete(ds.id)}>delete</button></td>
         <td><button onClick={() => this.ping(ds.id)}>ping</button></td>
       </tr>
     );
+
+    const mode = this.state.id === null ? 'New' : 'Update';
 
     return (
       <div>
@@ -135,7 +153,7 @@ class DataSources extends Component {
           </table>
 
         </div>
-        <button onClick={() => this.showDrawer(null)}>
+        <button onClick={() => this.showEditPanel(null)}>
           Add
         </button>
         <button>
@@ -146,6 +164,7 @@ class DataSources extends Component {
         </button>
 
         <div className={filterDrawerClass}>
+          <h3>{mode}</h3>
           <form>
             <label>Name</label>
             <input 

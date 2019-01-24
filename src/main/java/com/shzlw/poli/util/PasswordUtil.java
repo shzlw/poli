@@ -1,17 +1,29 @@
 package com.shzlw.poli.util;
 
-import org.apache.tomcat.util.codec.binary.Base64;
-
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
+import java.util.Base64;
+import java.util.UUID;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public final class PasswordUtil {
 
     private PasswordUtil() {}
+
+    public static String getUniqueId() {
+        return uuidToBase64(UUID.randomUUID().toString());
+    }
+
+    private static String uuidToBase64(String str) {
+        UUID uuid = UUID.fromString(str);
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bb.array());
+    }
 
     public static String getMd5Hash(String s) {
         String rt = "";
@@ -49,7 +61,7 @@ public final class PasswordUtil {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
             byte[] encrypted = cipher.doFinal(value.getBytes());
-            rt = new String(Base64.encodeBase64(encrypted));
+            rt = new String(Base64.getEncoder().encodeToString(encrypted));
         } catch (Exception e) {
         }
 
@@ -65,7 +77,7 @@ public final class PasswordUtil {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
-            byte[] decrypted = cipher.doFinal(Base64.decodeBase64(val));
+            byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(val));
             rt = new String(decrypted);
         } catch (Exception e) {
         }

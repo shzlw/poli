@@ -121,8 +121,9 @@ body,
 .right-drawer {
   display: none;
   border: 2px solid blue;
+  background-color: #f9f9f9;
   position: fixed;
-  top: 0;
+  top: 40px;
   bottom: 0;
   right: 0;
   width: 400px;

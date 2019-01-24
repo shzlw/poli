@@ -11,4 +11,9 @@ public class PasswordUtilTest {
         String b = PasswordUtil.decrypt(PasswordUtil.encrypt(value));
         Assert.assertEquals(value, b);
     }
+
+    @Test
+    public void test_getUniqueId() {
+        Assert.assertEquals(22, PasswordUtil.getUniqueId().length());
+    }
 }

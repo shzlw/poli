@@ -90,7 +90,6 @@ public class JdbcQueryService {
                 ObjectMapper mapper = new ObjectMapper();
                 ArrayNode array = mapper.createArrayNode();
 
-
                 while (rs.next()) {
                     ObjectNode node = mapper.createObjectNode();
                     for (int i = 1; i <= columnCount; i++) {

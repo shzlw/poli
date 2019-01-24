@@ -7,7 +7,9 @@ import DataSources from './views/DataSources';
 import Dashboards from './views/Dashboards';
 import Test from './views/Test';
 import EditDataSource from './views/EditDataSource';
-import EditDashboard from './views/EditDashboard';
+import DashboardEditView from './views/DashboardEditView';
+
+import SingleTest from './views/SingleTest';
 
 class App extends Component {
   constructor(props) {
@@ -54,6 +56,10 @@ class App extends Component {
               <li>
                 <Link to="/test">Test</Link>
               </li>
+              <li>
+                <Link to="/single-test">SingleTest</Link>
+              </li>
+              
             </ul>
             <div className="Nav__toggle-menu">
               <div onClick={this.toggleMenu}>toggle</div>
@@ -71,8 +77,9 @@ class App extends Component {
           <Route exact path="/test" component={Test} />
           <Route exact path="/datasources/new" component={EditDataSource} />
           <Route exact path="/datasources/edit/:id" component={EditDataSource} />
-          <Route exact path="/dashboard/new" component={EditDashboard} />
-          <Route exact path="/dashboard/edit/:id" component={EditDashboard} />
+          <Route exact path="/dashboard/new" component={DashboardEditView} />
+          <Route exact path="/dashboard/edit/:id" component={DashboardEditView} />
+          <Route exact path="/single-test" component={SingleTest} />
         </div>
       </div>
     );

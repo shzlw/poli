@@ -182,7 +182,7 @@ class EditFilter extends Component {
     }
 
     return (
-      <div key={this.props.filterId}>
+      <div>
         <h3>EditFilter</h3>
         <label>Data Sources</label>
         <br/>

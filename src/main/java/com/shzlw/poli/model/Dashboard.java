@@ -15,6 +15,16 @@ public class Dashboard {
     private int width;
     private int height;
 
+    /**
+     * Creator
+     */
+    private long userId;
+
+    /**
+     * public or private
+     */
+    private String access;
+
     private List<Filter> filters;
     private List<Widget> widgets;
 

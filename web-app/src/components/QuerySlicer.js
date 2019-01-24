@@ -2,22 +2,8 @@ import React from 'react';
 
 class QuerySlicer extends React.Component {
 
-  constructor(props) {
-    super(props);
-
-    const data = this.props.data;
-    const checkBoxes = [];
-    for (let i = 0; i < data.length; i++) {
-      checkBoxes.push({
-        value: data[i],
-        isChecked: false
-      });
-    }
-
-    this.state = {
-      isSelectAll: false,
-      checkBoxes: checkBoxes
-    };
+  state = {
+    isSelectAll: false,
   }
 
   handleChange = (event) => {
@@ -25,45 +11,29 @@ class QuerySlicer extends React.Component {
     const name = target.name;
     const isChecked = target.checked;
 
-    const newCheckBoxes = [...this.state.checkBoxes];
+    const newCheckBoxes = [...this.props.checkBoxes];
     const newCheckBox = newCheckBoxes.find(x => x.value === name);
     newCheckBox.isChecked = isChecked;
 
-    this.setState({
-      checkBoxes: newCheckBoxes
-    });
+    this.props.onChange(this.props.filterId, newCheckBox);
   }
 
   toggleSelectAll = () => {
     const newIsSelectAll = !this.state.isSelectAll;
-    const newCheckBoxes = [...this.state.checkBoxes];
+    const newCheckBoxes = [...this.props.checkBoxes];
     for (let i = 0; i < newCheckBoxes.length; i++) {
       newCheckBoxes[i].isChecked = newIsSelectAll;
     }
+    this.props.onChange(this.props.filterId, newCheckBoxes);
 
-    this.setState({
-      isSelectAll: newIsSelectAll,
-      checkBoxes: newCheckBoxes
-    });
-  }
-
-  applyFilter = () => {
-    console.log(this.state.checkBoxes);
-    const checkBoxes = this.state.checkBoxes;
-    const checked = [];
-    for (let i = 0; i < checkBoxes.length; i++) {
-      if (checkBoxes[i].isChecked) {
-        checked.push(checkBoxes[i]);
-      }
-    }
-
-    const isSelectAll = checked.length === checkBoxes.length;
-    this.props.onApply(checked, isSelectAll);
+    this.setState(prevState => ({
+      isSelectAll: !prevState.isSelectAll
+    }));
   }
 
   render() {
 
-    const checkBoxes = this.state.checkBoxes.map((box, index) => 
+    const checkBoxes = this.props.checkBoxes.map((box, index) => 
       <div key={index}>
         <input 
           type="checkbox" 
@@ -83,7 +53,6 @@ class QuerySlicer extends React.Component {
         <div>
           {checkBoxes}
         </div>
-        <button onClick={this.applyFilter}>Apply</button>
       </div>
     );
   }
