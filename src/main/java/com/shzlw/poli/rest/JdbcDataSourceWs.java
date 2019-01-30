@@ -2,6 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ public class JdbcDataSourceWs {
 
     @Autowired
     JdbcDataSourceDao jdbcDataSourceDao;
+
+    @Autowired
+    JdbcQueryService jdbcQueryService;
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -53,6 +57,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String ping(@PathVariable("id") long id) {
-        return "good";
+        JdbcDataSource ds = jdbcDataSourceDao.fetchById(id);
+        return jdbcQueryService.ping(ds);
     }
 }

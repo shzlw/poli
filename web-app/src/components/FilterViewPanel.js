@@ -80,7 +80,7 @@ class FilterViewPanel extends Component {
       }
     }
 
-    const isSelectAll = checked.length === checkBoxes.length;
+    // const isSelectAll = checked.length === checkBoxes.length;    
   }
 
 
@@ -101,10 +101,10 @@ class FilterViewPanel extends Component {
 
   render() {
     return (
-      <div>
+      <div className="testPanel">
         <h5>FilterViewPanel</h5>
-        {this.renderFilterPanel()}
         <button onClick={this.run}>Run</button>
+        {this.renderFilterPanel()}
       </div>
     )
   };

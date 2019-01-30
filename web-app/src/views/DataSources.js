@@ -1,7 +1,5 @@
 
 import React, { Component } from 'react';
-
-import { Link } from "react-router-dom";
 import axios from 'axios';
 import * as webApi from '../api/WebApi';
 
@@ -110,9 +108,9 @@ class DataSources extends Component {
       this.clearEditPanel();
     }
     
-    this.setState(prevState => ({
-      showEditPanel: !prevState.showEditPanel
-    })); 
+    this.setState({
+      showEditPanel: true
+    }); 
   }
 
   showDeletePanel = () => {
@@ -156,15 +154,10 @@ class DataSources extends Component {
         <button onClick={() => this.showEditPanel(null)}>
           Add
         </button>
-        <button>
-          <Link to="/datasources/new">New</Link>
-        </button>
-        <button>
-          <Link to="/datasources/edit/1">Edit</Link>
-        </button>
 
         <div className={filterDrawerClass}>
           <h3>{mode}</h3>
+          <button onClick={() => this.setState({showEditPanel: false })}>Close</button>
           <form>
             <label>Name</label>
             <input 

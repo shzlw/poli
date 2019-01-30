@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import Select from 'react-select';
 import * as webApi from '../api/WebApi';
 
 import ReactTable from "react-table";
@@ -481,11 +480,6 @@ class EditDashboard extends Component {
             <div>{this.state.filterId}  - {this.state.filterTitle}</div>
             <label>Type</label>
             <br/>
-            <Select
-              value={filterType}
-              onChange={this.handleFilterTypeChange}
-              options={filterTypes}
-            />
 
             <label>Title</label>
             <br/>

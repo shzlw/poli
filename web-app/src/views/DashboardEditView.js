@@ -2,9 +2,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-import FilterViewPanel from "../components/FilterViewPanel";
+import FilterViewPanel from '../components/FilterViewPanel';
+import WidgetViewPanel from '../components/WidgetViewPanel';
+import WidgetEditPanel from '../components/WidgetEditPanel';
+import FilterEditPanel from '../components/FilterEditPanel';
 
-const filterTypes = [
+const FILTER_TYPES = [
   { value: 'slicer', label: 'Slicer' },
   { value: 'number-range', label: 'Number Range' },
   { value: 'date-range', label: 'Date Range' }
@@ -54,6 +57,8 @@ class DashboardEditView extends React.Component {
     super(props);
     
     this.state = {
+      showWidgetEditPanel: false,
+      showFilterEditPanel: false,
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -62,11 +67,14 @@ class DashboardEditView extends React.Component {
     }
 
     this.filterViewPanel = React.createRef();
+    this.widgetViewPanel = React.createRef();
+    this.widgetEditPanel = React.createRef();
   }
 
   componentDidMount() {
     let dashboardId = 1; // this.props.match.params.id;
     console.log("componentDidMount", dashboardId);
+    this.initData(dashboardId);
   }
 
   async initData(dashboardId) {
@@ -93,9 +101,9 @@ class DashboardEditView extends React.Component {
         widgets: widgets
       });
 
-      this.initFilters();
+      //this.initFilters();
       // TODO: inig widgets based on the base value of the filters.
-      this.initWidgets();
+      //this.initWidgets();
     } else {
       this.setState({ 
         dashboardId: null,
@@ -110,12 +118,40 @@ class DashboardEditView extends React.Component {
     this.filterViewPanel.current.fetchFilters();
   }
 
+  showFilterEditPanel = (filter) => {
+    this.setState({
+      showFilterEditPanel: true
+    });
+  }
+
+  showWidgetEditPanel = (widget) => {
+    this.widgetEditPanel.current.fetchWidget(null);
+    this.setState({
+      showWidgetEditPanel: true
+    });
+  }
+
   render() {
     return (
       <div>
         <h3>DashboardEditView</h3>
         <button onClick={this.refresh}>Refresh</button>
-        <FilterViewPanel ref={this.filterViewPanel}/>
+        <button onClick={() => this.showFilterEditPanel(null)}>Add Filter</button>
+        <button onClick={() => this.showWidgetEditPanel(null)}>Add Widget</button>
+        <FilterViewPanel ref={this.filterViewPanel} />
+        <WidgetViewPanel ref={this.widgetViewPanel} />
+        <WidgetEditPanel 
+          ref={this.widgetEditPanel} 
+          show={this.state.showWidgetEditPanel}
+          onClose={() => this.setState({ showWidgetEditPanel: false})}
+          jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
+        />
+        <FilterEditPanel
+          ref={this.FilterEditPanel}
+          show={this.state.showFilterEditPanel}
+          onClose={() => this.setState({ showFilterEditPanel: false})}
+          jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
+        />
       </div>
     )
   };

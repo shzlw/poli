@@ -5,8 +5,6 @@ import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 
-import Select from 'react-select';
-
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -68,12 +66,6 @@ class Test extends React.PureComponent {
             }}
           />
           <button onClick={this.submit}>Submit</button>
-
-          <Select
-            value={selectedOption}
-            onChange={this.handleChange}
-            options={options}
-          />
 
           <ReactTable
             data={data}

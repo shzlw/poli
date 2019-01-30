@@ -1,6 +1,6 @@
-rm -rf server/src/main/resource/static/*
-cd web
+rm -rf src/main/resources/static/*
+cd web-app
 npm run build
-cp -r dist/* ../server/src/main/resources/static/
-cd ../server
+cp -r build/* ../src/main/resources/static/
+cd ..
 mvn clean install

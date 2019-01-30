@@ -4,6 +4,12 @@ import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
 
+const mockDashboards = [
+  {
+    dashboardId: 1,
+    name: 'dashboard1'
+  }
+]
 
 class Dashboard extends Component {
 
@@ -12,7 +18,10 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
-    this.fetchBoards();
+    //this.fetchBoards();
+    this.setState({
+      dashboards: mockDashboards
+    });
   }
 
   fetchBoards = () => {
@@ -33,8 +42,8 @@ class Dashboard extends Component {
     this.props.history.push(`/dashboard/edit/${dashboardId}`);
   }
 
-  delete = () => {
-
+  delete = (dashboardId) => {
+    console.log('delete', dashboardId);
   }
 
   jump = () => {
@@ -49,6 +58,7 @@ class Dashboard extends Component {
         <td>{d.id}</td>
         <td>{d.name}</td>
         <td><button onClick={() => this.update(d.id)}>update</button></td>
+        <td><button onClick={() => this.delete(d.id)}>delete</button></td>
       </tr>
     );
 

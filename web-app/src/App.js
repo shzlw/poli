@@ -40,18 +40,28 @@ class App extends Component {
     return (
       <div className="App">
         <div className="Nav">
-          <div className="Nav_title">
+          <div className="Nav_title-bar">
+            <div className="Nav_title">Poli</div>
           </div>
           <div className="Nav_menu">
             <ul className="menu">
               <li>
-                <Link to="/overview">Overview</Link>
+                <Link to="/overview">
+                  <i class="fas fa-heartbeat fa-fw"></i>
+                  <span class="menu-text">Overview</span>
+                </Link>
               </li>
               <li>
-                <Link to="/datasources">Data Sources</Link>
+                <Link to="/datasources">
+                  <i class="fas fa-database fa-fw"></i>
+                  <span class="menu-text">Data Sources</span>
+                </Link>
               </li>
               <li>
-                <Link to="/dashboards">Dashboards</Link>
+                <Link to="/dashboards">
+                  <i class="fas fa-chalkboard fa-fw"></i>
+                  <span class="menu-text">Dashboards</span>
+                </Link>
               </li>
               <li>
                 <Link to="/test">Test</Link>
@@ -67,7 +77,6 @@ class App extends Component {
           </div>
         </div>
         <div className={`Status_bar ${this.state.menuMin}`}>
-          account, logout
         </div>
         <div className={`Content ${this.state.menuMin}`}>
           <Route exact path="/" component={Overview} />
