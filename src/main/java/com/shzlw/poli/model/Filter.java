@@ -21,6 +21,8 @@ public class Filter {
 
     private long id;
     private long dashboardId;
+    private String name;
+    private String type;
 
     /**
      * json column
@@ -43,6 +45,22 @@ public class Filter {
 
     public void setDashboardId(long dashboardId) {
         this.dashboardId = dashboardId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @JsonRawValue

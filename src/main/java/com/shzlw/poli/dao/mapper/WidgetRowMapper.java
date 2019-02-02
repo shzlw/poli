@@ -13,7 +13,10 @@ public class WidgetRowMapper implements RowMapper<Widget> {
     public Widget mapRow(ResultSet rs, int i) throws SQLException {
         Widget w = new Widget();
         w.setId(rs.getLong("id"));
-        w.setData(rs.getString("data"));
+        w.setDashboardId(rs.getLong("dashboard_id"));
+        w.setJdbcDataSourceId(rs.getLong("datasource_id"));
+        w.setName(rs.getString("name"));
+        w.setSqlQuery(rs.getString("sql_query"));
         return w;
     }
 }

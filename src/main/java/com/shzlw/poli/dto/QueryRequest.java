@@ -2,24 +2,24 @@ package com.shzlw.poli.dto;
 
 public class QueryRequest {
 
-    private long id;
-    private String query;
+    private long jdbcDataSourceId;
+    private String sqlQuery;
 
     public QueryRequest() {}
 
-    public long getId() {
-        return id;
+    public long getJdbcDataSourceId() {
+        return jdbcDataSourceId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setJdbcDataSourceId(long jdbcDataSourceId) {
+        this.jdbcDataSourceId = jdbcDataSourceId;
     }
 
-    public String getQuery() {
-        return query;
+    public String getSqlQuery() {
+        return sqlQuery;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
     }
 }

@@ -2,43 +2,52 @@ import React, { Component } from 'react';
 import QuerySlicer from "./QuerySlicer";
 import NumberRange from "./NumberRange";
 
+import axios from 'axios';
 
-const filters = [
-  {
-    type: 'slicer',
-    id: 1,
-    dashboardId: 1,
-    data: {
-      dataSourceId: 2,
-      sqlQuery: 'select name from table',
-      display: 'Name',
-      columns: [{
-          name: 'name',
-          param: 'name'
-        },
-        {
-          name: 'b',
-          param: ':column b'
-        }
-      ]
-    },
-    queryResult: ['s1', 's2', 's3']
-  }
-]
 
 class FilterViewPanel extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      filters: filters
+      filters: []
     };
   }
 
-  componentDidMount() {
-    console.log('componentDidMount');
-    this.fetchFilters();
+  fetchFilters = (dashboardId) => {
+    if (dashboardId === null) {
+      return;
+    }
+
+    axios.get('/ws/filter/dashboard/' + dashboardId)
+      .then(res => {
+        const result = res.data;
+        this.setState({
+          filters: result,
+        }, this.queryFilters);
+      });
   }
+
+  queryFilters = () => {
+    const filters = this.state.filters;
+    for (let i = 0; i < filters.length; i++) {
+      const filter = filters[i];
+      if (filter.type === 'slicer') {
+        const queryRequest = filter.data;
+        axios.post('/ws/jdbcquery/filter/' + filter.id, queryRequest)
+          .then(res => {
+            const result = res.data;
+            const index = filters.findIndex(f => f.id === result.id);
+            const newFilters = [...this.state.filters];
+            newFilters[index].queryResult = JSON.parse(result.data);
+            this.setState({
+              filters: newFilters
+            });
+          });
+      }
+    }
+  }
+
 
   renderFilterPanel = () => {
     console.log('renderFilterPanel');
@@ -51,14 +60,35 @@ class FilterViewPanel extends Component {
 
         const queryResult = filter.queryResult;
         const checkBoxes = [];
-        for (let i = 0; i < queryResult.length; i++) {
-          checkBoxes.push({
-            value: queryResult[i],
-            isChecked: false
-          });
-        }
+        if (queryResult !== undefined 
+          && queryResult.length !== 0 
+          && Array.isArray(queryResult)) {
+          for (let i = 0; i < queryResult.length; i++) {
+            const values = Object.values(queryResult[i]);
+            for (const val of values) {
+              checkBoxes.push({
+                value: val,
+                isChecked: false
+              });
+            }
+          }
 
-        filterPanel.push(<QuerySlicer key={i} filterId={filter.id} checkBoxes={checkBoxes} onChange={this.onQuerySlicerChange} />);
+          filterPanel.push(
+            (
+              <div className="filterCard">
+                <div>{filter.name}</div>
+                <div>
+                  <QuerySlicer 
+                    key={i} 
+                    filterId={filter.id} 
+                    checkBoxes={checkBoxes} 
+                    onChange={this.onQuerySlicerChange} 
+                  />
+                </div>
+              </div>
+            )
+          );
+        }
       } else if (filter.type === 'number-range') {
         filterPanel.push(<NumberRange key={i} />);
       } else if (filter.type === 'date-range') {
@@ -84,18 +114,9 @@ class FilterViewPanel extends Component {
   }
 
 
-  fetchFilters = () => {
-    console.log('fetchFilters');
-    this.setState({
-      filters: filters
-    });
-  }
-
   run = () => {
     console.log('run');
-    
-    this.fetchFilters();
-
+  
     // TODO: call props
   }
 
@@ -104,7 +125,9 @@ class FilterViewPanel extends Component {
       <div className="testPanel">
         <h5>FilterViewPanel</h5>
         <button onClick={this.run}>Run</button>
-        {this.renderFilterPanel()}
+        <div className="filterViewPanel">
+          {this.renderFilterPanel()}
+        </div>
       </div>
     )
   };

@@ -18,13 +18,12 @@ const CHART_TYPES = ['table', 'pie'];
 
 class WidgetEditPanel extends React.Component {
 
-   constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       jdbcDataSources: [],
       widgetId: null,
       name: '',
-      dashboardId: null,
       sqlQuery: '',
       jdbcDataSourceId: null,
       queryResult: []
@@ -42,9 +41,18 @@ class WidgetEditPanel extends React.Component {
     });
 
     if (id === null) {
-      
+      if (jdbcDataSources.length !== 0) {
+        this.setState({
+          jdbcDataSourceId: jdbcDataSources[0].id 
+        });
+      }
+      this.setState({
+        widgetId: null
+      })
     } else {
-
+      this.setState({
+        widgetId: id
+      })
     }
   }
 
@@ -58,39 +66,6 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  save = (event) => {
-    event.preventDefault();
-    const widget ={
-      id: this.state.widgetId,
-      name: this.state.name,
-      dashboardId: this.state.dashboardId,
-      jdbcDataSourceId: this.state.jdbcDataSourceId,
-      sqlQuery: this.state.sqlQuery
-    };
-    console.log('save', widget);
-  }
-
-  close = () => {
-    this.props.onClose();
-  }
-
-  runQuery = (event) => {
-    event.preventDefault();
-    const queryRequest ={
-      id: this.state.jdbcDataSourceId,
-      query: this.state.sqlQuery
-    };
-
-    axios.post('/ws/jdbcquery/query', queryRequest)
-      .then(res => {
-        const result = res.data;
-        const queryResult = result;
-        this.setState({
-          queryResult: queryResult
-        });
-      });
-  }
-
   handleAceEditorChange = (newValue) => {
     this.setState({
       sqlQuery: newValue
@@ -101,6 +76,43 @@ class WidgetEditPanel extends React.Component {
     this.setState({ 
       jdbcDataSourceId: event.target.value
     });
+  }
+
+  save = (event) => {
+    event.preventDefault();
+    const widget ={
+      id: this.state.widgetId,
+      name: this.state.name,
+      dashboardId: this.props.dashboardId,
+      jdbcDataSourceId: this.state.jdbcDataSourceId,
+      sqlQuery: this.state.sqlQuery
+    };
+    
+    axios.post('/ws/widget', widget)
+      .then(res => {
+        
+      });
+  }
+
+  close = () => {
+    this.props.onClose();
+  }
+
+  runQuery = (event) => {
+    event.preventDefault();
+    const queryRequest ={
+      jdbcDataSourceId: this.state.jdbcDataSourceId,
+      sqlQuery: this.state.sqlQuery
+    };
+
+    axios.post('/ws/jdbcquery/query', queryRequest)
+      .then(res => {
+        const result = res.data;
+        const queryResult = result;
+        this.setState({
+          queryResult: queryResult
+        });
+      });
   }
 
   render() {
@@ -117,7 +129,8 @@ class WidgetEditPanel extends React.Component {
 
     const headers = [];
     const queryResult = this.state.queryResult;
-    if (queryResult !== undefined && queryResult.length !== 0) {
+    let queryResultItem;
+    if (queryResult !== undefined && queryResult.length !== 0 && Array.isArray(queryResult)) {
       const obj = queryResult[0];
       const keys = Object.keys(obj);
       for (const key of keys) {
@@ -126,6 +139,19 @@ class WidgetEditPanel extends React.Component {
           accessor: key
         })
       }
+
+      queryResultItem = (
+        <ReactTable
+          data={this.state.queryResult}
+          columns={headers}
+          minRows={0}
+          showPagination={false}
+        />
+      );
+    } else {
+      queryResultItem = (
+        <div>{queryResult}</div>
+      );
     }
 
     return (
@@ -173,11 +199,7 @@ class WidgetEditPanel extends React.Component {
           />
 
           <label>Result</label>
-          <ReactTable
-            data={this.state.queryResult}
-            columns={headers}
-            defaultPageSize={10}
-          />
+          {queryResultItem}
 
           <label>Columns Mapping</label>
           <div>column name, display name, data type</div>

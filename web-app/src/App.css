@@ -281,3 +281,38 @@ label {
 .Select.is-open {
   z-index: 1000 !important;
 }
+
+.filterViewPanel:before,
+.filterViewPanel:after {
+  content: "";
+  display: table;
+} 
+.filterViewPanel:after {
+  clear: both;
+}
+
+.filterCard {
+  float: left;
+  margin: 5px;
+  border: 1px solid blueviolet;
+}
+
+/** ReactTable */
+.ReactTable .rt-table {
+  background-color: #fff;
+  font-size: 15px;
+}
+
+.ReactTable .rt-thead {
+  overflow-y: scroll;
+}
+
+.ReactTable .rt-thead .rt-th.-sort-asc, 
+.ReactTable .rt-thead .rt-td.-sort-asc {
+  box-shadow: inset 0 3px 0 0 red;
+}
+
+.ReactTable .rt-thead .rt-th.-sort-desc, 
+.ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: inset 0 -3px 0 0 red;
+}

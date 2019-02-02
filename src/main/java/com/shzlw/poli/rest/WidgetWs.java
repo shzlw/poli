@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/ws/widget")
 public class WidgetWs {
@@ -29,6 +31,12 @@ public class WidgetWs {
     @Transactional(readOnly = true)
     public Widget one(@PathVariable("id") long id) {
         return widgetDao.fetchById(id);
+    }
+
+    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public List<Widget> allByDashboardId(@PathVariable("id") long id) {
+        return widgetDao.fetchAllByDashboardId(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -50,13 +58,5 @@ public class WidgetWs {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         widgetDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public QueryResult runQuery(@PathVariable("id") long id) {
-        String sql = "select * from page";
-        JdbcDataSource ds = jdbcDataSourceDao.fetchByWidgetId(id);
-        String data = jdbcQueryService.fetchJsonByQuery(ds, sql);
-        return new QueryResult(id, data);
     }
 }

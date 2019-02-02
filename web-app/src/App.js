@@ -47,20 +47,20 @@ class App extends Component {
             <ul className="menu">
               <li>
                 <Link to="/overview">
-                  <i class="fas fa-heartbeat fa-fw"></i>
-                  <span class="menu-text">Overview</span>
+                  <i className="fas fa-heartbeat fa-fw"></i>
+                  <span className="menu-text">Overview</span>
                 </Link>
               </li>
               <li>
                 <Link to="/datasources">
-                  <i class="fas fa-database fa-fw"></i>
-                  <span class="menu-text">Data Sources</span>
+                  <i className="fas fa-database fa-fw"></i>
+                  <span className="menu-text">Data Sources</span>
                 </Link>
               </li>
               <li>
                 <Link to="/dashboards">
-                  <i class="fas fa-chalkboard fa-fw"></i>
-                  <span class="menu-text">Dashboards</span>
+                  <i className="fas fa-chalkboard fa-fw"></i>
+                  <span className="menu-text">Dashboards</span>
                 </Link>
               </li>
               <li>

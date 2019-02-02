@@ -2,11 +2,14 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.model.Filter;
+import com.shzlw.poli.model.Widget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ws/filter")
@@ -19,6 +22,12 @@ public class FilterWs {
     @Transactional(readOnly = true)
     public Filter one(@PathVariable("id") long id) {
         return filterDao.fetchById(id);
+    }
+
+    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public List<Filter> allByDashboardId(@PathVariable("id") long id) {
+        return filterDao.fetchAllByDashboardId(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)

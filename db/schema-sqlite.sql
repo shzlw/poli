@@ -27,7 +27,9 @@ CREATE TABLE
 IF NOT EXISTS p_filter (
     id INTEGER NOT NULL PRIMARY KEY,
     dashboard_id INTEGER NOT NULL,
-    data TEXT NOT NULL,
+    type TEXT NOT NULL,
+    name TEXT,
+    data TEXT,
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id)
 );
 
@@ -36,7 +38,9 @@ IF NOT EXISTS p_widget (
     id INTEGER NOT NULL PRIMARY KEY,
     dashboard_id INTEGER NOT NULL,
     datasource_id INTEGER NOT NULL,
-    data TEXT NOT NULL,
+    name TEXT,
+    sql_query TEXT,
+    data TEXT,
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
     FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );

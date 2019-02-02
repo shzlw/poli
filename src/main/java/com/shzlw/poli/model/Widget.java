@@ -10,10 +10,17 @@ import java.util.List;
 public class Widget {
 
     private long id;
+    private String name;
     private int width;
     private int height;
     private long jdbcDataSourceId;
     private long dashboardId;
+
+    /**
+     * select * from a where col IN (:field)
+     */
+    private String sqlQuery;
+
 
     /**
      * Json column
@@ -29,12 +36,6 @@ public class Widget {
      *
      */
     private String data;
-
-
-    /**
-     * select * from a where col IN (:field)
-     */
-    private String sqlQuery;
 
     /**
      * {
@@ -63,6 +64,14 @@ public class Widget {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getWidth() {
@@ -103,6 +112,14 @@ public class Widget {
 
     public void setColumns(String columns) {
         this.columns = columns;
+    }
+
+    public String getSqlQuery() {
+        return sqlQuery;
+    }
+
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
     }
 
     @JsonRawValue

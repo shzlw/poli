@@ -13,6 +13,9 @@ public class FilterRowMapper implements RowMapper<Filter> {
         Filter f = new Filter();
         f.setId(rs.getLong("id"));
         f.setData(rs.getString("data"));
+        f.setName(rs.getString("name"));
+        f.setType(rs.getString("type"));
+        f.setDashboardId(rs.getLong("dashboard_id"));
         return f;
     }
 }

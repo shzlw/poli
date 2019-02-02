@@ -4,24 +4,17 @@ import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
 
-const mockDashboards = [
-  {
-    dashboardId: 1,
-    name: 'dashboard1'
-  }
-]
 
 class Dashboard extends Component {
 
   state = { 
     dashboards: [],
+    showEditPanel: false,
+    name: ''
   };
 
   componentDidMount() {
-    //this.fetchBoards();
-    this.setState({
-      dashboards: mockDashboards
-    });
+    this.fetchBoards();
   }
 
   fetchBoards = () => {
@@ -34,8 +27,26 @@ class Dashboard extends Component {
       });
   }
 
-  save = () => {
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
 
+    this.setState({
+      [name]: value
+    });
+  }
+
+  save = () => {
+    const dashboard = {
+      name: this.state.name
+    };
+
+    axios.post('/ws/dashboard', dashboard)
+      .then(res => {
+        const dashboardId = res.data;
+        this.props.history.push(`/dashboard/edit/${dashboardId}`);
+      });
   }
 
   update = (dashboardId) => {
@@ -44,14 +55,18 @@ class Dashboard extends Component {
 
   delete = (dashboardId) => {
     console.log('delete', dashboardId);
+    axios.delete('/ws/dashboard/' + dashboardId)
+      .then(res => {
+        this.fetchBoards();
+      });
   }
 
   jump = () => {
     this.props.history.push('/overview');
   }
 
-
   render() {
+    const panelClass = this.state.showEditPanel ? 'right-drawer display-block' : 'right-drawer display-none';
 
     const dashboardRows = this.state.dashboards.map((d, index) => 
       <tr key={index}>
@@ -66,7 +81,7 @@ class Dashboard extends Component {
       <div>
         Board
         <button onClick={this.jump}>Overview</button>
-        <button onClick={() => this.props.history.push('/dashboard/new')}>New</button>
+        <button onClick={() => this.setState({ showEditPanel: true })}>Add</button>
 
         <table>
           <thead>
@@ -75,6 +90,20 @@ class Dashboard extends Component {
             {dashboardRows}
           </tbody>
         </table>
+
+        <div className={panelClass}>
+          <div>New dashboard</div>
+          <button onClick={() => this.setState({showEditPanel: false })}>Close</button>
+          <button onClick={this.save}>Save</button>
+          <form>
+            <label>Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={this.state.name}
+              onChange={this.handleInputChange} />
+          </form>
+        </div>
       </div>
     );
   }
