@@ -3,4 +3,4 @@ cd web-app
 npm run build
 cp -r build/* ../src/main/resources/static/
 cd ..
-mvn clean install
+mvn clean install -DskipTests

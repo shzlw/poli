@@ -5,13 +5,18 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
+import GridLayout from './GridLayout';
+
+
 class WidgetViewPanel extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       dashboardId: null,
-      widgets: []
+      widgets: [],
+      snapToGrid: false,
+      showGridlines: true
     };
   }
 
@@ -46,6 +51,19 @@ class WidgetViewPanel extends React.Component {
     }
   }
 
+  handleChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    const isChecked = target.checked;
+    this.setState({
+      [name]: isChecked
+    })
+  }
+
+  onWidgetMove = (widget) => {
+    console.log('onWidgetMove', widget);
+  }
+
   render() {
 
     const widgetItems = this.state.widgets.map((widget, index) => {
@@ -77,7 +95,35 @@ class WidgetViewPanel extends React.Component {
     return (
       <div className="testPanel">
         <h3>WidgetViewPanel</h3>
+        <input 
+          type="checkbox" 
+          name="snapToGrid"
+          value="snapToGrid"
+          checked={this.state.snapToGrid} 
+          onChange={this.handleChange}
+          />
+          snapToGrid
+        <br/>
+        <input 
+          type="checkbox" 
+          name="showGridlines"
+          value="showGridlines"
+          checked={this.state.showGridlines} 
+          onChange={this.handleChange}
+          />
+          showGridlines
+        <br/>
+        
         {widgetItems}
+        <div>
+          <GridLayout 
+            width={800}
+            height={600}
+            snapToGrid={this.state.snapToGrid}
+            showGridlines={this.state.showGridlines}
+            widgets={this.state.widgets}
+            onWidgetMove={this.onWidgetMove} />
+        </div>
       </div>
     )
   };

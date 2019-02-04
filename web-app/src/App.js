@@ -76,8 +76,6 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className={`Status_bar ${this.state.menuMin}`}>
-        </div>
         <div className={`Content ${this.state.menuMin}`}>
           <Route exact path="/" component={Overview} />
           <Route exact path="/overview" component={Overview} />

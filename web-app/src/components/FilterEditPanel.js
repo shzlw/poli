@@ -156,7 +156,7 @@ class FilterEditPanel extends React.Component {
 
     return (
       <div className={panelClass}>
-        <h3>FilterEditPanel</h3>
+        <h3>FilterEditPanel: {this.state.filterId}</h3>
         <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run</button>

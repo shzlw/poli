@@ -16,6 +16,25 @@ const options = [
   { value: 'vanilla', label: 'Vanilla' }
 ];
 
+const widgets = [
+   {
+    id: 1,
+    name: 'title1',
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100
+  },
+  {
+    id: 2,
+    name: 'title2',
+    x: 100,
+    y: 100,
+    width: 100,
+    height: 100
+  }
+];
+
 class Test extends React.PureComponent {
 
   state = {
@@ -40,49 +59,20 @@ class Test extends React.PureComponent {
     console.log(`Option selected:`, selectedOption);
   }
 
-  render() {
-    const { selectedOption } = this.state;
-    const { data } = this.state;
+  editWidget = (widgetId) => {
+    console.log('editWidget', widgetId);
+  }
 
+  render() {
     return (
       <div>
-        <AceEditor
-          mode="mysql"
-          theme="xcode"
-          name="blah2"
-          onChange={this.onChange}
-          height={'300px'}
-          width={'300px'}
-          fontSize={18}
-          showPrintMargin={false}
-          showGutter={true}
-          highlightActiveLine={true}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: false,
-            showLineNumbers: true,
-            tabSize: 2,
-            }}
-          />
-          <button onClick={this.submit}>Submit</button>
 
-          <ReactTable
-            data={data}
-            columns={[
-              {
-                Header: "First Name",
-                accessor: "firstName"
-              },
-              {
-                Header: "Last Name",
-                accessor: "lastName"
-              },
-            ]}
-            defaultPageSize={10}
-          />
-
-          <GridLayout />
+          <GridLayout 
+            width={800}
+            height={600}
+            snapToGrid={false}
+            showGridlines={true}
+            widgets={widgets} />
       </div>
     )
   }

@@ -156,7 +156,7 @@ class WidgetEditPanel extends React.Component {
 
     return (
       <div className={panelClass}>
-        <h3>WidgetEditPanel</h3>
+        <h3>WidgetEditPanel: {this.state.widgetId}</h3>
         <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run Query</button>

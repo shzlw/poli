@@ -17,6 +17,11 @@ public class WidgetRowMapper implements RowMapper<Widget> {
         w.setJdbcDataSourceId(rs.getLong("datasource_id"));
         w.setName(rs.getString("name"));
         w.setSqlQuery(rs.getString("sql_query"));
+        w.setX(rs.getInt("x"));
+        w.setY(rs.getInt("y"));
+        w.setWidth(rs.getInt("width"));
+        w.setHeight(rs.getInt("width"));
+        w.setType(rs.getString("type"));
         return w;
     }
 }

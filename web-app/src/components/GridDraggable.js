@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+const WIDGET_BORDER = 2;
+
 class GridDraggable extends React.Component {
 
   constructor(props) {
@@ -30,11 +32,10 @@ class GridDraggable extends React.Component {
 
     let boxes = document.getElementsByClassName("grid-box");
     for (let i = 0; i < boxes.length; i++) {
-        boxes[i].style.zIndex = 2;
+        boxes[i].style.zIndex = 20;
     }
-    gridItemNode.style.zIndex = 3;
+    gridItemNode.style.zIndex = 30;
 
-    
     const { ownerDocument } = gridItemNode;
     ownerDocument.addEventListener('mouseup', this.onMouseUp);
     ownerDocument.addEventListener('mousemove', this.onMouseMove);
@@ -65,7 +66,11 @@ class GridDraggable extends React.Component {
       return; 
     }
 
-    let gridCell = 5;
+    let gridCell = 1;
+    if (this.props.snapToGrid) {
+      gridCell = 4;
+    }
+
     const thisNode = ReactDOM.findDOMNode(this);
     const gridItemNode = thisNode.parentNode;
     let currentX = event.clientX - this.state.xOffset;
@@ -75,9 +80,8 @@ class GridDraggable extends React.Component {
     const containerWidth = containerNode.clientWidth;
     const containerHeight = containerNode.clientHeight;
     
-    let boxWidth = parseInt(gridItemNode.style.width, 10) + 4;
-    let boxHeight = parseInt(gridItemNode.style.height, 10) + 4;
-
+    let boxWidth = parseInt(gridItemNode.style.width, 10) + WIDGET_BORDER * 2;
+    let boxHeight = parseInt(gridItemNode.style.height, 10) + WIDGET_BORDER * 2;
 
     if (currentX < 0) {
       currentX = 0;
@@ -91,7 +95,6 @@ class GridDraggable extends React.Component {
     if (currentY + boxHeight > containerHeight) {
       currentY = containerHeight - boxHeight;
     }
-    
 
     currentX = Math.floor(currentX / gridCell) * gridCell;
     currentY = Math.floor(currentY / gridCell) * gridCell;
@@ -104,7 +107,7 @@ class GridDraggable extends React.Component {
     return (
       <div className="grid-draggable"
         onMouseDown={this.onMouseDown}
-        onMouseUp={this.onMouseUp} >
+        onMouseUp={this.onMouseUp}>
       </div>
     )
   }

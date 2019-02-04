@@ -12,10 +12,9 @@ class QuerySlicer extends React.Component {
     const isChecked = target.checked;
 
     const newCheckBoxes = [...this.props.checkBoxes];
-    const newCheckBox = newCheckBoxes.find(x => x.value === name);
-    newCheckBox.isChecked = isChecked;
-
-    this.props.onChange(this.props.filterId, newCheckBox);
+    const index = newCheckBoxes.findIndex(x => x.value === name);
+    newCheckBoxes[index].isChecked = isChecked;
+    this.props.onChange(this.props.filterId, newCheckBoxes);
   }
 
   toggleSelectAll = () => {
@@ -32,26 +31,29 @@ class QuerySlicer extends React.Component {
   }
 
   render() {
-
-    const checkBoxes = this.props.checkBoxes.map((box, index) => 
-      <div key={index}>
-        <input 
-          type="checkbox" 
-          name={box.value} 
-          value={box.value} 
-          checked={box.isChecked} 
-          onChange={this.handleChange}
-          />
-          {box.value}
-        <br/>
-      </div>
-    );
+    const checkBoxes = this.props.checkBoxes;
+    let checkBoxItems = [];
+    if (checkBoxes !== undefined && checkBoxes.length !== 0) {
+      checkBoxItems = this.props.checkBoxes.map((box, index) => 
+        <div key={index}>
+          <input 
+            type="checkbox" 
+            name={box.value} 
+            value={box.value} 
+            checked={box.isChecked} 
+            onChange={this.handleChange}
+            />
+            {box.value}
+          <br/>
+        </div>
+      );
+    }
 
     return (
       <div>
         <button onClick={this.toggleSelectAll}>Toggle Select All {this.state.isSelectAll}</button>
         <div>
-          {checkBoxes}
+          {checkBoxItems}
         </div>
       </div>
     );

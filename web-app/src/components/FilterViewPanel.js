@@ -39,7 +39,24 @@ class FilterViewPanel extends Component {
             const result = res.data;
             const index = filters.findIndex(f => f.id === result.id);
             const newFilters = [...this.state.filters];
-            newFilters[index].queryResult = JSON.parse(result.data);
+            const queryResult = JSON.parse(result.data);
+            const checkBoxes = [];
+
+            if (this.isArrayNotEmpty(queryResult)) {
+              for (let i = 0; i < queryResult.length; i++) {
+                const values = Object.values(queryResult[i]);
+                for (const val of values) {
+                  checkBoxes.push({
+                    value: val,
+                    isChecked: false
+                  });
+                }
+              }
+            }
+
+            newFilters[index].queryResult = queryResult;
+            newFilters[index].checkBoxes = checkBoxes;
+
             this.setState({
               filters: newFilters
             });
@@ -48,47 +65,42 @@ class FilterViewPanel extends Component {
     }
   }
 
+  isArrayNotEmpty(a) {
+    return a !== undefined && a.length !== 0 && Array.isArray(a);
+  }
 
   renderFilterPanel = () => {
-    console.log('renderFilterPanel');
     const filterPanel = [];
     const filters = this.state.filters;
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
       if (filter.type === 'slicer') {
-        console.log('11111');
-
-        const queryResult = filter.queryResult;
-        const checkBoxes = [];
-        if (queryResult !== undefined 
-          && queryResult.length !== 0 
-          && Array.isArray(queryResult)) {
-          for (let i = 0; i < queryResult.length; i++) {
-            const values = Object.values(queryResult[i]);
-            for (const val of values) {
-              checkBoxes.push({
-                value: val,
-                isChecked: false
-              });
-            }
-          }
-
-          filterPanel.push(
-            (
-              <div className="filterCard">
-                <div>{filter.name}</div>
-                <div>
-                  <QuerySlicer 
-                    key={i} 
-                    filterId={filter.id} 
-                    checkBoxes={checkBoxes} 
-                    onChange={this.onQuerySlicerChange} 
-                  />
+        const checkBoxes = filter.checkBoxes;
+        filterPanel.push(
+          (
+            <div className="filterCard">
+              <div className="filter-card-title">
+                {filter.name}
+                <div className="icon-button-group">
+                  <div className="icon-btn" onClick={() => this.edit(filter.id)}>
+                    <i className="fas fa-edit fa-fw"></i>
+                  </div>
+                  <div className="icon-btn" onClick={() => this.delete(filter.id)}>
+                    <i className="fas fa-trash-alt fa-fw"></i>
+                  </div>
                 </div>
               </div>
-            )
-          );
-        }
+              <div>
+                <QuerySlicer 
+                  key={i} 
+                  filterId={filter.id} 
+                  checkBoxes={checkBoxes} 
+                  onChange={this.onQuerySlicerChange} 
+                />
+              </div>
+            </div>
+          )
+        );
       } else if (filter.type === 'number-range') {
         filterPanel.push(<NumberRange key={i} />);
       } else if (filter.type === 'date-range') {
@@ -98,18 +110,23 @@ class FilterViewPanel extends Component {
     return filterPanel;
   }
 
+  edit = (filterId) => {
+    this.props.onEdit(filterId);
+  }
+
+  delete = (filterId) => {
+
+  }
+
   onQuerySlicerChange = (filterId, checkBoxes) => {
-    console.log('onQuerySlicerChange', filterId, checkBoxes);
+    const index = this.state.filters.findIndex(f => f.id === filterId);
+    const newFilters = [...this.state.filters];
+    newFilters[index].checkBoxes = [...checkBoxes];
+    this.setState({
+      filters: newFilters
+    });
 
-    const filter = this.state.filters.find(f => f.id === filterId);
-
-    const checked = [];
-    for (let i = 0; i < checkBoxes.length; i++) {
-      if (checkBoxes[i].isChecked) {
-        checked.push(checkBoxes[i]);
-      }
-    }
-
+    // TODO: select all.
     // const isSelectAll = checked.length === checkBoxes.length;    
   }
 
@@ -121,9 +138,12 @@ class FilterViewPanel extends Component {
   }
 
   render() {
+    const panelClass = this.props.show ? 'display-block' : 'display-none';
+
     return (
-      <div className="testPanel">
+      <div className={`testPanel ${panelClass}`}>
         <h5>FilterViewPanel</h5>
+        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.run}>Run</button>
         <div className="filterViewPanel">
           {this.renderFilterPanel()}

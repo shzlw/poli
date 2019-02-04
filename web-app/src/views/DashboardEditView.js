@@ -16,16 +16,6 @@ const FILTER_TYPES = [
   { value: 'date-range', label: 'Date Range' }
 ];
 
-
-const mockDataSources = [{
-    name: 'ds1',
-    id: 1
-  }, {
-    name: 'ds2',
-    id: 2
-  }
-]
-
 const mockDashboard = {
   dashboardId: 1,
   filters: [
@@ -62,6 +52,7 @@ class DashboardEditView extends React.Component {
     this.state = {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
+      showFilterViewPanel: true,
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -83,6 +74,16 @@ class DashboardEditView extends React.Component {
     })
   }
 
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
   refresh = () => {
     console.log('refresh');
     const { dashboardId } = this.state;
@@ -90,15 +91,20 @@ class DashboardEditView extends React.Component {
     this.widgetViewPanel.current.fetchWidgets(dashboardId);
   }
 
-  showFilterEditPanel = (filter) => {
-    this.filterEditPanel.current.fetchFilter(null);
+  save = () => {
+    console.log('save');
+
+  }
+
+  openFilterEditPanel = (filterId) => {
+    this.filterEditPanel.current.fetchFilter(filterId);
     this.setState({
       showFilterEditPanel: true
     });
   }
 
-  showWidgetEditPanel = (widget) => {
-    this.widgetEditPanel.current.fetchWidget(null);
+  openWidgetEditPanel = (widgetId) => {
+    this.widgetEditPanel.current.fetchWidget(widgetId);
     this.setState({
       showWidgetEditPanel: true
     });
@@ -107,15 +113,29 @@ class DashboardEditView extends React.Component {
   render() {
     return (
       <div>
-        <h3>DashboardEditView</h3>
+        <h3>
+          DashboardEditView: 
+          <input 
+          type="text" 
+          name="name" 
+          value={this.state.name}
+          onChange={this.handleInputChange} />
+        </h3>
         <button onClick={this.refresh}>Refresh</button>
-        <button onClick={() => this.showFilterEditPanel(null)}>Add Filter</button>
-        <button onClick={() => this.showWidgetEditPanel(null)}>Add Widget</button>
+        <button onClick={this.save}>Save</button>
+        <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
+        <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+        <button onClick={() => this.setState({ showFilterViewPanel: true})}>Show Filters</button>
+        
         <FilterViewPanel 
           ref={this.filterViewPanel} 
+          onEdit={this.openFilterEditPanel}
+          show={this.state.showFilterViewPanel}
+          onClose={() => this.setState({ showFilterViewPanel: false})}
         />
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
+          onEdit={this.openWidgetEditPanel}
         />
         <WidgetEditPanel 
           ref={this.widgetEditPanel} 
