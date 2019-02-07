@@ -62,6 +62,17 @@ class WidgetViewPanel extends React.Component {
 
   onWidgetMove = (widget) => {
     console.log('onWidgetMove', widget);
+
+    const index = this.state.widgets.findIndex(w => w.id === widget.id);
+    const newWidgets = [...this.state.widgets];
+    newWidgets[index].x = widget.x;
+    newWidgets[index].y = widget.y;
+    newWidgets[index].width = widget.width;
+    newWidgets[index].height = widget.height;
+
+    this.setState({
+      widgets: newWidgets
+    });
   }
 
   render() {
@@ -122,7 +133,8 @@ class WidgetViewPanel extends React.Component {
             snapToGrid={this.state.snapToGrid}
             showGridlines={this.state.showGridlines}
             widgets={this.state.widgets}
-            onWidgetMove={this.onWidgetMove} />
+            onWidgetMove={this.onWidgetMove}
+            onWidgetEdit={this.props.onWidgetEdit} />
         </div>
       </div>
     )

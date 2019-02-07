@@ -89,7 +89,7 @@ body,
 .Status_bar {
   position:fixed;
   top:0;
-  left: 200px;
+  left: 180px;
   right:0;
   height:39px;
   background-color: #f9f9f9;
@@ -100,7 +100,7 @@ body,
 .Content {
   position:fixed;
   top: 0px;
-  left: 200px;
+  left: 180px;
   right: 0;
   bottom: 0;
   background-color: #f6f9fc;
@@ -135,15 +135,16 @@ body,
 
 .right-drawer {
   display: none;
-  border: 2px solid blue;
+  border: 3px solid blue;
   background-color: #f9f9f9;
   padding: 10px;
   position: fixed;
-  top: 40px;
-  left: 200px;
+  top: 0;
+  left: 180px;
   right: 0;
   bottom: 0;
   overflow-y: auto;
+  z-index: 50;
 }
 
 .display-block {

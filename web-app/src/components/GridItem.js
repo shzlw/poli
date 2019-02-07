@@ -66,6 +66,7 @@ class GridItem extends React.Component {
 
   editWidget = (widgetId) => {
     console.log('editWidget', widgetId);
+    this.props.onWidgetEdit(widgetId);
   }
 
   delete = () => {

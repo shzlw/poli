@@ -135,7 +135,7 @@ class DashboardEditView extends React.Component {
         />
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
-          onEdit={this.openWidgetEditPanel}
+          onWidgetEdit={this.openWidgetEditPanel}
         />
         <WidgetEditPanel 
           ref={this.widgetEditPanel} 
