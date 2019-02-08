@@ -104,7 +104,8 @@ class DashboardEditView extends React.Component {
   }
 
   openWidgetEditPanel = (widgetId) => {
-    this.widgetEditPanel.current.fetchWidget(widgetId);
+    const { dashboardId } = this.state;
+    this.widgetEditPanel.current.fetchWidget(widgetId, dashboardId);
     this.setState({
       showWidgetEditPanel: true
     });

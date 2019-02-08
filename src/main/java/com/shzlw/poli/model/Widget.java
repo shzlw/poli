@@ -17,17 +17,12 @@ public class Widget {
     private int height;
     private long jdbcDataSourceId;
     private long dashboardId;
+    private String sqlQuery;
     /**
      * table
      * kpi
      */
     private String type;
-
-    /**
-     * select * from a where col IN (:field)
-     */
-    private String sqlQuery;
-
 
     /**
      * Json column

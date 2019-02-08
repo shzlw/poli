@@ -22,11 +22,14 @@ class WidgetEditPanel extends React.Component {
     super(props);
     this.state = {
       jdbcDataSources: [],
+      filters: [],
       widgetId: null,
       name: '',
       sqlQuery: '',
       jdbcDataSourceId: null,
-      queryResult: []
+      queryResult: [],
+      filterId: null,
+      filterParams: []
     };
   }
 
@@ -34,16 +37,27 @@ class WidgetEditPanel extends React.Component {
     console.log('WidgetEditPanel', 'componentDidMount');
   }
 
-  fetchWidget = async (id) => {
+  fetchWidget = async (widgetId, dashboardId) => {
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
     });
 
-    if (id === null) {
+    const filters = await webApi.fetchFiltersByDashboardId(dashboardId);
+    this.setState({ 
+      filters: filters 
+    });
+
+    if (widgetId === null) {
       if (jdbcDataSources.length !== 0) {
         this.setState({
           jdbcDataSourceId: jdbcDataSources[0].id 
+        });
+      }
+
+      if (filters.length !== 0) {
+        this.setState({
+          filterId: filters[0].id
         });
       }
       this.setState({
@@ -51,7 +65,7 @@ class WidgetEditPanel extends React.Component {
       })
     } else {
       this.setState({
-        widgetId: id
+        widgetId: widgetId
       })
     }
   }
@@ -115,6 +129,37 @@ class WidgetEditPanel extends React.Component {
       });
   }
 
+  addFilterParam = (event) => {
+    event.preventDefault();
+    const filterId = this.state.filterId;
+    const index = this.state.filterParams.findIndex(f => f === filterId);
+    if (index === -1) {
+      const newFilterParams = [...this.state.filterParams];
+      newFilterParams.push(filterId);
+      this.setState({
+        filterParams: newFilterParams
+      });
+    } 
+  }
+
+  removeFilterParam = (filterId, event) => {
+    event.preventDefault();
+    const index = this.state.filterParams.findIndex(f => f === filterId);
+    if (index !== -1) {
+      const newFilterParams = [...this.state.filterParams];
+      newFilterParams.splice(index, 1);
+      this.setState({
+        filterParams: newFilterParams
+      });
+    } 
+  }
+
+  handleFilterChange = (event) => {
+    this.setState({ 
+      filterId: event.target.value
+    });
+  }
+
   render() {
     const panelClass = this.props.show ? 'right-drawer display-block' : 'right-drawer display-none';
 
@@ -122,10 +167,20 @@ class WidgetEditPanel extends React.Component {
       <option value={ds.id} key={ds.id}>{ds.name}</option>
     );
 
+    const filterOptions = this.state.filters.map(f =>
+      <option value={f.id} key={f.id}>{f.id}</option>
+    );
+
+    const filterParamItems = this.state.filterParams.map(f =>
+      <div key={f}>
+        <div>value: {f}</div>
+        <button onClick={(event) => this.removeFilterParam(f, event)}>delete</button>
+      </div>
+    );
+
     const chartOptionList = CHART_TYPES.map(o =>
       <option value={o} key={o}>{o}</option>
     );
-
 
     const headers = [];
     const queryResult = this.state.queryResult;
@@ -200,6 +255,21 @@ class WidgetEditPanel extends React.Component {
 
           <label>Result</label>
           {queryResultItem}
+
+          <label>Filter Params</label>
+          <div>
+            <select value={this.state.filterId} onChange={this.handleFilterChange}>
+              {filterOptions}
+            </select>
+            <div>
+              {filterParamItems}
+            </div>
+            <button onClick={this.addFilterParam}>Add</button>
+            <div>
+              
+            </div>
+          </div>
+        
 
           <label>Columns Mapping</label>
           <div>column name, display name, data type</div>

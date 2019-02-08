@@ -36,6 +36,15 @@ public class JdbcDataSourceDao {
         }
     }
 
+    public JdbcDataSource fetchFullById(long id) {
+        String sql = "SELECT id, name, connection_url, username, password, type, ping FROM p_datasource WHERE id=?";
+        try {
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new FullDataSourceRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public long add(JdbcDataSource ds) {
         String sql = "INSERT INTO p_datasource(name, connection_url, username, password, type, ping) VALUES(?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

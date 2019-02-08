@@ -14,13 +14,16 @@ export const fetchDashboardById = async (id) => {
   return await get(`/ws/dashboard/${id}`);
 }
 
+export const fetchFiltersByDashboardId = async (dashboardId) => {
+  return await get(`/ws/filter/dashboard/${dashboardId}`);
+}
 
 const get = async (url) => {
   try {
     const response = await axios.get(url);
     return response.data;
   } catch (e) {
-    return [];
+    return null;
   }
 } 
 

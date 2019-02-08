@@ -13,7 +13,6 @@ class WidgetViewPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dashboardId: null,
       widgets: [],
       snapToGrid: false,
       showGridlines: true

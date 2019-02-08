@@ -35,7 +35,7 @@ public class JdbcQueryWs {
     public String runQuery(@RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
         String query = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
+        JdbcDataSource ds = jdbcDataSourceDao.fetchFullById(dsId);
         return jdbcQueryService.fetchJsonByQuery(ds, query);
     }
 
@@ -53,7 +53,7 @@ public class JdbcQueryWs {
                                       @RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
+        JdbcDataSource ds = jdbcDataSourceDao.fetchFullById(dsId);
         String data = jdbcQueryService.fetchJsonByQuery(ds, sql);
         return new QueryResult(filterId, data);
     }

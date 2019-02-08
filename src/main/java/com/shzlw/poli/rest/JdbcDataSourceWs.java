@@ -57,7 +57,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String ping(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(id);
+        JdbcDataSource ds = jdbcDataSourceDao.fetchFullById(id);
         return jdbcQueryService.ping(ds);
     }
 }

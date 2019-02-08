@@ -27,17 +27,18 @@ class FilterEditPanel extends React.Component {
       data: {},
       sqlQuery: '',
       jdbcDataSourceId: null,
-      queryResult: []
+      queryResult: [],
+      param: ''
     };
   }
 
-  fetchFilter = async (id) => {
+  fetchFilter = async (filterId) => {
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
     });
 
-    if (id === null) {
+    if (filterId === null) {
       if (jdbcDataSources.length !== 0) {
         this.setState({
           jdbcDataSourceId: jdbcDataSources[0].id 
@@ -47,9 +48,26 @@ class FilterEditPanel extends React.Component {
         filterId: null
       })
     } else {
-      this.setState({
-        filterId: id
-      })
+      axios.get('/ws/filter/' + filterId)
+      .then(res => {
+        const result = res.data;
+        const data = result.data;
+        this.setState({
+          filterId: filterId,
+          name: result.name,
+          type: result.type,
+          data: data
+        });
+
+        if (result.type === 'slicer') {
+           this.setState({
+            sqlQuery: data.sqlQuery,
+            jdbcDataSourceId: data.jdbcDataSourceId,
+            param: data.param
+          });
+        }
+      });
+      
     }
   }
 
@@ -90,7 +108,8 @@ class FilterEditPanel extends React.Component {
       dashboardId: this.props.dashboardId,
       data: {
         jdbcDataSourceId: this.state.jdbcDataSourceId,
-        sqlQuery: this.state.sqlQuery
+        sqlQuery: this.state.sqlQuery,
+        param: this.state.param
       }
     };
     
@@ -205,6 +224,14 @@ class FilterEditPanel extends React.Component {
 
           <label>Result</label>
           {queryResultItem}
+
+          <label>Param</label>
+          <input 
+            type="text" 
+            name="name" 
+            value={this.state.param}
+            onChange={this.handleInputChange} 
+          />
 
         </form>
 

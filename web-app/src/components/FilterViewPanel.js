@@ -10,6 +10,7 @@ class FilterViewPanel extends Component {
   constructor(props){
     super(props);
     this.state = {
+      dashboardId: null,
       filters: []
     };
   }
@@ -18,6 +19,10 @@ class FilterViewPanel extends Component {
     if (dashboardId === null) {
       return;
     }
+
+    this.setState({
+      dashboardId: dashboardId
+    })
 
     axios.get('/ws/filter/dashboard/' + dashboardId)
       .then(res => {
@@ -115,7 +120,15 @@ class FilterViewPanel extends Component {
   }
 
   delete = (filterId) => {
-
+    axios.get('/ws/filter/' + filterId)
+      .then(res => {
+        const index = this.state.filters.findIndex(f => f.id === filterId);
+        const newFilters = [...this.state.filters];
+        newFilters.splice(index, 1);
+        this.setState({
+          filters: newFilters
+        });
+      });
   }
 
   onQuerySlicerChange = (filterId, checkBoxes) => {
