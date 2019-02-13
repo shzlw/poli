@@ -11,6 +11,8 @@ import 'react-table/react-table.css';
 import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
+import * as util from '../api/Util';
+
 
 const QUERY_SLICER = 'slicer'
 const TYPES = [QUERY_SLICER];
@@ -147,9 +149,10 @@ class FilterEditPanel extends React.Component {
     );
 
     const headers = [];
-    const queryResult = this.state.queryResult;
+    const { queryResult } = this.state;
     let queryResultItem;
-    if (queryResult !== undefined && queryResult.length !== 0 && Array.isArray(queryResult)) {
+    if (!util.isArrayEmpty(queryResult)) {
+      console.log('queryResult', queryResult);
       const obj = queryResult[0];
       const keys = Object.keys(obj);
       for (const key of keys) {
@@ -228,7 +231,7 @@ class FilterEditPanel extends React.Component {
           <label>Param</label>
           <input 
             type="text" 
-            name="name" 
+            name="param" 
             value={this.state.param}
             onChange={this.handleInputChange} 
           />

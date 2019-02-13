@@ -38,6 +38,7 @@ public class DashboardWs {
     @Transactional(readOnly = true)
     public Dashboard one(@PathVariable("id") long id) {
         Dashboard dashboard = dashboardDao.fetchById(id);
+        // FIXME: No need this any more
         List<Filter> filters = filterDao.fetchAllByDashboardId(id);
         List<Widget> widgets = widgetDao.fetchAllByDashboardId(id);
         dashboard.setFilters(filters);
@@ -61,6 +62,8 @@ public class DashboardWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        filterDao.deleteByDashboardId(id);
+        widgetDao.deleteByDashboardId(id);
         dashboardDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }

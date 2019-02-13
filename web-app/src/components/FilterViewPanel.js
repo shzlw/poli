@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import QuerySlicer from "./QuerySlicer";
 import NumberRange from "./NumberRange";
+import * as util from '../api/Util';
 
 import axios from 'axios';
 
@@ -47,7 +48,7 @@ class FilterViewPanel extends Component {
             const queryResult = JSON.parse(result.data);
             const checkBoxes = [];
 
-            if (this.isArrayNotEmpty(queryResult)) {
+            if (!util.isArrayEmpty(queryResult)) {
               for (let i = 0; i < queryResult.length; i++) {
                 const values = Object.values(queryResult[i]);
                 for (const val of values) {
@@ -70,10 +71,6 @@ class FilterViewPanel extends Component {
     }
   }
 
-  isArrayNotEmpty(a) {
-    return a !== undefined && a.length !== 0 && Array.isArray(a);
-  }
-
   renderFilterPanel = () => {
     const filterPanel = [];
     const filters = this.state.filters;
@@ -90,7 +87,7 @@ class FilterViewPanel extends Component {
                   <div className="icon-btn" onClick={() => this.edit(filter.id)}>
                     <i className="fas fa-edit fa-fw"></i>
                   </div>
-                  <div className="icon-btn" onClick={() => this.delete(filter.id)}>
+                  <div className="icon-btn" onClick={() => this.remove(filter.id)}>
                     <i className="fas fa-trash-alt fa-fw"></i>
                   </div>
                 </div>
@@ -119,8 +116,8 @@ class FilterViewPanel extends Component {
     this.props.onEdit(filterId);
   }
 
-  delete = (filterId) => {
-    axios.get('/ws/filter/' + filterId)
+  remove = (filterId) => {
+    axios.delete('/ws/filter/' + filterId)
       .then(res => {
         const index = this.state.filters.findIndex(f => f.id === filterId);
         const newFilters = [...this.state.filters];
@@ -143,11 +140,29 @@ class FilterViewPanel extends Component {
     // const isSelectAll = checked.length === checkBoxes.length;    
   }
 
+  applyFilters = () => {
+    console.log('applyFilters');
+    const { filters } = this.state;
+    const filterParams = [];
+    for (let i = 0; i < filters.length; i++) {
+      const filter = filters[i];
+      if (filter.type === 'slicer') {
+        const checkBoxes = filter.checkBoxes;
+        const paramValues = [];
+        for (let j = 0; j < checkBoxes.length; j++) {
+          const checkBox = checkBoxes[j];
+          if (checkBox.isChecked) {
+            paramValues.push(checkBox.value);
+          }
+        }
+        filterParams.push({
+          param: filter.data.param,
+          value: paramValues
+        });
+      }
+    }
 
-  run = () => {
-    console.log('run');
-  
-    // TODO: call props
+    this.props.onApplyFilters(filterParams);
   }
 
   render() {
@@ -157,7 +172,7 @@ class FilterViewPanel extends Component {
       <div className={`testPanel ${panelClass}`}>
         <h5>FilterViewPanel</h5>
         <button onClick={() => this.props.onClose()}>Close</button>
-        <button onClick={this.run}>Run</button>
+        <button onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">
           {this.renderFilterPanel()}
         </div>

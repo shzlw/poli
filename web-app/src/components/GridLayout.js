@@ -32,6 +32,7 @@ class GridLayout extends React.Component {
         {...widget}
         onWidgetMove={this.props.onWidgetMove}
         onWidgetEdit={this.props.onWidgetEdit}
+        onWidgetRemove={this.props.onWidgetRemove}
       />
     );
 

@@ -1,6 +1,5 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.dao.mapper.JdbcDataSourceRowMapper;
 import com.shzlw.poli.model.JdbcDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,23 +22,14 @@ public class JdbcDataSourceDao {
     JdbcTemplate jt;
 
     public List<JdbcDataSource> fetchAll() {
-        String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource";
+        String sql = "SELECT id, name, connection_url, username, password, type, ping FROM p_datasource";
         return jt.query(sql, new Object[] {}, new JdbcDataSourceRowMapper());
     }
 
     public JdbcDataSource fetchById(long id) {
-        String sql = "SELECT id, name, connection_url, username, type, ping FROM p_datasource WHERE id=?";
-        try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    public JdbcDataSource fetchFullById(long id) {
         String sql = "SELECT id, name, connection_url, username, password, type, ping FROM p_datasource WHERE id=?";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new FullDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -85,7 +75,7 @@ public class JdbcDataSourceDao {
                     + "FROM p_datasource d, p_widget w "
                     + "WHERE w.id = ? AND d.id = w.datasource_id";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new FullDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -96,13 +86,13 @@ public class JdbcDataSourceDao {
                 + "FROM p_datasource d, p_filter f "
                 + "WHERE f.id = ? AND d.id = f.datasource_id";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new FullDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    private class FullDataSourceRowMapper implements RowMapper<JdbcDataSource> {
+    private class JdbcDataSourceRowMapper implements RowMapper<JdbcDataSource> {
         @Override
         public JdbcDataSource mapRow(ResultSet rs, int i) throws SQLException {
             JdbcDataSource ds = new JdbcDataSource();

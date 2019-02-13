@@ -6,6 +6,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
 import GridLayout from './GridLayout';
+import * as util from '../api/Util';
 
 
 class WidgetViewPanel extends React.Component {
@@ -19,7 +20,7 @@ class WidgetViewPanel extends React.Component {
     };
   }
 
-  fetchWidgets = (dashboardId) => {
+  fetchWidgets = (dashboardId, filterParams) => {
     if (dashboardId === null) {
       return;
     }
@@ -29,15 +30,17 @@ class WidgetViewPanel extends React.Component {
         const result = res.data;
         this.setState({
           widgets: result,
-        }, this.queryWidgets);
+        }, this.queryWidgets(filterParams));
       });
   }
 
-  queryWidgets() {
+  queryWidgets = (filterParams) => {
+    console.log('queryWidgets', filterParams);
+    const params = filterParams === null ? [] : filterParams;
     const widgets = this.state.widgets;
     for (let i = 0; i < widgets.length; i++) {
       const widget = widgets[i];
-      axios.get('/ws/jdbcquery/widget/' + widget.id)
+      axios.post('/ws/jdbcquery/widget/' + widget.id, params)
         .then(res => {
           const result = res.data;
           const index = widgets.findIndex(w => w.id === result.id);
@@ -74,13 +77,25 @@ class WidgetViewPanel extends React.Component {
     });
   }
 
+  onWidgetRemove = (widgetId) => {
+    axios.delete('/ws/widget/' + widgetId)
+      .then(res => {
+        const index = this.state.widgets.findIndex(w => w.id === widgetId);
+        const newWidgets = [...this.state.widgets];
+        newWidgets.splice(index, 1);
+        this.setState({
+          widgets: newWidgets
+        });
+      });
+  }
+
   render() {
 
     const widgetItems = this.state.widgets.map((widget, index) => {
       
       const headers = [];
       const queryResult = widget.queryResult;
-      if (queryResult !== undefined && Array.isArray(queryResult)) {
+      if (!util.isArrayEmpty(queryResult)) {
         const obj = queryResult[0];
         const keys = Object.keys(obj);
         for (const key of keys) {
@@ -124,7 +139,6 @@ class WidgetViewPanel extends React.Component {
           showGridlines
         <br/>
         
-        {widgetItems}
         <div>
           <GridLayout 
             width={800}
@@ -133,7 +147,8 @@ class WidgetViewPanel extends React.Component {
             showGridlines={this.state.showGridlines}
             widgets={this.state.widgets}
             onWidgetMove={this.onWidgetMove}
-            onWidgetEdit={this.props.onWidgetEdit} />
+            onWidgetEdit={this.props.onWidgetEdit} 
+            onWidgetRemove={this.onWidgetRemove} />
         </div>
       </div>
     )

@@ -13,6 +13,7 @@ import 'react-table/react-table.css';
 import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
+import * as util from '../api/Util';
 
 const CHART_TYPES = ['table', 'pie'];
 
@@ -67,6 +68,20 @@ class WidgetEditPanel extends React.Component {
       this.setState({
         widgetId: widgetId
       })
+      axios.get('/ws/widget/' + widgetId)
+        .then(res => {
+          const result = res.data;
+          this.setState({
+            widgetId: widgetId,
+            name: result.name,
+            x: result.x,
+            y: result.y,
+            width: result.width,
+            height: result.height,
+            sqlQuery: result.sqlQuery,
+            jdbcDataSourceId: result.jdbcDataSourceId,
+          });
+        });
     }
   }
 
@@ -185,7 +200,7 @@ class WidgetEditPanel extends React.Component {
     const headers = [];
     const queryResult = this.state.queryResult;
     let queryResultItem;
-    if (queryResult !== undefined && queryResult.length !== 0 && Array.isArray(queryResult)) {
+    if (!util.isArrayEmpty(queryResult)) {
       const obj = queryResult[0];
       const keys = Object.keys(obj);
       for (const key of keys) {

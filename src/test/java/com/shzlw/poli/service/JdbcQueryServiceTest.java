@@ -13,7 +13,7 @@ public class JdbcQueryServiceTest {
         String sql = "SELECT * FROM table "
                     + "WHERE 1=1 {{AND field IN (:fields)}} {{AND time > :startTime}} AND user='2' {{AND status =:status }} AND column3='2'";
         String expected = "SELECT * FROM table WHERE 1=1 AND field IN (:fields) AND time > :startTime AND user='2'  AND column3='2'";
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("fields", "a, b, c");
         params.put("startTime", "12-01");
         Assert.assertEquals(expected, JdbcQueryService.parseSqlStatementWithParams(sql, params));

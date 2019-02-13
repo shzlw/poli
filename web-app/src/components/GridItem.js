@@ -69,8 +69,8 @@ class GridItem extends React.Component {
     this.props.onWidgetEdit(widgetId);
   }
 
-  delete = () => {
-
+  removeWidget = (widgetId) => {
+    this.props.onWidgetRemove(widgetId);
   }
 
   renderWidgetContent = () => {
@@ -123,7 +123,7 @@ class GridItem extends React.Component {
             <div className="icon-btn" onClick={() => this.editWidget(this.props.id)}>
               <i className="fas fa-edit fa-fw"></i>
             </div>
-            <div className="icon-btn" onClick={() => this.delete()}>
+            <div className="icon-btn" onClick={() => this.removeWidget(this.props.id)}>
               <i className="fas fa-trash-alt fa-fw"></i>
             </div>
           </div>

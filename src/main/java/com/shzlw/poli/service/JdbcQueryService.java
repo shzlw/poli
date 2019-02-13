@@ -3,24 +3,37 @@ package com.shzlw.poli.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class JdbcQueryService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryService.class);
+
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    JdbcDataSourceService jdbcDataSourceService;
 
     public Connection getConnectionByType(JdbcDataSource ds) throws SQLException, ClassNotFoundException {
         return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
@@ -112,13 +125,9 @@ public class JdbcQueryService {
     }
 
     public String fetchJsonByQuery(JdbcDataSource ds, String sql) {
-        HikariDataSource hds = new HikariDataSource();
-        hds.setJdbcUrl(ds.getConnectionUrl());
-        hds.setUsername(ds.getUsername());
-        hds.setPassword(ds.getPassword());
-        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(hds);
+        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
 
-        Map<String, String> namedParameters = new HashMap();
+        Map<String, Object> namedParameters = new HashMap();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
         String result = npTemplate.query(parsedSql, new ResultSetExtractor<String>() {
             @Nullable
@@ -153,7 +162,65 @@ public class JdbcQueryService {
         return result;
     }
 
-    public static String parseSqlStatementWithParams(String sql, Map<String, String> params) {
+    public String fetchJsonWithParams(JdbcDataSource ds, String sql, List<FilterParameter> filterParams) {
+        LOGGER.info("[fetchJsonWithParams] filterParams: {}", filterParams);
+        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
+
+        Map<String, Object> namedParameters = new HashMap<>();
+        if (filterParams != null) {
+            for (FilterParameter param : filterParams) {
+                if (param != null
+                        && param.getParam() != null
+                        && param.getValue() != null) {
+                    String name = param.getParam();
+                    String json = param.getValue();
+                    try {
+                        List<String> array = Arrays.asList(mapper.readValue(json, String[].class));
+                        namedParameters.put(name, array);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+
+
+        String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
+        String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
+            @Nullable
+            @Override
+            public String extractData(ResultSet rs) {
+                try {
+                    ResultSetMetaData metadata = rs.getMetaData();
+                    int columnCount = metadata.getColumnCount();
+                    String[] columnNames = new String[columnCount + 1];
+                    for (int i = 1; i <= columnCount; i++) {
+                        String colName = metadata.getColumnName(i);
+                        columnNames[i] = colName;
+                    }
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    ArrayNode array = mapper.createArrayNode();
+
+                    while (rs.next()) {
+                        ObjectNode node = mapper.createObjectNode();
+                        for (int i = 1; i <= columnCount; i++) {
+                            node.put(columnNames[i], rs.getString(i));
+                        }
+                        array.add(node);
+                    }
+                    return array.toString();
+                } catch (Exception e) {
+                    return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                }
+            }
+        });
+
+        return result;
+    }
+
+    public static String parseSqlStatementWithParams(String sql, Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();
         char[] s = sql.toCharArray();
         int i = 0;
@@ -164,7 +231,7 @@ public class JdbcQueryService {
                     if (s[j] == '}' && (j + 1 < s.length) && s[j + 1] == '}') {
                         String clause = sql.substring(i + 2, j);
                         boolean hasParam = false;
-                        for (Map.Entry<String, String> entry : params.entrySet())  {
+                        for (Map.Entry<String, Object> entry : params.entrySet())  {
                             if (clause.contains(":" + entry.getKey())) {
                                 hasParam = true;
                                 break;

@@ -1,9 +1,16 @@
 package com.shzlw.poli.service;
 
+import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,28 +20,53 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class JdbcDataSourceService {
 
-    private Map<String, HikariDataSource> dataSourcesCache = new ConcurrentHashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSourceService.class);
 
-    public void loadAll(List<JdbcDataSource> dataSourceList) {
-        for (JdbcDataSource dataSource : dataSourceList) {
+    private static final Map<String, HikariDataSource> DATA_SOURCE_CACHE = new ConcurrentHashMap<>();
+
+    @Autowired
+    JdbcDataSourceDao jdbcDataSourceDao;
+
+    @PostConstruct
+    public void init() {
+        List<JdbcDataSource> dataSources = jdbcDataSourceDao.fetchAll();
+        for (JdbcDataSource dataSource : dataSources) {
             save(dataSource);
         }
     }
 
-    public void save(JdbcDataSource dataSource) {
-        HikariDataSource hds = new HikariDataSource();
-        hds.setJdbcUrl(dataSource.getConnectionUrl());
-        hds.setUsername(dataSource.getUsername());
-        hds.setPassword(dataSource.getPassword());
-        dataSourcesCache.put(dataSource.getName(), hds);
+    @PreDestroy
+    public void shutdown() {
+        for (HikariDataSource ds : DATA_SOURCE_CACHE.values()) {
+            ds.close();
+        }
     }
 
-    public void delete(JdbcDataSource dataSource) {
-        dataSourcesCache.remove(dataSource);
+    public HikariDataSource save(JdbcDataSource dataSource) {
+        LOGGER.info("HikariDataSource - save: {}", dataSource);
+        HikariDataSource ds = DATA_SOURCE_CACHE.get(dataSource.getName());
+        if (ds != null) {
+            ds.close();
+        }
+        HikariDataSource newDs = new HikariDataSource();
+        newDs.setJdbcUrl(dataSource.getConnectionUrl());
+        newDs.setUsername(dataSource.getUsername());
+        newDs.setPassword(dataSource.getPassword());
+        newDs.setMaximumPoolSize(10);
+        DATA_SOURCE_CACHE.put(dataSource.getName(), newDs);
+        return newDs;
     }
 
-    public Connection getConnection(String name) throws SQLException {
-        HikariDataSource ds = dataSourcesCache.get(name);
-        return ds.getConnection();
+
+    public void remove(JdbcDataSource dataSource) {
+        DATA_SOURCE_CACHE.remove(dataSource.getName());
+    }
+
+    public DataSource getDataSource(JdbcDataSource dataSource) {
+        HikariDataSource ds = DATA_SOURCE_CACHE.get(dataSource.getName());
+        if (ds == null) {
+            ds = save(dataSource);
+        }
+        return ds;
     }
 }

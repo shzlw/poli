@@ -88,7 +88,7 @@ class DashboardEditView extends React.Component {
     console.log('refresh');
     const { dashboardId } = this.state;
     this.filterViewPanel.current.fetchFilters(dashboardId);
-    this.widgetViewPanel.current.fetchWidgets(dashboardId);
+    this.widgetViewPanel.current.fetchWidgets(dashboardId, null);
   }
 
   save = () => {
@@ -111,6 +111,11 @@ class DashboardEditView extends React.Component {
     });
   }
 
+  applyFilters = (filterParams) => {
+    const { dashboardId } = this.state;
+    this.widgetViewPanel.current.fetchWidgets(dashboardId, filterParams);
+  }
+
   render() {
     return (
       <div>
@@ -131,6 +136,7 @@ class DashboardEditView extends React.Component {
         <FilterViewPanel 
           ref={this.filterViewPanel} 
           onEdit={this.openFilterEditPanel}
+          onApplyFilters={this.applyFilters}
           show={this.state.showFilterViewPanel}
           onClose={() => this.setState({ showFilterViewPanel: false})}
         />

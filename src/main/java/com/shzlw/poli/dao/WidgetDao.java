@@ -61,4 +61,14 @@ public class WidgetDao {
         String sql = "DELETE FROM p_widget WHERE id=?";
         return jt.update(sql, new Object[]{ id });
     }
+
+    public int deleteByDashboardId(long dashboardId) {
+        String sql = "DELETE FROM p_widget WHERE dashboard_id=?";
+        return jt.update(sql, new Object[]{ dashboardId });
+    }
+
+    public int deleteByDataSourceId(long dataSourceId) {
+        String sql = "DELETE FROM p_widget WHERE datasource_id=?";
+        return jt.update(sql, new Object[]{ dataSourceId });
+    }
 }

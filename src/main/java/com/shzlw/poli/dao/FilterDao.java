@@ -55,4 +55,9 @@ public class FilterDao {
         String sql = "DELETE FROM p_filter WHERE id=?";
         return jt.update(sql, new Object[]{ id });
     }
+
+    public int deleteByDashboardId(long dashboardId) {
+        String sql = "DELETE FROM p_filter WHERE dashboard_id=?";
+        return jt.update(sql, new Object[]{ dashboardId });
+    }
 }
