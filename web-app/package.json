@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "echarts": "^4.1.0",
+    "echarts-for-react": "^2.0.15-beta.0",
     "react": "^16.6.3",
     "react-ace": "^6.3.2",
     "react-dom": "^16.6.3",

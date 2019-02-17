@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import ReactTable from 'react-table';
@@ -8,6 +9,7 @@ import 'react-table/react-table.css';
 import GridLayout from './GridLayout';
 import * as util from '../api/Util';
 
+const BASE_WIDTH = 1200;
 
 class WidgetViewPanel extends React.Component {
 
@@ -18,6 +20,16 @@ class WidgetViewPanel extends React.Component {
       snapToGrid: false,
       showGridlines: true
     };
+  }
+
+  componentDidMount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    const width = thisNode.clientWidth;
+    // const height = parentNode.clientHeight;
+    this.setState({
+      width: width - 20 * 2,
+      height: 600
+    });
   }
 
   fetchWidgets = (dashboardId, filterParams) => {
@@ -64,17 +76,18 @@ class WidgetViewPanel extends React.Component {
 
   onWidgetMove = (widget) => {
     console.log('onWidgetMove', widget);
-
-    const index = this.state.widgets.findIndex(w => w.id === widget.id);
-    const newWidgets = [...this.state.widgets];
-    newWidgets[index].x = widget.x;
-    newWidgets[index].y = widget.y;
-    newWidgets[index].width = widget.width;
-    newWidgets[index].height = widget.height;
-
-    this.setState({
-      widgets: newWidgets
-    });
+    axios.post('/ws/widget/position', widget)
+      .then(res => {
+        const index = this.state.widgets.findIndex(w => w.id === widget.id);
+        const newWidgets = [...this.state.widgets];
+        newWidgets[index].x = widget.x;
+        newWidgets[index].y = widget.y;
+        newWidgets[index].width = widget.width;
+        newWidgets[index].height = widget.height;
+        this.setState({
+          widgets: newWidgets
+        });
+      });
   }
 
   onWidgetRemove = (widgetId) => {
@@ -139,17 +152,15 @@ class WidgetViewPanel extends React.Component {
           showGridlines
         <br/>
         
-        <div>
-          <GridLayout 
-            width={800}
-            height={600}
-            snapToGrid={this.state.snapToGrid}
-            showGridlines={this.state.showGridlines}
-            widgets={this.state.widgets}
-            onWidgetMove={this.onWidgetMove}
-            onWidgetEdit={this.props.onWidgetEdit} 
-            onWidgetRemove={this.onWidgetRemove} />
-        </div>
+        <GridLayout 
+          width={this.state.width}
+          height={this.state.height}
+          snapToGrid={this.state.snapToGrid}
+          showGridlines={this.state.showGridlines}
+          widgets={this.state.widgets}
+          onWidgetMove={this.onWidgetMove}
+          onWidgetEdit={this.props.onWidgetEdit} 
+          onWidgetRemove={this.onWidgetRemove} />
       </div>
     )
   };

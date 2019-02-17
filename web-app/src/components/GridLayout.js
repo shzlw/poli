@@ -11,13 +11,10 @@ class GridLayout extends React.Component {
     };
   }
 
-  componentDidMount() {
-  }
-
   render() {
     let styles = {
       width: this.props.width + 'px',
-      height: this.props.height + 'px',
+      height: this.props.height + 'px'
     };
 
     if (this.props.showGridlines) {

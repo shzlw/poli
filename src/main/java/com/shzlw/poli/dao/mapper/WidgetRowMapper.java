@@ -20,7 +20,7 @@ public class WidgetRowMapper implements RowMapper<Widget> {
         w.setX(rs.getInt("x"));
         w.setY(rs.getInt("y"));
         w.setWidth(rs.getInt("width"));
-        w.setHeight(rs.getInt("width"));
+        w.setHeight(rs.getInt("height"));
         w.setType(rs.getString("type"));
         return w;
     }

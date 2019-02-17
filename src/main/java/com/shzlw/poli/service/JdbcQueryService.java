@@ -176,7 +176,9 @@ public class JdbcQueryService {
                     String json = param.getValue();
                     try {
                         List<String> array = Arrays.asList(mapper.readValue(json, String[].class));
-                        namedParameters.put(name, array);
+                        if (!array.isEmpty()) {
+                            namedParameters.put(name, array);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

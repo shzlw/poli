@@ -14,14 +14,24 @@ import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
 import * as util from '../api/Util';
+import * as echartsApi from '../api/EchartsApi';
 
-const CHART_TYPES = ['table', 'pie'];
+import ReactEcharts from 'echarts-for-react';
+
+
+const PIE = 'pie';
+const TABLE = 'table';
+const CHART_TYPES = [TABLE, PIE];
 
 class WidgetEditPanel extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.initialState;
+  }
+
+  get initialState() {
+    return {
       jdbcDataSources: [],
       filters: [],
       widgetId: null,
@@ -30,7 +40,11 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSourceId: null,
       queryResult: [],
       filterId: null,
-      filterParams: []
+      filterParams: [],
+      chartType: 'table',
+      aggrKey: '',
+      aggrValue: '',
+      chartOption: {}
     };
   }
 
@@ -39,6 +53,8 @@ class WidgetEditPanel extends React.Component {
   }
 
   fetchWidget = async (widgetId, dashboardId) => {
+    this.setState(this.initialState);
+
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
@@ -104,6 +120,12 @@ class WidgetEditPanel extends React.Component {
   handleDataSourceChange = (event) => {
     this.setState({ 
       jdbcDataSourceId: event.target.value
+    });
+  }
+
+  handleChartTypeChange = (event) => {
+    this.setState({ 
+      chartType: event.target.value
     });
   }
 
@@ -173,6 +195,32 @@ class WidgetEditPanel extends React.Component {
     this.setState({ 
       filterId: event.target.value
     });
+  }
+
+  generateChart = () => {
+    if (this.state.chartType === PIE) {
+      const { 
+        aggrKey, 
+        aggrValue, 
+        queryResult 
+      } = this.state.aggrValue;
+      if (!util.isArrayEmpty(queryResult)) {
+        let legend = [];
+        let series = [];
+        for (let i = 0; i < queryResult.length; i++) {
+          const row = queryResult[i];
+          legend.push(row[aggrKey]);
+          series.push({
+            name: row[aggrKey],
+            value: row[aggrValue]
+          });
+        }
+        const chartOption = echartsApi.getPieOption(legend, series);
+        this.setState({
+          chartOption: chartOption
+        })
+      }
+    }
   }
 
   render() {
@@ -290,7 +338,7 @@ class WidgetEditPanel extends React.Component {
           <div>column name, display name, data type</div>
 
           <label>Chart Options</label>
-          <select value={this.state.optionValue} onChange={this.handleOptionChange}>
+          <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
             {chartOptionList}
           </select>
 
@@ -299,7 +347,27 @@ class WidgetEditPanel extends React.Component {
 
           <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
           <div>Count "users" by "last name"</div>
+          <label>Aggr Key</label>
+          <input 
+            type="text" 
+            name="aggrKey" 
+            value={this.state.aggrKey}
+            onChange={this.handleInputChange} 
+          />
 
+          <label>By Aggr Value</label>
+          <input 
+            type="text" 
+            name="aggrValue" 
+            value={this.state.aggrValue}
+            onChange={this.handleInputChange} 
+          />
+          <button onClick={this.generateChart}></button>
+
+          <ReactEcharts 
+            option={this.state.chartOption} 
+            style={{height: '350px', width: '100%'}}  
+            className='react_for_echarts' />
 
         </form>
         

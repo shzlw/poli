@@ -16,34 +16,6 @@ const FILTER_TYPES = [
   { value: 'date-range', label: 'Date Range' }
 ];
 
-const mockDashboard = {
-  dashboardId: 1,
-  filters: [
-    {
-      type: 'slicer',
-      id: 1,
-      dashboardId: 1,
-      data: {
-        dataSourceId: 2,
-        sqlQuery: 'select name from table',
-        display: 'Name',
-        columns: [{
-            name: 'name',
-            param: 'name'
-          },
-          {
-            name: 'b',
-            param: ':column b'
-          }
-        ]
-      },
-      queryResult: ['s1', 's2', 's3']
-    }
-  ],
-  widgets: []
-}
-
-
 class DashboardEditView extends React.Component {
 
   constructor(props) {
@@ -112,11 +84,18 @@ class DashboardEditView extends React.Component {
   }
 
   applyFilters = (filterParams) => {
-    const { dashboardId } = this.state;
-    this.widgetViewPanel.current.fetchWidgets(dashboardId, filterParams);
+    this.widgetViewPanel.current.queryWidgets(filterParams);
+  }
+
+  toggleFilterViewPanel = () => {
+    this.setState(prevState => ({
+      showFilterViewPanel: !prevState.showFilterViewPanel,
+    }));
   }
 
   render() {
+    const dialogOverlay = this.state.showFilterEditPanel || this.state.showWidgetEditPanel ? 'display-block' : 'display-none';
+
     return (
       <div>
         <h3>
@@ -131,14 +110,13 @@ class DashboardEditView extends React.Component {
         <button onClick={this.save}>Save</button>
         <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
         <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
-        <button onClick={() => this.setState({ showFilterViewPanel: true})}>Show Filters</button>
+        <button onClick={this.toggleFilterViewPanel}>Toggle Filters</button>
         
         <FilterViewPanel 
           ref={this.filterViewPanel} 
           onEdit={this.openFilterEditPanel}
           onApplyFilters={this.applyFilters}
           show={this.state.showFilterViewPanel}
-          onClose={() => this.setState({ showFilterViewPanel: false})}
         />
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
@@ -158,6 +136,7 @@ class DashboardEditView extends React.Component {
           jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
           dashboardId={this.state.dashboardId}
         />
+        <div className={`dialog-overlay ${dialogOverlay}`}></div>
       </div>
     )
   };

@@ -21,7 +21,11 @@ class FilterEditPanel extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.initialState;
+  }
+
+  get initialState() {
+    return {
       jdbcDataSources: [],
       filterId: null,
       name: '',
@@ -35,6 +39,8 @@ class FilterEditPanel extends React.Component {
   }
 
   fetchFilter = async (filterId) => {
+    this.setState(this.initialState);
+
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
@@ -51,24 +57,24 @@ class FilterEditPanel extends React.Component {
       })
     } else {
       axios.get('/ws/filter/' + filterId)
-      .then(res => {
-        const result = res.data;
-        const data = result.data;
-        this.setState({
-          filterId: filterId,
-          name: result.name,
-          type: result.type,
-          data: data
-        });
-
-        if (result.type === 'slicer') {
-           this.setState({
-            sqlQuery: data.sqlQuery,
-            jdbcDataSourceId: data.jdbcDataSourceId,
-            param: data.param
+        .then(res => {
+          const result = res.data;
+          const data = result.data;
+          this.setState({
+            filterId: filterId,
+            name: result.name,
+            type: result.type,
+            data: data
           });
-        }
-      });
+
+          if (result.type === 'slicer') {
+            this.setState({
+              sqlQuery: data.sqlQuery,
+              jdbcDataSourceId: data.jdbcDataSourceId,
+              param: data.param
+            });
+          }
+        });
       
     }
   }
@@ -179,7 +185,6 @@ class FilterEditPanel extends React.Component {
     return (
       <div className={panelClass}>
         <h3>FilterEditPanel: {this.state.filterId}</h3>
-        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run</button>
 

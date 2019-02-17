@@ -1,6 +1,7 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.dao.mapper.WidgetRowMapper;
+import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.model.Widget;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class WidgetDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public int updatePosition(Widget w) {
+        String sql = "UPDATE p_widget SET width=?, height=?, x=?, y=? WHERE id=?";
+        return jt.update(sql, new Object[] { w.getWidth(), w.getHeight(), w.getX(), w.getY(), w.getId() });
     }
 
     public long add(Widget w) {

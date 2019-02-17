@@ -16,7 +16,8 @@ class App extends Component {
     super(props);
     this.state = {
       current: 'overview',
-      menuMin: ''
+      menuMin: '',
+      appName: 'Poli'
     }
   }
 
@@ -30,9 +31,18 @@ class App extends Component {
   }
 
   toggleMenu = () => {
-    const menuMin = this.state.menuMin === '' ? 'menu-min' : '';
+    let menuMin;
+    let appName;
+    if (this.state.menuMin === '') {
+      menuMin = 'menu-min';
+      appName = 'P';
+    } else {
+      menuMin = '';
+      appName = 'Poli'
+    }
     this.setState({
-      menuMin: menuMin
+      menuMin: menuMin,
+      appName: appName
     });
   }
 
@@ -41,7 +51,7 @@ class App extends Component {
       <div className="App">
         <div className="Nav">
           <div className="Nav_title-bar">
-            <div className="Nav_title">Poli</div>
+            <div className="Nav_title">{this.state.appName}</div>
           </div>
           <div className="Nav_menu">
             <ul className="menu">
@@ -72,7 +82,9 @@ class App extends Component {
               
             </ul>
             <div className="Nav__toggle-menu">
-              <div onClick={this.toggleMenu}>toggle</div>
+              <div style={{margin: '5px 0px 5px 15px', color: 'red'}} onClick={this.toggleMenu}>
+                <i class="fas fa-arrows-alt-h fa-fw fa-lg"></i>
+              </div>
             </div>
           </div>
         </div>

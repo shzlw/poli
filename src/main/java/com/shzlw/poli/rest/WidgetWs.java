@@ -64,4 +64,11 @@ public class WidgetWs {
         widgetDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
+
+    @RequestMapping(value = "/position", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<?> updatePos(@RequestBody Widget widget) {
+        widgetDao.updatePosition(widget);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
 }
