@@ -197,13 +197,14 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  generateChart = () => {
+  generateChart = (event) => {
+    event.preventDefault();
     if (this.state.chartType === PIE) {
       const { 
         aggrKey, 
         aggrValue, 
         queryResult 
-      } = this.state.aggrValue;
+      } = this.state;
       if (!util.isArrayEmpty(queryResult)) {
         let legend = [];
         let series = [];
@@ -224,8 +225,6 @@ class WidgetEditPanel extends React.Component {
   }
 
   render() {
-    const panelClass = this.props.show ? 'right-drawer display-block' : 'right-drawer display-none';
-
     const dataSourceOptions = this.state.jdbcDataSources.map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
     );
@@ -273,9 +272,8 @@ class WidgetEditPanel extends React.Component {
     }
 
     return (
-      <div className={panelClass}>
+      <div>
         <h3>WidgetEditPanel: {this.state.widgetId}</h3>
-        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run Query</button>
 
@@ -362,7 +360,7 @@ class WidgetEditPanel extends React.Component {
             value={this.state.aggrValue}
             onChange={this.handleInputChange} 
           />
-          <button onClick={this.generateChart}></button>
+          <button onClick={this.generateChart}>Generete Chart</button>
 
           <ReactEcharts 
             option={this.state.chartOption} 

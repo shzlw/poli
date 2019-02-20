@@ -13,7 +13,7 @@ body,
 }
 
 .Nav {
-  border: 1px solid blue;
+  border: 1px solid #0065FF;
 }
 
 .Nav_title-bar {
@@ -76,10 +76,7 @@ body,
 }
 
 .menu li a:hover {
-  background-color: #0066CC;
-}
-.menu li .router-link-exact-active {
-  background-color: #0066CC;
+  background-color: #0065FF;
 }
 
 .menu-min {
@@ -133,24 +130,34 @@ body,
   overflow: auto;
 }
 
-.right-drawer {
-  display: none;
-  border: 3px solid blue;
+.lg-modal-panel {
   background-color: #f9f9f9;
   padding: 10px;
   position: fixed;
-  top: 10px;
-  left: 180px;
-  right: 180px;
-  bottom: 10px;
+  top: 20px;
+  left: 40px;
+  right: 40px;
+  bottom: 20px;
   overflow-y: auto;
   z-index: 50;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
-dialog-overlay {
-  display: none;
-  background-color: #000;
-  opacity: 0.75;
+.right-modal-panel {
+  background-color: #f9f9f9;
+  padding: 10px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 500px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
   position: fixed;
   top: 0;
   left: 0;
@@ -181,7 +188,8 @@ dialog-overlay {
 
 button {
   // display: block;
-  background: #666ee8;
+  //background: #666ee8;
+  background: #0065FF;
   color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
@@ -194,7 +202,7 @@ button {
 }
 
 button:focus {
-  background: #555abf;
+  background: #0052CC;
 }
 
 button:hover {
@@ -204,13 +212,13 @@ button:hover {
 }
 
 button:active {
-  background: #43458b;
+  background: #0747A6;
 }
 
 button:hover {
   color: #fff;
   cursor: pointer;
-  background-color: #7795f8;
+  background-color: #2684FF;
   transform: translateY(-1px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
 }
@@ -264,7 +272,7 @@ label {
 
 .testPanel {
   padding: 10px;
-  border: 2px solid blue;
+  border: 2px solid #0065FF;
   margin-top: 10px;
 }
 
@@ -280,7 +288,7 @@ label {
 .filterCard {
   float: left;
   margin: 5px;
-  border: 1px solid blueviolet;
+  border: 1px solid #0065FFviolet;
 }
 
 .filter-card-title {

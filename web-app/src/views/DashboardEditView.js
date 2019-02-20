@@ -6,6 +6,7 @@ import FilterViewPanel from '../components/FilterViewPanel';
 import WidgetViewPanel from '../components/WidgetViewPanel';
 import WidgetEditPanel from '../components/WidgetEditPanel';
 import FilterEditPanel from '../components/FilterEditPanel';
+import Modal from '../components/Modal';
 
 import * as webApi from '../api/WebApi';
 import axios from 'axios';
@@ -24,7 +25,7 @@ class DashboardEditView extends React.Component {
     this.state = {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
-      showFilterViewPanel: true,
+      showFilterViewPanel: false,
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -87,15 +88,7 @@ class DashboardEditView extends React.Component {
     this.widgetViewPanel.current.queryWidgets(filterParams);
   }
 
-  toggleFilterViewPanel = () => {
-    this.setState(prevState => ({
-      showFilterViewPanel: !prevState.showFilterViewPanel,
-    }));
-  }
-
   render() {
-    const dialogOverlay = this.state.showFilterEditPanel || this.state.showWidgetEditPanel ? 'display-block' : 'display-none';
-
     return (
       <div>
         <h3>
@@ -110,33 +103,46 @@ class DashboardEditView extends React.Component {
         <button onClick={this.save}>Save</button>
         <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
         <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
-        <button onClick={this.toggleFilterViewPanel}>Toggle Filters</button>
+        <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters: {this.state.showFilterViewPanel}</button>
         
-        <FilterViewPanel 
-          ref={this.filterViewPanel} 
-          onEdit={this.openFilterEditPanel}
-          onApplyFilters={this.applyFilters}
-          show={this.state.showFilterViewPanel}
-        />
+        
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           onWidgetEdit={this.openWidgetEditPanel}
         />
-        <WidgetEditPanel 
-          ref={this.widgetEditPanel} 
+
+        <Modal 
+          show={this.state.showFilterViewPanel}
+          onClose={() => this.setState({ showFilterViewPanel: false })}
+          modalClass={'right-modal-panel'} >
+          <FilterViewPanel 
+            ref={this.filterViewPanel} 
+            onEdit={this.openFilterEditPanel}
+            onApplyFilters={this.applyFilters}
+          />
+        </Modal>
+
+        <Modal 
           show={this.state.showWidgetEditPanel}
-          onClose={() => this.setState({ showWidgetEditPanel: false})}
-          jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
-          dashboardId={this.state.dashboardId}
-        />
-        <FilterEditPanel
-          ref={this.filterEditPanel}
-          show={this.state.showFilterEditPanel}
-          onClose={() => this.setState({ showFilterEditPanel: false})}
-          jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
-          dashboardId={this.state.dashboardId}
-        />
-        <div className={`dialog-overlay ${dialogOverlay}`}></div>
+          onClose={() => this.setState({ showWidgetEditPanel: false })}
+          modalClass={'lg-modal-panel'} >
+          <WidgetEditPanel 
+            ref={this.widgetEditPanel} 
+            jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
+            dashboardId={this.state.dashboardId}
+          />
+        </Modal>
+
+        <Modal 
+          show={this.state.showFilterEditPanel} 
+          onClose={() => this.setState({ showFilterEditPanel: false })}
+          modalClass={'lg-modal-panel'} >
+          <FilterEditPanel
+            ref={this.filterEditPanel}
+            jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
+            dashboardId={this.state.dashboardId}
+          />
+        </Modal>
       </div>
     )
   };

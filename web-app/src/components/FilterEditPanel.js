@@ -145,7 +145,6 @@ class FilterEditPanel extends React.Component {
   }
 
   render() {
-    const panelClass = this.props.show ? 'right-drawer display-block' : 'right-drawer display-none';
     const dataSourceOptions = this.state.jdbcDataSources.map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
     );
@@ -183,8 +182,9 @@ class FilterEditPanel extends React.Component {
     }
 
     return (
-      <div className={panelClass}>
+      <div>
         <h3>FilterEditPanel: {this.state.filterId}</h3>
+        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run</button>
 

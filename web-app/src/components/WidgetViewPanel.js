@@ -76,6 +76,7 @@ class WidgetViewPanel extends React.Component {
 
   onWidgetMove = (widget) => {
     console.log('onWidgetMove', widget);
+    // FIXME: use save button to update position and size of all widgets at the same time.
     axios.post('/ws/widget/position', widget)
       .then(res => {
         const index = this.state.widgets.findIndex(w => w.id === widget.id);
@@ -88,6 +89,7 @@ class WidgetViewPanel extends React.Component {
           widgets: newWidgets
         });
       });
+      
   }
 
   onWidgetRemove = (widgetId) => {
