@@ -1,17 +1,19 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.dao.mapper.WidgetRowMapper;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.model.Widget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -76,5 +78,24 @@ public class WidgetDao {
     public int deleteByDataSourceId(long dataSourceId) {
         String sql = "DELETE FROM p_widget WHERE datasource_id=?";
         return jt.update(sql, new Object[]{ dataSourceId });
+    }
+
+    private static class WidgetRowMapper implements RowMapper<Widget> {
+
+        @Override
+        public Widget mapRow(ResultSet rs, int i) throws SQLException {
+            Widget w = new Widget();
+            w.setId(rs.getLong("id"));
+            w.setDashboardId(rs.getLong("dashboard_id"));
+            w.setJdbcDataSourceId(rs.getLong("datasource_id"));
+            w.setName(rs.getString("name"));
+            w.setSqlQuery(rs.getString("sql_query"));
+            w.setX(rs.getInt("x"));
+            w.setY(rs.getInt("y"));
+            w.setWidth(rs.getInt("width"));
+            w.setHeight(rs.getInt("height"));
+            w.setType(rs.getString("type"));
+            return w;
+        }
     }
 }

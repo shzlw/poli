@@ -1,15 +1,17 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.dao.mapper.FilterRowMapper;
 import com.shzlw.poli.model.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -59,5 +61,19 @@ public class FilterDao {
     public int deleteByDashboardId(long dashboardId) {
         String sql = "DELETE FROM p_filter WHERE dashboard_id=?";
         return jt.update(sql, new Object[]{ dashboardId });
+    }
+
+    private static class FilterRowMapper implements RowMapper<Filter> {
+
+        @Override
+        public Filter mapRow(ResultSet rs, int i) throws SQLException {
+            Filter f = new Filter();
+            f.setId(rs.getLong("id"));
+            f.setData(rs.getString("data"));
+            f.setName(rs.getString("name"));
+            f.setType(rs.getString("type"));
+            f.setDashboardId(rs.getLong("dashboard_id"));
+            return f;
+        }
     }
 }

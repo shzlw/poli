@@ -92,7 +92,7 @@ public class JdbcDataSourceDao {
         }
     }
 
-    private class JdbcDataSourceRowMapper implements RowMapper<JdbcDataSource> {
+    private static class JdbcDataSourceRowMapper implements RowMapper<JdbcDataSource> {
         @Override
         public JdbcDataSource mapRow(ResultSet rs, int i) throws SQLException {
             JdbcDataSource ds = new JdbcDataSource();

@@ -6,7 +6,6 @@ import Overview from './views/Overview';
 import DataSources from './views/DataSources';
 import Dashboards from './views/Dashboards';
 import Test from './views/Test';
-import EditDataSource from './views/EditDataSource';
 import DashboardEditView from './views/DashboardEditView';
 
 import SingleTest from './views/SingleTest';
@@ -94,8 +93,6 @@ class App extends Component {
           <Route exact path="/datasources" component={DataSources} />
           <Route exact path="/dashboards" component={Dashboards} />
           <Route exact path="/test" component={Test} />
-          <Route exact path="/datasources/new" component={EditDataSource} />
-          <Route exact path="/datasources/edit/:id" component={EditDataSource} />
           <Route exact path="/dashboard/new" component={DashboardEditView} />
           <Route exact path="/dashboard/edit/:id" component={DashboardEditView} />
           <Route exact path="/single-test" component={SingleTest} />

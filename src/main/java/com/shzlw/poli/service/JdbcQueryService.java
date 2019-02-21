@@ -3,7 +3,9 @@ package com.shzlw.poli.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
+import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -18,11 +20,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class JdbcQueryService {
@@ -124,12 +124,13 @@ public class JdbcQueryService {
         }
     }
 
-    public String fetchJsonByQuery(JdbcDataSource ds, String sql) {
+    public QueryResult fetchJsonByQuery(JdbcDataSource ds, String sql) {
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
 
+        QueryResult queryResult = new QueryResult();
         Map<String, Object> namedParameters = new HashMap();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
-        String result = npTemplate.query(parsedSql, new ResultSetExtractor<String>() {
+        String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
             @Nullable
             @Override
             public String extractData(ResultSet rs) {
@@ -137,9 +138,13 @@ public class JdbcQueryService {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
                     String[] columnNames = new String[columnCount + 1];
+                    List<Column> columns = new ArrayList<>();
+                    Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
                     for (int i = 1; i <= columnCount; i++) {
-                        String colName = metadata.getColumnName(i);
-                        columnNames[i] = colName;
+                        String columnName = metadata.getColumnName(i);
+                        int columnType = metadata.getColumnType(i);
+                        columnNames[i] = columnName;
+                        columns.add(new Column(columnName, jdbcMappings.get(columnType)));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();
@@ -152,17 +157,22 @@ public class JdbcQueryService {
                         }
                         array.add(node);
                     }
-                    return array.toString();
+                    String data = array.toString();
+                    queryResult.setData(data);
+                    queryResult.setColumns(columns);
+                    return data;
                 } catch (Exception e) {
-                    return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    String data = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    queryResult.setData(data);
+                    return data;
                 }
             }
         });
 
-        return result;
+        return queryResult;
     }
 
-    public String fetchJsonWithParams(JdbcDataSource ds, String sql, List<FilterParameter> filterParams) {
+    public QueryResult fetchJsonWithParams(JdbcDataSource ds, String sql, List<FilterParameter> filterParams) {
         LOGGER.info("[fetchJsonWithParams] filterParams: {}", filterParams);
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
 
@@ -187,7 +197,7 @@ public class JdbcQueryService {
             }
         }
 
-
+        QueryResult queryResult = new QueryResult();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
         String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
             @Nullable
@@ -197,9 +207,13 @@ public class JdbcQueryService {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
                     String[] columnNames = new String[columnCount + 1];
+                    List<Column> columns = new ArrayList<>();
+                    Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
                     for (int i = 1; i <= columnCount; i++) {
-                        String colName = metadata.getColumnName(i);
-                        columnNames[i] = colName;
+                        String columnName = metadata.getColumnName(i);
+                        int columnType = metadata.getColumnType(i);
+                        columnNames[i] = columnName;
+                        columns.add(new Column(columnName, jdbcMappings.get(columnType)));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();
@@ -212,13 +226,26 @@ public class JdbcQueryService {
                         }
                         array.add(node);
                     }
-                    return array.toString();
+                    String data = array.toString();
+                    queryResult.setData(data);
+                    queryResult.setColumns(columns);
+                    return data;
                 } catch (Exception e) {
-                    return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    String data = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    queryResult.setData(data);
+                    return data;
                 }
             }
         });
 
+        return queryResult;
+    }
+
+    public static Map<Integer, String> getAllJdbcTypeNames() throws IllegalAccessException {
+        Map<Integer, String> result = new HashMap<Integer, String>();
+        for (Field field : java.sql.Types.class.getFields()) {
+            result.put((Integer) field.get(null), field.getName());
+        }
         return result;
     }
 

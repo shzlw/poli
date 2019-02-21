@@ -98,7 +98,7 @@ body,
   position:fixed;
   top: 0px;
   left: 180px;
-  right: 0;
+  right: 200px;
   bottom: 0;
   background-color: #f6f9fc;
   z-index: 2;
@@ -148,9 +148,9 @@ body,
   padding: 10px;
   position: fixed;
   top: 20px;
-  right: 20px;
+  right: 0;
   bottom: 20px;
-  width: 500px;
+  width: 200px;
   overflow-y: auto;
   z-index: 50;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -285,10 +285,9 @@ label {
   clear: both;
 }
 
-.filterCard {
-  float: left;
+.filter-card {
   margin: 5px;
-  border: 1px solid #0065FFviolet;
+  border: 1px solid #0065FF;
 }
 
 .filter-card-title {

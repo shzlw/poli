@@ -14,8 +14,9 @@ import * as webApi from '../api/WebApi';
 import * as util from '../api/Util';
 
 
-const QUERY_SLICER = 'slicer'
-const TYPES = [QUERY_SLICER];
+const SLICER = 'slicer';
+const SINGLE_VALUE= 'single';
+const TYPES = [SLICER, SINGLE_VALUE];
 
 class FilterEditPanel extends React.Component {
 
@@ -67,7 +68,7 @@ class FilterEditPanel extends React.Component {
             data: data
           });
 
-          if (result.type === 'slicer') {
+          if (result.type === SLICER) {
             this.setState({
               sqlQuery: data.sqlQuery,
               jdbcDataSourceId: data.jdbcDataSourceId,
@@ -109,18 +110,26 @@ class FilterEditPanel extends React.Component {
 
   save = (event) => {
     event.preventDefault();
-    const filter ={
+    const {
+      type
+    } = this.state;
+
+    let filter = {
       id: this.state.filterId,
       name: this.state.name,
       type: this.state.type,
-      dashboardId: this.props.dashboardId,
-      data: {
+      dashboardId: this.props.dashboardId
+    };
+
+    if (type === SLICER) {
+      filter.data = {
         jdbcDataSourceId: this.state.jdbcDataSourceId,
         sqlQuery: this.state.sqlQuery,
         param: this.state.param
       }
-    };
-    
+    } else if (type === SINGLE_VALUE) {
+    }
+
     axios.post('/ws/filter', filter)
       .then(res => {
         
@@ -184,7 +193,6 @@ class FilterEditPanel extends React.Component {
     return (
       <div>
         <h3>FilterEditPanel: {this.state.filterId}</h3>
-        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.save}>Save</button>
         <button onClick={this.runQuery}>Run</button>
 

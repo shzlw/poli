@@ -80,7 +80,7 @@ class FilterViewPanel extends Component {
         const checkBoxes = filter.checkBoxes;
         filterPanel.push(
           (
-            <div className="filterCard">
+            <div className="filter-card">
               <div className="filter-card-title">
                 {filter.name}
                 <div className="icon-button-group">
@@ -166,12 +166,9 @@ class FilterViewPanel extends Component {
   }
 
   render() {
-    const panelClass = this.props.show ? 'display-block' : 'display-none';
-
     return (
-      <div className={`testPanel ${panelClass}`}>
+      <div>
         <h5>FilterViewPanel</h5>
-        <button onClick={() => this.props.onClose()}>Close</button>
         <button onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">
           {this.renderFilterPanel()}

@@ -2,20 +2,36 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import * as webApi from '../api/WebApi';
+import Modal from '../components/Modal';
 
 class DataSources extends Component {
 
-  state = { 
-    jdbcDataSources: [],
-    showEditPanel: false,
-    id: null,
-    name: '',
-    connectionUrl: '',
-    username: '',
-    password: '',
-    type: '',
-    ping: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      jdbcDataSources: [],
+      showEditPanel: false,
+      id: null,
+      name: '',
+      connectionUrl: '',
+      username: '',
+      password: '',
+      type: '',
+      ping: ''
+    };
+  }
+
+  get initialState() {
+    return {
+      id: null,
+      name: '',
+      connectionUrl: '',
+      username: '',
+      password: '',
+      type: '',
+      ping: ''
+    };
+  }
 
   componentDidMount() {
     // Fetch all datasources
@@ -82,15 +98,7 @@ class DataSources extends Component {
   }
 
   clearEditPanel = () => {
-    this.setState({
-      id: null,
-      connectionUrl: '',
-      username: '',
-      password: '',
-      name: '',
-      type: '',
-      ping: ''
-    });
+    this.setState(this.initialState);
   }
 
   showEditPanel = (ds) => {
@@ -117,10 +125,11 @@ class DataSources extends Component {
 
   }
 
+  enableUpdatePassword = () => {
+    
+  }
+
   render() {
-
-    const filterDrawerClass = this.state.showEditPanel ? 'right-drawer display-block' : 'right-drawer display-none';
-
     const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
       <tr key={index}>
         <td>{ds.name}</td>
@@ -155,60 +164,67 @@ class DataSources extends Component {
           Add
         </button>
 
-        <div className={filterDrawerClass}>
-          <h3>{mode}</h3>
-          <button onClick={() => this.setState({showEditPanel: false })}>Close</button>
-          <form>
-            <label>Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              value={this.state.name}
-              onChange={this.handleInputChange} />
-
-            <label>Connection Url</label>
-            <textarea
-              row="3"
-              type="text" 
-              name="connectionUrl" 
-              value={this.state.connectionUrl}
-              onChange={this.handleInputChange} >
-            </textarea>
-
-            <label>Username</label>
-            <input 
-              type="text" 
-              name="username" 
-              value={this.state.username}
-              onChange={this.handleInputChange} />
-
-            <label>Password</label>
-            <input 
-              type="password" 
-              name="password" 
-              value={this.state.password}
-              onChange={this.handleInputChange} />
-
-            <label>Type</label>
-            <input 
-              type="text" 
-              name="type" 
-              value={this.state.type}
-              onChange={this.handleInputChange} />
-
-            <label>Ping</label>
-            <input 
-              type="text" 
-              name="ping" 
-              value={this.state.ping}
-              onChange={this.handleInputChange} />
-          </form>
+        <Modal 
+          show={this.state.showEditPanel}
+          onClose={() => this.setState({ showEditPanel: false })}
+          modalClass={'lg-modal-panel'} >
 
           <div>
-            <button onClick={this.save}>Save</button>
-            <button onClick={this.ping}>Ping</button>
+            <h3>{mode}</h3>
+            <form>
+              <label>Name</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={this.state.name}
+                onChange={this.handleInputChange} />
+
+              <label>Connection Url</label>
+              <textarea
+                row="3"
+                type="text" 
+                name="connectionUrl" 
+                value={this.state.connectionUrl}
+                onChange={this.handleInputChange} >
+              </textarea>
+
+              <label>Username</label>
+              <input 
+                type="text" 
+                name="username" 
+                value={this.state.username}
+                onChange={this.handleInputChange} />
+
+              <label>Password</label>
+              <input 
+                type="password" 
+                name="password" 
+                value={this.state.password}
+                onChange={this.handleInputChange} />
+              <button onClick={this.enableUpdatePassword}>Update password</button>
+
+              <label>Type</label>
+              <input 
+                type="text" 
+                name="type" 
+                value={this.state.type}
+                onChange={this.handleInputChange} />
+
+              <label>Ping</label>
+              <input 
+                type="text" 
+                name="ping" 
+                value={this.state.ping}
+                onChange={this.handleInputChange} />
+            </form>
+
+            <div>
+              <button onClick={this.save}>Save</button>
+              <button onClick={this.ping}>Ping</button>
+            </div>
           </div>
-        </div>
+
+        </Modal>
       </div>
     );
   }

@@ -34,9 +34,10 @@ public class JdbcQueryWs {
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     public String runQuery(@RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
-        String query = queryRequest.getSqlQuery();
+        String sql = queryRequest.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
-        return jdbcQueryService.fetchJsonByQuery(ds, query);
+        QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
+        return queryResult.getData();
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
@@ -45,8 +46,9 @@ public class JdbcQueryWs {
         Widget widget = widgetDao.fetchById(widgetId);
         String sql = widget.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.fetchByWidgetId(widgetId);
-        String data = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);
-        return new QueryResult(widgetId, data);
+        QueryResult queryResult = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);
+        queryResult.setId(widgetId);
+        return queryResult;
     }
 
     @RequestMapping(value = "/filter/{id}", method = RequestMethod.POST)
@@ -55,7 +57,8 @@ public class JdbcQueryWs {
         long dsId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
-        String data = jdbcQueryService.fetchJsonByQuery(ds, sql);
-        return new QueryResult(filterId, data);
+        QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
+        queryResult.setId(filterId);
+        return queryResult;
     }
 }

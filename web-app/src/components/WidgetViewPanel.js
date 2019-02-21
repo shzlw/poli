@@ -27,7 +27,7 @@ class WidgetViewPanel extends React.Component {
     const width = thisNode.clientWidth;
     // const height = parentNode.clientHeight;
     this.setState({
-      width: width - 20 * 2,
+      width: width - 20,
       height: 600
     });
   }
