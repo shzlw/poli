@@ -13,15 +13,12 @@ import 'react-table/react-table.css';
 import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
-import * as util from '../api/Util';
-import * as echartsApi from '../api/EchartsApi';
+import * as Util from '../api/Util';
+import * as EchartsApi from '../api/EchartsApi';
+import * as Constants from '../api/Constants';
 
 import ReactEcharts from 'echarts-for-react';
 
-
-const PIE = 'pie';
-const TABLE = 'table';
-const CHART_TYPES = [TABLE, PIE];
 
 class WidgetEditPanel extends React.Component {
 
@@ -41,7 +38,7 @@ class WidgetEditPanel extends React.Component {
       queryResult: [],
       filterId: null,
       filterParams: [],
-      chartType: 'table',
+      chartType: Constants.TABLE,
       aggrKey: '',
       aggrValue: '',
       chartOption: {}
@@ -131,14 +128,37 @@ class WidgetEditPanel extends React.Component {
 
   save = (event) => {
     event.preventDefault();
-    const widget ={
-      id: this.state.widgetId,
-      name: this.state.name,
-      dashboardId: this.props.dashboardId,
-      jdbcDataSourceId: this.state.jdbcDataSourceId,
-      sqlQuery: this.state.sqlQuery
-    };
-    
+
+    const {
+      widgetId,
+      name,
+      dashboardId,
+      jdbcDataSourceId,
+      sqlQuery,
+      chartType,
+    } = this.state;
+
+    const widget = {
+      name: name,
+      dashboardId: dashboardId,
+      chartType: chartType,
+      jdbcDataSourceId: jdbcDataSourceId,
+      sqlQuery: sqlQuery
+    }
+
+    if (widgetId !== null) {
+      widget.id = widgetId;
+    }
+
+    if (chartType === Constants.TABLE) {
+
+    } else if (chartType === Constants.PIE) {
+      widget.data = {
+        name: '1',
+        value: '1'
+      }
+    }
+
     axios.post('/ws/widget', widget)
       .then(res => {
         
@@ -199,13 +219,13 @@ class WidgetEditPanel extends React.Component {
 
   generateChart = (event) => {
     event.preventDefault();
-    if (this.state.chartType === PIE) {
+    if (this.state.chartType === Constants.PIE) {
       const { 
         aggrKey, 
         aggrValue, 
         queryResult 
       } = this.state;
-      if (!util.isArrayEmpty(queryResult)) {
+      if (!Util.isArrayEmpty(queryResult)) {
         let legend = [];
         let series = [];
         for (let i = 0; i < queryResult.length; i++) {
@@ -216,7 +236,7 @@ class WidgetEditPanel extends React.Component {
             value: row[aggrValue]
           });
         }
-        const chartOption = echartsApi.getPieOption(legend, series);
+        const chartOption = EchartsApi.getPieOption(legend, series);
         this.setState({
           chartOption: chartOption
         })
@@ -240,14 +260,14 @@ class WidgetEditPanel extends React.Component {
       </div>
     );
 
-    const chartOptionList = CHART_TYPES.map(o =>
+    const chartOptionList = Constants.CHART_TYPES.map(o =>
       <option value={o} key={o}>{o}</option>
     );
 
     const headers = [];
     const queryResult = this.state.queryResult;
     let queryResultItem;
-    if (!util.isArrayEmpty(queryResult)) {
+    if (!Util.isArrayEmpty(queryResult)) {
       const obj = queryResult[0];
       const keys = Object.keys(obj);
       for (const key of keys) {

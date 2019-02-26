@@ -1,7 +1,6 @@
 import React from 'react';
 
 class Modal extends React.Component {
-  state = {};
 
   render() {
     const modalStatus = this.props.show ? 'display-block' : 'display-none';

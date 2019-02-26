@@ -15,8 +15,7 @@ class App extends Component {
     super(props);
     this.state = {
       current: 'overview',
-      menuMin: '',
-      appName: 'Poli'
+      menuMin: false,
     }
   }
 
@@ -30,27 +29,27 @@ class App extends Component {
   }
 
   toggleMenu = () => {
-    let menuMin;
-    let appName;
-    if (this.state.menuMin === '') {
-      menuMin = 'menu-min';
-      appName = 'P';
-    } else {
-      menuMin = '';
-      appName = 'Poli'
-    }
-    this.setState({
-      menuMin: menuMin,
-      appName: appName
-    });
+    this.setState(prevState => ({
+      menuMin: !prevState.menuMin
+    })); 
   }
 
   render() {
+    let menuMinClass;
+    let appName;
+    if (this.state.menuMin) {
+      menuMinClass = 'menu-min';
+      appName = 'P';
+    } else {
+      menuMinClass = '';
+      appName = 'Poli'
+    }
+
     return (
       <div className="App">
         <div className="Nav">
           <div className="Nav_title-bar">
-            <div className="Nav_title">{this.state.appName}</div>
+            <div className="Nav_title">{appName}</div>
           </div>
           <div className="Nav_menu">
             <ul className="menu">
@@ -87,14 +86,15 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className={`Content ${this.state.menuMin}`}>
+        <div className={`Content ${menuMinClass}`}>
           <Route exact path="/" component={Overview} />
           <Route exact path="/overview" component={Overview} />
           <Route exact path="/datasources" component={DataSources} />
           <Route exact path="/dashboards" component={Dashboards} />
+          <Route exact path="/dashboards" component={Dashboards} />
+          <Route exact path="/dashboard/new" render={() => <DashboardEditView menuMin={this.menuMin} />} />
+          <Route exact path="/dashboard/edit/:id" render={() => <DashboardEditView menuMin={this.menuMin} />} />
           <Route exact path="/test" component={Test} />
-          <Route exact path="/dashboard/new" component={DashboardEditView} />
-          <Route exact path="/dashboard/edit/:id" component={DashboardEditView} />
           <Route exact path="/single-test" component={SingleTest} />
         </div>
       </div>

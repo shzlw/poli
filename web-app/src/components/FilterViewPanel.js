@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import QuerySlicer from "./QuerySlicer";
+import Slicer from "./Slicer";
 import NumberRange from "./NumberRange";
-import * as util from '../api/Util';
+import * as Util from '../api/Util';
+import * as Constants from '../api/Constants';
 
 import axios from 'axios';
 
@@ -35,33 +36,44 @@ class FilterViewPanel extends Component {
   }
 
   queryFilters = () => {
-    const filters = this.state.filters;
+    const { filters } = this.state;
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
-      if (filter.type === 'slicer') {
+      if (filter.type === Constants.SLICER) {
         const queryRequest = filter.data;
         axios.post('/ws/jdbcquery/filter/' + filter.id, queryRequest)
           .then(res => {
             const result = res.data;
+            const queryResult = JSON.parse(result.data);
+
             const index = filters.findIndex(f => f.id === result.id);
             const newFilters = [...this.state.filters];
-            const queryResult = JSON.parse(result.data);
-            const checkBoxes = [];
-
-            if (!util.isArrayEmpty(queryResult)) {
-              for (let i = 0; i < queryResult.length; i++) {
-                const values = Object.values(queryResult[i]);
-                for (const val of values) {
-                  checkBoxes.push({
-                    value: val,
-                    isChecked: false
-                  });
+            newFilters[index].queryResult = queryResult;
+            const type = newFilters[index].type;
+            if (type === Constants.SLICER) {
+              const checkBoxes = [];
+              if (!Util.isArrayEmpty(queryResult)) {
+                for (let i = 0; i < queryResult.length; i++) {
+                  const values = Object.values(queryResult[i]);
+                  for (const val of values) {
+                    checkBoxes.push({
+                      value: val,
+                      isChecked: false
+                    });
+                  }
                 }
               }
-            }
 
-            newFilters[index].queryResult = queryResult;
-            newFilters[index].checkBoxes = checkBoxes;
+              newFilters[index].checkBoxes = checkBoxes;
+            } else if (type === Constants.SINGLE_VALUE) {
+              const values = Object.values(queryResult);
+              let value = '';
+              for (const val of values) {
+                value = val;
+                break;
+              }
+              newFilters[index].value = value;
+            }
 
             this.setState({
               filters: newFilters
@@ -76,7 +88,7 @@ class FilterViewPanel extends Component {
     const filters = this.state.filters;
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
-      if (filter.type === 'slicer') {
+      if (filter.type === Constants.SLICER) {
         const checkBoxes = filter.checkBoxes;
         filterPanel.push(
           (
@@ -93,18 +105,41 @@ class FilterViewPanel extends Component {
                 </div>
               </div>
               <div>
-                <QuerySlicer 
+                <Slicer 
                   key={i} 
                   filterId={filter.id} 
                   checkBoxes={checkBoxes} 
-                  onChange={this.onQuerySlicerChange} 
+                  onChange={this.onSlicerChange} 
                 />
               </div>
             </div>
           )
         );
-      } else if (filter.type === 'number-range') {
-        filterPanel.push(<NumberRange key={i} />);
+      } else if (filter.type === Constants.SINGLE_VALUE) {
+        filterPanel.push(
+          (
+            <div className="filter-card">
+              <div className="filter-card-title">
+                {filter.name}
+                <div className="icon-button-group">
+                  <div className="icon-btn" onClick={() => this.edit(filter.id)}>
+                    <i className="fas fa-edit fa-fw"></i>
+                  </div>
+                  <div className="icon-btn" onClick={() => this.remove(filter.id)}>
+                    <i className="fas fa-trash-alt fa-fw"></i>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input 
+                  type="text"  
+                  value={filter.value}
+                  onChange={(event) => this.onSingleValueChange(filter.id, event)} 
+                />
+              </div>
+            </div>
+          )
+        );
       } else if (filter.type === 'date-range') {
 
       }
@@ -128,7 +163,7 @@ class FilterViewPanel extends Component {
       });
   }
 
-  onQuerySlicerChange = (filterId, checkBoxes) => {
+  onSlicerChange = (filterId, checkBoxes) => {
     const index = this.state.filters.findIndex(f => f.id === filterId);
     const newFilters = [...this.state.filters];
     newFilters[index].checkBoxes = [...checkBoxes];
@@ -140,13 +175,24 @@ class FilterViewPanel extends Component {
     // const isSelectAll = checked.length === checkBoxes.length;    
   }
 
+  onSingleValueChange = (filterId, event) => {
+    const { filters } = this.state;
+    const value = event.target.value;
+    const index = filters.findIndex(f => f.id === filterId);
+    const newFilters = [...filters];
+    newFilters[index].value = value;
+    this.setState({
+      filters: newFilters
+    });
+  }
+
   applyFilters = () => {
     console.log('applyFilters');
     const { filters } = this.state;
     const filterParams = [];
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
-      if (filter.type === 'slicer') {
+      if (filter.type === Constants.SLICER) {
         const checkBoxes = filter.checkBoxes;
         const paramValues = [];
         for (let j = 0; j < checkBoxes.length; j++) {
@@ -158,6 +204,11 @@ class FilterViewPanel extends Component {
         filterParams.push({
           param: filter.data.param,
           value: paramValues
+        });
+      } else if (filter.type === Constants.SINGLE_VALUE) {
+        filterParams.push({
+          param: filter.data.param,
+          value: filter.value
         });
       }
     }

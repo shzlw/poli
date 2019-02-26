@@ -11,12 +11,6 @@ import Modal from '../components/Modal';
 import * as webApi from '../api/WebApi';
 import axios from 'axios';
 
-const FILTER_TYPES = [
-  { value: 'slicer', label: 'Slicer' },
-  { value: 'number-range', label: 'Number Range' },
-  { value: 'date-range', label: 'Date Range' }
-];
-
 class DashboardEditView extends React.Component {
 
   constructor(props) {
@@ -26,6 +20,8 @@ class DashboardEditView extends React.Component {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
       showFilterViewPanel: false,
+      autoRefreshTimerId: '',
+      lastUpdated: '',
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -47,6 +43,13 @@ class DashboardEditView extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    const { autoRefreshTimerId } = this.state;
+    if (autoRefreshTimerId) {
+      clearInterval(autoRefreshTimerId);
+    }
+  }
+
   handleInputChange = (event) => {
     const target = event.target;
     const value = target.value;
@@ -55,6 +58,28 @@ class DashboardEditView extends React.Component {
     this.setState({
       [name]: value
     });
+  }
+
+  toggleAutoRefresh = () => {
+    const { autoRefreshTimerId } = this.state;
+    if (autoRefreshTimerId) {
+      clearInterval(autoRefreshTimerId);
+      this.setState({
+        autoRefreshTimerId: ''
+      });
+    } else {
+      const { dashboardId } = this.state;
+      const timerId = setInterval(() => {
+        this.widgetViewPanel.current.fetchWidgets(dashboardId, null);
+        const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+        this.setState({
+          lastUpdated: now
+        });
+      }, 5000);
+      this.setState({
+        autoRefreshTimerId: timerId
+      });
+    }
   }
 
   refresh = () => {
@@ -72,6 +97,7 @@ class DashboardEditView extends React.Component {
   openFilterEditPanel = (filterId) => {
     this.filterEditPanel.current.fetchFilter(filterId);
     this.setState({
+      showFilterViewPanel: false,
       showFilterEditPanel: true
     });
   }
@@ -89,6 +115,12 @@ class DashboardEditView extends React.Component {
   }
 
   render() {
+    const {
+      autoRefreshTimerId,
+      lastUpdated
+    } = this.state;
+    const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
+
     return (
       <div>
         <h3>
@@ -99,11 +131,12 @@ class DashboardEditView extends React.Component {
           value={this.state.name}
           onChange={this.handleInputChange} />
         </h3>
+        <button onClick={this.toggleAutoRefresh}>toggleAutoRefresh: {autoRefreshStatus} - {lastUpdated}</button>
         <button onClick={this.refresh}>Refresh</button>
         <button onClick={this.save}>Save</button>
         <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
         <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
-        <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters: {this.state.showFilterViewPanel}</button>
+        <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters</button>
         
         
         <WidgetViewPanel 

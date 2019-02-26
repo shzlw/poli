@@ -187,8 +187,6 @@ body,
 }
 
 button {
-  // display: block;
-  //background: #666ee8;
   background: #0065FF;
   color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -199,6 +197,7 @@ button {
   outline: none;
   cursor: pointer;
   transition: all 0.15s ease;
+  margin: 3px;
 }
 
 button:focus {

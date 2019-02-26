@@ -6,6 +6,9 @@ import GridResizable from './GridResizable';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
+import * as Util from '../api/Util';
+import * as Constants from '../api/Constants';
+
 
 class GridItem extends React.Component {
 
@@ -95,15 +98,13 @@ class GridItem extends React.Component {
   }
 
   renderWidgetContent = () => {
-    const widget = this.props;
+    const { widget } = this.props;
     let widgetItem = (<div>NONE</div>);
-    if (widget.type === 'table') {
+    if (widget.type === Constants.TABLE) {
 
       const headers = [];
       const queryResult = widget.queryResult;
-      if (queryResult !== undefined 
-        && queryResult.length !== 0 
-        && Array.isArray(queryResult)) {
+      if (!Util.isArrayEmpty(queryResult)) {
         const obj = queryResult[0];
         const keys = Object.keys(obj);
         for (const key of keys) {
@@ -123,7 +124,10 @@ class GridItem extends React.Component {
           getTdProps={this.onTdPropsChange}
         />
       );
+    } else if (widget.type === Constants.PIE) {
+
     } 
+
     return widgetItem;
   }
 

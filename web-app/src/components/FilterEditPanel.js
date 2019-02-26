@@ -11,12 +11,8 @@ import 'react-table/react-table.css';
 import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
-import * as util from '../api/Util';
-
-
-const SLICER = 'slicer';
-const SINGLE_VALUE= 'single';
-const TYPES = [SLICER, SINGLE_VALUE];
+import * as Util from '../api/Util';
+import * as Constants from '../api/Constants';
 
 class FilterEditPanel extends React.Component {
 
@@ -30,12 +26,12 @@ class FilterEditPanel extends React.Component {
       jdbcDataSources: [],
       filterId: null,
       name: '',
-      type: 'slicer',
+      type: Constants.SLICER,
       data: {},
       sqlQuery: '',
       jdbcDataSourceId: null,
       queryResult: [],
-      param: ''
+      param: '',
     };
   }
 
@@ -68,7 +64,7 @@ class FilterEditPanel extends React.Component {
             data: data
           });
 
-          if (result.type === SLICER) {
+          if (result.type === Constants.SLICER) {
             this.setState({
               sqlQuery: data.sqlQuery,
               jdbcDataSourceId: data.jdbcDataSourceId,
@@ -114,20 +110,26 @@ class FilterEditPanel extends React.Component {
       type
     } = this.state;
 
-    let filter = {
+    const filter = {
       id: this.state.filterId,
       name: this.state.name,
       type: this.state.type,
       dashboardId: this.props.dashboardId
     };
 
-    if (type === SLICER) {
+    if (type === Constants.SLICER) {
       filter.data = {
         jdbcDataSourceId: this.state.jdbcDataSourceId,
         sqlQuery: this.state.sqlQuery,
         param: this.state.param
       }
-    } else if (type === SINGLE_VALUE) {
+    } else if (type === Constants.SINGLE_VALUE) {
+      filter.data = {
+        useQuery: false,
+        jdbcDataSourceId: this.state.jdbcDataSourceId,
+        sqlQuery: this.state.sqlQuery,
+        param: this.state.param,
+      }
     }
 
     axios.post('/ws/filter', filter)
@@ -154,18 +156,23 @@ class FilterEditPanel extends React.Component {
   }
 
   render() {
-    const dataSourceOptions = this.state.jdbcDataSources.map(ds =>
+
+    const { 
+      queryResult,
+      jdbcDataSources
+    } = this.state;
+
+    const dataSourceOptions = jdbcDataSources.map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
     );
 
-    const typeOptions = TYPES.map(t =>
+    const typeOptions = Constants.FILTER_TYPES.map(t =>
       <option value={t} key={t}>{t}</option>
     );
 
     const headers = [];
-    const { queryResult } = this.state;
     let queryResultItem;
-    if (!util.isArrayEmpty(queryResult)) {
+    if (!Util.isArrayEmpty(queryResult)) {
       console.log('queryResult', queryResult);
       const obj = queryResult[0];
       const keys = Object.keys(obj);

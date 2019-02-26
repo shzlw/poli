@@ -11,6 +11,7 @@ class DataSources extends Component {
     this.state = {
       jdbcDataSources: [],
       showEditPanel: false,
+      showUpdatePassword: false,
       id: null,
       name: '',
       connectionUrl: '',
@@ -23,6 +24,7 @@ class DataSources extends Component {
 
   get initialState() {
     return {
+      showUpdatePassword: false,
       id: null,
       name: '',
       connectionUrl: '',
@@ -35,11 +37,11 @@ class DataSources extends Component {
 
   componentDidMount() {
     // Fetch all datasources
-    this.initData();
+    this.fetchDataSources();
     
   }
 
-  async initData() {
+  async fetchDataSources() {
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
@@ -58,18 +60,37 @@ class DataSources extends Component {
 
   save = (event) => {
     event.preventDefault();
-    const ds = {
-      connectionUrl: this.state.connectionUrl,
-      username: this.state.username,
-      password: this.state.password,
-      name: this.state.name,
-      type: this.state.password,
-      ping: this.state.ping
+    const {
+      showUpdatePassword,
+      id,
+      connectionUrl,
+      username,
+      password,
+      name,
+      type,
+      ping,
+    } = this.state;
+
+    let ds = {
+      connectionUrl: connectionUrl,
+      username: username,
+      name: name,
+      type: type,
+      ping: ping
     };
+    if (id !== null) {
+      ds.id = id;
+      if (showUpdatePassword) {
+        ds.password = password;
+      }
+    } else {
+      ds.password = password;
+    }
 
     axios.post('/ws/jdbcdatasource', ds)
       .then(res => {
-        this.initData();
+        this.closeEditPanel();
+        this.fetchDataSources();
       });
   }
 
@@ -78,7 +99,7 @@ class DataSources extends Component {
 
     axios.put('/ws/jdbcdatasource', ds)
       .then(res => {
-        this.initData();
+        this.fetchDataSources();
       });
   }
 
@@ -86,7 +107,7 @@ class DataSources extends Component {
     console.log('delete', id);
     axios.delete('/ws/jdbcdatasource/' + id)
       .then(res => {
-        this.initData();
+        this.fetchDataSources();
       });
   }
 
@@ -101,9 +122,10 @@ class DataSources extends Component {
     this.setState(this.initialState);
   }
 
-  showEditPanel = (ds) => {
+  openEditPanel = (ds) => {
     if (ds !== null) {
       this.setState({
+        showUpdatePassword: false,
         id: ds.id,
         connectionUrl: ds.connectionUrl,
         username: ds.username,
@@ -121,29 +143,63 @@ class DataSources extends Component {
     }); 
   }
 
-  showDeletePanel = () => {
+  closeEditPanel = () => {
+    this.setState({
+      showEditPanel: false
+    });
+  }
+
+  openDeletePanel = () => {
 
   }
 
-  enableUpdatePassword = () => {
-    
+  toggleUpdatePassword = () => {
+    this.setState(prevState => ({
+      showUpdatePassword: !prevState.showUpdatePassword
+    })); 
   }
 
   render() {
-    const jdbcDataSourceItems = this.state.jdbcDataSources.map((ds, index) => 
+    const { 
+      showUpdatePassword,
+      id,
+      jdbcDataSources
+    } = this.state;
+
+    const jdbcDataSourceItems = jdbcDataSources.map((ds, index) => 
       <tr key={index}>
         <td>{ds.name}</td>
         <td>{ds.connectionUrl}</td>
         <td>{ds.type}</td>
         <td>{ds.username}</td>
         <td>{ds.ping}</td>
-        <td><button onClick={() => this.showEditPanel(ds)}>update</button></td>
+        <td><button onClick={() => this.openEditPanel(ds)}>update</button></td>
         <td><button onClick={() => this.delete(ds.id)}>delete</button></td>
         <td><button onClick={() => this.ping(ds.id)}>ping</button></td>
       </tr>
     );
 
-    const mode = this.state.id === null ? 'New' : 'Update';
+    let mode;
+    let passwordInput = (
+      <div>
+        <label>Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          value={this.state.password}
+          onChange={this.handleInputChange} />
+      </div>
+    );
+    if (id === null) {
+      mode = 'New';
+    } else {
+      mode = 'Update';
+      if (!showUpdatePassword) {
+        passwordInput = (
+          <button onClick={this.toggleUpdatePassword}>Update password</button>
+        );
+      }
+    }
 
     return (
       <div>
@@ -166,7 +222,7 @@ class DataSources extends Component {
 
         <Modal 
           show={this.state.showEditPanel}
-          onClose={() => this.setState({ showEditPanel: false })}
+          onClose={this.closeEditPanel}
           modalClass={'lg-modal-panel'} >
 
           <div>
@@ -194,14 +250,8 @@ class DataSources extends Component {
                 name="username" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
-
-              <label>Password</label>
-              <input 
-                type="password" 
-                name="password" 
-                value={this.state.password}
-                onChange={this.handleInputChange} />
-              <button onClick={this.enableUpdatePassword}>Update password</button>
+              
+              {passwordInput}
 
               <label>Type</label>
               <input 
@@ -220,7 +270,6 @@ class DataSources extends Component {
 
             <div>
               <button onClick={this.save}>Save</button>
-              <button onClick={this.ping}>Ping</button>
             </div>
           </div>
 
