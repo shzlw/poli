@@ -1,7 +1,7 @@
 # Poli
 
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 ## Installation
 
@@ -9,4 +9,4 @@
 
 ## License
 
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[LGPLv3](https://www.gnu.org/licenses/lgpl-3.0.en.html)

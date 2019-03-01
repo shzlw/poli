@@ -20,8 +20,9 @@ class DashboardEditView extends React.Component {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
       showFilterViewPanel: false,
+      isEditMode: false,
       autoRefreshTimerId: '',
-      lastUpdated: '',
+      lastRefreshed: '',
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -73,7 +74,7 @@ class DashboardEditView extends React.Component {
         this.widgetViewPanel.current.fetchWidgets(dashboardId, null);
         const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
         this.setState({
-          lastUpdated: now
+          lastRefreshed: now
         });
       }, 5000);
       this.setState({
@@ -81,6 +82,8 @@ class DashboardEditView extends React.Component {
       });
     }
   }
+
+
 
   refresh = () => {
     console.log('refresh');
@@ -91,8 +94,26 @@ class DashboardEditView extends React.Component {
 
   save = () => {
     console.log('save');
-
+    this.setState({
+      isEditMode: false
+    });
   }
+
+  edit = () => {
+    this.setState({
+      isEditMode: true
+    });
+  }
+
+  delete = () => {
+    const { dashboardId } = this.state;
+    console.log('delete', dashboardId);
+    axios.delete('/ws/dashboard/' + dashboardId)
+      .then(res => {
+        //this.fetchBoards();
+      });
+  }
+
 
   openFilterEditPanel = (filterId) => {
     this.filterEditPanel.current.fetchFilter(filterId);
@@ -117,9 +138,29 @@ class DashboardEditView extends React.Component {
   render() {
     const {
       autoRefreshTimerId,
-      lastUpdated
+      lastRefreshed,
+      isEditMode
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
+
+    let statusButtonPanel;
+    if (isEditMode) {
+      statusButtonPanel = (
+        <React.Fragment>
+          <button onClick={this.save}>Save</button>
+          <button onClick={this.delete}>Delete</button>
+          <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
+          <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+        </React.Fragment>
+      );
+    } else {
+      statusButtonPanel = (
+        <React.Fragment>
+          <button onClick={this.edit}>Edit</button>
+          <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters</button>
+        </React.Fragment>
+      );
+    }
 
     return (
       <div>
@@ -131,13 +172,10 @@ class DashboardEditView extends React.Component {
           value={this.state.name}
           onChange={this.handleInputChange} />
         </h3>
-        <button onClick={this.toggleAutoRefresh}>toggleAutoRefresh: {autoRefreshStatus} - {lastUpdated}</button>
+        <button onClick={this.toggleAutoRefresh}>toggleAutoRefresh: {autoRefreshStatus} - {lastRefreshed}</button>
         <button onClick={this.refresh}>Refresh</button>
-        <button onClick={this.save}>Save</button>
-        <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
-        <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
-        <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters</button>
         
+        {statusButtonPanel}
         
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 

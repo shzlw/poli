@@ -27,7 +27,7 @@ class WidgetViewPanel extends React.Component {
   }
 
   componentDidMount() {
-    this.resizeGrid();
+    // this.resizeGrid();
   }
 
   resizeGrid = () => {

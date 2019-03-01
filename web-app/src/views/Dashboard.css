@@ -1,0 +1,28 @@
+.dashboard-sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 199px;
+  overflow-y: auto;
+  border-right: 1px solid #1e1e1e;
+}
+
+.dashboard-content {
+  position: absolute;
+  top: 0;
+  left: 200px;
+  right: 0;
+  bottom: 0;
+  background-color: #eeeeee;
+  overflow: auto;
+}
+
+.dashboard-item {
+  margin: 5px;
+  padding: 5px;
+  border-bottom: 1px solid grey;
+  background-color: black;
+  word-break: break-all;
+  color: white;
+}
