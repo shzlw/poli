@@ -7,7 +7,12 @@ const JSON_HEADER = {
 };
 
 export const fetchDataSources = async () => {
-  return await get('/ws/jdbcdatasource');
+  try {
+    const response = await axios.get('/ws/jdbcdatasource');
+    return response.data || [];
+  } catch (e) {
+    return null;
+  }
 };
 
 export const fetchDashboardById = async (id) => {

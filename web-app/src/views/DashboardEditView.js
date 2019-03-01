@@ -8,6 +8,8 @@ import WidgetEditPanel from '../components/WidgetEditPanel';
 import FilterEditPanel from '../components/FilterEditPanel';
 import Modal from '../components/Modal';
 
+import './Dashboard.css';
+
 import * as webApi from '../api/WebApi';
 import axios from 'axios';
 
@@ -26,6 +28,8 @@ class DashboardEditView extends React.Component {
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
+      width: 0,
+      height: 0,
       widgets: [],
       filters: []
     }
@@ -39,9 +43,23 @@ class DashboardEditView extends React.Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
-    this.setState({
-      dashboardId: dashboardId
-    })
+    console.log('DashboardEditView', dashboardId);
+    if (dashboardId === null) {
+      this.setState({
+        dashboardId: null
+      });
+    } else {
+      axios.get(`/ws/dashboard/${dashboardId}`)
+        .then(res => {
+          const result = res.data;
+          this.setState({
+            dashboardId: result.id,
+            name: result.name,
+            width: result.width,
+            height: result.height,
+          });
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -69,9 +87,13 @@ class DashboardEditView extends React.Component {
         autoRefreshTimerId: ''
       });
     } else {
-      const { dashboardId } = this.state;
+      const { 
+        dashboardId,
+        width,
+        height
+      } = this.state;
       const timerId = setInterval(() => {
-        this.widgetViewPanel.current.fetchWidgets(dashboardId, null);
+        this.widgetViewPanel.current.fetchWidgets(dashboardId, width, height, null);
         const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
         this.setState({
           lastRefreshed: now
@@ -83,17 +105,33 @@ class DashboardEditView extends React.Component {
     }
   }
 
-
-
   refresh = () => {
     console.log('refresh');
-    const { dashboardId } = this.state;
+    const { 
+      dashboardId,
+      width,
+      height
+    } = this.state;
     this.filterViewPanel.current.fetchFilters(dashboardId);
-    this.widgetViewPanel.current.fetchWidgets(dashboardId, null);
+    this.widgetViewPanel.current.fetchWidgets(dashboardId, width, height, null);
   }
 
   save = () => {
     console.log('save');
+    const {
+      dashboardId,
+      name,
+      width,
+      height
+    } = this.state;
+
+    const dashboard = {
+      dashboardId: dashboardId,
+      name: name,
+      width: width,
+      height: height
+    };
+
     this.setState({
       isEditMode: false
     });
@@ -165,7 +203,6 @@ class DashboardEditView extends React.Component {
     return (
       <div>
         <h3>
-          DashboardEditView: 
           <input 
           type="text" 
           name="name" 
@@ -177,21 +214,19 @@ class DashboardEditView extends React.Component {
         
         {statusButtonPanel}
         
-        <WidgetViewPanel 
-          ref={this.widgetViewPanel} 
-          onWidgetEdit={this.openWidgetEditPanel}
-        />
-
-        <Modal 
-          show={this.state.showFilterViewPanel}
-          onClose={() => this.setState({ showFilterViewPanel: false })}
-          modalClass={'right-modal-panel'} >
+        <div className="dashboard-content-widget-panel">
+          <WidgetViewPanel 
+            ref={this.widgetViewPanel} 
+            onWidgetEdit={this.openWidgetEditPanel}
+          />
+        </div>
+        <div className="dashboard-content-filter-panel">
           <FilterViewPanel 
             ref={this.filterViewPanel} 
             onEdit={this.openFilterEditPanel}
             onApplyFilters={this.applyFilters}
           />
-        </Modal>
+        </div>
 
         <Modal 
           show={this.state.showWidgetEditPanel}
@@ -205,7 +240,7 @@ class DashboardEditView extends React.Component {
         </Modal>
 
         <Modal 
-          show={this.state.showFilterEditPanel} 
+          show={this.state.showFilterEditPanel}
           onClose={() => this.setState({ showFilterEditPanel: false })}
           modalClass={'lg-modal-panel'} >
           <FilterEditPanel
@@ -214,6 +249,7 @@ class DashboardEditView extends React.Component {
             dashboardId={this.state.dashboardId}
           />
         </Modal>
+
       </div>
     )
   };

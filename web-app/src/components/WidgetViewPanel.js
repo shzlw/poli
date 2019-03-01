@@ -1,6 +1,5 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import ReactTable from 'react-table';
@@ -9,15 +8,14 @@ import 'react-table/react-table.css';
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
 
-const BASE_WIDTH = 1000;
-
 class WidgetViewPanel extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       widgets: [],
-      actualWidth: 1200,
+      gridWidth: 1200,
+      width: 1200,
       height: 600,
       snapToGrid: false,
       showGridlines: true
@@ -27,19 +25,16 @@ class WidgetViewPanel extends React.Component {
   }
 
   componentDidMount() {
-    // this.resizeGrid();
   }
 
   resizeGrid = () => {
-    const thisNode = ReactDOM.findDOMNode(this.refs.widgetViewPanel);
-    const actualWidth = thisNode.clientWidth;
-    // const height = parentNode.clientHeight;
+    const thisNode = this.widgetViewPanel.current;
+    const gridWidth = thisNode.clientWidth;
     this.setState({
-      actualWidth: actualWidth - 20,
+      gridWidth: gridWidth - 20,
     }, () => {
       const { widgets } = this.state;
       const newWidgets = [...widgets];
-      // this.resizeWidgetsToBase(newWidgets);
       this.resizeWidgetsToActual(newWidgets);
       this.setState({
         widgets: newWidgets
@@ -59,13 +54,29 @@ class WidgetViewPanel extends React.Component {
   resizeWidgetsToActual = (widgets) => {
     for (let i = 0; i < widgets.length; i++) {
       const actualX = this.scaleToActual(widgets[i].x);
-      const actualWidth = this.scaleToActual(widgets[i].width);
+      const gridWidth = this.scaleToActual(widgets[i].width);
       widgets[i].x = actualX;
-      widgets[i].width = actualWidth;
+      widgets[i].width = gridWidth;
     }
   }
 
-  fetchWidgets = (dashboardId, filterParams) => {
+  scaleToActual = (num) => {
+    const {
+      width,
+      gridWidth
+    } = this.state;
+    return Math.round(num * gridWidth / width);
+  }
+
+  scaleToBase = (num) => {
+    const {
+      width,
+      gridWidth
+    } = this.state;
+    return Math.round(num * width / gridWidth);
+  }
+
+  fetchWidgets = (dashboardId, width, height, filterParams) => {
     if (dashboardId === null) {
       return;
     }
@@ -75,7 +86,12 @@ class WidgetViewPanel extends React.Component {
         const result = res.data;
         this.setState({
           widgets: result,
-        }, this.queryWidgets(filterParams));
+          width: width,
+          height: height
+        }, () => {
+          this.resizeGrid();
+          this.queryWidgets(filterParams);
+        });
       });
   }
 
@@ -200,7 +216,7 @@ class WidgetViewPanel extends React.Component {
         <br/>
         
         <GridLayout 
-          width={this.state.actualWidth}
+          width={this.state.gridWidth}
           height={this.state.height}
           snapToGrid={this.state.snapToGrid}
           showGridlines={this.state.showGridlines}

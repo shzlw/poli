@@ -38,11 +38,6 @@ public class DashboardWs {
     @Transactional(readOnly = true)
     public Dashboard one(@PathVariable("id") long id) {
         Dashboard dashboard = dashboardDao.fetchById(id);
-        // FIXME: No need this any more
-        List<Filter> filters = filterDao.fetchAllByDashboardId(id);
-        List<Widget> widgets = widgetDao.fetchAllByDashboardId(id);
-        dashboard.setFilters(filters);
-        dashboard.setWidgets(widgets);
         return dashboard;
     }
 

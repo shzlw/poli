@@ -98,12 +98,14 @@ class GridItem extends React.Component {
   }
 
   renderWidgetContent = () => {
-    const { widget } = this.props;
+    const { 
+      chartType,
+      queryResult 
+    } = this.props;
     let widgetItem = (<div>NONE</div>);
-    if (widget.type === Constants.TABLE) {
+    if (chartType === Constants.TABLE) {
 
       const headers = [];
-      const queryResult = widget.queryResult;
       if (!Util.isArrayEmpty(queryResult)) {
         const obj = queryResult[0];
         const keys = Object.keys(obj);
@@ -124,7 +126,7 @@ class GridItem extends React.Component {
           getTdProps={this.onTdPropsChange}
         />
       );
-    } else if (widget.type === Constants.PIE) {
+    } else if (chartType === Constants.PIE) {
 
     } 
 

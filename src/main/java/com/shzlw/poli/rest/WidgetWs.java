@@ -46,7 +46,6 @@ public class WidgetWs {
         widget.setY(0);
         widget.setWidth(200);
         widget.setHeight(200);
-        widget.setType("table");
         long id = widgetDao.add(widget);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }

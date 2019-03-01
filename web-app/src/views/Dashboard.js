@@ -5,18 +5,28 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import './Dashboard.css';
 
-import { Route, Switch } from "react-router-dom";
+import { Route } from "react-router-dom";
 import DashboardEditView from './DashboardEditView';
 import Modal from '../components/Modal';
 
 
 class Dashboard extends Component {
 
-  state = { 
-    dashboards: [],
-    showEditPanel: false,
-    name: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = this.initialState;
+  }
+
+  get initialState() {
+    return {
+      searchValue: '',
+      dashboards: [],
+      showEditPanel: false,
+      name: '',
+      width: 1200,
+      height: 800
+    };
+  }
 
   componentDidMount() {
     this.fetchBoards();
@@ -43,13 +53,25 @@ class Dashboard extends Component {
   }
 
   save = () => {
+    const {
+      name,
+      width,
+      height
+    } = this.state;
+
     const dashboard = {
-      name: this.state.name
+      name: name,
+      width: width,
+      height: height
     };
 
     axios.post('/ws/dashboard', dashboard)
       .then(res => {
         const dashboardId = res.data;
+        this.setState({ 
+          showEditPanel: false 
+        });
+        this.fetchBoards();
         this.props.history.push(`/dashboard/${dashboardId}`);
       });
   }
@@ -69,12 +91,17 @@ class Dashboard extends Component {
       <div>
         <div className="dashboard-sidebar">
           <button onClick={() => this.setState({ showEditPanel: true })}>Add</button>
+          <label>Search</label>
+          <input 
+            type="text" 
+            name="searchValue" 
+            value={this.state.searchValue}
+            placeholder="Dashboard"
+            onChange={this.handleInputChange} />
           {dashboardRows}
         </div>
         <div className="dashboard-content">
-          <Switch>
-            <Route path="/dashboard/:id" component={DashboardEditView} />
-          </Switch>
+          <Route path="/dashboard/:id" render={(props) => <DashboardEditView key={props.match.params.id} />} />
         </div>
 
         <Modal 
@@ -82,7 +109,6 @@ class Dashboard extends Component {
           onClose={() => this.setState({ showEditPanel: false })}
           modalClass={'lg-modal-panel'} >
           <div>New dashboard</div>
-          <button onClick={() => this.setState({showEditPanel: false })}>Close</button>
           <button onClick={this.save}>Save</button>
           <form>
             <label>Name</label>

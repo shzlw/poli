@@ -46,7 +46,6 @@ class WidgetEditPanel extends React.Component {
   }
 
   componentDidMount() {
-    console.log('WidgetEditPanel', 'componentDidMount');
   }
 
   fetchWidget = async (widgetId, dashboardId) => {
@@ -92,6 +91,7 @@ class WidgetEditPanel extends React.Component {
             width: result.width,
             height: result.height,
             sqlQuery: result.sqlQuery,
+            chartType: result.chartType,
             jdbcDataSourceId: result.jdbcDataSourceId,
           });
         });
@@ -132,7 +132,6 @@ class WidgetEditPanel extends React.Component {
     const {
       widgetId,
       name,
-      dashboardId,
       jdbcDataSourceId,
       sqlQuery,
       chartType,
@@ -140,7 +139,7 @@ class WidgetEditPanel extends React.Component {
 
     const widget = {
       name: name,
-      dashboardId: dashboardId,
+      dashboardId: this.props.dashboardId,
       chartType: chartType,
       jdbcDataSourceId: jdbcDataSourceId,
       sqlQuery: sqlQuery

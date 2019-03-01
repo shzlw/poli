@@ -18,11 +18,7 @@ public class Widget {
     private long jdbcDataSourceId;
     private long dashboardId;
     private String sqlQuery;
-    /**
-     * table
-     * kpi
-     */
-    private String type;
+    private String chartType;
 
     /**
      * Json column
@@ -135,12 +131,12 @@ public class Widget {
         this.sqlQuery = sqlQuery;
     }
 
-    public String getType() {
-        return type;
+    public String getChartType() {
+        return chartType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setChartType(String chartType) {
+        this.chartType = chartType;
     }
 
     @JsonRawValue

@@ -26,3 +26,23 @@
   word-break: break-all;
   color: white;
 }
+
+.dashboard-content-widget-panel {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 200px;
+  bottom: 0;
+  background-color: #eeeeee;
+  overflow: auto;
+}
+
+.dashboard-content-filter-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: #eeeeee;
+  overflow: auto;
+}

@@ -25,9 +25,6 @@ public class Dashboard {
      */
     private String access;
 
-    private List<Filter> filters;
-    private List<Widget> widgets;
-
     public long getId() {
         return id;
     }
@@ -58,41 +55,5 @@ public class Dashboard {
 
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public List<Filter> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(List<Filter> filters) {
-        this.filters = filters;
-    }
-
-    public static String getTABLE() {
-        return TABLE;
-    }
-
-    public static String getID() {
-        return ID;
-    }
-
-    public static String getNAME() {
-        return NAME;
-    }
-
-    public static String getWIDTH() {
-        return WIDTH;
-    }
-
-    public static String getHEIGHT() {
-        return HEIGHT;
-    }
-
-    public List<Widget> getWidgets() {
-        return widgets;
-    }
-
-    public void setWidgets(List<Widget> widgets) {
-        this.widgets = widgets;
     }
 }
