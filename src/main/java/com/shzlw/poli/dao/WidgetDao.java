@@ -24,13 +24,13 @@ public class WidgetDao {
     JdbcTemplate jt;
 
     public List<Widget> fetchAllByDashboardId(long dashboardId) {
-        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type "
+        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type, data "
                     + "FROM p_widget WHERE dashboard_id=?";
         return jt.query(sql, new Object[] { dashboardId }, new WidgetRowMapper());
     }
 
     public Widget fetchById(long id) {
-        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type "
+        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type, data "
                     + "FROM p_widget WHERE id=?";
         try {
             return (Widget) jt.queryForObject(sql, new Object[]{ id }, new WidgetRowMapper());
@@ -45,8 +45,8 @@ public class WidgetDao {
     }
 
     public long add(Widget w) {
-        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, name, sql_query, width, height, x, y, chart_type) "
-                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, name, sql_query, width, height, x, y, chart_type, data) "
+                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -59,6 +59,7 @@ public class WidgetDao {
             ps.setInt(7, w.getX());
             ps.setInt(8, w.getY());
             ps.setString(9, w.getChartType());
+            ps.setString(10, w.getData());
             return ps;
         }, keyHolder);
 
@@ -95,6 +96,7 @@ public class WidgetDao {
             w.setWidth(rs.getInt("width"));
             w.setHeight(rs.getInt("height"));
             w.setChartType(rs.getString("chart_type"));
+            w.setData(rs.getString("data"));
             return w;
         }
     }

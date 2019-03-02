@@ -126,26 +126,13 @@ body,
 }
 
 .lg-modal-panel {
-  background-color: #f9f9f9;
+  background-color: #eee;
   padding: 10px;
   position: fixed;
   top: 20px;
   left: 40px;
   right: 40px;
   bottom: 20px;
-  overflow-y: auto;
-  z-index: 50;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.right-modal-panel {
-  background-color: #f9f9f9;
-  padding: 10px;
-  position: fixed;
-  top: 20px;
-  right: 0;
-  bottom: 20px;
-  width: 200px;
   overflow-y: auto;
   z-index: 50;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);

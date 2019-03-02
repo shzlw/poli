@@ -152,20 +152,20 @@ class WidgetEditPanel extends React.Component {
     if (chartType === Constants.TABLE) {
 
     } else if (chartType === Constants.PIE) {
+      const {
+        aggrKey,
+        aggrValue
+      } = this.state;
       widget.data = {
-        name: '1',
-        value: '1'
+        name: aggrKey,
+        value: aggrValue
       }
     }
 
     axios.post('/ws/widget', widget)
       .then(res => {
-        
+        this.props.onSave();
       });
-  }
-
-  close = () => {
-    this.props.onClose();
   }
 
   runQuery = (event) => {
@@ -238,7 +238,7 @@ class WidgetEditPanel extends React.Component {
         const chartOption = EchartsApi.getPieOption(legend, series);
         this.setState({
           chartOption: chartOption
-        })
+        });
       }
     }
   }
@@ -273,7 +273,7 @@ class WidgetEditPanel extends React.Component {
         headers.push({
           Header: key,
           accessor: key
-        })
+        });
       }
 
       queryResultItem = (
@@ -363,7 +363,7 @@ class WidgetEditPanel extends React.Component {
           <div></div>
 
           <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
-          <div>Count "users" by "last name"</div>
+          <div>Count "value" by "key"</div>
           <label>Aggr Key</label>
           <input 
             type="text" 

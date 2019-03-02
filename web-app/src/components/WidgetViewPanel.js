@@ -54,9 +54,9 @@ class WidgetViewPanel extends React.Component {
   resizeWidgetsToActual = (widgets) => {
     for (let i = 0; i < widgets.length; i++) {
       const actualX = this.scaleToActual(widgets[i].x);
-      const gridWidth = this.scaleToActual(widgets[i].width);
+      const actualdWidth = this.scaleToActual(widgets[i].width);
       widgets[i].x = actualX;
-      widgets[i].width = gridWidth;
+      widgets[i].width = actualdWidth;
     }
   }
 
@@ -123,11 +123,13 @@ class WidgetViewPanel extends React.Component {
     })
   }
 
-  save = () => {
-    const { widgets } = this.state;
-    const newWidgets = [...widgets];
+  saveWidgets = () => {
+    const newWidgets = JSON.parse(JSON.stringify(this.state.widgets));
     this.resizeWidgetsToBase(newWidgets);
     console.log('save', newWidgets);
+    axios.post('/ws/widget/position', newWidgets)
+      .then(res => {
+      });
   }
 
   onWidgetMove = (widget) => {
@@ -142,12 +144,6 @@ class WidgetViewPanel extends React.Component {
     this.setState({
       widgets: newWidgets
     });
-
-    // FIXME: use save button to update position and size of all widgets at the same time.
-    // axios.post('/ws/widget/position', widget)
-    //   .then(res => {
-    //  });
-      
   }
 
   onWidgetRemove = (widgetId) => {

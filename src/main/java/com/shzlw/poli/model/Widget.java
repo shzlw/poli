@@ -27,11 +27,7 @@ public class Widget {
     private String columns;
 
     /**
-     * {
-     *     sqlQuery,
-     *
-     * }
-     *
+     * Json column
      */
     private String data;
 

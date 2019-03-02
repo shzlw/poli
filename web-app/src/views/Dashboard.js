@@ -80,6 +80,11 @@ class Dashboard extends Component {
     this.props.history.push(`/dashboard/${dashboardId}`);
   }
 
+  onSaveDashboard = (dashboardId) => {
+    console.log('onSaveDashboard', dashboardId);
+    this.fetchBoards();
+  }
+
   render() {
     const dashboardRows = this.state.dashboards.map((d, index) => 
       <div key={index} className="dashboard-item" onClick={() => this.view(d.id)}>
@@ -101,7 +106,7 @@ class Dashboard extends Component {
           {dashboardRows}
         </div>
         <div className="dashboard-content">
-          <Route path="/dashboard/:id" render={(props) => <DashboardEditView key={props.match.params.id} />} />
+          <Route path="/dashboard/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
         </div>
 
         <Modal 

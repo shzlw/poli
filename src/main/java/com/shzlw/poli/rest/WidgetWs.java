@@ -66,8 +66,10 @@ public class WidgetWs {
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<?> updatePos(@RequestBody Widget widget) {
-        widgetDao.updatePosition(widget);
+    public ResponseEntity<?> updatePos(@RequestBody List<Widget> widgets) {
+        for (Widget widget : widgets) {
+            widgetDao.updatePosition(widget);
+        }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

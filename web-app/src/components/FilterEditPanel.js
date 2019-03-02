@@ -134,7 +134,7 @@ class FilterEditPanel extends React.Component {
 
     axios.post('/ws/filter', filter)
       .then(res => {
-        
+        this.props.onSave();
       });
   }
 

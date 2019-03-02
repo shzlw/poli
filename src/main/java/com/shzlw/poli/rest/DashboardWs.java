@@ -51,6 +51,7 @@ public class DashboardWs {
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
     public ResponseEntity<?> update(@RequestBody Dashboard dashboard) {
+        dashboardDao.update(dashboard);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

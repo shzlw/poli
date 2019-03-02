@@ -98,7 +98,7 @@ class DashboardEditView extends React.Component {
         this.setState({
           lastRefreshed: now
         });
-      }, 5000);
+      }, 1000);
       this.setState({
         autoRefreshTimerId: timerId
       });
@@ -126,11 +126,19 @@ class DashboardEditView extends React.Component {
     } = this.state;
 
     const dashboard = {
-      dashboardId: dashboardId,
+      id: dashboardId,
       name: name,
       width: width,
       height: height
     };
+
+    axios.put('/ws/dashboard/', dashboard)
+      .then(res => {
+      });
+
+    this.widgetViewPanel.current.saveWidgets();
+
+    this.props.onSaveDashboard(dashboardId);
 
     this.setState({
       isEditMode: false
@@ -146,12 +154,19 @@ class DashboardEditView extends React.Component {
   delete = () => {
     const { dashboardId } = this.state;
     console.log('delete', dashboardId);
-    axios.delete('/ws/dashboard/' + dashboardId)
+    axios.delete(`/ws/dashboard/${dashboardId}`)
       .then(res => {
         //this.fetchBoards();
       });
   }
 
+  onSaveWidget = () => {
+
+  }
+
+  onSaveFilter = () => {
+    
+  }
 
   openFilterEditPanel = (filterId) => {
     this.filterEditPanel.current.fetchFilter(filterId);
@@ -202,13 +217,12 @@ class DashboardEditView extends React.Component {
 
     return (
       <div>
-        <h3>
-          <input 
+        <label>Name</label>
+        <input 
           type="text" 
           name="name" 
           value={this.state.name}
           onChange={this.handleInputChange} />
-        </h3>
         <button onClick={this.toggleAutoRefresh}>toggleAutoRefresh: {autoRefreshStatus} - {lastRefreshed}</button>
         <button onClick={this.refresh}>Refresh</button>
         
@@ -236,6 +250,7 @@ class DashboardEditView extends React.Component {
             ref={this.widgetEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
+            onSave={() => this.setState({ showWidgetEditPanel: false })}
           />
         </Modal>
 
@@ -247,6 +262,7 @@ class DashboardEditView extends React.Component {
             ref={this.filterEditPanel}
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
+            onSave={() => this.setState({ showFilterEditPanel: false })}
           />
         </Modal>
 

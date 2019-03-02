@@ -9,6 +9,8 @@ import 'react-table/react-table.css';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
+import ReactEcharts from 'echarts-for-react';
+import * as EchartsApi from '../api/EchartsApi';
 
 class GridItem extends React.Component {
 
@@ -127,7 +129,31 @@ class GridItem extends React.Component {
         />
       );
     } else if (chartType === Constants.PIE) {
-
+      const { 
+        name,
+        value
+      } = this.props.data;
+      console.log('Constants.PIE', this.props)
+      
+      if (!Util.isArrayEmpty(queryResult)) {
+        let legend = [];
+        let series = [];
+        for (let i = 0; i < queryResult.length; i++) {
+          const row = queryResult[i];
+          legend.push(row[name]);
+          series.push({
+            name: row[name],
+            value: row[value]
+          });
+        }
+        const chartOption = EchartsApi.getPieOption(legend, series);
+        widgetItem = (
+          <ReactEcharts 
+            option={chartOption}   
+            className="echarts" />
+        );
+      }
+      
     } 
 
     return widgetItem;

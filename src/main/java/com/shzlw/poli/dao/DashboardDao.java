@@ -49,6 +49,11 @@ public class DashboardDao {
         return keyHolder.getKey().longValue();
     }
 
+    public int update(Dashboard d) {
+        String sql = "UPDATE p_dashboard SET name=?, width=?, height=? WHERE id=?";
+        return jt.update(sql, new Object[] { d.getName(), d.getWidth(), d.getHeight(), d.getId() });
+    }
+
     public int delete(long id) {
         String sql = "DELETE FROM p_dashboard WHERE id=?";
         return jt.update(sql, new Object[]{ id });
