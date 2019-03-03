@@ -60,7 +60,6 @@ class GridDraggable extends React.Component {
   }
 
   onMouseMove = (event) => {
-    console.log('GridDraggable onMouseMove', event);
     event.preventDefault();
     if (this.props.mode !== 'drag') {
       return; 

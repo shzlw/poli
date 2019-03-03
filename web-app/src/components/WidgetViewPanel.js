@@ -80,7 +80,6 @@ class WidgetViewPanel extends React.Component {
     if (dashboardId === null) {
       return;
     }
-
     axios.get('/ws/widget/dashboard/' + dashboardId)
       .then(res => {
         const result = res.data;
@@ -96,7 +95,6 @@ class WidgetViewPanel extends React.Component {
   }
 
   queryWidgets = (filterParams) => {
-    console.log('queryWidgets', filterParams);
     const params = filterParams === null ? [] : filterParams;
     const { widgets } = this.state;
     for (let i = 0; i < widgets.length; i++) {
@@ -126,7 +124,6 @@ class WidgetViewPanel extends React.Component {
   saveWidgets = () => {
     const newWidgets = JSON.parse(JSON.stringify(this.state.widgets));
     this.resizeWidgetsToBase(newWidgets);
-    console.log('save', newWidgets);
     axios.post('/ws/widget/position', newWidgets)
       .then(res => {
       });
@@ -160,56 +157,32 @@ class WidgetViewPanel extends React.Component {
   }
 
   render() {
-    const widgetItems = this.state.widgets.map((widget, index) => {
-      
-      const headers = [];
-      const queryResult = widget.queryResult;
-      if (!Util.isArrayEmpty(queryResult)) {
-        const obj = queryResult[0];
-        const keys = Object.keys(obj);
-        for (const key of keys) {
-          headers.push({
-            Header: key,
-            accessor: key
-          })
-        }
-      }
-
-      return (
-        <div key={index}>
-          <ReactTable
-            data={queryResult}
-            columns={headers}
-            minRows={0}
-            showPagination={false}
-          />
-        </div>);
-    });
-
     return (
       <div 
         ref={this.widgetViewPanel} 
         className="testPanel">
 
-        <h3>WidgetViewPanel</h3>
-        <input 
-          type="checkbox" 
-          name="snapToGrid"
-          value="snapToGrid"
-          checked={this.state.snapToGrid} 
-          onChange={this.handleChange}
-          />
-          snapToGrid
-        <br/>
-        <input 
-          type="checkbox" 
-          name="showGridlines"
-          value="showGridlines"
-          checked={this.state.showGridlines} 
-          onChange={this.handleChange}
-          />
-          showGridlines
-        <br/>
+        {this.props.isEditMode ?
+        (
+          <div>
+            <input 
+            type="checkbox" 
+            name="snapToGrid"
+            value="snapToGrid"
+            checked={this.state.snapToGrid} 
+            onChange={this.handleChange} />
+            snapToGrid
+            <br/>
+            <input 
+              type="checkbox" 
+              name="showGridlines"
+              value="showGridlines"
+              checked={this.state.showGridlines} 
+              onChange={this.handleChange} />
+              showGridlines
+            <br/>
+          </div>
+        ) : null}
         
         <GridLayout 
           width={this.state.gridWidth}
@@ -217,6 +190,7 @@ class WidgetViewPanel extends React.Component {
           snapToGrid={this.state.snapToGrid}
           showGridlines={this.state.showGridlines}
           widgets={this.state.widgets}
+          isEditMode={this.props.isEditMode}
           onWidgetMove={this.onWidgetMove}
           onWidgetEdit={this.props.onWidgetEdit} 
           onWidgetRemove={this.onWidgetRemove} />

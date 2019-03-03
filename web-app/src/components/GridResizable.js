@@ -26,7 +26,6 @@ class GridResizable extends React.Component {
   }
 
   onMouseDown = (event) => {
-    console.log('onMouseDown', event);
     event.preventDefault();
     const thisNode = ReactDOM.findDOMNode(this);
     const currentX = event.clientX;
@@ -56,7 +55,6 @@ class GridResizable extends React.Component {
   }
 
   onMouseMove = (event) => {
-    console.log('GridResizer onMouseMove', event);
     event.preventDefault();
     if (this.props.mode !== 'resize') {
       return; 

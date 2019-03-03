@@ -17,8 +17,6 @@ class GridItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      x: this.props.x,
-      y: this.props.y,
       mode: ''
     };
   }
@@ -65,12 +63,10 @@ class GridItem extends React.Component {
   }
 
   onMouseMove = (event, mode, state) => {
-    console.log('GridItem onMouseMove', event);
     event.preventDefault();   
   }
 
   editWidget = (widgetId) => {
-    console.log('editWidget', widgetId);
     this.props.onWidgetEdit(widgetId);
   }
 
@@ -133,8 +129,6 @@ class GridItem extends React.Component {
         name,
         value
       } = this.props.data;
-      console.log('Constants.PIE', this.props)
-      
       if (!Util.isArrayEmpty(queryResult)) {
         let legend = [];
         let series = [];
@@ -160,11 +154,12 @@ class GridItem extends React.Component {
   }
 
   render() {
+    console.log(this.props.id, this.props.x, this.props.width);
     let styles = {
-      left: this.state.x,
-      top: this.state.y,
-      width: this.props.width,
-      height: this.props.height,
+      left: this.props.x + 'px',
+      top: this.props.y + 'px',
+      width: this.props.width + 'px',
+      height: this.props.height + 'px',
       zIndex: 1
     };
 
@@ -173,31 +168,39 @@ class GridItem extends React.Component {
         <div className="grid-box-title">
           {this.props.name}
 
-          <div className="icon-button-group" style={{marginRight: '20px'}}>
-            <div className="icon-btn" onClick={() => this.editWidget(this.props.id)}>
-              <i className="fas fa-edit fa-fw"></i>
+          { this.props.isEditMode ? (
+            <div className="icon-button-group" style={{marginRight: '20px'}}>
+              <div className="icon-btn" onClick={() => this.editWidget(this.props.id)}>
+                <i className="fas fa-edit fa-fw"></i>
+              </div>
+              <div className="icon-btn" onClick={() => this.removeWidget(this.props.id)}>
+                <i className="fas fa-trash-alt fa-fw"></i>
+              </div>
             </div>
-            <div className="icon-btn" onClick={() => this.removeWidget(this.props.id)}>
-              <i className="fas fa-trash-alt fa-fw"></i>
-            </div>
-          </div>
+          ) : null}
+          
         </div>
         <div className="grid-box-content">
           {this.renderWidgetContent()}
         </div>
 
-        <GridDraggable 
-          onMouseUp={this.onMouseUp}
-          onMouseDown={this.onMouseDown}
-          onMouseMove={this.onMouseMove}
-          mode={this.state.mode}
-          snapToGrid={this.props.snapToGrid} />
+        { this.props.isEditMode ? (
+          <GridDraggable 
+            onMouseUp={this.onMouseUp}
+            onMouseDown={this.onMouseDown}
+            onMouseMove={this.onMouseMove}
+            mode={this.state.mode}
+            snapToGrid={this.props.snapToGrid} />
+        ): null}
 
-        <GridResizable 
-          onMouseUp={this.onMouseUp}
-          onMouseDown={this.onMouseDown}
-          onMouseMove={this.onMouseMove}
-          mode={this.state.mode} />
+        { this.props.isEditMode ? (
+          <GridResizable 
+            onMouseUp={this.onMouseUp}
+            onMouseDown={this.onMouseDown}
+            onMouseMove={this.onMouseMove}
+            mode={this.state.mode} />
+        ): null}
+        
       </div>
     )
   }

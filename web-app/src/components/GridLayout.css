@@ -6,8 +6,6 @@
 }
 .grid-box {
   position: absolute;
-  // width: 100px;
-  // height: 100px;
   border: 2px solid #4b4f56;
   overflow-x: hidden;
   overflow-y: hidden;

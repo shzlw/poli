@@ -57,6 +57,8 @@ class DashboardEditView extends React.Component {
             name: result.name,
             width: result.width,
             height: result.height,
+          }, () => {
+            this.refresh();
           });
         });
     }
@@ -151,6 +153,12 @@ class DashboardEditView extends React.Component {
     });
   }
 
+  cancelEdit = () => {
+    this.setState({
+      isEditMode: false
+    });
+  }
+
   delete = () => {
     const { dashboardId } = this.state;
     console.log('delete', dashboardId);
@@ -200,6 +208,7 @@ class DashboardEditView extends React.Component {
     if (isEditMode) {
       statusButtonPanel = (
         <React.Fragment>
+          <button onClick={this.cancelEdit}>Cancel</button>
           <button onClick={this.save}>Save</button>
           <button onClick={this.delete}>Delete</button>
           <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
@@ -217,13 +226,39 @@ class DashboardEditView extends React.Component {
 
     return (
       <div>
-        <label>Name</label>
-        <input 
-          type="text" 
-          name="name" 
-          value={this.state.name}
-          onChange={this.handleInputChange} />
-        <button onClick={this.toggleAutoRefresh}>toggleAutoRefresh: {autoRefreshStatus} - {lastRefreshed}</button>
+        <div className="row">
+           <div className="inline-block">Name:</div>
+          <input 
+            type="text" 
+            name="name" 
+            value={this.state.name}
+            onChange={this.handleInputChange} 
+            className="inline-block" 
+            style={{width: '200px'}}
+            />
+
+          <div className="inline-block">W:</div>
+          <input 
+            type="text" 
+            name="width" 
+            value={this.state.width}
+            onChange={this.handleInputChange} 
+            className="inline-block" 
+            style={{width: '200px'}}
+            />
+
+          <div className="inline-block">H:</div>
+          <input 
+            type="text" 
+            name="height" 
+            value={this.state.height}
+            onChange={this.handleInputChange} 
+            className="inline-block" 
+            style={{width: '200px'}}
+            />
+        </div>
+        
+        <button onClick={this.toggleAutoRefresh}>AUTO: {autoRefreshStatus} - {lastRefreshed}</button>
         <button onClick={this.refresh}>Refresh</button>
         
         {statusButtonPanel}
@@ -232,6 +267,7 @@ class DashboardEditView extends React.Component {
           <WidgetViewPanel 
             ref={this.widgetViewPanel} 
             onWidgetEdit={this.openWidgetEditPanel}
+            isEditMode={this.state.isEditMode}
           />
         </div>
         <div className="dashboard-content-filter-panel">
@@ -239,6 +275,7 @@ class DashboardEditView extends React.Component {
             ref={this.filterViewPanel} 
             onEdit={this.openFilterEditPanel}
             onApplyFilters={this.applyFilters}
+            isEditMode={this.state.isEditMode}
           />
         </div>
 

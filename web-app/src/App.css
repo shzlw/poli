@@ -164,10 +164,6 @@ body,
   display: inline-block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 button {
   background: #0065FF;
   color: #fff;

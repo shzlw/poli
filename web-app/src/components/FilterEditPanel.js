@@ -237,11 +237,8 @@ class FilterEditPanel extends React.Component {
             showGutter={true}
             highlightActiveLine={true}
             setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: false,
               showLineNumbers: true,
-              tabSize: 2,
+              tabSize: 2
             }}
           />
 

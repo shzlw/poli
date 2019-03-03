@@ -121,21 +121,30 @@ class Dashboard extends Component {
               type="text" 
               name="name" 
               value={this.state.name}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+              disabled={!this.state.isEditMode}
+              style={{width: '200px'}}
+              />
 
             <label>Width</label>
             <input 
               type="text" 
               name="width" 
               value={this.state.width}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+              disabled={!this.state.isEditMode}
+              style={{width: '100px'}}
+              />
 
             <label>Height</label>
             <input 
               type="text" 
               name="height" 
               value={this.state.height}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+              disabled={!this.state.isEditMode}
+              style={{width: '100px'}}
+              />
             
           </form>
         </Modal>
