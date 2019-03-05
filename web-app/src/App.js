@@ -33,13 +33,13 @@ class App extends Component {
           <div className="app-name">Poli</div>
           <ul className="app-nav-menu">
             <li>
-              <Link to="/datasource" onClick={(e) => this.handleClick('datasource')}>
+              <Link to="/datasources" onClick={(e) => this.handleClick('datasource')}>
                 <i className="fas fa-database fa-fw"></i>
                 <span className="app-nav-menu-text">Data Source</span>
               </Link>
             </li>
             <li>
-              <Link to="/dashboard" onClick={(e) => this.handleClick('dashboard')}>
+              <Link to="/dashboards" onClick={(e) => this.handleClick('dashboard')}>
                 <i className="fas fa-chalkboard fa-fw"></i>
                 <span className="app-nav-menu-text">Dashboard</span>
               </Link>
@@ -54,8 +54,8 @@ class App extends Component {
         <div className="app-content">
           <Switch>
             <Route exact path="/" component={Dashboard} />
-            <Route exact path="/datasource" component={DataSource} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route exact path="/datasources" component={DataSource} />
+            <Route path="/dashboards" component={Dashboard} />
             <Route exact path="/single-test" component={SingleTest} />
           </Switch>
         </div>

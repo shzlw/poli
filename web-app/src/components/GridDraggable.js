@@ -107,6 +107,7 @@ class GridDraggable extends React.Component {
       <div className="grid-draggable"
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}>
+        <i class="fas fa-expand-arrows-alt fa-fw"></i>
       </div>
     )
   }

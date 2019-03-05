@@ -88,35 +88,28 @@ class FilterViewPanel extends Component {
     const filters = this.state.filters;
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
+      let filterComponent = (<div>NONE</div>);
       if (filter.type === Constants.SLICER) {
         const checkBoxes = filter.checkBoxes;
-        filterPanel.push(
-          (
-            <div className="filter-card">
-              <div className="filter-card-title">
-                {filter.name}
-                <div className="icon-button-group">
-                  <div className="icon-btn" onClick={() => this.edit(filter.id)}>
-                    <i className="fas fa-edit fa-fw"></i>
-                  </div>
-                  <div className="icon-btn" onClick={() => this.remove(filter.id)}>
-                    <i className="fas fa-trash-alt fa-fw"></i>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <Slicer 
-                  key={i} 
-                  filterId={filter.id} 
-                  checkBoxes={checkBoxes} 
-                  onChange={this.onSlicerChange} 
-                />
-              </div>
-            </div>
-          )
+        filterComponent = (
+          <Slicer 
+            key={i} 
+            filterId={filter.id} 
+            checkBoxes={checkBoxes} 
+            onChange={this.onSlicerChange} 
+          />
         );
       } else if (filter.type === Constants.SINGLE_VALUE) {
-        filterPanel.push(
+        filterComponent = (
+          <input 
+            type="text"  
+            value={filter.value}
+            onChange={(event) => this.onSingleValueChange(filter.id, event)} 
+          />
+        );
+      }
+
+      filterPanel.push(
           (
             <div className="filter-card">
               <div className="filter-card-title">
@@ -131,18 +124,11 @@ class FilterViewPanel extends Component {
                 </div>
               </div>
               <div>
-                <input 
-                  type="text"  
-                  value={filter.value}
-                  onChange={(event) => this.onSingleValueChange(filter.id, event)} 
-                />
+                {filterComponent}
               </div>
             </div>
           )
         );
-      } else if (filter.type === 'date-range') {
-
-      }
     }
     return filterPanel;
   }

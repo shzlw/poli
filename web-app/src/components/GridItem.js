@@ -70,6 +70,14 @@ class GridItem extends React.Component {
     this.props.onWidgetEdit(widgetId);
   }
 
+  exportCsv = (widgetId) => {
+
+  }
+
+  exportJson = (widgetId) => {
+
+  }
+
   removeWidget = (widgetId) => {
     this.props.onWidgetRemove(widgetId);
   }
@@ -154,7 +162,6 @@ class GridItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.id, this.props.x, this.props.width);
     let styles = {
       left: this.props.x + 'px',
       top: this.props.y + 'px',
@@ -177,7 +184,16 @@ class GridItem extends React.Component {
                 <i className="fas fa-trash-alt fa-fw"></i>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="icon-button-group" style={{marginRight: '20px'}}>
+              <div className="icon-btn" onClick={() => this.exportJson(this.props.id)}>
+                <i class="fas fa-file-export fa-fw"></i>
+              </div>
+              <div className="icon-btn" onClick={() => this.exportCsv(this.props.id)}>
+                <i className="fas fa-file-csv fa-fw"></i>
+              </div>
+            </div>
+          )}
           
         </div>
         <div className="grid-box-content">

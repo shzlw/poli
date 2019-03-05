@@ -72,12 +72,12 @@ class Dashboard extends Component {
           showEditPanel: false 
         });
         this.fetchBoards();
-        this.props.history.push(`/dashboard/${dashboardId}`);
+        this.props.history.push(`/dashboards/${dashboardId}`);
       });
   }
 
   view = (dashboardId) => {
-    this.props.history.push(`/dashboard/${dashboardId}`);
+    this.props.history.push(`/dashboards/${dashboardId}`);
   }
 
   onSaveDashboard = (dashboardId) => {
@@ -87,7 +87,7 @@ class Dashboard extends Component {
 
   render() {
     const dashboardRows = this.state.dashboards.map((d, index) => 
-      <div key={index} className="dashboard-item" onClick={() => this.view(d.id)}>
+      <div key={index} className="dashboard-menu-item" onClick={() => this.view(d.id)}>
         <div>{d.id} {d.name}</div>
       </div>
     );
@@ -106,7 +106,7 @@ class Dashboard extends Component {
           {dashboardRows}
         </div>
         <div className="dashboard-content">
-          <Route path="/dashboard/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
+          <Route path="/dashboards/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
         </div>
 
         <Modal 
@@ -122,7 +122,6 @@ class Dashboard extends Component {
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} 
-              disabled={!this.state.isEditMode}
               style={{width: '200px'}}
               />
 
@@ -132,7 +131,6 @@ class Dashboard extends Component {
               name="width" 
               value={this.state.width}
               onChange={this.handleInputChange} 
-              disabled={!this.state.isEditMode}
               style={{width: '100px'}}
               />
 
@@ -142,7 +140,6 @@ class Dashboard extends Component {
               name="height" 
               value={this.state.height}
               onChange={this.handleInputChange} 
-              disabled={!this.state.isEditMode}
               style={{width: '100px'}}
               />
             

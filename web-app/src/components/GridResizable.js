@@ -109,6 +109,7 @@ class GridResizable extends React.Component {
         className="grid-resizable"
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp} >
+        <i class="fas fa-compress fa-fw"></i>
       </div>
     )
   }
