@@ -44,6 +44,18 @@ public class WidgetDao {
         return jt.update(sql, new Object[] { w.getWidth(), w.getHeight(), w.getX(), w.getY(), w.getId() });
     }
 
+    public int update(Widget w) {
+        String sql = "UPDATE p_widget SET datasource_id=?, name=?, sql_query=?, chart_type=?, data=? WHERE id=?";
+        return jt.update(sql, new Object[] {
+                w.getJdbcDataSourceId(),
+                w.getName(),
+                w.getSqlQuery(),
+                w.getChartType(),
+                w.getData(),
+                w.getId()
+        });
+    }
+
     public long add(Widget w) {
         String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, name, sql_query, width, height, x, y, chart_type, data) "
                     + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

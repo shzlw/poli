@@ -271,6 +271,14 @@ label {
   padding: 3px;
 }
 
+.datasource-panel {
+  float: left;
+  width: 300px;
+  height: 200px;
+  margin: 10px;
+  border: 2px solid #0065FF;
+}
+
 /** ReactTable */
 .ReactTable {
   font-size: 15px;

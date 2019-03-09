@@ -1,5 +1,6 @@
 package com.shzlw.poli.dao;
 
+import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -51,6 +52,16 @@ public class FilterDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public int update(Filter f) {
+        String sql = "UPDATE p_filter SET name=?, type=?, data=? WHERE id=?";
+        return jt.update(sql, new Object[] {
+                f.getName(),
+                f.getType(),
+                f.getData(),
+                f.getId()
+        });
     }
 
     public int delete(long id) {

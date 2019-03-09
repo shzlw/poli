@@ -7,7 +7,7 @@
   overflow-y: auto;
   border-right: 1px solid #1e1e1e;
 }
-
+  
 .dashboard-content {
   position: absolute;
   top: 0;
@@ -27,20 +27,18 @@
   color: white;
 }
 
-.dashboard-menu-item:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1),
-    0 3px 6px 0 rgba(0, 0, 0, 0.08);
-}
-
 .dashboard-content-widget-panel {
   position: absolute;
-  top: 150px;
+  top: 100px;
   left: 0;
   right: 200px;
   bottom: 0;
   background-color: #eeeeee;
   overflow: auto;
+}
+
+.full-width {
+   right: 0px;
 }
 
 .dashboard-content-filter-panel {

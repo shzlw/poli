@@ -56,7 +56,10 @@ class FilterEditPanel extends React.Component {
       axios.get('/ws/filter/' + filterId)
         .then(res => {
           const result = res.data;
-          const data = result.data;
+          const { 
+            data,
+            type
+          } = result;
           this.setState({
             filterId: filterId,
             name: result.name,
@@ -64,7 +67,13 @@ class FilterEditPanel extends React.Component {
             data: data
           });
 
-          if (result.type === Constants.SLICER) {
+          if (type === Constants.SLICER) {
+            this.setState({
+              sqlQuery: data.sqlQuery,
+              jdbcDataSourceId: data.jdbcDataSourceId,
+              param: data.param
+            });
+          } else if (type === Constants.SINGLE_VALUE) {
             this.setState({
               sqlQuery: data.sqlQuery,
               jdbcDataSourceId: data.jdbcDataSourceId,
@@ -107,35 +116,47 @@ class FilterEditPanel extends React.Component {
   save = (event) => {
     event.preventDefault();
     const {
-      type
+      filterId,
+      name,
+      type,
+      jdbcDataSourceId,
+      sqlQuery,
+      param
     } = this.state;
 
     const filter = {
-      id: this.state.filterId,
-      name: this.state.name,
-      type: this.state.type,
+      name: name,
+      type: type,
       dashboardId: this.props.dashboardId
     };
 
     if (type === Constants.SLICER) {
       filter.data = {
-        jdbcDataSourceId: this.state.jdbcDataSourceId,
-        sqlQuery: this.state.sqlQuery,
-        param: this.state.param
+        jdbcDataSourceId: jdbcDataSourceId,
+        sqlQuery: sqlQuery,
+        param: param
       }
     } else if (type === Constants.SINGLE_VALUE) {
       filter.data = {
         useQuery: false,
-        jdbcDataSourceId: this.state.jdbcDataSourceId,
-        sqlQuery: this.state.sqlQuery,
-        param: this.state.param,
+        jdbcDataSourceId: jdbcDataSourceId,
+        sqlQuery: sqlQuery,
+        param: param,
       }
     }
 
-    axios.post('/ws/filter', filter)
-      .then(res => {
-        this.props.onSave();
-      });
+    if (filterId === null) {
+      axios.post('/ws/filter', filter)
+        .then(res => {
+          this.props.onSave();
+        });
+    } else {
+      filter.id = filterId;
+      axios.put('/ws/filter', filter)
+        .then(res => {
+          this.props.onSave();
+        });
+    }
   }
 
   runQuery = (event) => {

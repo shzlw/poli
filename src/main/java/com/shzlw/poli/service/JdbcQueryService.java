@@ -7,6 +7,7 @@ import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.util.Constants;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -179,26 +181,41 @@ public class JdbcQueryService {
         Map<String, Object> namedParameters = new HashMap<>();
         if (filterParams != null) {
             for (FilterParameter param : filterParams) {
-                if (param != null
-                        && param.getParam() != null
-                        && param.getValue() != null) {
+                if (!isFilterParameterEmpty(param)) {
+                    String type = param.getType();
                     String name = param.getParam();
-                    String json = param.getValue();
-                    try {
-                        List<String> array = Arrays.asList(mapper.readValue(json, String[].class));
-                        if (!array.isEmpty()) {
-                            namedParameters.put(name, array);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    String value = param.getValue();
 
+                    if (type.equals(Constants.FILTER_TYPE_SLICER)) {
+                        String remark = param.getRemark();
+                        if (remark == null) {
+                            try {
+                                List<String> array = Arrays.asList(mapper.readValue(value, String[].class));
+                                if (!array.isEmpty()) {
+                                    namedParameters.put(name, array);
+                                }
+                            } catch (IOException e) {
+                                LOGGER.warn("exception: {}", e);
+                            }
+                        }
+                    } else if (type.equals(Constants.FILTER_TYPE_SINGLE)) {
+                        try {
+                            String singleValue = mapper.readValue(value, String.class);
+                            namedParameters.put(name, singleValue);
+                        } catch (IOException e) {
+                            LOGGER.warn("exception: {}", e);
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Unknown filter type");
+                    }
                 }
             }
         }
 
         QueryResult queryResult = new QueryResult();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
+        LOGGER.info("[fetchJsonWithParams] parsedSql: {}", parsedSql);
+        LOGGER.info("[fetchJsonWithParams] namedParameters: {}", namedParameters);
         String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
             @Nullable
             @Override
@@ -286,4 +303,16 @@ public class JdbcQueryService {
 
         return sb.toString();
     }
+
+    private static boolean isFilterParameterEmpty(FilterParameter p) {
+        if (p == null
+                || StringUtils.isEmpty(p.getType())
+                || StringUtils.isEmpty(p.getParam())
+                || StringUtils.isEmpty(p.getValue())) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

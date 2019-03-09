@@ -115,8 +115,9 @@ class WidgetEditPanel extends React.Component {
   }
 
   handleDataSourceChange = (event) => {
+    const jdbcDataSourceId = parseInt(event.target.value, 10);
     this.setState({ 
-      jdbcDataSourceId: event.target.value
+      jdbcDataSourceId: jdbcDataSourceId
     });
   }
 
@@ -128,7 +129,6 @@ class WidgetEditPanel extends React.Component {
 
   save = (event) => {
     event.preventDefault();
-
     const {
       widgetId,
       name,
@@ -145,10 +145,6 @@ class WidgetEditPanel extends React.Component {
       sqlQuery: sqlQuery
     }
 
-    if (widgetId !== null) {
-      widget.id = widgetId;
-    }
-
     if (chartType === Constants.TABLE) {
 
     } else if (chartType === Constants.PIE) {
@@ -162,10 +158,18 @@ class WidgetEditPanel extends React.Component {
       }
     }
 
-    axios.post('/ws/widget', widget)
-      .then(res => {
-        this.props.onSave();
-      });
+    if (widgetId === null) {
+      axios.post('/ws/widget', widget)
+        .then(res => {
+          this.props.onSave();
+        });
+    } else {
+      widget.id = widgetId;
+      axios.put('/ws/widget', widget)
+        .then(res => {
+          this.props.onSave();
+        });
+    }
   }
 
   runQuery = (event) => {

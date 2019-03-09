@@ -6,8 +6,18 @@ import com.shzlw.poli.util.RawStringDeserialzier;
 
 public class FilterParameter {
 
+    private String type;
     private String param;
     private String value;
+    private String remark;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getParam() {
         return param;
@@ -27,10 +37,19 @@ public class FilterParameter {
         this.value = value;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public String toString() {
         return "FilterParameter{" +
-                "param='" + param + '\'' +
+                "type='" + type + '\'' +
+                ", param='" + param + '\'' +
                 ", value='" + value + '\'' +
                 '}';
     }

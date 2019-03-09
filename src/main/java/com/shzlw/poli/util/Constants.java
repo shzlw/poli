@@ -15,4 +15,10 @@ public final class Constants {
 
     public static final String ENCRYPT_KEY = "1234salt1234salt";
     public static final String ENCRYPT_IV = "5678salt5678salt";
+
+    public static final String FILTER_TYPE_SLICER = "slicer";
+    public static final String FILTER_TYPE_SINGLE = "single";
+
+    public static final String SLICER_SELECT_ALL = "select all";
+    public static final String SLICER_SELECT_NONE = "select none";
 }

@@ -166,16 +166,17 @@ class DataSource extends Component {
     } = this.state;
 
     const jdbcDataSourceItems = jdbcDataSources.map((ds, index) => 
-      <tr key={index}>
-        <td>{ds.name}</td>
-        <td>{ds.connectionUrl}</td>
-        <td>{ds.type}</td>
-        <td>{ds.username}</td>
-        <td>{ds.ping}</td>
-        <td><button onClick={() => this.openEditPanel(ds)}>update</button></td>
-        <td><button onClick={() => this.delete(ds.id)}>delete</button></td>
-        <td><button onClick={() => this.ping(ds.id)}>ping</button></td>
-      </tr>
+      <div key={index} className="datasource-panel">
+        <p>
+          {ds.name}
+          {ds.connectionUrl}
+          {ds.username}
+          {ds.ping}
+          <button onClick={() => this.openEditPanel(ds)}>update</button>
+          <button onClick={() => this.delete(ds.id)}>delete</button>
+          <button onClick={() => this.ping(ds.id)}>ping</button>
+        </p>
+      </div>
     );
 
     let mode;
@@ -203,17 +204,13 @@ class DataSource extends Component {
     return (
       <div>
         <h1>Data Sources</h1>
-        <div>
-          <h2>Table</h2>
-
-          <table>
-            <thead>
-            </thead>
-            <tbody>
-              {jdbcDataSourceItems}
-            </tbody>
-          </table>
-
+        <input
+          type="text"
+          name="searchValue"
+          placeholder="Data source name..."
+          />
+        <div className="row">
+          {jdbcDataSourceItems}
         </div>
         <button onClick={() => this.openEditPanel(null)}>
           Add

@@ -114,14 +114,19 @@ class FilterViewPanel extends Component {
             <div className="filter-card">
               <div className="filter-card-title">
                 {filter.name}
-                <div className="icon-button-group">
-                  <div className="icon-btn" onClick={() => this.edit(filter.id)}>
-                    <i className="fas fa-edit fa-fw"></i>
-                  </div>
-                  <div className="icon-btn" onClick={() => this.remove(filter.id)}>
-                    <i className="fas fa-trash-alt fa-fw"></i>
-                  </div>
-                </div>
+
+                { this.props.isEditMode ? 
+                  (
+                    <div className="icon-button-group">
+                      <div className="icon-btn" onClick={() => this.edit(filter.id)}>
+                        <i className="fas fa-edit fa-fw"></i>
+                      </div>
+                      <div className="icon-btn" onClick={() => this.remove(filter.id)}>
+                        <i className="fas fa-trash-alt fa-fw"></i>
+                      </div>
+                    </div>
+                  ): null 
+                }
               </div>
               <div>
                 {filterComponent}
@@ -178,6 +183,7 @@ class FilterViewPanel extends Component {
     const filterParams = [];
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
+      const filterParam = {};
       if (filter.type === Constants.SLICER) {
         const checkBoxes = filter.checkBoxes;
         const paramValues = [];
@@ -187,16 +193,16 @@ class FilterViewPanel extends Component {
             paramValues.push(checkBox.value);
           }
         }
-        filterParams.push({
-          param: filter.data.param,
-          value: paramValues
-        });
+        filterParam.value = paramValues;
+        if (paramValues.length === checkBoxes.length) {
+          filterParam.remark = 'select all';
+        }
       } else if (filter.type === Constants.SINGLE_VALUE) {
-        filterParams.push({
-          param: filter.data.param,
-          value: filter.value
-        });
+        filterParam.value = filter.value;
       }
+      filterParam.param = filter.data.param;
+      filterParam.type = filter.type;
+      filterParams.push(filterParam);
     }
 
     this.props.onApplyFilters(filterParams);
@@ -204,7 +210,7 @@ class FilterViewPanel extends Component {
 
   render() {
     return (
-      <div>
+      <div className="dashboard-content-filter-panel">
         <h5>FilterViewPanel</h5>
         <button onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">

@@ -40,7 +40,7 @@ public class FilterWs {
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
     public ResponseEntity<?> update(@RequestBody Filter filter) {
-        // TODO:
+        filterDao.update(filter);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

@@ -53,7 +53,7 @@ public class WidgetWs {
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
     public ResponseEntity<?> update(@RequestBody Widget widget) {
-        // TODO:
+        widgetDao.update(widget);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

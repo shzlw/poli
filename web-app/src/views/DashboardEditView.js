@@ -21,7 +21,6 @@ class DashboardEditView extends React.Component {
     this.state = {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
-      showFilterViewPanel: false,
       isEditMode: false,
       autoRefreshTimerId: '',
       lastRefreshed: '',
@@ -30,8 +29,6 @@ class DashboardEditView extends React.Component {
       name: '',
       width: 0,
       height: 0,
-      widgets: [],
-      filters: []
     }
 
     this.filterViewPanel = React.createRef();
@@ -89,13 +86,8 @@ class DashboardEditView extends React.Component {
         autoRefreshTimerId: ''
       });
     } else {
-      const { 
-        dashboardId,
-        width,
-        height
-      } = this.state;
       const timerId = setInterval(() => {
-        this.widgetViewPanel.current.fetchWidgets(dashboardId, width, height, null);
+        this.refreshWidgetView();
         const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
         this.setState({
           lastRefreshed: now
@@ -109,14 +101,25 @@ class DashboardEditView extends React.Component {
 
   refresh = () => {
     console.log('refresh');
+    this.refreshWidgetView();
+    this.refreshFilterView();
+  }
+
+  refreshFilterView = () => {
+    const { 
+      dashboardId
+    } = this.state;
+    this.filterViewPanel.current.fetchFilters(dashboardId);
+  }
+
+  refreshWidgetView = () => {
     const { 
       dashboardId,
       width,
       height
     } = this.state;
-    this.filterViewPanel.current.fetchFilters(dashboardId);
-    this.widgetViewPanel.current.fetchWidgets(dashboardId, width, height, null);
-  }
+    this.widgetViewPanel.current.fetchWidgets(dashboardId, width, null);
+  } 
 
   save = () => {
     console.log('save');
@@ -128,8 +131,7 @@ class DashboardEditView extends React.Component {
     } = this.state;
 
     const dashboard = {
-      id: dashboardId,
-      name: name,
+      id: dashboardId, 
       width: width,
       height: height
     };
@@ -169,17 +171,24 @@ class DashboardEditView extends React.Component {
   }
 
   onSaveWidget = () => {
-
+    this.setState({ 
+      showWidgetEditPanel: false 
+    });
+    // FIXME: not need to refresh. Just add to state.widgets
+    this.refreshWidgetView();
   }
 
   onSaveFilter = () => {
-    
+    this.setState({ 
+      showFilterEditPanel: false 
+    });
+    // FIXME: not need to refresh. Just add to state.widgets
+    this.refreshFilterView();
   }
 
   openFilterEditPanel = (filterId) => {
     this.filterEditPanel.current.fetchFilter(filterId);
     this.setState({
-      showFilterViewPanel: false,
       showFilterEditPanel: true
     });
   }
@@ -219,7 +228,6 @@ class DashboardEditView extends React.Component {
       statusButtonPanel = (
         <React.Fragment>
           <button onClick={this.edit}>Edit</button>
-          <button onClick={() => this.setState({ showFilterViewPanel: true })}>Show Filters</button>
         </React.Fragment>
       );
     }
@@ -232,16 +240,6 @@ class DashboardEditView extends React.Component {
             type="text" 
             name="name" 
             value={this.state.name}
-            onChange={this.handleInputChange} 
-            className="inline-block" 
-            style={{width: '200px'}}
-            />
-
-          <div className="inline-block">W:</div>
-          <input 
-            type="text" 
-            name="width" 
-            value={this.state.width}
             onChange={this.handleInputChange} 
             className="inline-block" 
             style={{width: '200px'}}
@@ -268,16 +266,15 @@ class DashboardEditView extends React.Component {
             ref={this.widgetViewPanel} 
             onWidgetEdit={this.openWidgetEditPanel}
             isEditMode={this.state.isEditMode}
+            height={this.state.height}
           />
         </div>
-        <div className="dashboard-content-filter-panel">
-          <FilterViewPanel 
-            ref={this.filterViewPanel} 
-            onEdit={this.openFilterEditPanel}
-            onApplyFilters={this.applyFilters}
-            isEditMode={this.state.isEditMode}
-          />
-        </div>
+        <FilterViewPanel 
+          ref={this.filterViewPanel} 
+          onEdit={this.openFilterEditPanel}
+          onApplyFilters={this.applyFilters}
+          isEditMode={this.state.isEditMode}
+        />
 
         <Modal 
           show={this.state.showWidgetEditPanel}
@@ -287,7 +284,7 @@ class DashboardEditView extends React.Component {
             ref={this.widgetEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
-            onSave={() => this.setState({ showWidgetEditPanel: false })}
+            onSave={this.onSaveWidget}
           />
         </Modal>
 
@@ -299,7 +296,7 @@ class DashboardEditView extends React.Component {
             ref={this.filterEditPanel}
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
-            onSave={() => this.setState({ showFilterEditPanel: false })}
+            onSave={this.onSaveFilter}
           />
         </Modal>
 

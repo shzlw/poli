@@ -5,6 +5,8 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
+import ColorPicker from './ColorPicker';
+
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
 
@@ -76,7 +78,7 @@ class WidgetViewPanel extends React.Component {
     return Math.round(num * width / gridWidth);
   }
 
-  fetchWidgets = (dashboardId, width, height, filterParams) => {
+  fetchWidgets = (dashboardId, width, filterParams) => {
     if (dashboardId === null) {
       return;
     }
@@ -85,8 +87,7 @@ class WidgetViewPanel extends React.Component {
         const result = res.data;
         this.setState({
           widgets: result,
-          width: width,
-          height: height
+          width: width
         }, () => {
           this.resizeGrid();
           this.queryWidgets(filterParams);
@@ -181,12 +182,17 @@ class WidgetViewPanel extends React.Component {
               onChange={this.handleChange} />
               showGridlines
             <br/>
+
+            <label>Background Color</label>
+            
+            <ColorPicker />
+
           </div>
         ) : null}
         
         <GridLayout 
           width={this.state.gridWidth}
-          height={this.state.height}
+          height={this.props.height}
           snapToGrid={this.state.snapToGrid}
           showGridlines={this.state.showGridlines}
           widgets={this.state.widgets}
