@@ -209,8 +209,16 @@ class FilterViewPanel extends Component {
   }
 
   render() {
+    const { show } = this.props;
+    const style = {};
+    if (show) {
+      style.width = Constants.DEFAULT_FILTER_VIEW_WIDTH + 'px';
+    } else {
+      style.width = '0px';
+    }
+
     return (
-      <div className="dashboard-content-filter-panel">
+      <div className="dashboard-content-filter-panel" style={style}>
         <h5>FilterViewPanel</h5>
         <button onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">

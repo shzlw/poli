@@ -10,6 +10,9 @@ import ColorPicker from './ColorPicker';
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
 
+
+const BASE_WIDTH = 1200;
+
 class WidgetViewPanel extends React.Component {
 
   constructor(props) {
@@ -17,65 +20,55 @@ class WidgetViewPanel extends React.Component {
     this.state = {
       widgets: [],
       gridWidth: 1200,
-      width: 1200,
       height: 600,
       snapToGrid: false,
       showGridlines: true
     };
-
-    this.widgetViewPanel = React.createRef();
   }
 
   componentDidMount() {
   }
 
-  resizeGrid = () => {
-    const thisNode = this.widgetViewPanel.current;
-    const gridWidth = thisNode.clientWidth;
+  resizeGrid = (width, isResizeToBase) => {
+    const preGridWidth = this.state.gridWidth;
+    const { widgets } = this.state;
+    const newWidgets = [...widgets];
+    if (isResizeToBase) {
+      this.resizeWidgetsToBase(newWidgets, preGridWidth);
+    }
+
+    const gridWidth = width - 20;
+    this.resizeWidgetsToActual(newWidgets, gridWidth);
     this.setState({
-      gridWidth: gridWidth - 20,
-    }, () => {
-      const { widgets } = this.state;
-      const newWidgets = [...widgets];
-      this.resizeWidgetsToActual(newWidgets);
-      this.setState({
-        widgets: newWidgets
-      });
+      widgets: newWidgets,
+      gridWidth: gridWidth
     });
   }
 
-  resizeWidgetsToBase = (widgets) => {
+  resizeWidgetsToBase = (widgets, gridWidth) => {
     for (let i = 0; i < widgets.length; i++) {
-      const baseX = this.scaleToBase(widgets[i].x);
-      const baseWidth = this.scaleToBase(widgets[i].width);
+      const baseX = this.scaleToBase(widgets[i].x, gridWidth);
+      const baseWidth = this.scaleToBase(widgets[i].width, gridWidth);
       widgets[i].x = baseX;
       widgets[i].width = baseWidth;
     }
   }
 
-  resizeWidgetsToActual = (widgets) => {
+  resizeWidgetsToActual = (widgets, gridWidth) => {
     for (let i = 0; i < widgets.length; i++) {
-      const actualX = this.scaleToActual(widgets[i].x);
-      const actualdWidth = this.scaleToActual(widgets[i].width);
+      const actualX = this.scaleToActual(widgets[i].x, gridWidth);
+      const actualdWidth = this.scaleToActual(widgets[i].width, gridWidth);
       widgets[i].x = actualX;
       widgets[i].width = actualdWidth;
     }
   }
 
-  scaleToActual = (num) => {
-    const {
-      width,
-      gridWidth
-    } = this.state;
-    return Math.round(num * gridWidth / width);
+  scaleToActual = (num, gridWidth) => {
+    return Math.round(num * gridWidth / BASE_WIDTH);
   }
 
-  scaleToBase = (num) => {
-    const {
-      width,
-      gridWidth
-    } = this.state;
-    return Math.round(num * width / gridWidth);
+  scaleToBase = (num, gridWidth) => {
+    return Math.round(num * BASE_WIDTH / gridWidth);
   }
 
   fetchWidgets = (dashboardId, width, filterParams) => {
@@ -86,10 +79,9 @@ class WidgetViewPanel extends React.Component {
       .then(res => {
         const result = res.data;
         this.setState({
-          widgets: result,
-          width: width
+          widgets: result
         }, () => {
-          this.resizeGrid();
+          this.resizeGrid(width, false);
           this.queryWidgets(filterParams);
         });
       });
@@ -124,14 +116,14 @@ class WidgetViewPanel extends React.Component {
 
   saveWidgets = () => {
     const newWidgets = JSON.parse(JSON.stringify(this.state.widgets));
-    this.resizeWidgetsToBase(newWidgets);
+    const { gridWidth } = this.state;
+    this.resizeWidgetsToBase(newWidgets, gridWidth);
     axios.post('/ws/widget/position', newWidgets)
       .then(res => {
       });
   }
 
   onWidgetMove = (widget) => {
-    console.log('onWidgetMove', widget);
     const { widgets } = this.state;
     const index = widgets.findIndex(w => w.id === widget.id);
     const newWidgets = [...widgets];
@@ -158,10 +150,13 @@ class WidgetViewPanel extends React.Component {
   }
 
   render() {
+    const { widgetViewWidth } = this.props;
+    const style = {
+      width: widgetViewWidth + 'px'
+    }
+
     return (
-      <div 
-        ref={this.widgetViewPanel} 
-        className="testPanel">
+      <div className="dashboard-content-widget-panel" style={style}>
 
         {this.props.isEditMode ?
         (

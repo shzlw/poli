@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 
 import FilterViewPanel from '../components/FilterViewPanel';
@@ -7,6 +8,8 @@ import WidgetViewPanel from '../components/WidgetViewPanel';
 import WidgetEditPanel from '../components/WidgetEditPanel';
 import FilterEditPanel from '../components/FilterEditPanel';
 import Modal from '../components/Modal';
+
+import * as Constants from '../api/Constants';
 
 import './Dashboard.css';
 
@@ -21,14 +24,15 @@ class DashboardEditView extends React.Component {
     this.state = {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
+      showFilterViewPanel: true,
       isEditMode: false,
       autoRefreshTimerId: '',
       lastRefreshed: '',
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
-      width: 0,
       height: 0,
+      widgetViewWidth: 1000
     }
 
     this.filterViewPanel = React.createRef();
@@ -41,24 +45,32 @@ class DashboardEditView extends React.Component {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
     console.log('DashboardEditView', dashboardId);
-    if (dashboardId === null) {
-      this.setState({
-        dashboardId: null
-      });
-    } else {
-      axios.get(`/ws/dashboard/${dashboardId}`)
-        .then(res => {
-          const result = res.data;
-          this.setState({
-            dashboardId: result.id,
-            name: result.name,
-            width: result.width,
-            height: result.height,
-          }, () => {
-            this.refresh();
-          });
+
+    const pageWidth = this.getPageWidth();
+    const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
+    console.log('componentDidMount', pageWidth, widgetViewWidth);
+    this.setState({
+      pageWidth: pageWidth,
+      widgetViewWidth: widgetViewWidth
+    }, () => {
+      if (dashboardId === null) {
+        this.setState({
+          dashboardId: null
         });
-    }
+      } else {
+        axios.get(`/ws/dashboard/${dashboardId}`)
+          .then(res => {
+            const result = res.data;
+            this.setState({
+              dashboardId: result.id,
+              name: result.name,
+              height: result.height,
+            }, () => {
+              this.refresh();
+            });
+          });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -66,6 +78,11 @@ class DashboardEditView extends React.Component {
     if (autoRefreshTimerId) {
       clearInterval(autoRefreshTimerId);
     }
+  }
+
+  getPageWidth = () => {
+    const thisNode = ReactDOM.findDOMNode(this);
+    return thisNode.clientWidth;
   }
 
   handleInputChange = (event) => {
@@ -115,10 +132,9 @@ class DashboardEditView extends React.Component {
   refreshWidgetView = () => {
     const { 
       dashboardId,
-      width,
-      height
+      widgetViewWidth
     } = this.state;
-    this.widgetViewPanel.current.fetchWidgets(dashboardId, width, null);
+    this.widgetViewPanel.current.fetchWidgets(dashboardId, widgetViewWidth, null);
   } 
 
   save = () => {
@@ -126,13 +142,11 @@ class DashboardEditView extends React.Component {
     const {
       dashboardId,
       name,
-      width,
       height
     } = this.state;
 
     const dashboard = {
       id: dashboardId, 
-      width: width,
       height: height
     };
 
@@ -186,6 +200,24 @@ class DashboardEditView extends React.Component {
     this.refreshFilterView();
   }
 
+  toggleFilterViewPanel = () => {
+    const { 
+      showFilterViewPanel
+    } = this.state;
+    this.resizePageLayout(!showFilterViewPanel);
+  }
+
+  resizePageLayout = (showFilterViewPanel) => {
+    const pageWidth = this.getPageWidth();;
+    let widgetViewWidth = showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
+    this.widgetViewPanel.current.resizeGrid(widgetViewWidth, true);
+
+    this.setState({
+      showFilterViewPanel: showFilterViewPanel,
+      widgetViewWidth: widgetViewWidth
+    }); 
+  }
+
   openFilterEditPanel = (filterId) => {
     this.filterEditPanel.current.fetchFilter(filterId);
     this.setState({
@@ -228,6 +260,7 @@ class DashboardEditView extends React.Component {
       statusButtonPanel = (
         <React.Fragment>
           <button onClick={this.edit}>Edit</button>
+          <button onClick={this.toggleFilterViewPanel}>Show Filters</button>
         </React.Fragment>
       );
     }
@@ -261,19 +294,19 @@ class DashboardEditView extends React.Component {
         
         {statusButtonPanel}
         
-        <div className="dashboard-content-widget-panel">
-          <WidgetViewPanel 
-            ref={this.widgetViewPanel} 
-            onWidgetEdit={this.openWidgetEditPanel}
-            isEditMode={this.state.isEditMode}
-            height={this.state.height}
-          />
-        </div>
+        <WidgetViewPanel 
+          ref={this.widgetViewPanel} 
+          onWidgetEdit={this.openWidgetEditPanel}
+          isEditMode={this.state.isEditMode}
+          height={this.state.height}
+          widgetViewWidth={this.state.widgetViewWidth}
+        />
         <FilterViewPanel 
           ref={this.filterViewPanel} 
           onEdit={this.openFilterEditPanel}
           onApplyFilters={this.applyFilters}
           isEditMode={this.state.isEditMode}
+          show={this.state.showFilterViewPanel}
         />
 
         <Modal 
