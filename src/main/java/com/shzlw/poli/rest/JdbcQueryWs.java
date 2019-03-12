@@ -32,12 +32,12 @@ public class JdbcQueryWs {
     WidgetDao widgetDao;
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public String runQuery(@RequestBody QueryRequest queryRequest) {
+    public QueryResult runQuery(@RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
         QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
-        return queryResult.getData();
+        return queryResult;
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)

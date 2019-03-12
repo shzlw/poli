@@ -30,14 +30,12 @@ class WidgetEditPanel extends React.Component {
   get initialState() {
     return {
       jdbcDataSources: [],
-      filters: [],
       widgetId: null,
       name: '',
       sqlQuery: '',
       jdbcDataSourceId: null,
-      queryResult: [],
-      filterId: null,
-      filterParams: [],
+      columns: [],
+      queryResultData: [],
       chartType: Constants.TABLE,
       aggrKey: '',
       aggrValue: '',
@@ -127,6 +125,13 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
+  handleColumnChange = (name, event) => {
+    const value = event.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
+
   save = (event) => {
     event.preventDefault();
     const {
@@ -182,42 +187,13 @@ class WidgetEditPanel extends React.Component {
     axios.post('/ws/jdbcquery/query', queryRequest)
       .then(res => {
         const result = res.data;
-        const queryResult = result;
+        const columns = result.columns;
+        const data = JSON.parse(result.data);
         this.setState({
-          queryResult: queryResult
+          queryResultData: data,
+          columns: columns 
         });
       });
-  }
-
-  addFilterParam = (event) => {
-    event.preventDefault();
-    const filterId = this.state.filterId;
-    const index = this.state.filterParams.findIndex(f => f === filterId);
-    if (index === -1) {
-      const newFilterParams = [...this.state.filterParams];
-      newFilterParams.push(filterId);
-      this.setState({
-        filterParams: newFilterParams
-      });
-    } 
-  }
-
-  removeFilterParam = (filterId, event) => {
-    event.preventDefault();
-    const index = this.state.filterParams.findIndex(f => f === filterId);
-    if (index !== -1) {
-      const newFilterParams = [...this.state.filterParams];
-      newFilterParams.splice(index, 1);
-      this.setState({
-        filterParams: newFilterParams
-      });
-    } 
-  }
-
-  handleFilterChange = (event) => {
-    this.setState({ 
-      filterId: event.target.value
-    });
   }
 
   generateChart = (event) => {
@@ -226,13 +202,13 @@ class WidgetEditPanel extends React.Component {
       const { 
         aggrKey, 
         aggrValue, 
-        queryResult 
+        queryResultData 
       } = this.state;
-      if (!Util.isArrayEmpty(queryResult)) {
+      if (!Util.isArrayEmpty(queryResultData)) {
         let legend = [];
         let series = [];
-        for (let i = 0; i < queryResult.length; i++) {
-          const row = queryResult[i];
+        for (let i = 0; i < queryResultData.length; i++) {
+          const row = queryResultData[i];
           legend.push(row[aggrKey]);
           series.push({
             name: row[aggrKey],
@@ -247,20 +223,46 @@ class WidgetEditPanel extends React.Component {
     }
   }
 
+  renderChartPreview = () => {
+    const { 
+      chartType,
+      columns 
+    } = this.state;
+    const columnOptions = (columns || []).map(col =>
+      <option value={col.name} key={col.name}>{col.name}</option>
+    );
+
+    let chartPreview = (<div>NOT SUPPORTED</div>);
+    if (chartType === Constants.TABLE) {
+
+    } else if (chartType === Constants.PIE) {
+      chartPreview = (
+        <div>
+          <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
+          <div>Count "value" by "key"</div>
+          <label>Aggr Key (string)</label>
+          <select value={this.state.aggrKey} onChange={(event) => this.handleColumnChange('aggrKey', event)}>
+            {columnOptions}
+          </select>
+
+          <label>By Aggr Value (number)</label>
+          <select value={this.state.aggrValue} onChange={(event) => this.handleColumnChange('aggrValue', event)}>
+            {columnOptions}
+          </select>
+          <button onClick={this.generateChart}>Generete Chart</button>
+          <ReactEcharts 
+            option={this.state.chartOption} 
+            style={{height: '350px', width: '100%'}}  
+            className='react_for_echarts' />
+        </div>
+      );
+    }
+    return chartPreview;
+  }
+
   render() {
     const dataSourceOptions = this.state.jdbcDataSources.map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
-    );
-
-    const filterOptions = this.state.filters.map(f =>
-      <option value={f.id} key={f.id}>{f.id}</option>
-    );
-
-    const filterParamItems = this.state.filterParams.map(f =>
-      <div key={f}>
-        <div>value: {f}</div>
-        <button onClick={(event) => this.removeFilterParam(f, event)}>delete</button>
-      </div>
     );
 
     const chartOptionList = Constants.CHART_TYPES.map(o =>
@@ -268,10 +270,14 @@ class WidgetEditPanel extends React.Component {
     );
 
     const headers = [];
-    const queryResult = this.state.queryResult;
+    const { 
+      columns,
+      queryResultData
+    } = this.state;
+
     let queryResultItem;
-    if (!Util.isArrayEmpty(queryResult)) {
-      const obj = queryResult[0];
+    if (!Util.isArrayEmpty(queryResultData)) {
+      const obj = queryResultData[0];
       const keys = Object.keys(obj);
       for (const key of keys) {
         headers.push({
@@ -282,7 +288,7 @@ class WidgetEditPanel extends React.Component {
 
       queryResultItem = (
         <ReactTable
-          data={this.state.queryResult}
+          data={queryResultData}
           columns={headers}
           minRows={0}
           showPagination={false}
@@ -290,9 +296,13 @@ class WidgetEditPanel extends React.Component {
       );
     } else {
       queryResultItem = (
-        <div>{queryResult}</div>
+        <div>{queryResultData}</div>
       );
     }
+
+    const columnItems = columns.map(col =>
+      <div key={col.name}>{col.name} {col.dataType}</div>
+    );
 
     return (
       <div>
@@ -337,56 +347,18 @@ class WidgetEditPanel extends React.Component {
           <label>Result</label>
           {queryResultItem}
 
-          <label>Filter Params</label>
-          <div>
-            <select value={this.state.filterId} onChange={this.handleFilterChange}>
-              {filterOptions}
-            </select>
-            <div>
-              {filterParamItems}
-            </div>
-            <button onClick={this.addFilterParam}>Add</button>
-            <div>
-              
-            </div>
-          </div>
-        
-
           <label>Columns Mapping</label>
-          <div>column name, display name, data type</div>
+          <div>
+             {columnItems}
+          </div>
 
           <label>Chart Options</label>
           <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
             {chartOptionList}
           </select>
 
-          <label><i class="fas fa-table"></i> Table</label>
-          <div></div>
-
-          <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
-          <div>Count "value" by "key"</div>
-          <label>Aggr Key</label>
-          <input 
-            type="text" 
-            name="aggrKey" 
-            value={this.state.aggrKey}
-            onChange={this.handleInputChange} 
-          />
-
-          <label>By Aggr Value</label>
-          <input 
-            type="text" 
-            name="aggrValue" 
-            value={this.state.aggrValue}
-            onChange={this.handleInputChange} 
-          />
-          <button onClick={this.generateChart}>Generete Chart</button>
-
-          <ReactEcharts 
-            option={this.state.chartOption} 
-            style={{height: '350px', width: '100%'}}  
-            className='react_for_echarts' />
-
+          <label>Preview</label>
+          {this.renderChartPreview()}  
         </form>
         
       </div>
