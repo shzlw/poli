@@ -237,6 +237,16 @@ class DashboardEditView extends React.Component {
     this.widgetViewPanel.current.queryWidgets(filterParams);
   }
 
+  fullScreen = () => {
+    const { dashboardId } = this.state;
+    const url = `/poli/dashboards/${dashboardId}`;
+    window.open(url, '_blank');
+  }
+
+  onTableCellClick = () => {
+    this.props.history.push(`/dashboards/drill?name=&`);
+  }
+
   render() {
     const {
       autoRefreshTimerId,
@@ -291,6 +301,7 @@ class DashboardEditView extends React.Component {
         
         <button onClick={this.toggleAutoRefresh}>AUTO: {autoRefreshStatus} - {lastRefreshed}</button>
         <button onClick={this.refresh}>Refresh</button>
+        <button onClick={this.fullScreen}>Full Screen</button>
         
         {statusButtonPanel}
         

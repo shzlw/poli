@@ -39,7 +39,11 @@ class WidgetEditPanel extends React.Component {
       chartType: Constants.TABLE,
       aggrKey: '',
       aggrValue: '',
-      chartOption: {}
+      chartOption: {},
+      drills: [],
+      drillDashboards: [],
+      drillColumnName: '',
+      drillDashboardName: ''
     };
   }
 
@@ -58,6 +62,14 @@ class WidgetEditPanel extends React.Component {
     this.setState({ 
       filters: filters 
     });
+
+    axios.get('/ws/dashboard')
+      .then(res => {
+        const dashboards = res.data;
+        this.setState({ 
+          drillDashboards: dashboards 
+        });
+      });
 
     if (widgetId === null) {
       if (jdbcDataSources.length !== 0) {
@@ -132,6 +144,18 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
+  handleDrillColumnChange = (event) => {
+    this.setState({ 
+      drillColumnName: event.target.value
+    });
+  }
+
+  handleDrillDashboardChange = (event) => {
+    this.setState({ 
+      drillDashboardName: event.target.value
+    });
+  }
+
   save = (event) => {
     event.preventDefault();
     const {
@@ -194,6 +218,40 @@ class WidgetEditPanel extends React.Component {
           columns: columns 
         });
       });
+  }
+
+  addDrillThrough = (event) => {
+    event.preventDefault();
+    const { 
+      drills,
+      drillColumnName,
+      drillDashboardName
+    } = this.state;
+    const filterId = this.state.filterId;
+    const index = drills.findIndex(d => d.columnName === drillColumnName);
+    if (index === -1) {
+      const newDrills = [...drills];
+      newDrills.push({
+        columnName: drillColumnName,
+        dashboardName: drillDashboardName
+      });
+      this.setState({
+        drills: newDrills
+      });
+    } 
+  }
+
+  removeDrillThrough = (drill, event) => {
+    event.preventDefault();
+    const { drills } = this.state;
+    const index = drills.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardName === drill.dashboardName));
+    if (index !== -1) {
+      const newDrills = [...drills];
+      newDrills.splice(index, 1);
+      this.setState({
+        drills: newDrills
+      });
+    } 
   }
 
   generateChart = (event) => {
@@ -261,20 +319,39 @@ class WidgetEditPanel extends React.Component {
   }
 
   render() {
-    const dataSourceOptions = this.state.jdbcDataSources.map(ds =>
+    const { 
+      columns,
+      queryResultData,
+      jdbcDataSources,
+      drills,
+      drillDashboards
+    } = this.state;
+
+    const dataSourceOptions = (jdbcDataSources || []).map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
+    );
+
+    const columnOptions = (columns || []).map(col =>
+      <option value={col.name} key={col.name}>{col.name}</option>
     );
 
     const chartOptionList = Constants.CHART_TYPES.map(o =>
       <option value={o} key={o}>{o}</option>
     );
 
-    const headers = [];
-    const { 
-      columns,
-      queryResultData
-    } = this.state;
+    const dashboardOptions = (drillDashboards || []).map(dash =>
+      <option value={dash.name} key={dash.name}>{dash.name}</option>
+    );
 
+    const drillItems = (drills || []).map(drill =>
+      <div key={drill.columnName}>
+        <div>Column: {drill.columnName}</div>
+        <div>Dashboard: {drill.dashboardName}</div>
+        <button onClick={(event) => this.removeDrillThrough(drill, event)}>delete</button>
+      </div>
+    );
+
+    const headers = [];
     let queryResultItem;
     if (!Util.isArrayEmpty(queryResultData)) {
       const obj = queryResultData[0];
@@ -300,7 +377,7 @@ class WidgetEditPanel extends React.Component {
       );
     }
 
-    const columnItems = columns.map(col =>
+    const columnItems = (columns || []).map(col =>
       <div key={col.name}>{col.name} {col.dataType}</div>
     );
 
@@ -359,6 +436,23 @@ class WidgetEditPanel extends React.Component {
 
           <label>Preview</label>
           {this.renderChartPreview()}  
+
+          <label>Drill through</label>
+          <div>
+            <label>Column</label>
+            <select value={this.state.drillColumnName} onChange={this.handleDrillColumnChange}>
+              {columnOptions}
+            </select>
+            <label>Dashboard</label>
+            <select value={this.state.drillDashboardName} onChange={this.handleDrillDashboardChange}>
+              {dashboardOptions}
+            </select>
+            <div>
+              {drillItems}
+            </div>
+            <button onClick={this.addDrillThrough}>Add</button>
+          </div>
+
         </form>
         
       </div>
