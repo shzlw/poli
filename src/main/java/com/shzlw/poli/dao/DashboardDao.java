@@ -35,6 +35,15 @@ public class DashboardDao {
         }
     }
 
+    public Dashboard fetchByName(String name) {
+        String sql = "SELECT id, name, width, height FROM p_dashboard WHERE name=?";
+        try {
+            return (Dashboard) jt.queryForObject(sql, new Object[]{ name }, new DashboardRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public long add(Dashboard d) {
         String sql = "INSERT INTO p_dashboard(name, width, height) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

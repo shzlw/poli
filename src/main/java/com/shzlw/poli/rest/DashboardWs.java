@@ -41,6 +41,13 @@ public class DashboardWs {
         return dashboard;
     }
 
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public Dashboard fetchOneByName(@PathVariable("name") String name) {
+        Dashboard dashboard = dashboardDao.fetchByName(name);
+        return dashboard;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Dashboard dashboard) {

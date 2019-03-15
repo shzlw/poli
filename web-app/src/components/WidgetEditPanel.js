@@ -33,7 +33,7 @@ class WidgetEditPanel extends React.Component {
       widgetId: null,
       name: '',
       sqlQuery: '',
-      jdbcDataSourceId: null,
+      jdbcDataSourceId: '',
       columns: [],
       queryResultData: [],
       chartType: Constants.TABLE,
@@ -43,7 +43,7 @@ class WidgetEditPanel extends React.Component {
       drills: [],
       drillDashboards: [],
       drillColumnName: '',
-      drillDashboardName: ''
+      drillDashboardId: ''
     };
   }
 
@@ -103,6 +103,7 @@ class WidgetEditPanel extends React.Component {
             sqlQuery: result.sqlQuery,
             chartType: result.chartType,
             jdbcDataSourceId: result.jdbcDataSourceId,
+            drills: result.drillThrough
           });
         });
     }
@@ -151,8 +152,9 @@ class WidgetEditPanel extends React.Component {
   }
 
   handleDrillDashboardChange = (event) => {
+    const drillDashboardId = parseInt(event.target.value, 10);
     this.setState({ 
-      drillDashboardName: event.target.value
+      drillDashboardId: drillDashboardId
     });
   }
 
@@ -164,6 +166,7 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSourceId,
       sqlQuery,
       chartType,
+      drills
     } = this.state;
 
     const widget = {
@@ -171,7 +174,8 @@ class WidgetEditPanel extends React.Component {
       dashboardId: this.props.dashboardId,
       chartType: chartType,
       jdbcDataSourceId: jdbcDataSourceId,
-      sqlQuery: sqlQuery
+      sqlQuery: sqlQuery,
+      drillThrough: drills
     }
 
     if (chartType === Constants.TABLE) {
@@ -225,7 +229,7 @@ class WidgetEditPanel extends React.Component {
     const { 
       drills,
       drillColumnName,
-      drillDashboardName
+      drillDashboardId
     } = this.state;
     const filterId = this.state.filterId;
     const index = drills.findIndex(d => d.columnName === drillColumnName);
@@ -233,7 +237,7 @@ class WidgetEditPanel extends React.Component {
       const newDrills = [...drills];
       newDrills.push({
         columnName: drillColumnName,
-        dashboardName: drillDashboardName
+        dashboardId: drillDashboardId
       });
       this.setState({
         drills: newDrills
@@ -244,7 +248,7 @@ class WidgetEditPanel extends React.Component {
   removeDrillThrough = (drill, event) => {
     event.preventDefault();
     const { drills } = this.state;
-    const index = drills.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardName === drill.dashboardName));
+    const index = drills.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardId === drill.dashboardId));
     if (index !== -1) {
       const newDrills = [...drills];
       newDrills.splice(index, 1);
@@ -340,13 +344,13 @@ class WidgetEditPanel extends React.Component {
     );
 
     const dashboardOptions = (drillDashboards || []).map(dash =>
-      <option value={dash.name} key={dash.name}>{dash.name}</option>
+      <option value={dash.id} key={dash.id}>{dash.name}</option>
     );
 
     const drillItems = (drills || []).map(drill =>
       <div key={drill.columnName}>
         <div>Column: {drill.columnName}</div>
-        <div>Dashboard: {drill.dashboardName}</div>
+        <div>Dashboard: {drill.dashboardId}</div>
         <button onClick={(event) => this.removeDrillThrough(drill, event)}>delete</button>
       </div>
     );
@@ -444,7 +448,7 @@ class WidgetEditPanel extends React.Component {
               {columnOptions}
             </select>
             <label>Dashboard</label>
-            <select value={this.state.drillDashboardName} onChange={this.handleDrillDashboardChange}>
+            <select value={this.state.drillDashboardId} onChange={this.handleDrillDashboardChange}>
               {dashboardOptions}
             </select>
             <div>

@@ -46,6 +46,7 @@ IF NOT EXISTS p_widget (
     chart_type TEXT NOT NULL,
     sql_query TEXT,
     data TEXT,
+    drill_through TEXT,
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
     FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );

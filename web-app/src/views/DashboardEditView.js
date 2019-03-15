@@ -26,6 +26,7 @@ class DashboardEditView extends React.Component {
       showFilterEditPanel: false,
       showFilterViewPanel: true,
       isEditMode: false,
+      isReadOnly: false,
       autoRefreshTimerId: '',
       lastRefreshed: '',
       jdbcDataSourceOptions: [],
@@ -45,6 +46,11 @@ class DashboardEditView extends React.Component {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
     console.log('DashboardEditView', dashboardId);
+
+    const url = this.props.location.search;
+    console.log('url', url);
+    const params = new URLSearchParams(url);
+    console.log('params', params);
 
     const pageWidth = this.getPageWidth();
     const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
@@ -78,6 +84,29 @@ class DashboardEditView extends React.Component {
     if (autoRefreshTimerId) {
       clearInterval(autoRefreshTimerId);
     }
+  }
+
+  loadViewByDashboardName = (dashboardName) => {
+    const pageWidth = this.getPageWidth();
+    const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
+    console.log('loadViewByDashboardName', pageWidth, widgetViewWidth);
+    this.setState({
+      pageWidth: pageWidth,
+      widgetViewWidth: widgetViewWidth,
+      isReadOnly: true
+    }, () => {
+      axios.get(`/ws/dashboard/name/${dashboardName}`)
+        .then(res => {
+          const result = res.data;
+          this.setState({
+            dashboardId: result.id,
+            name: result.name,
+            height: result.height,
+          }, () => {
+            this.refresh();
+          });
+        });
+    });
   }
 
   getPageWidth = () => {
@@ -147,6 +176,7 @@ class DashboardEditView extends React.Component {
 
     const dashboard = {
       id: dashboardId, 
+      name: name,
       height: height
     };
 
@@ -238,8 +268,8 @@ class DashboardEditView extends React.Component {
   }
 
   fullScreen = () => {
-    const { dashboardId } = this.state;
-    const url = `/poli/dashboards/${dashboardId}`;
+    const { name } = this.state;
+    const url = `/poli/dashboard/view?name=${name}`;
     window.open(url, '_blank');
   }
 
@@ -251,29 +281,39 @@ class DashboardEditView extends React.Component {
     const {
       autoRefreshTimerId,
       lastRefreshed,
-      isEditMode
+      isEditMode,
+      isReadOnly
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
-    let statusButtonPanel;
-    if (isEditMode) {
-      statusButtonPanel = (
+    let editButtonPanel;
+    let fullScreenButtonPanel;
+    if (!isReadOnly) {
+      fullScreenButtonPanel = (
         <React.Fragment>
-          <button onClick={this.cancelEdit}>Cancel</button>
-          <button onClick={this.save}>Save</button>
-          <button onClick={this.delete}>Delete</button>
-          <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
-          <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+          <button onClick={this.fullScreen}>Full Screen</button>
         </React.Fragment>
       );
-    } else {
-      statusButtonPanel = (
-        <React.Fragment>
-          <button onClick={this.edit}>Edit</button>
-          <button onClick={this.toggleFilterViewPanel}>Show Filters</button>
-        </React.Fragment>
-      );
+
+      if (isEditMode) {
+        editButtonPanel = (
+          <React.Fragment>
+            <button onClick={this.cancelEdit}>Cancel</button>
+            <button onClick={this.save}>Save</button>
+            <button onClick={this.delete}>Delete</button>
+            <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
+            <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+          </React.Fragment>
+        );
+      } else {
+        editButtonPanel = (
+          <React.Fragment>
+            <button onClick={this.edit}>Edit</button>
+          </React.Fragment>
+        );
+      }
     }
+    
 
     return (
       <div>
@@ -301,9 +341,10 @@ class DashboardEditView extends React.Component {
         
         <button onClick={this.toggleAutoRefresh}>AUTO: {autoRefreshStatus} - {lastRefreshed}</button>
         <button onClick={this.refresh}>Refresh</button>
-        <button onClick={this.fullScreen}>Full Screen</button>
+        <button onClick={this.toggleFilterViewPanel}>Show Filters</button>
         
-        {statusButtonPanel}
+        {fullScreenButtonPanel}
+        {editButtonPanel}
         
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 

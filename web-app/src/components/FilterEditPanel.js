@@ -29,7 +29,7 @@ class FilterEditPanel extends React.Component {
       type: Constants.SLICER,
       data: {},
       sqlQuery: '',
-      jdbcDataSourceId: null,
+      jdbcDataSourceId: '',
       queryResult: [],
       param: '',
     };

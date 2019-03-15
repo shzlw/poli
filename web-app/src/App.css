@@ -148,6 +148,16 @@ body,
   z-index: 49;
 }
 
+.full-screen-view {
+  background-color: #FFF;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+}
+
 .display-block {
   display: block;
 }

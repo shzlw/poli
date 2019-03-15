@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import GridDraggable from './GridDraggable';
 import GridResizable from './GridResizable';
 
+import { withRouter } from 'react-router-dom';
+
+
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -82,7 +85,7 @@ class GridItem extends React.Component {
     this.props.onWidgetRemove(widgetId);
   }
 
-  onTdPropsChange = (state, rowInfo, column, instance) => {
+  onTableTdPropsChange = (state, rowInfo, column, instance) => {
     return {
       onClick: (e, handleOriginal) => {
         console.log("A Td Element was clicked!");
@@ -90,23 +93,41 @@ class GridItem extends React.Component {
         console.log("It was in this column:", column);
         console.log("It was in this row:", rowInfo);
         console.log("It was in this table instance:", instance);
-
-        // IMPORTANT! React-Table uses onClick internally to trigger
-        // events like expanding SubComponents and pivots.
-        // By default a custom 'onClick' handler will override this functionality.
-        // If you want to fire the original onClick handler, call the
-        // 'handleOriginal' function.
-        if (handleOriginal) {
-          handleOriginal();
+        
+        const header = column.Header;
+        const row = rowInfo.row;
+        const value = row[header];
+        const drills = instance.props.widgetDrillThrough; 
+        console.log('onTableTdPropsChange', header, value, drills);
+        if (!Util.isArrayEmpty(drills)) {
+          const index = drills.findIndex(d => d.columnName === header);
+          if (index !== -1) {
+            const dashboardId = drills[index].dashboardId;
+            this.props.history.push(`/dashboards/${dashboardId}?${header}=${value}`);
+          }
         }
       }
     };
   }
 
+  onChartClick = (param, echarts) => {
+    console.log('onChartClick', param, echarts);
+  };
+
+  onChartLegendselectchanged = (param, echart) => {
+    console.log('onChartLegendselectchanged', param, echart);
+  };
+
   renderWidgetContent = () => {
+    const onChartEvents = {
+      'click': this.onChartClick,
+      'legendselectchanged': this.onChartLegendselectchanged
+    };
+
     const { 
       chartType,
-      queryResult 
+      queryResult,
+      drillThrough
     } = this.props;
     let widgetItem = (<div>NONE</div>);
     if (chartType === Constants.TABLE) {
@@ -129,7 +150,8 @@ class GridItem extends React.Component {
           columns={headers}
           minRows={0}
           showPagination={false}
-          getTdProps={this.onTdPropsChange}
+          getTdProps={this.onTableTdPropsChange}
+          widgetDrillThrough={drillThrough}  
         />
       );
     } else if (chartType === Constants.PIE) {
@@ -152,7 +174,8 @@ class GridItem extends React.Component {
         widgetItem = (
           <ReactEcharts 
             option={chartOption}   
-            className="echarts" />
+            className="echarts"
+            onEvents={onChartEvents}  />
         );
       }
       
@@ -222,4 +245,4 @@ class GridItem extends React.Component {
   }
 }
 
-export default GridItem;
+export default withRouter(GridItem);

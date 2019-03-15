@@ -5,6 +5,7 @@ import { Route, Link, Switch } from "react-router-dom";
 import DataSource from './views/DataSource';
 import Dashboard from './views/Dashboard';
 import SingleTest from './views/SingleTest';
+import DashboardFullScreenView from './views/DashboardFullScreenView';
 
 const menuItems = ['datasource', 'dashboard', 'single-test'];
 
@@ -57,6 +58,7 @@ class App extends Component {
             <Route exact path="/datasources" component={DataSource} />
             <Route path="/dashboards" component={Dashboard} />
             <Route exact path="/single-test" component={SingleTest} />
+            <Route exact path="/dashboard/view" component={DashboardFullScreenView} />
           </Switch>
         </div>
       </div>

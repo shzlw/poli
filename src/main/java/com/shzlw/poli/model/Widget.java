@@ -19,33 +19,12 @@ public class Widget {
     private long dashboardId;
     private String sqlQuery;
     private String chartType;
-
-    /**
-     * Json column
-     * name, type, display name
-     */
-    private String columns;
-
     /**
      * Json column
      */
     private String data;
 
-    /**
-     * {
-     *  ":fields": "a,b,c",
-     *  "valu2": "value2"
-     * }
-     */
-    private String filterParams;
-
-    // json column
-    private String chartOptions;
-
-    /**
-     * NON database field.
-     */
-    private String queryResult;
+    private String drillThrough;
 
     public long getId() {
         return id;
@@ -111,14 +90,6 @@ public class Widget {
         this.dashboardId = dashboardId;
     }
 
-    public String getColumns() {
-        return columns;
-    }
-
-    public void setColumns(String columns) {
-        this.columns = columns;
-    }
-
     public String getSqlQuery() {
         return sqlQuery;
     }
@@ -143,5 +114,15 @@ public class Widget {
     @JsonDeserialize(using = RawStringDeserialzier.class)
     public void setData(String data) {
         this.data = data;
+    }
+
+    @JsonRawValue
+    public String getDrillThrough() {
+        return drillThrough;
+    }
+
+    @JsonDeserialize(using = RawStringDeserialzier.class)
+    public void setDrillThrough(String drillThrough) {
+        this.drillThrough = drillThrough;
     }
 }
