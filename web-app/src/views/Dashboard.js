@@ -72,12 +72,12 @@ class Dashboard extends Component {
           showEditPanel: false 
         });
         this.fetchBoards();
-        this.props.history.push(`/dashboards/${dashboardId}`);
+        this.props.history.push(`/workspace/dashboards/${dashboardId}`);
       });
   }
 
   view = (dashboardId) => {
-    this.props.history.push(`/dashboards/${dashboardId}`);
+    this.props.history.push(`/workspace/dashboards/${dashboardId}`);
   }
 
   onSaveDashboard = (dashboardId) => {
@@ -106,7 +106,7 @@ class Dashboard extends Component {
           {dashboardRows}
         </div>
         <div className="dashboard-content">
-          <Route path="/dashboards/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
+          <Route path="/workspace/dashboards/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
         </div>
 
         <Modal 

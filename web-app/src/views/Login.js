@@ -1,14 +1,14 @@
 
 import React from 'react';
 
-class Role extends React.Component {
+class Login extends React.Component {
   render() {
     return (
       <div>
-        Role
+        <h1>Login</h1>
       </div>
     )
   };
 }
 
-export default Role;
+export default Login;

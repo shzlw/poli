@@ -269,7 +269,7 @@ class DashboardEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/poli/dashboard/view?name=${name}`;
+    const url = `/poli//workspace/dashboard/view?name=${name}`;
     window.open(url, '_blank');
   }
 

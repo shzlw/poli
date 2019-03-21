@@ -1,4 +1,5 @@
 import React from 'react';
+import './Modal.css';
 
 class Modal extends React.Component {
 
@@ -7,6 +8,9 @@ class Modal extends React.Component {
     return (
       <div className={`modal-overlay ${modalStatus}`}>
         <div className={this.props.modalClass}>
+          <div>
+            {this.props.title}
+          </div>
           <button onClick={() => this.props.onClose()}>Close</button>
           <div className='modal-body'>
             {this.props.children}

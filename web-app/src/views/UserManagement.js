@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, Link, Switch } from "react-router-dom";
 import User from './User';
-import Role from './Role';
+import Group from './Group';
 
 const MENU_ITEMS = [
   {
@@ -11,8 +11,8 @@ const MENU_ITEMS = [
     icon: 'fa-user'
   }, 
   {
-    link: '/user-management/role',
-    value: 'Role',
+    link: '/user-management/group',
+    value: 'Group',
     icon: 'fa-chalkboard',
   }
 ];
@@ -22,7 +22,7 @@ class UserManagement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuLink: 'role',
+      currentMenuLink: 'group',
     }
   }
 
@@ -57,7 +57,7 @@ class UserManagement extends React.Component {
         <div>
           <Switch>
             <Route path="/user-management/user" component={User} />
-            <Route path="/user-management/role" component={Role} />
+            <Route path="/user-management/group" component={Group} />
           </Switch>
         </div>
       </div>
