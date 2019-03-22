@@ -1,11 +1,11 @@
 # Poli
 
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Features
 
-* Use any JDBC drivers
+* Connect to any databases supporting JDBC drivers
 * Build widgets and filters in SQL
 * Dynamic query string
 * Drill through 
@@ -19,4 +19,4 @@
 
 ## License
 
-[LGPLv3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[Apache License 2.0](https://opensource.org/licenses/Apache-2.0)
