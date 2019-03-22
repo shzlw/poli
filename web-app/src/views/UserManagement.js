@@ -40,7 +40,7 @@ class UserManagement extends React.Component {
       const active = this.state.currentMenuLink === menu.link ? 'active' : '';
       menuItems.push(
         (
-          <li className={active} key={menu.name}>
+          <li className={active} key={i}>
             <Link to={menu.link} onClick={() => this.handleMenuClick(menu.link)}>
               <i className={`fas ${menu.icon} fa-fw`}></i>
               <span className="app-nav-menu-text">{menu.value}</span>

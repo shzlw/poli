@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { Route, Link, Switch } from "react-router-dom";
+import { Route, Link, Switch, withRouter } from "react-router-dom";
 import DataSource from './DataSource';
 import Dashboard from './Dashboard';
 import SingleTest from './SingleTest';
@@ -9,16 +8,19 @@ import DashboardFullScreenView from './DashboardFullScreenView';
 import UserManagement from './UserManagement';
 import Account from './Account';
 
+import * as Constants from '../api/Constants';
+import AuthStore from '../api/AuthStore';
+
 const MENU_ITEMS = [
-  {
-    link: '/workspace/datasource',
-    value: 'Data source',
-    icon: 'fa-database'
-  }, 
   {
     link: '/workspace/dashboard',
     value: 'Dashboard',
     icon: 'fa-chalkboard',
+  }, 
+  {
+    link: '/workspace/datasource',
+    value: 'Data source',
+    icon: 'fa-database'
   }, 
   {
     link: '/workspace/single-test',
@@ -37,27 +39,31 @@ const MENU_ITEMS = [
   }
 ];
 
-const SYS_ROLE_ADMIN = 'admin';
-const SYS_ROLE_DEVELOPER = 'developer';
-const SYS_ROLE_VIEWER = 'viewer';
-
 class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuItem: 'dashboard',
+      currentMenuLink: '/workspace/dashboard',
       username: '',
       sysRole: ''
     }
   }
 
   componentDidMount() {
-    console.log('app');
+    console.log('Workspace - componentDidMount');
+    const pathname = this.props.location.pathname;
     // TODO: fetch user information
     this.setState({
-      username: 'testuser',
-      sysRole: SYS_ROLE_DEVELOPER
-    })
+      currentMenuLink: pathname,
+    });
+    if (AuthStore.isAuthenticated) {
+      const sysRole = AuthStore.sysRole;
+      this.setState({
+        sysRole: sysRole
+      });
+    } else {
+      // Try login. If not, redirect
+    }
   }
 
   handleMenuClick = (menuLink) => {
@@ -74,7 +80,7 @@ class Workspace extends React.Component {
 
     let menuItems = [];
     let menuList = [];
-    if (sysRole === SYS_ROLE_VIEWER) {
+    if (sysRole === Constants.SYS_ROLE_VIEWER) {
       menuList = MENU_ITEMS.filter(m => m.name === 'dashboard' || m.name === 'account');
     } else {
       menuList = MENU_ITEMS;
@@ -93,14 +99,17 @@ class Workspace extends React.Component {
         )
       );
     }
-    
+
     return (
-      <div>
+      <React.Fragment>
         <div className="app-nav">
           <div className="app-name">Poli</div>
           <ul className="app-nav-menu">
             {menuItems}
           </ul>
+          <div style={{position: 'absolute', top: '0px', right: '0px'}}>
+            <Link to="/login">logout</Link>
+          </div>
         </div>
         <div className="app-content">
           <Switch>
@@ -112,8 +121,8 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/account" component={Account} />
           </Switch>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
-export default Workspace;
+export default withRouter(Workspace);

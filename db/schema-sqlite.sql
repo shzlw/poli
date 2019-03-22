@@ -1,8 +1,12 @@
 
+DROP TABLE IF EXISTS p_group_dashboard;
 DROP TABLE IF EXISTS p_widget;
 DROP TABLE IF EXISTS p_filter;
-DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_dashboard;
+DROP TABLE IF EXISTS p_datasource;
+DROP TABLE IF EXISTS p_group_user;
+DROP TABLE IF EXISTS p_user;
+DROP TABLE IF EXISTS p_group;
 
 CREATE TABLE
 IF NOT EXISTS p_datasource (
@@ -19,7 +23,6 @@ CREATE TABLE
 IF NOT EXISTS p_dashboard (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
-    width INTEGER,
     height INTEGER
 );
 
@@ -51,3 +54,39 @@ IF NOT EXISTS p_widget (
     FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );
 
+CREATE TABLE 
+IF NOT EXISTS p_user (
+    id INTEGER NOT NULL PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    name TEXT,
+    password TEXT NOT NULL,
+    temp_password TEXT,
+    session_key TEXT,
+    session_timeout INTEGER, 
+    api_key TEXT,
+    sys_role TEXT NOT NULL
+);
+
+CREATE TABLE 
+IF NOT EXISTS p_group (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+); 
+
+CREATE TABLE 
+IF NOT EXISTS p_group_user (
+    user_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, group_id),
+    FOREIGN KEY (user_id) REFERENCES p_user(id),
+    FOREIGN KEY (group_id) REFERENCES p_group(id)
+); 
+
+CREATE TABLE 
+IF NOT EXISTS p_group_dashboard (
+    dashboard_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    PRIMARY KEY (dashboard_id, group_id),
+    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
+    FOREIGN KEY (group_id) REFERENCES p_group(id)
+);

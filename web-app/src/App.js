@@ -1,10 +1,12 @@
 import React from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect, Component } from "react-router-dom";
 import './App.css';
 
 import Login from './views/Login';
 import Workspace from './views/Workspace';
-import NotFound from './views/NotFound';
+import PageNotFound from './views/PageNotFound';
+
+import AuthStore from './api/AuthStore';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,18 +16,34 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('App - componentDidMount', AuthStore.isAuthenticated);
   }
-
+   
   render() {
+    console.log('App - render', AuthStore.isAuthenticated);
     return (
       <div className="app">
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/workspace" component={Workspace} />
-          <Route component={NotFound} />
+          <PrivateRoute authenticated={AuthStore.isAuthenticated} path='/workspace' component={Workspace} />
+          <Route component={PageNotFound} />
         </Switch>
       </div>
     );
   }
 }
+
+function PrivateRoute({component: Component, authenticated, ...rest}) {
+  return (
+    <Route
+      {...rest}
+      render={
+        (props) => authenticated === true
+        ? <Component {...props} />
+        : <Redirect to={{pathname: '/login', state: {from: props.location}}} />
+      }
+    />
+  )
+}
+
 export default App;

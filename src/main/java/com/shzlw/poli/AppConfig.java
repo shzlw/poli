@@ -1,5 +1,6 @@
 package com.shzlw.poli;
 
+import com.shzlw.poli.filter.AuthFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,5 +20,16 @@ public class AppConfig implements WebMvcConfigurer {
                 .setViewName("forward:/");
         registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
                 .setViewName("forward:/");
+    }
+
+    @Bean
+    public FilterRegistrationBean authFilterRegistry() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("authFilter");
+        registration.setFilter(new AuthFilter());
+        registration.addUrlPatterns("/*");
+        registration.setAsyncSupported(Boolean.TRUE);
+        registration.setEnabled(Boolean.TRUE);
+        return registration;
     }
 }

@@ -1,0 +1,90 @@
+package com.shzlw.poli.model;
+
+import java.util.Date;
+
+public class User {
+
+    private long id;
+    private String username;
+    private String name;
+    private String password;
+    private String tempPassword;
+    private String sessionKey;
+    private Date sessionTimeout;
+    private String sysRole;
+    private String apiKey;
+
+    public User() {}
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public Date getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(Date sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
+
+    public String getSysRole() {
+        return sysRole;
+    }
+
+    public void setSysRole(String sysRole) {
+        this.sysRole = sysRole;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+}

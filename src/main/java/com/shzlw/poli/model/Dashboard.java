@@ -7,12 +7,10 @@ public class Dashboard {
     public static final String TABLE = "p_dashboard";
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
 
     private long id;
     private String name;
-    private int width;
     private int height;
 
     /**
@@ -39,14 +37,6 @@ public class Dashboard {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public int getHeight() {
