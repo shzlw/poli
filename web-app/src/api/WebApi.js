@@ -11,7 +11,7 @@ export const fetchDataSources = async () => {
     const response = await axios.get('/ws/jdbcdatasource');
     return response.data || [];
   } catch (e) {
-    return null;
+    return [];
   }
 };
 
@@ -28,7 +28,7 @@ const get = async (url) => {
     const response = await axios.get(url);
     return response.data;
   } catch (e) {
-    return null;
+    return [];
   }
 } 
 

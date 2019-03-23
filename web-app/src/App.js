@@ -8,6 +8,16 @@ import PageNotFound from './views/PageNotFound';
 
 import AuthStore from './api/AuthStore';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { 
+  faChalkboard, 
+  faDatabase,
+  faUsersCog,
+  faPlus,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
+library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes);
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +34,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <Switch>
+          <Route exact path="/" component={Login} />
           <Route path="/login" component={Login} />
           <PrivateRoute authenticated={AuthStore.isAuthenticated} path='/workspace' component={Workspace} />
           <Route component={PageNotFound} />

@@ -6,14 +6,14 @@ import Group from './Group';
 
 const MENU_ITEMS = [
   {
-    link: '/user-management/user',
+    link: '/workspace/user-management/user',
     value: 'User',
-    icon: 'fa-user'
+    icon: 'fa-users'
   }, 
   {
-    link: '/user-management/group',
+    link: '/workspace/user-management/group',
     value: 'Group',
-    icon: 'fa-chalkboard',
+    icon: 'fa-user-cog',
   }
 ];
 
@@ -52,12 +52,11 @@ class UserManagement extends React.Component {
 
     return (
       <div>
-        <h3>UserManagement</h3>
         {menuItems}
         <div>
           <Switch>
-            <Route path="/user-management/user" component={User} />
-            <Route path="/user-management/group" component={Group} />
+            <Route path="/workspace/user-management/user" component={User} />
+            <Route path="/workspace/user-management/group" component={Group} />
           </Switch>
         </div>
       </div>

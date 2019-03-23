@@ -78,7 +78,7 @@ class Account extends React.Component {
     return (
       <div>
         <h3>Account</h3>
-        <form>
+        <div className="form-panel">   
           <label>Username</label>
           <div>{username}</div>
 
@@ -121,8 +121,7 @@ class Account extends React.Component {
           }
 
           <button onClick={this.save}>Save</button>
-
-        </form>
+        </div>
       </div>
     )
   }

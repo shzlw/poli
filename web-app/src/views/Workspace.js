@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import DataSource from './DataSource';
 import Dashboard from './Dashboard';
-import SingleTest from './SingleTest';
 import DashboardFullScreenView from './DashboardFullScreenView';
 
 import UserManagement from './UserManagement';
@@ -10,34 +9,29 @@ import Account from './Account';
 
 import * as Constants from '../api/Constants';
 import AuthStore from '../api/AuthStore';
+import './Workspace.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MENU_ITEMS = [
   {
     link: '/workspace/dashboard',
     value: 'Dashboard',
-    icon: 'fa-chalkboard',
+    icon: 'chalkboard',
   }, 
   {
     link: '/workspace/datasource',
     value: 'Data source',
-    icon: 'fa-database'
+    icon: 'database'
   }, 
-  {
-    link: '/workspace/single-test',
-    value: 'Single test',
-    icon: ''
-  },
   {
     link: '/workspace/user-management',
     value: 'User Management',
-    icon: 'fa-users-cog'
-  }, 
-  {
-    link: '/workspace/account',
-    value: 'Account',
-    icon: 'fa-user'
+    icon: 'users-cog'
   }
 ];
+
+const ACCOUNT_MENU_LINK = '/workspace/account';
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -92,33 +86,43 @@ class Workspace extends React.Component {
         (
           <li className={active} key={menu.link}>
             <Link to={menu.link} onClick={() => this.handleMenuClick(menu.link)}>
-              <i className={`fas ${menu.icon} fa-fw`}></i>
-              <span className="app-nav-menu-text">{menu.value}</span>
+              <FontAwesomeIcon icon={menu.icon} />
+              <span className="workspace-nav-menu-text">{menu.value}</span>
             </Link>
           </li>
         )
       );
     }
 
+    const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'active' : '';
+
     return (
       <React.Fragment>
-        <div className="app-nav">
-          <div className="app-name">Poli</div>
-          <ul className="app-nav-menu">
+        <div className="workspace-nav">  
+          <div className="workspace-name">Poli</div>
+          <ul className="workspace-nav-menu">
             {menuItems}
           </ul>
-          <div style={{position: 'absolute', top: '0px', right: '0px'}}>
-            <Link to="/login">logout</Link>
+          <div className="workspace-account-menu">
+            <div className={isAccountMenuActive}>
+              <Link to="/workspace/account" onClick={() => this.handleMenuClick(ACCOUNT_MENU_LINK)}>
+                <i className="fas fa-user fa-fw"></i>
+                <span className="workspace-nav-menu-text">Account</span>
+              </Link>
+            </div>
+            <Link to="/login">
+              <i className="fas fa-sign-out-alt"></i>
+              logout
+            </Link>
           </div>
         </div>
-        <div className="app-content">
+        <div className="workspace-content">
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
-            <Route path="/workspace/dashboard" component={Dashboard} />
-            <Route exact path="/workspace/single-test" component={SingleTest} />
             <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
-            <Route path="/workspace/user-management" component={UserManagement} />
             <Route exact path="/workspace/account" component={Account} />
+            <Route path="/workspace/dashboard" component={Dashboard} />
+            <Route path="/workspace/user-management" component={UserManagement} />
           </Switch>
         </div>
       </React.Fragment>

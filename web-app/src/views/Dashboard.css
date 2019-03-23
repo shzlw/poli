@@ -36,8 +36,8 @@
   overflow: auto;
 }
 
-.full-width {
-   right: 0px;
+.dashboard-full-width {
+  right: 0px;
 }
 
 .dashboard-content-filter-panel {
@@ -48,4 +48,9 @@
   width: 200px;
   background-color: #eeeeee;
   overflow: auto;
+}
+
+.dashboard-add-button {
+  margin-top: 5px;
+  width: 100%;
 }

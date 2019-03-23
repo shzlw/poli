@@ -1,19 +1,30 @@
 import React from 'react';
 import './Modal.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Modal extends React.Component {
 
   render() {
-    const modalStatus = this.props.show ? 'display-block' : 'display-none';
+    const {
+      show,
+      modalClass = '',
+      title,
+      children
+    } = this.props;
+
+    const modalStatus = show ? 'display-block' : 'display-none';
     return (
       <div className={`modal-overlay ${modalStatus}`}>
-        <div className={this.props.modalClass}>
-          <div>
-            {this.props.title}
+        <div className={`modal-panel ${modalClass}`}>
+          <div className="model-header row">
+            <div className="model-title">{title}</div>
+            <button className="model-close-btn button icon-button" onClick={() => this.props.onClose()}>
+              <FontAwesomeIcon icon="times" />
+            </button>
           </div>
-          <button onClick={() => this.props.onClose()}>Close</button>
+          <hr/>
           <div className='modal-body'>
-            {this.props.children}
+            {children}
           </div>
         </div>
       </div>

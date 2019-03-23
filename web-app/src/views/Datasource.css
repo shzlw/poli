@@ -1,0 +1,13 @@
+
+
+.datasource-card {
+  float: left;
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  background-color: #FFFFFF;
+}
+
+.datasource-card-title {
+  font-size: 20px;
+}

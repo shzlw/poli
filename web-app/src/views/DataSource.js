@@ -3,6 +3,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
+import './Datasource.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class DataSource extends Component {
 
@@ -162,20 +166,19 @@ class DataSource extends Component {
     const { 
       showUpdatePassword,
       id,
-      jdbcDataSources
+      jdbcDataSources = []
     } = this.state;
 
     const jdbcDataSourceItems = jdbcDataSources.map((ds, index) => 
-      <div key={index} className="datasource-panel">
-        <p>
+      <div key={index} className="datasource-card">
+        <div className="datasource-card-title ellipsis">
           {ds.name}
-          {ds.connectionUrl}
-          {ds.username}
-          {ds.ping}
+        </div>
+        <div>
           <button onClick={() => this.openEditPanel(ds)}>update</button>
           <button onClick={() => this.delete(ds.id)}>delete</button>
           <button onClick={() => this.ping(ds.id)}>ping</button>
-        </p>
+        </div>
       </div>
     );
 
@@ -203,71 +206,66 @@ class DataSource extends Component {
 
     return (
       <div>
-        <h1>Data Sources</h1>
         <input
           type="text"
           name="searchValue"
-          placeholder="Data source name..."
+          placeholder="Datasource name..."
           />
         <div className="row">
           {jdbcDataSourceItems}
         </div>
-        <button onClick={() => this.openEditPanel(null)}>
-          Add
+        <button className="button" onClick={() => this.openEditPanel(null)}>
+          <FontAwesomeIcon icon="plus" /> New datasource
         </button>
 
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'lg-modal-panel'} >
+          modalClass={'small-modal-panel'}
+          title={mode} >
 
           <div>
-            <h3>{mode}</h3>
-            <form>
-              <label>Name</label>
-              <input 
-                type="text" 
-                name="name" 
-                value={this.state.name}
-                onChange={this.handleInputChange} />
+            <label>Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={this.state.name}
+              onChange={this.handleInputChange} />
 
-              <label>Connection Url</label>
-              <textarea
-                row="3"
-                type="text" 
-                name="connectionUrl" 
-                value={this.state.connectionUrl}
-                onChange={this.handleInputChange} >
-              </textarea>
+            <label>Connection Url</label>
+            <textarea
+              row="3"
+              type="text" 
+              name="connectionUrl" 
+              value={this.state.connectionUrl}
+              onChange={this.handleInputChange} >
+            </textarea>
 
-              <label>Username</label>
-              <input 
-                type="text" 
-                name="username" 
-                value={this.state.username}
-                onChange={this.handleInputChange} />
-              
-              {passwordInput}
-              <br/>
+            <label>Username</label>
+            <input 
+              type="text" 
+              name="username" 
+              value={this.state.username}
+              onChange={this.handleInputChange} />
+            
+            {passwordInput}
+            <br/>
 
-              <label>Type</label>
-              <input 
-                type="text" 
-                name="type" 
-                value={this.state.type}
-                onChange={this.handleInputChange} />
+            <label>Type</label>
+            <input 
+              type="text" 
+              name="type" 
+              value={this.state.type}
+              onChange={this.handleInputChange} />
 
-              <label>Ping</label>
-              <input 
-                type="text" 
-                name="ping" 
-                value={this.state.ping}
-                onChange={this.handleInputChange} />
-            </form>
+            <label>Ping</label>
+            <input 
+              type="text" 
+              name="ping" 
+              value={this.state.ping}
+              onChange={this.handleInputChange} />
 
-            <div>
-              <button onClick={this.save}>Save</button>
-            </div>
+            <button className="button"onClick={this.save}>Save</button>
           </div>
 
         </Modal>

@@ -9,6 +9,7 @@ import { Route } from "react-router-dom";
 import DashboardEditView from './DashboardEditView';
 import Modal from '../components/Modal';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Dashboard extends Component {
 
@@ -23,7 +24,6 @@ class Dashboard extends Component {
       dashboards: [],
       showEditPanel: false,
       name: '',
-      width: 1200,
       height: 800
     };
   }
@@ -55,13 +55,11 @@ class Dashboard extends Component {
   save = () => {
     const {
       name,
-      width,
       height
     } = this.state;
 
     const dashboard = {
       name: name,
-      width: width,
       height: height
     };
 
@@ -86,64 +84,63 @@ class Dashboard extends Component {
   }
 
   render() {
-    const dashboardRows = this.state.dashboards.map((d, index) => 
-      <div key={index} className="dashboard-menu-item" onClick={() => this.view(d.id)}>
-        <div>{d.id} {d.name}</div>
+    const {
+      dashboards = []
+    } = this.state;
+    
+    const dashboardRows = dashboards.map((d, index) => 
+      <div key={index} className="dashboard-menu-item ellipsis" onClick={() => this.view(d.id)}>
+        {d.name}
       </div>
     );
 
     return (
       <div>
         <div className="dashboard-sidebar">
-          <button onClick={() => this.setState({ showEditPanel: true })}>Add</button>
-          <label>Search</label>
-          <input 
-            type="text" 
-            name="searchValue" 
-            value={this.state.searchValue}
-            placeholder="Dashboard"
-            onChange={this.handleInputChange} />
-          {dashboardRows}
+          <div style={{margin: '5px'}}>
+            <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
+              <FontAwesomeIcon icon="plus" /> New dashboard
+            </button>
+            <input 
+              type="text" 
+              name="searchValue" 
+              value={this.state.searchValue}
+              placeholder="Search..."
+              onChange={this.handleInputChange} />
+          </div>
+          <div>
+            {dashboardRows}
+          </div>
         </div>
         <div className="dashboard-content">
-          <Route path="/workspace/dashboard/:id" render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} />
+          <Route 
+            path="/workspace/dashboard/:id" 
+            render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} 
+            />
         </div>
 
         <Modal 
           show={this.state.showEditPanel}
           onClose={() => this.setState({ showEditPanel: false })}
-          modalClass={'lg-modal-panel'} >
-          <div>New dashboard</div>
-          <button onClick={this.save}>Save</button>
-          <form>
+          modalClass={'small-modal-panel'} 
+          title={'New'} >
+          <div>
             <label>Name</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} 
-              style={{width: '200px'}}
               />
-
-            <label>Width</label>
-            <input 
-              type="text" 
-              name="width" 
-              value={this.state.width}
-              onChange={this.handleInputChange} 
-              style={{width: '100px'}}
-              />
-
             <label>Height</label>
             <input 
               type="text" 
               name="height" 
               value={this.state.height}
               onChange={this.handleInputChange} 
-              style={{width: '100px'}}
               />
-            
-          </form>
+            <button className="button" onClick={this.save}>Save</button>
+          </div>
         </Modal>
 
       </div>

@@ -86,12 +86,8 @@ class FilterEditPanel extends React.Component {
   }
 
   handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
     this.setState({
-      [name]: value
+      [event.target.name]: event.target.value
     });
   }
 

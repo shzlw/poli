@@ -27,7 +27,6 @@ public class DashboardWs {
     @Autowired
     WidgetDao widgetDao;
 
-
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Dashboard> all() {

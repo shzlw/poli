@@ -1,8 +1,19 @@
 package com.shzlw.poli.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
+
+    public static final String ID = "id";
+    public static final String USERNAME = "username";
+    public static final String NAME = "name";
+    public static final String PASSWORD = "password";
+    public static final String TEMP_PASSWORD = "temp_password";
+    public static final String SESSION_KEY = "session_key";
+    public static final String SESSION_TIMEOUT = "session_timeout";
+    public static final String SYS_ROLE = "sys_role";
+    public static final String API_KEY = "api_key";
 
     private long id;
     private String username;
@@ -10,7 +21,7 @@ public class User {
     private String password;
     private String tempPassword;
     private String sessionKey;
-    private Date sessionTimeout;
+    private LocalDateTime sessionTimeout;
     private String sysRole;
     private String apiKey;
 
@@ -64,11 +75,11 @@ public class User {
         this.sessionKey = sessionKey;
     }
 
-    public Date getSessionTimeout() {
+    public LocalDateTime getSessionTimeout() {
         return sessionTimeout;
     }
 
-    public void setSessionTimeout(Date sessionTimeout) {
+    public void setSessionTimeout(LocalDateTime sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
 

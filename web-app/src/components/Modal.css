@@ -7,3 +7,24 @@
   bottom: 0;
   z-index: 49;
 }
+
+.model-title {
+  font-size: 25px;
+  float: left;
+}
+
+.model-close-btn {
+  float: right;
+  cursor: pointer;
+}
+
+.modal-panel {
+  background-color: #eee;
+  position: fixed;
+  overflow-y: auto;
+  left: 50%;
+  padding: 10px;
+  z-index: 50;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  max-height: 800px;
+}

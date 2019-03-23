@@ -115,12 +115,8 @@ class DashboardEditView extends React.Component {
   }
 
   handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
     this.setState({
-      [name]: value
+      [event.target.name]: event.target.value
     });
   }
 
@@ -269,12 +265,12 @@ class DashboardEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/poli/workspace/dashboard/view?name=${name}`;
+    const url = `/workspace/dashboard/view?name=${name}`;
     window.open(url, '_blank');
   }
 
   onTableCellClick = () => {
-    this.props.history.push(`/dashboards/drill?name=&`);
+    this.props.history.push(`/workspace/dashboard/drill?name=&`);
   }
 
   render() {
@@ -328,7 +324,7 @@ class DashboardEditView extends React.Component {
             style={{width: '200px'}}
             />
 
-          <div className="inline-block">H:</div>
+          <div className="inline-block">Height:</div>
           <input 
             type="text" 
             name="height" 
@@ -339,8 +335,10 @@ class DashboardEditView extends React.Component {
             />
         </div>
         
+        <i className="far fa-play-circle"></i>
+        <i className="far fa-stop-circle"></i>
         <button onClick={this.toggleAutoRefresh}>AUTO: {autoRefreshStatus} - {lastRefreshed}</button>
-        <button onClick={this.refresh}>Refresh</button>
+        <button onClick={this.refresh}><i className="fas fa-sync-alt"></i>Refresh</button>
         <button onClick={this.toggleFilterViewPanel}>Show Filters</button>
         
         {fullScreenButtonPanel}
@@ -364,7 +362,9 @@ class DashboardEditView extends React.Component {
         <Modal 
           show={this.state.showWidgetEditPanel}
           onClose={() => this.setState({ showWidgetEditPanel: false })}
-          modalClass={'lg-modal-panel'} >
+          modalClass={'lg-modal-panel'} 
+          title={'Widget Edit'}
+          >
           <WidgetEditPanel 
             ref={this.widgetEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
@@ -376,7 +376,9 @@ class DashboardEditView extends React.Component {
         <Modal 
           show={this.state.showFilterEditPanel}
           onClose={() => this.setState({ showFilterEditPanel: false })}
-          modalClass={'lg-modal-panel'} >
+          modalClass={'lg-modal-panel'}
+          title='Filter Edit'
+          >
           <FilterEditPanel
             ref={this.filterEditPanel}
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}

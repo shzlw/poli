@@ -48,57 +48,14 @@ body,
   z-index: 2;
 }
 
-.app-name {
-  display: block;
-  color: #0065FF;
-  padding: 7px 18px;
-  font-size: 22px;
-  font-weight: bold;
-  float: left;
-  margin-right: 20px;
-}
-
-.app-nav-menu {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-.app-nav-menu li {
-  float: left;
-  font-size: 16px; 
-}
-
-.app-nav-menu-text {
-  margin-left: 6px;
-}
-
-.app-nav-menu li a {
-  display: block;
-  color: #d6d7e1;
-  padding: 11px 14px;
-  text-decoration: none;
-}
-
-.app-nav-menu li a:hover {
-  background-color: #0065FF;
-}
-
-.app-nav-menu .active {
-  color: #e9ebee;
-  background-color: #0065FF;
-}
-
-.app-content {
-  position: fixed;
-  top: 40px;
-  left: 0px;
-  right: 0;
-  bottom: 0;
-  background-color: #e9ebee;
-  overflow: hidden; 
+.form-panel {
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
   padding: 10px;
+  margin: 5px;
+  background-color: rgba(18, 91, 152, 0.05);
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
 }
 
 .panel {
@@ -125,27 +82,10 @@ body,
   overflow: auto;
 }
 
-.lg-modal-panel {
-  background-color: #eee;
-  padding: 10px;
-  position: fixed;
-  top: 20px;
-  left: 40px;
-  right: 40px;
-  bottom: 20px;
-  overflow-y: auto;
-  z-index: 50;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.6);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 49;
+.small-modal-panel {
+  width: 300px;
+  margin-top: 20px;
+  margin-left: -150px;
 }
 
 .full-screen-view {
@@ -174,7 +114,7 @@ body,
   display: inline-block;
 }
 
-button {
+.button {
   background: #0065FF;
   color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -185,24 +125,28 @@ button {
   outline: none;
   cursor: pointer;
   transition: all 0.15s ease;
-  margin: 3px;
 }
 
-button:focus {
+.icon-button {
+  height: 30px;
+  width: 30px;
+}
+
+.button:focus {
   background: #0052CC;
 }
 
-button:hover {
+.button:hover {
   transform: translateY(-1px);
   box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1),
     0 3px 6px 0 rgba(0, 0, 0, 0.08);
 }
 
-button:active {
+.button:active {
   background: #0747A6;
 }
 
-button:hover {
+.button:hover {
   color: #fff;
   cursor: pointer;
   background-color: #2684FF;
@@ -213,8 +157,7 @@ button:hover {
 input[type=text],
 input[type=password],
 select,
-textarea,
-.PoliElement {
+textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
@@ -281,13 +224,6 @@ label {
   padding: 3px;
 }
 
-.datasource-panel {
-  float: left;
-  width: 300px;
-  height: 200px;
-  margin: 10px;
-  border: 2px solid #0065FF;
-}
 
 /** ReactTable */
 .ReactTable {
@@ -347,4 +283,17 @@ label {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 0; 
+}
+
+.full-width {
+  width: 100%;
 }

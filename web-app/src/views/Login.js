@@ -5,8 +5,6 @@ import axios from 'axios';
 import AuthStore from '../api/AuthStore';
 import './Login.css';
 
-
-
 class Login extends React.Component {
 
   constructor(props) {
@@ -75,8 +73,8 @@ class Login extends React.Component {
     return (
       <React.Fragment>
         <div className="login-panel">
-          <div>Poli</div>
-          <label>{this.state.errorMsg}</label>
+          <div className="login-app-title">Poli</div>
+          <div className="login-error-msg">{this.state.errorMsg}</div>
           <form>
             <div className="form-group">
               <label>Username</label>
@@ -92,7 +90,7 @@ class Login extends React.Component {
                 value={this.state.password}
                 onChange={this.handleInputChange} />
             </div>
-            <button onClick={this.login}>Login</button>
+            <button className="button login-button" onClick={this.login}>Login</button>
           </form>
         </div>
       </React.Fragment>
