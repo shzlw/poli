@@ -103,7 +103,7 @@ class GridItem extends React.Component {
           const index = drills.findIndex(d => d.columnName === header);
           if (index !== -1) {
             const dashboardId = drills[index].dashboardId;
-            this.props.history.push(`/dashboards/${dashboardId}?${header}=${value}`);
+            this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
           }
         }
       }
@@ -129,7 +129,7 @@ class GridItem extends React.Component {
       queryResult,
       drillThrough
     } = this.props;
-    let widgetItem = (<div>NONE</div>);
+    let widgetItem = (<div></div>);
     if (chartType === Constants.TABLE) {
 
       const headers = [];

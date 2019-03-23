@@ -7,7 +7,6 @@ public class JdbcDataSource {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String CONNECTION_URL = "connection_url";
-    public static final String TYPE = "type";
     public static final String PING = "ping";
 
     private long id;
@@ -15,7 +14,6 @@ public class JdbcDataSource {
     private String connectionUrl;
     private String username;
     private String password;
-    private String type;
     private String ping;
 
     public JdbcDataSource() {}
@@ -60,14 +58,6 @@ public class JdbcDataSource {
         this.password = password;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getPing() {
         return ping;
     }
@@ -89,7 +79,6 @@ public class JdbcDataSource {
             return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
         return ping != null ? ping.equals(that.ping) : that.ping == null;
     }
 
@@ -100,7 +89,6 @@ public class JdbcDataSource {
         result = 31 * result + (connectionUrl != null ? connectionUrl.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (ping != null ? ping.hashCode() : 0);
         return result;
     }
@@ -113,7 +101,6 @@ public class JdbcDataSource {
                 ", connectionUrl='" + connectionUrl + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", type='" + type + '\'' +
                 ", ping='" + ping + '\'' +
                 '}';
     }

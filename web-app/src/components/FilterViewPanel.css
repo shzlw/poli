@@ -1,0 +1,20 @@
+
+.filterViewPanel:before,
+.filterViewPanel:after {
+  content: "";
+  display: table;
+} 
+.filterViewPanel:after {
+  clear: both;
+}
+
+.filter-card {
+  margin: 5px;
+  border: 1px solid #0065FF;
+}
+
+.filter-card-title {
+  color: #e0e0e0;
+  background-color: #4b4f56;
+  padding: 3px;
+}

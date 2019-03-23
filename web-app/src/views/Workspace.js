@@ -81,12 +81,12 @@ class Workspace extends React.Component {
     }
     for (let i = 0; i < menuList.length; i++) {
       const menu = menuList[i];
-      const active = currentMenuLink === menu.link ? 'active' : '';
+      const active = currentMenuLink === menu.link ? 'menu-item-active' : '';
       menuItems.push(
         (
           <li className={active} key={menu.link}>
             <Link to={menu.link} onClick={() => this.handleMenuClick(menu.link)}>
-              <FontAwesomeIcon icon={menu.icon} />
+              <FontAwesomeIcon icon={menu.icon} fixedWidth />
               <span className="workspace-nav-menu-text">{menu.value}</span>
             </Link>
           </li>
@@ -94,7 +94,7 @@ class Workspace extends React.Component {
       );
     }
 
-    const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'active' : '';
+    const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'menu-item-active' : '';
 
     return (
       <React.Fragment>
@@ -104,16 +104,17 @@ class Workspace extends React.Component {
             {menuItems}
           </ul>
           <div className="workspace-account-menu">
-            <div className={isAccountMenuActive}>
+            <div className={`workspace-account-button inline-block ${isAccountMenuActive}`}>
               <Link to="/workspace/account" onClick={() => this.handleMenuClick(ACCOUNT_MENU_LINK)}>
-                <i className="fas fa-user fa-fw"></i>
+                <FontAwesomeIcon icon="user" fixedWidth />
                 <span className="workspace-nav-menu-text">Account</span>
               </Link>
             </div>
-            <Link to="/login">
-              <i className="fas fa-sign-out-alt"></i>
-              logout
-            </Link>
+            <div className="workspace-logout-button inline-block">
+              <Link to="/login">
+                <FontAwesomeIcon icon="sign-out-alt" fixedWidth />
+              </Link>
+            </div>
           </div>
         </div>
         <div className="workspace-content">

@@ -36,7 +36,7 @@
   background-color: #0065FF;
 }
 
-.workspace-nav-menu .active {
+.menu-item-active {
   color: #e9ebee;
   background-color: #0065FF;
 }
@@ -56,5 +56,16 @@
   float: right;
 }
 
-.workspace-logout-btn {
+.workspace-account-button a {
+  display: block;
+  color: #d6d7e1;
+  padding: 11px 14px;
+  text-decoration: none;
+}
+
+.workspace-logout-button a {
+  display: block;
+  color: #d6d7e1;
+  padding: 11px 14px;
+  text-decoration: none;
 }

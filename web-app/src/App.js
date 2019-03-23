@@ -10,13 +10,14 @@ import AuthStore from './api/AuthStore';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
-  faChalkboard, 
-  faDatabase,
-  faUsersCog,
-  faPlus,
-  faTimes
+  faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
+  faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
+  faTv, faPlug, faUser, faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes);
+library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
+  faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
+  faTv, faPlug, faUser, faSignOutAlt
+);
 
 class App extends React.Component {
   constructor(props) {

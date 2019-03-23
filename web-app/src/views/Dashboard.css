@@ -42,7 +42,7 @@
 
 .dashboard-content-filter-panel {
   position: absolute;
-  top: 0;
+  top: 100px;
   right: 0;
   bottom: 0;
   width: 200px;
@@ -53,4 +53,8 @@
 .dashboard-add-button {
   margin-top: 5px;
   width: 100%;
+}
+
+.dashboard-attribute-edit-panel {
+
 }

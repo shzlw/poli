@@ -77,7 +77,7 @@ class Account extends React.Component {
 
     return (
       <div>
-        <h3>Account</h3>
+        <div>Account</div>
         <div className="form-panel">   
           <label>Username</label>
           <div>{username}</div>
@@ -94,13 +94,14 @@ class Account extends React.Component {
 
           <label>API Key</label>
           <div>{apiKey}</div>
-          <button>Generate new API Key</button>
+          <button className="button" onClick={this.generateApiKey}>Generate new API Key</button>
+          <br/>
 
-          <label>Update password</label>
           {
             showUpdatePassword ?
             (
               <React.Fragment>
+                <br/>
                 <label>Password</label>
                 <input 
                   type="password" 
@@ -116,11 +117,15 @@ class Account extends React.Component {
               </React.Fragment>
             ) :
             (
-              <button onClick={this.toggleUpdatePassword}>Update password</button>
+              <React.Fragment>
+                <br/>
+                <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+              </React.Fragment>
             )
           }
 
-          <button onClick={this.save}>Save</button>
+          <br/>
+          <button className="button" onClick={this.save}>Save</button>
         </div>
       </div>
     )

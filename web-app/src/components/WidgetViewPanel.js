@@ -5,7 +5,6 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
-import ColorPicker from './ColorPicker';
 
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
@@ -105,13 +104,10 @@ class WidgetViewPanel extends React.Component {
     }
   }
 
-  handleChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    const isChecked = target.checked;
+  handleInputChange = (event) => {
     this.setState({
-      [name]: isChecked
-    })
+      [event.target.name]: event.target.value
+    });
   }
 
   saveWidgets = () => {
@@ -166,7 +162,7 @@ class WidgetViewPanel extends React.Component {
             name="snapToGrid"
             value="snapToGrid"
             checked={this.state.snapToGrid} 
-            onChange={this.handleChange} />
+            onChange={this.handleInputChange} />
             snapToGrid
             <br/>
             <input 
@@ -174,14 +170,9 @@ class WidgetViewPanel extends React.Component {
               name="showGridlines"
               value="showGridlines"
               checked={this.state.showGridlines} 
-              onChange={this.handleChange} />
+              onChange={this.handleInputChange} />
               showGridlines
             <br/>
-
-            <label>Background Color</label>
-            
-            <ColorPicker />
-
           </div>
         ) : null}
         

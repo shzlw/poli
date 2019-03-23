@@ -1,11 +1,9 @@
 
 
 .datasource-card {
-  float: left;
-  width: 200px;
-  height: 200px;
-  margin: 10px;
+  margin-bottom: 5px;
   background-color: #FFFFFF;
+  padding: 5px;
 }
 
 .datasource-card-title {

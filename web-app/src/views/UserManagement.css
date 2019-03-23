@@ -1,0 +1,30 @@
+
+.nav-menu {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.nav-menu li {
+  font-size: 16px; 
+  display: inline;
+}
+
+.nav-menu-text {
+  margin-left: 6px;
+}
+
+.nav-menu li a {
+  color: #d6d7e1;
+  padding: 11px 14px;
+  text-decoration: none;
+}
+
+.nav-menu li a:hover {
+  background-color: #0065FF;
+}
+
+.nav-menu-item-active {
+  color: #e9ebee;
+  background-color: #0065FF;
+}

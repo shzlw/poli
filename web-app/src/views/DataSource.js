@@ -21,7 +21,6 @@ class DataSource extends Component {
       connectionUrl: '',
       username: '',
       password: '',
-      type: '',
       ping: ''
     };
   }
@@ -34,7 +33,6 @@ class DataSource extends Component {
       connectionUrl: '',
       username: '',
       password: '',
-      type: '',
       ping: ''
     };
   }
@@ -71,7 +69,6 @@ class DataSource extends Component {
       username,
       password,
       name,
-      type,
       ping,
     } = this.state;
 
@@ -79,7 +76,6 @@ class DataSource extends Component {
       connectionUrl: connectionUrl,
       username: username,
       name: name,
-      type: type,
       ping: ping
     };
 
@@ -134,7 +130,6 @@ class DataSource extends Component {
         username: ds.username,
         password: ds.password,
         name: ds.name,
-        type: ds.type,
         ping: ds.ping
       });
     } else {
@@ -170,14 +165,20 @@ class DataSource extends Component {
     } = this.state;
 
     const jdbcDataSourceItems = jdbcDataSources.map((ds, index) => 
-      <div key={index} className="datasource-card">
-        <div className="datasource-card-title ellipsis">
+      <div key={index} className="datasource-card row">
+        <div className="float-left ellipsis">
           {ds.name}
         </div>
-        <div>
-          <button onClick={() => this.openEditPanel(ds)}>update</button>
-          <button onClick={() => this.delete(ds.id)}>delete</button>
-          <button onClick={() => this.ping(ds.id)}>ping</button>
+        <div className="float-right">
+          <button className="button icon-button" onClick={() => this.openEditPanel(ds)}>
+            <FontAwesomeIcon icon="edit" fixedWidth />
+          </button>
+          <button className="button icon-button" onClick={() => this.delete(ds.id)}>
+            <FontAwesomeIcon icon="trash-alt" fixedWidth />
+          </button>
+          <button className="button icon-button" onClick={() => this.ping(ds.id)}>
+            <FontAwesomeIcon icon="plug" fixedWidth />
+          </button>
         </div>
       </div>
     );
@@ -199,7 +200,10 @@ class DataSource extends Component {
       mode = 'Update';
       if (!showUpdatePassword) {
         passwordInput = (
-          <button onClick={this.toggleUpdatePassword}>Update password</button>
+          <React.Fragment>
+            <br/>
+            <button onClick={this.toggleUpdatePassword}>Update password</button>
+          </React.Fragment>
         );
       }
     }
@@ -211,12 +215,12 @@ class DataSource extends Component {
           name="searchValue"
           placeholder="Datasource name..."
           />
-        <div className="row">
-          {jdbcDataSourceItems}
-        </div>
         <button className="button" onClick={() => this.openEditPanel(null)}>
           <FontAwesomeIcon icon="plus" /> New datasource
         </button>
+        <div>
+          {jdbcDataSourceItems}
+        </div>
 
         <Modal 
           show={this.state.showEditPanel}
@@ -234,7 +238,7 @@ class DataSource extends Component {
 
             <label>Connection Url</label>
             <textarea
-              row="3"
+              rows="4"
               type="text" 
               name="connectionUrl" 
               value={this.state.connectionUrl}
@@ -249,14 +253,6 @@ class DataSource extends Component {
               onChange={this.handleInputChange} />
             
             {passwordInput}
-            <br/>
-
-            <label>Type</label>
-            <input 
-              type="text" 
-              name="type" 
-              value={this.state.type}
-              onChange={this.handleInputChange} />
 
             <label>Ping</label>
             <input 

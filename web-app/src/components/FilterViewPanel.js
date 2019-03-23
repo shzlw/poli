@@ -6,6 +6,9 @@ import * as Constants from '../api/Constants';
 
 import axios from 'axios';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import './FilterViewPanel.css';
 
 class FilterViewPanel extends Component {
 
@@ -119,10 +122,10 @@ class FilterViewPanel extends Component {
                   (
                     <div className="icon-button-group">
                       <div className="icon-btn" onClick={() => this.edit(filter.id)}>
-                        <i className="fas fa-edit fa-fw"></i>
+                        <FontAwesomeIcon icon="edit" fixedWidth />
                       </div>
                       <div className="icon-btn" onClick={() => this.remove(filter.id)}>
-                        <i className="fas fa-trash-alt fa-fw"></i>
+                        <FontAwesomeIcon icon="trash-alt" fixedWidth />
                       </div>
                     </div>
                   ): null 
@@ -219,7 +222,7 @@ class FilterViewPanel extends Component {
 
     return (
       <div className="dashboard-content-filter-panel" style={style}>
-        <h5>FilterViewPanel</h5>
+        <div>Filters</div>
         <button onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">
           {this.renderFilterPanel()}

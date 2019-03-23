@@ -13,41 +13,6 @@ body,
   text-rendering: optimizeLegibility;
 }
 
-.app-nav {
-  position: fixed;
-  top:0;
-  left: 0px;
-  right: 0px;
-  height: 40px;
-  background-color: #f9f9f9;
-}
-
-.Nav {
-  border: 1px solid #0065FF;
-}
-
-.Nav_title-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 180px;
-  height: 39px;
-  background-color: #282a3c;
-  z-index: 1;
-  border-bottom: 1px solid white;
-}
-
-.Status_bar {
-  position:fixed;
-  top:0;
-  left: 180px;
-  right:0;
-  height:39px;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #eee;
-  z-index: 2;
-}
-
 .form-panel {
   border: 0;
   outline: 0;
@@ -67,7 +32,6 @@ body,
   margin: 10px;
   background-color: #f6f9fc;
 }
-
 
 .wrapper {
   position: relative;
@@ -128,8 +92,8 @@ body,
 }
 
 .icon-button {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
 }
 
 .button:focus {
@@ -203,27 +167,6 @@ label {
   border: 2px solid #0065FF;
   margin-top: 10px;
 }
-
-.filterViewPanel:before,
-.filterViewPanel:after {
-  content: "";
-  display: table;
-} 
-.filterViewPanel:after {
-  clear: both;
-}
-
-.filter-card {
-  margin: 5px;
-  border: 1px solid #0065FF;
-}
-
-.filter-card-title {
-  color: #e0e0e0;
-  background-color: #4b4f56;
-  padding: 3px;
-}
-
 
 /** ReactTable */
 .ReactTable {

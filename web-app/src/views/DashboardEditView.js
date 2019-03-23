@@ -7,6 +7,7 @@ import FilterViewPanel from '../components/FilterViewPanel';
 import WidgetViewPanel from '../components/WidgetViewPanel';
 import WidgetEditPanel from '../components/WidgetEditPanel';
 import FilterEditPanel from '../components/FilterEditPanel';
+import ColorPicker from '../components/ColorPicker';
 import Modal from '../components/Modal';
 
 import * as Constants from '../api/Constants';
@@ -15,6 +16,9 @@ import './Dashboard.css';
 
 import * as webApi from '../api/WebApi';
 import axios from 'axios';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class DashboardEditView extends React.Component {
 
@@ -130,10 +134,6 @@ class DashboardEditView extends React.Component {
     } else {
       const timerId = setInterval(() => {
         this.refreshWidgetView();
-        const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-        this.setState({
-          lastRefreshed: now
-        });
       }, 1000);
       this.setState({
         autoRefreshTimerId: timerId
@@ -160,6 +160,11 @@ class DashboardEditView extends React.Component {
       widgetViewWidth
     } = this.state;
     this.widgetViewPanel.current.fetchWidgets(dashboardId, widgetViewWidth, null);
+
+    const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    this.setState({
+      lastRefreshed: now
+    });
   } 
 
   save = () => {
@@ -287,18 +292,20 @@ class DashboardEditView extends React.Component {
     if (!isReadOnly) {
       fullScreenButtonPanel = (
         <React.Fragment>
-          <button onClick={this.fullScreen}>Full Screen</button>
+          <button className="button icon-button" onClick={this.fullScreen}>
+            <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+          </button>
         </React.Fragment>
       );
 
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
-            <button onClick={this.cancelEdit}>Cancel</button>
-            <button onClick={this.save}>Save</button>
-            <button onClick={this.delete}>Delete</button>
-            <button onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
-            <button onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+            <button className="button" onClick={this.cancelEdit}>Cancel</button>
+            <button className="button" onClick={this.save}>Save</button>
+            <button className="button" onClick={this.delete}>Delete</button>
+            <button className="button" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
+            <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
           </React.Fragment>
         );
       } else {
@@ -309,41 +316,63 @@ class DashboardEditView extends React.Component {
         );
       }
     }
-    
 
     return (
-      <div>
+      <React.Fragment>
         <div className="row">
-           <div className="inline-block">Name:</div>
-          <input 
-            type="text" 
-            name="name" 
-            value={this.state.name}
-            onChange={this.handleInputChange} 
-            className="inline-block" 
-            style={{width: '200px'}}
-            />
-
-          <div className="inline-block">Height:</div>
-          <input 
-            type="text" 
-            name="height" 
-            value={this.state.height}
-            onChange={this.handleInputChange} 
-            className="inline-block" 
-            style={{width: '200px'}}
-            />
+          <div className="float-left">
+            <input 
+              type="text" 
+              name="name" 
+              value={this.state.name}
+              onChange={this.handleInputChange} 
+              style={{width: '200px'}}
+              readOnly={isReadOnly || !isEditMode}
+              />
+          </div>
+          <div className="float-right">
+            <span>Last refreshed: {lastRefreshed}</span>
+            <button className="button icon-button" onClick={this.toggleAutoRefresh}>
+              {
+                autoRefreshStatus === 'ON' ? 
+                (
+                  <FontAwesomeIcon icon="stop-circle" size="lg" fixedWidth />
+                ) : 
+                (
+                  <FontAwesomeIcon icon="play-circle" size="lg" fixedWidth />
+                )
+              }
+            </button>
+            <button className="button icon-button" onClick={this.refresh}>
+              <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
+            </button>
+            <button className="button" onClick={this.toggleFilterViewPanel}>Show Filters</button>
+            
+            {fullScreenButtonPanel}
+            {editButtonPanel}
+          </div>
         </div>
-        
-        <i className="far fa-play-circle"></i>
-        <i className="far fa-stop-circle"></i>
-        <button onClick={this.toggleAutoRefresh}>AUTO: {autoRefreshStatus} - {lastRefreshed}</button>
-        <button onClick={this.refresh}><i className="fas fa-sync-alt"></i>Refresh</button>
-        <button onClick={this.toggleFilterViewPanel}>Show Filters</button>
-        
-        {fullScreenButtonPanel}
-        {editButtonPanel}
-        
+        {
+          (!isReadOnly && isEditMode) ?
+          (
+            <div className="dashboard-attribute-edit-panel">
+              <div className="inline-block">Height:</div>
+              <input 
+                type="text" 
+                name="height" 
+                value={this.state.height}
+                onChange={this.handleInputChange} 
+                className="inline-block" 
+                style={{width: '200px'}}
+                />
+
+              <div className="inline-block">Background Color</div>
+              <ColorPicker />
+
+            </div>
+          ) : null
+        }
+
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           onWidgetEdit={this.openWidgetEditPanel}
@@ -363,8 +392,7 @@ class DashboardEditView extends React.Component {
           show={this.state.showWidgetEditPanel}
           onClose={() => this.setState({ showWidgetEditPanel: false })}
           modalClass={'lg-modal-panel'} 
-          title={'Widget Edit'}
-          >
+          title={'Widget Edit'} >
           <WidgetEditPanel 
             ref={this.widgetEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
@@ -377,8 +405,7 @@ class DashboardEditView extends React.Component {
           show={this.state.showFilterEditPanel}
           onClose={() => this.setState({ showFilterEditPanel: false })}
           modalClass={'lg-modal-panel'}
-          title='Filter Edit'
-          >
+          title={'Filter Edit'}>
           <FilterEditPanel
             ref={this.filterEditPanel}
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
@@ -387,7 +414,7 @@ class DashboardEditView extends React.Component {
           />
         </Modal>
 
-      </div>
+      </React.Fragment>
     )
   };
 }

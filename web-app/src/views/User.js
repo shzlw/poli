@@ -228,7 +228,7 @@ class User extends React.Component {
 
     return (
       <div>
-        <h1>User</h1>
+        <div>User</div>
         <input
           type="text"
           name=""

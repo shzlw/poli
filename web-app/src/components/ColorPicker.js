@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { ChromePicker  } from 'react-color';
+import React from 'react';
+import { ChromePicker } from 'react-color';
 
-class ColorPicker extends Component {
+class ColorPicker extends React.Component {
    state = {
     displayColorPicker: false,
     color: {

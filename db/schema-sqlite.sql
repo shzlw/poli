@@ -15,7 +15,6 @@ IF NOT EXISTS p_datasource (
     username TEXT,
     password TEXT,
     connection_url TEXT,
-    type TEXT,
     ping TEXT
 );
 

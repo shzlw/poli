@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Link, Switch } from "react-router-dom";
 import User from './User';
 import Group from './Group';
+import './UserManagement.css';
 
 const MENU_ITEMS = [
   {
@@ -51,15 +52,19 @@ class UserManagement extends React.Component {
     }
 
     return (
-      <div>
-        {menuItems}
+      <React.Fragment>
+        <div>
+          <ul className="nav-menu">
+            {menuItems}
+          </ul>
+        </div>
         <div>
           <Switch>
             <Route path="/workspace/user-management/user" component={User} />
             <Route path="/workspace/user-management/group" component={Group} />
           </Switch>
         </div>
-      </div>
+      </React.Fragment>
     )
   };
 }
