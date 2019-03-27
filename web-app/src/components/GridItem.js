@@ -15,6 +15,9 @@ import * as Constants from '../api/Constants';
 import ReactEcharts from 'echarts-for-react';
 import * as EchartsApi from '../api/EchartsApi';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
 class GridItem extends React.Component {
 
   constructor(props) {
@@ -199,21 +202,22 @@ class GridItem extends React.Component {
           {this.props.name}
 
           { this.props.isEditMode ? (
-            <div className="icon-button-group" style={{marginRight: '20px'}}>
+            <div className="float-right" style={{marginRight: '20px'}}>
               <div className="icon-btn" onClick={() => this.editWidget(this.props.id)}>
-                <i className="fas fa-edit fa-fw"></i>
+                <FontAwesomeIcon icon="edit" fixedWidth />
               </div>
               <div className="icon-btn" onClick={() => this.removeWidget(this.props.id)}>
-                <i className="fas fa-trash-alt fa-fw"></i>
+                <FontAwesomeIcon icon="trash-alt" fixedWidth />
               </div>
             </div>
           ) : (
-            <div className="icon-button-group" style={{marginRight: '20px'}}>
+            <div className="grid-box-file-button-group">
               <div className="icon-btn" onClick={() => this.exportJson(this.props.id)}>
-                <i class="fas fa-file-export fa-fw"></i>
+                <FontAwesomeIcon icon="file-export" fixedWidth />
               </div>
+              
               <div className="icon-btn" onClick={() => this.exportCsv(this.props.id)}>
-                <i className="fas fa-file-csv fa-fw"></i>
+                <FontAwesomeIcon icon="file-csv" fixedWidth />
               </div>
             </div>
           )}

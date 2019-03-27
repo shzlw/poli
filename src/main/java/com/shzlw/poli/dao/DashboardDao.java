@@ -22,12 +22,12 @@ public class DashboardDao {
     JdbcTemplate jt;
 
     public List<Dashboard> fetchAll() {
-        String sql = "SELECT id, name, height FROM p_dashboard";
+        String sql = "SELECT id, name, style FROM p_dashboard";
         return jt.query(sql, new Object[] {}, new DashboardRowMapper());
     }
 
     public Dashboard fetchById(long id) {
-        String sql = "SELECT id, name, height FROM p_dashboard WHERE id=?";
+        String sql = "SELECT id, name, style FROM p_dashboard WHERE id=?";
         try {
             return (Dashboard) jt.queryForObject(sql, new Object[]{ id }, new DashboardRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -36,7 +36,7 @@ public class DashboardDao {
     }
 
     public Dashboard fetchByName(String name) {
-        String sql = "SELECT id, name, height FROM p_dashboard WHERE name=?";
+        String sql = "SELECT id, name, style FROM p_dashboard WHERE name=?";
         try {
             return (Dashboard) jt.queryForObject(sql, new Object[]{ name }, new DashboardRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -44,13 +44,13 @@ public class DashboardDao {
         }
     }
 
-    public long add(Dashboard d) {
-        String sql = "INSERT INTO p_dashboard(name, height) VALUES(?, ?)";
+    public long add(String name, String style) {
+        String sql = "INSERT INTO p_dashboard(name, style) VALUES(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, d.getName());
-            ps.setInt(2, d.getHeight());
+            ps.setString(1, name);
+            ps.setString(2, style);
             return ps;
         }, keyHolder);
 
@@ -58,8 +58,8 @@ public class DashboardDao {
     }
 
     public int update(Dashboard d) {
-        String sql = "UPDATE p_dashboard SET name=?, height=? WHERE id=?";
-        return jt.update(sql, new Object[] { d.getName(), d.getHeight(), d.getId() });
+        String sql = "UPDATE p_dashboard SET name=?, style=? WHERE id=?";
+        return jt.update(sql, new Object[] { d.getName(), d.getStyle(), d.getId() });
     }
 
     public int delete(long id) {
@@ -74,7 +74,7 @@ public class DashboardDao {
             Dashboard d = new Dashboard();
             d.setId(rs.getLong(Dashboard.ID));
             d.setName(rs.getString(Dashboard.NAME));
-            d.setHeight(rs.getInt(Dashboard.HEIGHT));
+            d.setStyle(rs.getString(Dashboard.STYLE));
             return d;
         }
     }

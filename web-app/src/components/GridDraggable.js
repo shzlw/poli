@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const WIDGET_BORDER = 2;
 
@@ -107,7 +108,7 @@ class GridDraggable extends React.Component {
       <div className="grid-draggable"
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}>
-        <i class="fas fa-expand-arrows-alt fa-fw"></i>
+        <FontAwesomeIcon icon="expand-arrows-alt" fixedWidth />
       </div>
     )
   }

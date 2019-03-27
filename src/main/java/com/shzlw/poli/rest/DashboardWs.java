@@ -6,6 +6,7 @@ import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Filter;
 import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class DashboardWs {
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Dashboard dashboard) {
-        long id = dashboardDao.add(dashboard);
+        long id = dashboardDao.add(dashboard.getName(), dashboard.getStyle());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 

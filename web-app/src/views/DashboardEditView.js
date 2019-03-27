@@ -7,7 +7,7 @@ import FilterViewPanel from '../components/FilterViewPanel';
 import WidgetViewPanel from '../components/WidgetViewPanel';
 import WidgetEditPanel from '../components/WidgetEditPanel';
 import FilterEditPanel from '../components/FilterEditPanel';
-import ColorPicker from '../components/ColorPicker';
+
 import Modal from '../components/Modal';
 
 import * as Constants from '../api/Constants';
@@ -36,7 +36,7 @@ class DashboardEditView extends React.Component {
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
-      height: 0,
+      style: {},
       widgetViewWidth: 1000
     }
 
@@ -74,7 +74,7 @@ class DashboardEditView extends React.Component {
             this.setState({
               dashboardId: result.id,
               name: result.name,
-              height: result.height,
+              style: result.style
             }, () => {
               this.refresh();
             });
@@ -105,7 +105,7 @@ class DashboardEditView extends React.Component {
           this.setState({
             dashboardId: result.id,
             name: result.name,
-            height: result.height,
+            style: result.style
           }, () => {
             this.refresh();
           });
@@ -172,13 +172,13 @@ class DashboardEditView extends React.Component {
     const {
       dashboardId,
       name,
-      height
+      style
     } = this.state;
 
     const dashboard = {
       id: dashboardId, 
       name: name,
-      height: height
+      style: style
     };
 
     axios.put('/ws/dashboard/', dashboard)
@@ -278,6 +278,22 @@ class DashboardEditView extends React.Component {
     this.props.history.push(`/workspace/dashboard/drill?name=&`);
   }
 
+  onHeightChange = (height) => {
+    const style = {...this.state.style};
+    style.height = height;
+    this.setState({
+      style: style
+    });
+  }
+
+  onBackgroundColorChange = (color) => {
+    const style = {...this.state.style};
+    style.backgroundColor = color;
+    this.setState({
+      style: style
+    });
+  }
+
   render() {
     const {
       autoRefreshTimerId,
@@ -311,7 +327,7 @@ class DashboardEditView extends React.Component {
       } else {
         editButtonPanel = (
           <React.Fragment>
-            <button onClick={this.edit}>Edit</button>
+            <button className="button" onClick={this.edit}>Edit</button>
           </React.Fragment>
         );
       }
@@ -319,7 +335,7 @@ class DashboardEditView extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="row">
+        <div className="dashboard-menu-panel row">
           <div className="float-left">
             <input 
               type="text" 
@@ -352,33 +368,15 @@ class DashboardEditView extends React.Component {
             {editButtonPanel}
           </div>
         </div>
-        {
-          (!isReadOnly && isEditMode) ?
-          (
-            <div className="dashboard-attribute-edit-panel">
-              <div className="inline-block">Height:</div>
-              <input 
-                type="text" 
-                name="height" 
-                value={this.state.height}
-                onChange={this.handleInputChange} 
-                className="inline-block" 
-                style={{width: '200px'}}
-                />
-
-              <div className="inline-block">Background Color</div>
-              <ColorPicker />
-
-            </div>
-          ) : null
-        }
 
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
-          onWidgetEdit={this.openWidgetEditPanel}
           isEditMode={this.state.isEditMode}
-          height={this.state.height}
           widgetViewWidth={this.state.widgetViewWidth}
+          onWidgetEdit={this.openWidgetEditPanel}
+          onHeightChange={this.onHeightChange}
+          onBackgroundColorChange={this.onBackgroundColorChange}
+          {...this.state.style}
         />
         <FilterViewPanel 
           ref={this.filterViewPanel} 
@@ -391,7 +389,7 @@ class DashboardEditView extends React.Component {
         <Modal 
           show={this.state.showWidgetEditPanel}
           onClose={() => this.setState({ showWidgetEditPanel: false })}
-          modalClass={'lg-modal-panel'} 
+          modalClass={'dashboard-edit-widget-dialog'} 
           title={'Widget Edit'} >
           <WidgetEditPanel 
             ref={this.widgetEditPanel} 
@@ -404,7 +402,7 @@ class DashboardEditView extends React.Component {
         <Modal 
           show={this.state.showFilterEditPanel}
           onClose={() => this.setState({ showFilterEditPanel: false })}
-          modalClass={'lg-modal-panel'}
+          modalClass={'dashboard-edit-filter-dialog'} 
           title={'Filter Edit'}>
           <FilterEditPanel
             ref={this.filterEditPanel}

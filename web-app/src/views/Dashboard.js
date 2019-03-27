@@ -1,31 +1,23 @@
 
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-
-import axios from 'axios';
-import './Dashboard.css';
-
-import { Route } from "react-router-dom";
+import { Route, withRouter } from 'react-router-dom';
 import DashboardEditView from './DashboardEditView';
 import Modal from '../components/Modal';
-
+import './Dashboard.css';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as Constants from '../api/Constants';
 
 class Dashboard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.initialState;
-  }
-
-  get initialState() {
-    return {
+    this.state = {
       searchValue: '',
       dashboards: [],
       showEditPanel: false,
-      name: '',
-      height: 800
-    };
+      name: ''
+    }
   }
 
   componentDidMount() {
@@ -43,34 +35,40 @@ class Dashboard extends Component {
   }
 
   handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
     this.setState({
-      [name]: value
+      [event.target.name]: event.target.value
+    });
+  }
+
+  closeEditPanel = () => {
+    this.setState({
+      showEditPanel: false,
+      name: ''
     });
   }
 
   save = () => {
     const {
-      name,
-      height
+      name
     } = this.state;
 
     const dashboard = {
       name: name,
-      height: height
+      style: {
+        height: Constants.DEFAULT_DASHBOARD_HEIGHT,
+        backgroundColor: 'rgba(255, 255, 255, 1)'
+      }
     };
 
     axios.post('/ws/dashboard', dashboard)
       .then(res => {
         const dashboardId = res.data;
-        this.setState({ 
-          showEditPanel: false 
-        });
+        this.closeEditPanel();
         this.fetchBoards();
         this.props.history.push(`/workspace/dashboard/${dashboardId}`);
+      })
+      .catch(error => {
+        console.log(error);
       });
   }
 
@@ -79,7 +77,6 @@ class Dashboard extends Component {
   }
 
   onSaveDashboard = (dashboardId) => {
-    console.log('onSaveDashboard', dashboardId);
     this.fetchBoards();
   }
 
@@ -130,13 +127,6 @@ class Dashboard extends Component {
               type="text" 
               name="name" 
               value={this.state.name}
-              onChange={this.handleInputChange} 
-              />
-            <label>Height</label>
-            <input 
-              type="text" 
-              name="height" 
-              value={this.state.height}
               onChange={this.handleInputChange} 
               />
             <button className="button" onClick={this.save}>Save</button>

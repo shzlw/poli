@@ -47,8 +47,9 @@ body,
 }
 
 .small-modal-panel {
+  left: 50%;
   width: 300px;
-  margin-top: 20px;
+  top: 20px;
   margin-left: -150px;
 }
 
@@ -68,10 +69,6 @@ body,
 
 .display-none {
   display: none;
-}
-
-.icon-button-group {
-  float: right;
 }
 
 .icon-btn {

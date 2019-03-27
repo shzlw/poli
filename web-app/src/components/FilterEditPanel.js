@@ -216,11 +216,10 @@ class FilterEditPanel extends React.Component {
 
     return (
       <div>
-        <h3>FilterEditPanel: {this.state.filterId}</h3>
-        <button onClick={this.save}>Save</button>
-        <button onClick={this.runQuery}>Run</button>
+        <button className="button" onClick={this.save}>Save</button>
+        <button className="button" onClick={this.runQuery}>Run</button>
 
-        <form>
+        <div className="form-panel">
           <label>Name</label>
           <input 
             type="text" 
@@ -270,7 +269,7 @@ class FilterEditPanel extends React.Component {
             onChange={this.handleInputChange} 
           />
 
-        </form>
+        </div>
 
       </div>
     )

@@ -14,7 +14,9 @@
 }
 
 .filter-card-title {
-  color: #e0e0e0;
-  background-color: #4b4f56;
   padding: 3px;
+}
+
+.icon-button-group {
+  float: right;
 }

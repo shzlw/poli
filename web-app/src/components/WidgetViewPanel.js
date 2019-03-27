@@ -5,6 +5,8 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
+import ColorPicker from '../components/ColorPicker';
+import Checkbox from '../components/Checkbox';
 
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
@@ -19,7 +21,6 @@ class WidgetViewPanel extends React.Component {
     this.state = {
       widgets: [],
       gridWidth: 1200,
-      height: 600,
       snapToGrid: false,
       showGridlines: true
     };
@@ -36,7 +37,7 @@ class WidgetViewPanel extends React.Component {
       this.resizeWidgetsToBase(newWidgets, preGridWidth);
     }
 
-    const gridWidth = width - 20;
+    const gridWidth = width;
     this.resizeWidgetsToActual(newWidgets, gridWidth);
     this.setState({
       widgets: newWidgets,
@@ -104,10 +105,18 @@ class WidgetViewPanel extends React.Component {
     }
   }
 
-  handleInputChange = (event) => {
+  handleCheckBoxChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.checked
     });
+  }
+
+  handleHeightChange = (event) => {
+    this.props.onHeightChange(event.target.value);
+  }
+
+  onBackgroundColorChange = (color) => {
+    this.props.onBackgroundColorChange(color);
   }
 
   saveWidgets = () => {
@@ -156,21 +165,34 @@ class WidgetViewPanel extends React.Component {
 
         {this.props.isEditMode ?
         (
-          <div>
+          <div className="dashboard-attribute-edit-panel">
+            <div className="inline-block">Height:</div>
             <input 
-            type="checkbox" 
-            name="snapToGrid"
-            value="snapToGrid"
-            checked={this.state.snapToGrid} 
-            onChange={this.handleInputChange} />
-            snapToGrid
-            <br/>
+              type="text" 
+              name="height" 
+              value={this.props.height}
+              onChange={this.handleHeightChange} 
+              className="inline-block" 
+              style={{width: '200px'}}
+              />
+
+            <div className="inline-block">Background Color</div>
+            <ColorPicker value={this.props.backgroundColor} onChange={this.onBackgroundColorChange} />
+
+            <input 
+              type="checkbox" 
+              name="snapToGrid"
+              value="snapToGrid"
+              checked={this.state.snapToGrid} 
+              onChange={this.handleCheckBoxChange} />
+              snapToGrid
+              <br/>
             <input 
               type="checkbox" 
               name="showGridlines"
               value="showGridlines"
               checked={this.state.showGridlines} 
-              onChange={this.handleInputChange} />
+              onChange={this.handleCheckBoxChange} />
               showGridlines
             <br/>
           </div>
@@ -179,6 +201,7 @@ class WidgetViewPanel extends React.Component {
         <GridLayout 
           width={this.state.gridWidth}
           height={this.props.height}
+          backgroundColor={this.props.backgroundColor}
           snapToGrid={this.state.snapToGrid}
           showGridlines={this.state.showGridlines}
           widgets={this.state.widgets}

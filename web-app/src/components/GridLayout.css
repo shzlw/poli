@@ -1,8 +1,7 @@
 
 .grid-layout {
   position: relative;
-  border: 1px solid #0066CC;
-  background-color: #fff;
+  background-color: #FFFFFF;
 }
 .grid-box {
   position: absolute;
@@ -16,8 +15,6 @@
 }
 
 .grid-box-title {
-  color: #e0e0e0;
-  background-color: #4b4f56;
   padding: 3px;
   flex: 0 1 auto;
 }
@@ -27,8 +24,6 @@
 }
 
 .grid-draggable {
-  background-color: #4b4f56;
-  color: #e0e0e0;
   height: 18px;
   width: 18px;
   font-size: 16px;
@@ -45,4 +40,15 @@
   right: 0; 
   bottom: 0; 
   cursor: move; 
+}
+
+.grid-box-file-button-group {
+  float: right;
+  display: none;
+}
+
+.grid-box-title:hover .grid-box-file-button-group {
+  float: right;
+  display: block;
+  transition: 0.3s;
 }

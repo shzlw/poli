@@ -19,6 +19,8 @@ import * as Constants from '../api/Constants';
 
 import ReactEcharts from 'echarts-for-react';
 
+import './WidgetEditPanel.css';
+
 
 class WidgetEditPanel extends React.Component {
 
@@ -383,11 +385,10 @@ class WidgetEditPanel extends React.Component {
 
     return (
       <div>
-        <h3>WidgetEditPanel: {this.state.widgetId}</h3>
-        <button onClick={this.save}>Save</button>
-        <button onClick={this.runQuery}>Run Query</button>
+        <button className="button" onClick={this.save}>Save</button>
+        <button className="button" onClick={this.runQuery}>Run Query</button>
 
-        <form>
+        <div className="form-panel">
           <label>Name</label>
           <input 
             type="text" 
@@ -450,10 +451,10 @@ class WidgetEditPanel extends React.Component {
             <div>
               {drillItems}
             </div>
-            <button onClick={this.addDrillThrough}>Add</button>
+            <button className="button" onClick={this.addDrillThrough}>Add</button>
           </div>
 
-        </form>
+        </div>
         
       </div>
     )

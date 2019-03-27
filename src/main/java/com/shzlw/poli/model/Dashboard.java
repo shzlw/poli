@@ -1,27 +1,28 @@
 package com.shzlw.poli.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.shzlw.poli.util.RawStringDeserialzier;
 
 public class Dashboard {
 
     public static final String TABLE = "p_dashboard";
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String HEIGHT = "height";
+    public static final String STYLE = "style";
 
     private long id;
     private String name;
-    private int height;
 
     /**
-     * Creator
+     * Json field
+     *
+     * {
+     *     height: 600,
+     *     backgroundColor: '#123456'
+     * }
      */
-    private long userId;
-
-    /**
-     * public or private
-     */
-    private String access;
+    private String style;
 
     public long getId() {
         return id;
@@ -39,11 +40,13 @@ public class Dashboard {
         this.name = name;
     }
 
-    public int getHeight() {
-        return height;
+    @JsonRawValue
+    public String getStyle() {
+        return style;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    @JsonDeserialize(using = RawStringDeserialzier.class)
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

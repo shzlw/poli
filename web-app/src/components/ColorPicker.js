@@ -2,32 +2,30 @@ import React from 'react';
 import { ChromePicker } from 'react-color';
 
 class ColorPicker extends React.Component {
-   state = {
-    displayColorPicker: false,
-    color: {
-      r: '241',
-      g: '112',
-      b: '19',
-      a: '1',
-    },
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPalette: false
+    }
+  }
 
   handleClick = () => {
     this.setState(prevState => ({
-      displayColorPicker: !prevState.displayColorPicker
+      showPalette: !prevState.showPalette
     })); 
   };
 
   handleClose = () => {
     this.setState({ 
-      displayColorPicker: false 
+      showPalette: false 
     });
   };
 
   handleChange = (color) => {
-    this.setState({ 
-      color: color.rgb 
-    });
+    const rgb = color.rgb;
+    const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
+    this.props.onChange(rgba);
   };
 
   render() {
@@ -36,7 +34,7 @@ class ColorPicker extends React.Component {
       width: '36px',
       height: '14px',
       borderRadius: '2px',
-      background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`
+      background: this.props.value
     };
 
     const swatch = {
@@ -66,10 +64,13 @@ class ColorPicker extends React.Component {
         <div style={swatch} onClick={this.handleClick}>
           <div style={color} />
         </div>
-        { this.state.displayColorPicker ? <div style={popover}>
-          <div style={cover} onClick={this.handleClose}/>
-          <ChromePicker color={this.state.color} onChange={this.handleChange} />
-        </div> : null }
+        { this.state.showPalette ? 
+          (
+            <div style={popover}>
+              <div style={cover} onClick={this.handleClose} />
+              <ChromePicker color={this.props.value} onChange={this.handleChange} />
+            </div>
+          ) : null }
       </div>
     )
   };

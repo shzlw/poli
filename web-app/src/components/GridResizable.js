@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MIN_WIDTH = 30;
 const MIN_HEIGHT = 30;
 const WIDGET_BORDER = 2;
+
 
 class GridResizable extends React.Component {
 
@@ -109,7 +111,7 @@ class GridResizable extends React.Component {
         className="grid-resizable"
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp} >
-        <i class="fas fa-compress fa-fw"></i>
+        <FontAwesomeIcon icon="compress" fixedWidth />
       </div>
     )
   }

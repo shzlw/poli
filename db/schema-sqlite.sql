@@ -22,7 +22,7 @@ CREATE TABLE
 IF NOT EXISTS p_dashboard (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
-    height INTEGER
+    style TEXT
 );
 
 CREATE TABLE

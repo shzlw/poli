@@ -12,14 +12,21 @@ class GridLayout extends React.Component {
   }
 
   render() {
-    let styles = {
-      width: this.props.width + 'px',
-      height: this.props.height + 'px'
+    const {
+      width,
+      height,
+      backgroundColor
+    } = this.props;
+
+    let style = {
+      width: width + 'px',
+      height: height + 'px',
+      backgroundColor: backgroundColor
     };
 
     if (this.props.showGridlines) {
-      styles.backgroundSize = '15px 15px';
-      styles.backgroundImage = 'radial-gradient(rgb(63, 93, 131) 10%, transparent 10%)';
+      style.backgroundSize = '15px 15px';
+      style.backgroundImage = 'radial-gradient(rgb(63, 93, 131) 10%, transparent 10%)';
     }
 
     const boxItems = this.props.widgets.map((widget, index) => 
@@ -38,7 +45,7 @@ class GridLayout extends React.Component {
     return (
       <div
         className="grid-layout"
-        style={styles} >
+        style={style} >
         {boxItems}
       </div>
     )

@@ -18,6 +18,10 @@
   overflow: auto;
 }
 
+.dashboard-menu-panel {
+  padding: 5px 10px;
+}
+
 .dashboard-menu-item {
   margin: 5px;
   padding: 5px;
@@ -29,7 +33,7 @@
 
 .dashboard-content-widget-panel {
   position: absolute;
-  top: 100px;
+  top: 60px;
   left: 0;
   bottom: 0;
   background-color: #eeeeee;
@@ -42,7 +46,7 @@
 
 .dashboard-content-filter-panel {
   position: absolute;
-  top: 100px;
+  top: 60px;
   right: 0;
   bottom: 0;
   width: 200px;
@@ -57,4 +61,20 @@
 
 .dashboard-attribute-edit-panel {
 
+}
+
+.dashboard-edit-widget-dialog {
+  left: 50%;
+  width: 1000px;
+  top: 20px;
+  bottom: 20px;
+  margin-left: -500px;
+}
+
+.dashboard-edit-filter-dialog {
+  left: 50%;
+  width: 1000px;
+  top: 20px;
+  bottom: 20px;
+  margin-left: -500px;
 }
