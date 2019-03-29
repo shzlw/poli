@@ -21,6 +21,7 @@ import ReactEcharts from 'echarts-for-react';
 
 import './WidgetEditPanel.css';
 
+import Tabs from '../components/Tabs';
 
 class WidgetEditPanel extends React.Component {
 
@@ -386,76 +387,84 @@ class WidgetEditPanel extends React.Component {
     return (
       <div>
         <button className="button" onClick={this.save}>Save</button>
-        <button className="button" onClick={this.runQuery}>Run Query</button>
-
-        <div className="form-panel">
-          <label>Name</label>
-          <input 
-            type="text" 
-            name="name" 
-            value={this.state.name}
-            onChange={this.handleInputChange} 
-          />
-
-          <label>DataSource</label>
-          <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
-            {dataSourceOptions}
-          </select>
         
-          <label>SQL Query</label>
-          <AceEditor
-            style={{ marginTop: '8px' }}
-            value={this.state.sqlQuery}
-            mode="mysql"
-            theme="xcode"
-            name="blah2"
-            onChange={this.handleAceEditorChange}
-            height={'300px'}
-            width={'100%'}
-            fontSize={15}
-            showPrintMargin={false}
-            showGutter={true}
-            highlightActiveLine={true}
-            setOptions={{
-              showLineNumbers: true,
-              tabSize: 2
-            }}
-          />
-
-          <label>Result</label>
-          {queryResultItem}
-
-          <label>Columns Mapping</label>
-          <div>
-             {columnItems}
-          </div>
-
-          <label>Chart Options</label>
-          <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
-            {chartOptionList}
-          </select>
-
-          <label>Preview</label>
-          {this.renderChartPreview()}  
-
-          <label>Drill through</label>
-          <div>
-            <label>Column</label>
-            <select value={this.state.drillColumnName} onChange={this.handleDrillColumnChange}>
-              {columnOptions}
-            </select>
-            <label>Dashboard</label>
-            <select value={this.state.drillDashboardId} onChange={this.handleDrillDashboardChange}>
-              {dashboardOptions}
-            </select>
-            <div>
-              {drillItems}
+        <div className="form-panel">
+          <Tabs activeTab="basic">
+            <div title="basic">
+              <label>Name</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={this.state.name}
+                onChange={this.handleInputChange} 
+              />
             </div>
-            <button className="button" onClick={this.addDrillThrough}>Add</button>
-          </div>
+
+            <div title="Query">
+              <label>DataSource</label>
+              <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
+                {dataSourceOptions}
+              </select>
+            
+              <label>SQL Query</label>
+              <AceEditor
+                style={{ marginTop: '8px' }}
+                value={this.state.sqlQuery}
+                mode="mysql"
+                theme="xcode"
+                name="blah2"
+                onChange={this.handleAceEditorChange}
+                height={'300px'}
+                width={'100%'}
+                fontSize={15}
+                showPrintMargin={false}
+                showGutter={true}
+                highlightActiveLine={true}
+                setOptions={{
+                  showLineNumbers: true,
+                  tabSize: 2
+                }}
+              />
+
+              <button className="button" onClick={this.runQuery}>Run Query</button>
+
+              <label>Result</label>
+              {queryResultItem}
+
+              <label>Columns Mapping</label>
+              <div>
+                {columnItems}
+              </div>
+            </div>
+
+            <div title="Chart">
+              <label>Chart Options</label>
+              <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
+                {chartOptionList}
+              </select>
+
+              <label>Preview</label>
+              {this.renderChartPreview()}  
+            </div>
+
+            <div title="Drill through">
+              <label>Drill through</label>
+              <label>Column</label>
+              <select value={this.state.drillColumnName} onChange={this.handleDrillColumnChange}>
+                {columnOptions}
+              </select>
+              <label>Dashboard</label>
+              <select value={this.state.drillDashboardId} onChange={this.handleDrillDashboardChange}>
+                {dashboardOptions}
+              </select>
+              <div>
+                {drillItems}
+              </div>
+              <button className="button" onClick={this.addDrillThrough}>Add</button>
+            </div>
+          </Tabs>
 
         </div>
-        
       </div>
     )
   };

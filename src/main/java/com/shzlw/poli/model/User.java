@@ -1,7 +1,8 @@
 package com.shzlw.poli.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -24,6 +25,8 @@ public class User {
     private LocalDateTime sessionTimeout;
     private String sysRole;
     private String apiKey;
+
+    private List<Long> userGroups = new ArrayList<>();
 
     public User() {}
 
@@ -97,5 +100,13 @@ public class User {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public List<Long> getUserGroups() {
+        return userGroups;
+    }
+
+    public void setUserGroups(List<Long> userGroups) {
+        this.userGroups = userGroups;
     }
 }

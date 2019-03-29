@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,6 +50,7 @@ public class JdbcDataSourceService {
         newDs.setJdbcUrl(dataSource.getConnectionUrl());
         newDs.setUsername(dataSource.getUsername());
         newDs.setPassword(dataSource.getPassword());
+        newDs.setDriverClassName(dataSource.getDriverClassName());
         newDs.setMaximumPoolSize(10);
         DATA_SOURCE_CACHE.put(dataSource.getName(), newDs);
         return newDs;

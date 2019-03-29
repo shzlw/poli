@@ -19,6 +19,7 @@ class DataSource extends Component {
       id: null,
       name: '',
       connectionUrl: '',
+      driverClassName: '',
       username: '',
       password: '',
       ping: ''
@@ -31,6 +32,7 @@ class DataSource extends Component {
       id: null,
       name: '',
       connectionUrl: '',
+      driverClassName: '',
       username: '',
       password: '',
       ping: ''
@@ -66,6 +68,7 @@ class DataSource extends Component {
       showUpdatePassword,
       id,
       connectionUrl,
+      driverClassName,
       username,
       password,
       name,
@@ -74,6 +77,7 @@ class DataSource extends Component {
 
     let ds = {
       connectionUrl: connectionUrl,
+      driverClassName: driverClassName,
       username: username,
       name: name,
       ping: ping
@@ -127,6 +131,7 @@ class DataSource extends Component {
         showUpdatePassword: false,
         id: ds.id,
         connectionUrl: ds.connectionUrl,
+        driverClassName: ds.driverClassName,
         username: ds.username,
         password: ds.password,
         name: ds.name,
@@ -244,6 +249,13 @@ class DataSource extends Component {
               value={this.state.connectionUrl}
               onChange={this.handleInputChange} >
             </textarea>
+
+            <label>Driver class name</label>
+            <input 
+              type="text" 
+              name="driverClassName" 
+              value={this.state.driverClassName}
+              onChange={this.handleInputChange} />
 
             <label>Username</label>
             <input 

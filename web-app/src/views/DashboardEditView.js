@@ -304,16 +304,29 @@ class DashboardEditView extends React.Component {
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
     let editButtonPanel;
-    let fullScreenButtonPanel;
-    if (!isReadOnly) {
-      fullScreenButtonPanel = (
-        <React.Fragment>
-          <button className="button icon-button" onClick={this.fullScreen}>
-            <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
-          </button>
-        </React.Fragment>
-      );
+    let fullScreenButtonPanel = null;
+    const controlButtons = (
+      <React.Fragment>
+        <span>Last refreshed: {lastRefreshed}</span>
+        <button className="button icon-button" onClick={this.toggleAutoRefresh}>
+          {
+            autoRefreshStatus === 'ON' ? 
+            (
+              <FontAwesomeIcon icon="stop-circle" size="lg" fixedWidth />
+            ) : 
+            (
+              <FontAwesomeIcon icon="play-circle" size="lg" fixedWidth />
+            )
+          }
+        </button>
+        <button className="button icon-button" onClick={this.refresh}>
+          <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
+        </button>
+        <button className="button" onClick={this.toggleFilterViewPanel}>Show Filters</button>
+      </React.Fragment>
+    );
 
+    if (!isReadOnly) {
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
@@ -327,10 +340,16 @@ class DashboardEditView extends React.Component {
       } else {
         editButtonPanel = (
           <React.Fragment>
+            {controlButtons}
+            <button className="button icon-button" onClick={this.fullScreen}>
+              <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+            </button>
             <button className="button" onClick={this.edit}>Edit</button>
           </React.Fragment>
         );
       }
+    } else {
+      fullScreenButtonPanel = controlButtons;
     }
 
     return (
@@ -347,23 +366,6 @@ class DashboardEditView extends React.Component {
               />
           </div>
           <div className="float-right">
-            <span>Last refreshed: {lastRefreshed}</span>
-            <button className="button icon-button" onClick={this.toggleAutoRefresh}>
-              {
-                autoRefreshStatus === 'ON' ? 
-                (
-                  <FontAwesomeIcon icon="stop-circle" size="lg" fixedWidth />
-                ) : 
-                (
-                  <FontAwesomeIcon icon="play-circle" size="lg" fixedWidth />
-                )
-              }
-            </button>
-            <button className="button icon-button" onClick={this.refresh}>
-              <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
-            </button>
-            <button className="button" onClick={this.toggleFilterViewPanel}>Show Filters</button>
-            
             {fullScreenButtonPanel}
             {editButtonPanel}
           </div>

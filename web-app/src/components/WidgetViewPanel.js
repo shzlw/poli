@@ -105,9 +105,9 @@ class WidgetViewPanel extends React.Component {
     }
   }
 
-  handleCheckBoxChange = (event) => {
+  handleCheckBoxChange = (name, isChecked) => {
     this.setState({
-      [event.target.name]: event.target.checked
+      [name]: isChecked
     });
   }
 
@@ -179,22 +179,9 @@ class WidgetViewPanel extends React.Component {
             <div className="inline-block">Background Color</div>
             <ColorPicker value={this.props.backgroundColor} onChange={this.onBackgroundColorChange} />
 
-            <input 
-              type="checkbox" 
-              name="snapToGrid"
-              value="snapToGrid"
-              checked={this.state.snapToGrid} 
-              onChange={this.handleCheckBoxChange} />
-              snapToGrid
-              <br/>
-            <input 
-              type="checkbox" 
-              name="showGridlines"
-              value="showGridlines"
-              checked={this.state.showGridlines} 
-              onChange={this.handleCheckBoxChange} />
-              showGridlines
-            <br/>
+            <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />
+            <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />
+  
           </div>
         ) : null}
         

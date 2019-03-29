@@ -26,7 +26,7 @@ public class AuthWs {
         String username = user.getUsername();
         String password = user.getPassword();
 
-        User existUser = userDao.fetchByUsernameAndPassword(username, password);
+        User existUser = userDao.findByUsernameAndPassword(username, password);
         if (existUser == null) {
             return "error";
         }
@@ -45,7 +45,7 @@ public class AuthWs {
     @RequestMapping(value="/login/cookie", method= RequestMethod.POST)
     @Transactional
     public String loginBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User user = userDao.fetchBySessionKey(sessionKey);
+        User user = userDao.findBySessionKey(sessionKey);
         if (user == null) {
             return "error";
         }

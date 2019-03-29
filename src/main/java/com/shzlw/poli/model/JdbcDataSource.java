@@ -7,11 +7,13 @@ public class JdbcDataSource {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String CONNECTION_URL = "connection_url";
+    public static final String DRIVER_CLASS_NAME = "driver_class_name";
     public static final String PING = "ping";
 
     private long id;
     private String name;
     private String connectionUrl;
+    private String driverClassName;
     private String username;
     private String password;
     private String ping;
@@ -40,6 +42,14 @@ public class JdbcDataSource {
 
     public void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
+    }
+
+    public String getDriverClassName() {
+        return driverClassName;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
     }
 
     public String getUsername() {

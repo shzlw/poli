@@ -27,24 +27,35 @@ public class UserDao {
     @Autowired
     NamedParameterJdbcTemplate npjt;
 
-    public User fetchByUsernameAndPassword(String username, String rawPassword) {
+    public User findByUsernameAndPassword(String username, String rawPassword) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawPassword);
-        String sql = "SELECT id, username, name, session_key, session_timeout, sys_role, api_key "
-                    + "FROM p_user "
-                    + "WHERE username=? AND password=?";
+        String sql = "SELECT id, username, name, sys_role "
+                + "FROM p_user "
+                + "WHERE username=? AND password=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{username, encryptedPassword}, new UserRowMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{username, encryptedPassword}, new UserInfoRowMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public User fetchBySessionKey(String sessionKey) {
-        String sql = "SELECT id, username, name, session_key, session_timeout, sys_role, api_key "
-                    + "FROM p_user WHERE sessionKey=?";
+    public User findBySessionKey(String sessionKey) {
+        String sql = "SELECT id, username, name, sys_role "
+                + "FROM p_user WHERE sessionKey=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{sessionKey}, new UserRowMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{sessionKey}, new UserInfoRowMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public User findById(long id) {
+        String sql = "SELECT id, username, name, sys_role "
+                + "FROM p_user WHERE id=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{id}, new UserInfoRowMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -57,14 +68,27 @@ public class UserDao {
         return jt.update(sql, new Object[] { sessionKey, sessionTimeout, userId});
     }
 
-    public List<User> fetchAll() {
-        return null;
+    public List<User> findNonAdminUsers(long myUserId) {
+        String sql = "SELECT id, username, name, sys_role "
+                    + "FROM p_user WHERE sys_role IN ('viewer', 'developer') AND id != ?";
+        return jt.query(sql, new Object[]{myUserId}, new UserInfoRowMapper());
     }
 
-    public long add(String username, String name, String rawTempPassword, String sysRole) {
+    public List<User> findViewerUsers(long myUserId) {
+        String sql = "SELECT id, username, name, sys_role "
+                    + "FROM p_user WHERE sys_role = 'viewer' AND id != ?";
+        return jt.query(sql, new Object[]{myUserId}, new UserInfoRowMapper());
+    }
+
+    public List<Long> findUserGroups(long userId) {
+        String sql = "SELECT group_id FROM p_group_user WHERE user_id = ?";
+        return jt.queryForList(sql, new Object[]{ userId }, Long.class);
+    }
+
+    public long insertUser(String username, String name, String rawTempPassword, String sysRole) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
         String sql = "INSERT INTO p_user(username, name, temp_password, sys_role) "
-                    + "VALUES(:username, :name, :temp_password, :sys_role)";
+                + "VALUES(:username, :name, :temp_password, :sys_role)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(User.USERNAME, username);
         params.addValue(User.NAME, name);
@@ -74,6 +98,37 @@ public class UserDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjt.update(sql, params, keyHolder, new String[] { User.ID});
         return keyHolder.getKey().longValue();
+    }
+
+    public void insertUserGroups(long userId, List<Long> userGroups) {
+        String sql = "INSERT INTO p_group_user(group_id, user_id) VALUES(?, ?)";
+    }
+
+    public long updateUser(User user) {
+        String sql = "UPDATE p_user SET username=?, name=?, sys_role=? WHERE id=?";
+        return jt.update(sql, new Object[]{ user.getUsername(), user.getName(), user.getSysRole() });
+    }
+
+    public int deleteUser(long userId) {
+        String sql = "DELETE FROM p_user WHERE id=?";
+        return jt.update(sql, new Object[]{ userId });
+    }
+
+    public int deleteUserGroups(long userId) {
+        String sql = "DELETE FROM p_group_user WHERE user_id=?";
+        return jt.update(sql, new Object[]{ userId });
+    }
+
+    private static class UserInfoRowMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int i) throws SQLException {
+            User r = new User();
+            r.setId(rs.getLong(User.ID));
+            r.setUsername(rs.getString(User.USERNAME));
+            r.setName(rs.getString(User.NAME));
+            r.setSysRole(rs.getString(User.SYS_ROLE));
+            return r;
+        }
     }
 
     private static class UserRowMapper implements RowMapper<User> {
