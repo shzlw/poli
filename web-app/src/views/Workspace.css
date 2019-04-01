@@ -17,8 +17,10 @@
 }
 
 .workspace-nav-menu li {
-  float: left;
+  display: inline-block;
+  list-style: none;
   font-size: 16px; 
+  padding: 11px 14px;
 }
 
 .workspace-nav-menu-text {
@@ -28,11 +30,10 @@
 .workspace-nav-menu li a {
   display: block;
   color: #d6d7e1;
-  padding: 11px 14px;
   text-decoration: none;
 }
 
-.workspace-nav-menu li a:hover {
+.workspace-nav-menu li:hover {
   background-color: #0065FF;
 }
 

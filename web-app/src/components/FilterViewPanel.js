@@ -181,7 +181,6 @@ class FilterViewPanel extends Component {
   }
 
   applyFilters = () => {
-    console.log('applyFilters');
     const { filters } = this.state;
     const filterParams = [];
     for (let i = 0; i < filters.length; i++) {
@@ -223,7 +222,7 @@ class FilterViewPanel extends Component {
     return (
       <div className="dashboard-content-filter-panel" style={style}>
         <div>Filters</div>
-        <button onClick={this.applyFilters}>Run</button>
+        <button className="button" onClick={this.applyFilters}>Run</button>
         <div className="filterViewPanel">
           {this.renderFilterPanel()}
         </div>

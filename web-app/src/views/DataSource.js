@@ -188,31 +188,7 @@ class DataSource extends Component {
       </div>
     );
 
-    let mode;
-    let passwordInput = (
-      <div>
-        <label>Password</label>
-        <input 
-          type="password" 
-          name="password" 
-          value={this.state.password}
-          onChange={this.handleInputChange} />
-      </div>
-    );
-    if (id === null) {
-      mode = 'New';
-    } else {
-      mode = 'Update';
-      if (!showUpdatePassword) {
-        passwordInput = (
-          <React.Fragment>
-            <br/>
-            <button onClick={this.toggleUpdatePassword}>Update password</button>
-          </React.Fragment>
-        );
-      }
-    }
-
+    let mode = id === null ? 'New' : 'Update';
     return (
       <div>
         <input
@@ -264,8 +240,22 @@ class DataSource extends Component {
               value={this.state.username}
               onChange={this.handleInputChange} />
             
-            {passwordInput}
+            <br/>
+            <button onClick={this.toggleUpdatePassword}>Update password</button>
+            { this.props.showUpdatePassword ? 
+              (
+                <div>
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    name="password" 
+                    value={this.state.password}
+                    onChange={this.handleInputChange} />
+                </div>
+              ) : null
+            }
 
+            <br/>
             <label>Ping</label>
             <input 
               type="text" 

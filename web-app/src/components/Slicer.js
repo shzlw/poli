@@ -1,21 +1,11 @@
 import React from 'react';
+import Checkbox from './Checkbox';
 
 class Slicer extends React.Component {
 
   state = {
     isSelectAll: false,
     searchValue: ''
-  }
-
-  handleChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    const isChecked = target.checked;
-
-    const newCheckBoxes = [...this.props.checkBoxes];
-    const index = newCheckBoxes.findIndex(x => x.value === name);
-    newCheckBoxes[index].isChecked = isChecked;
-    this.props.onChange(this.props.filterId, newCheckBoxes);
   }
 
   toggleSelectAll = () => {
@@ -48,7 +38,13 @@ class Slicer extends React.Component {
     });
 
     // TODO: add checkBoxes to states and add a function to setCheckBoxes
-    // TODO: If value is too long, add.. to the end.
+  }
+
+  handleCheckBoxChange = (name, isChecked) => {
+    const newCheckBoxes = [...this.props.checkBoxes];
+    const index = newCheckBoxes.findIndex(x => x.value === name);
+    newCheckBoxes[index].isChecked = isChecked;
+    this.props.onChange(this.props.filterId, newCheckBoxes);
   }
 
   render() {
@@ -56,23 +52,19 @@ class Slicer extends React.Component {
     let checkBoxItems = [];
     if (checkBoxes !== undefined && checkBoxes.length !== 0) {
       checkBoxItems = this.props.checkBoxes.map((box, index) => 
-        <div key={index}>
-          <input 
-            type="checkbox" 
-            name={box.value} 
-            value={box.value} 
-            checked={box.isChecked} 
-            onChange={this.handleChange}
-            />
-            {box.value}
-          <br/>
-        </div>
+        <Checkbox 
+          key={index} 
+          name={box.value} 
+          value={box.value} 
+          checked={box.isChecked} 
+          onChange={this.handleCheckBoxChange} 
+        />
       );
     }
 
     return (
       <div>
-        <button onClick={this.toggleSelectAll}>Toggle Select All {this.state.isSelectAll}</button>
+        <button className="button" onClick={this.toggleSelectAll}>Toggle Select All {this.state.isSelectAll}</button>
         <input 
             type="text" 
             name="name" 

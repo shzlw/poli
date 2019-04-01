@@ -12,14 +12,7 @@ class DashboardFullScreenView extends React.Component {
   }
 
   componentDidMount() {
-    const url = this.props.location.search;
-    console.log('url', url);
-    const params = new URLSearchParams(url);
-    const dashboardName = params.get('name');
-    console.log('name', dashboardName);
-    console.log('dashboardEditView', this.dashboardEditView);
-
-    this.dashboardEditView.loadViewByDashboardName(dashboardName);
+    this.dashboardEditView.loadViewByDashboardName();
   }
 
   render() {

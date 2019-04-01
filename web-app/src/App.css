@@ -125,12 +125,12 @@ textarea {
   width: 100%;
   margin: 8px 0px;
   padding: 10px 14px;
-  font-size: 1em;
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
   border: 0;
   outline: 0;
   border-radius: 4px;
   background: white;
+  font-size: 16px;
 }
 
 input::placeholder {

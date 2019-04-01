@@ -97,6 +97,7 @@ class Account extends React.Component {
           <button className="button" onClick={this.generateApiKey}>Generate new API Key</button>
           <br/>
 
+          <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
           {
             showUpdatePassword ?
             (
@@ -115,13 +116,7 @@ class Account extends React.Component {
                   value={this.state.confirmedPassword}
                   onChange={this.handleInputChange} />
               </React.Fragment>
-            ) :
-            (
-              <React.Fragment>
-                <br/>
-                <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
-              </React.Fragment>
-            )
+            ) : null
           }
 
           <br/>

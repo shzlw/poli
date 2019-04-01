@@ -175,8 +175,8 @@ class FilterEditPanel extends React.Component {
   render() {
 
     const { 
-      queryResult,
-      jdbcDataSources
+      queryResult = [],
+      jdbcDataSources = [],
     } = this.state;
 
     const dataSourceOptions = jdbcDataSources.map(ds =>

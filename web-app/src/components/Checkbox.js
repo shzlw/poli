@@ -23,19 +23,21 @@ class Checkbox extends React.Component {
       checked
     } = this.props;
 
-    const checkmarkBgColor = checked ? '#000000' : '#FFFFFF';
-    const checkmarkStyle = {
-      backgroundColor: checkmarkBgColor
-    }
+    const checkmarkBoxBgColor = checked ? '#000000' : '#FFFFFF';
+    const checkmarkBoxStyle = {
+      backgroundColor: checkmarkBoxBgColor
+    };
 
     return (
       <div className="checkbox-container" onClick={this.toggle}>
-        <div className="checkbox-checkmark" style={checkmarkStyle}></div>
+        <div className="checkbox-checkmark">
+          <div className="checkbox-checkmark-box" style={checkmarkBoxStyle}>
+          </div>
+        </div>
         <div className="checkbox-label">{value}</div>
       </div>
     );
   }
 }
-
 
 export default Checkbox;

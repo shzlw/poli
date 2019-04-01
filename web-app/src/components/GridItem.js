@@ -129,27 +129,15 @@ class GridItem extends React.Component {
 
     const { 
       chartType,
-      queryResult,
+      queryResultData,
       drillThrough
     } = this.props;
     let widgetItem = (<div></div>);
     if (chartType === Constants.TABLE) {
-
-      const headers = [];
-      if (!Util.isArrayEmpty(queryResult)) {
-        const obj = queryResult[0];
-        const keys = Object.keys(obj);
-        for (const key of keys) {
-          headers.push({
-            Header: key,
-            accessor: key
-          })
-        }
-      }
-
+      const headers = EchartsApi.getTableHeaders(queryResultData);
       widgetItem = (
         <ReactTable
-          data={queryResult}
+          data={queryResultData}
           columns={headers}
           minRows={0}
           showPagination={false}
@@ -159,21 +147,11 @@ class GridItem extends React.Component {
       );
     } else if (chartType === Constants.PIE) {
       const { 
-        name,
-        value
+        pieKey,
+        pieValue
       } = this.props.data;
-      if (!Util.isArrayEmpty(queryResult)) {
-        let legend = [];
-        let series = [];
-        for (let i = 0; i < queryResult.length; i++) {
-          const row = queryResult[i];
-          legend.push(row[name]);
-          series.push({
-            name: row[name],
-            value: row[value]
-          });
-        }
-        const chartOption = EchartsApi.getPieOption(legend, series);
+      if (!Util.isArrayEmpty(queryResultData)) {
+        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
         widgetItem = (
           <ReactEcharts 
             option={chartOption}   

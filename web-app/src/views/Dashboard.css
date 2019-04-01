@@ -25,9 +25,11 @@
 .dashboard-menu-item {
   margin: 5px;
   padding: 5px;
-  border-bottom: 1px solid grey;
+}
+
+.dashboard-menu-item:hover {
+  border-left: 3px solid green;
   background-color: black;
-  word-break: break-all;
   color: white;
 }
 

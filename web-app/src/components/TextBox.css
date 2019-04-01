@@ -1,0 +1,5 @@
+.text-box {
+  word-wrap: break-word;
+  overflow-y: auto;
+  height: 100%;
+}

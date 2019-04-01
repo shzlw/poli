@@ -55,6 +55,9 @@ class DashboardEditView extends React.Component {
     console.log('url', url);
     const params = new URLSearchParams(url);
     console.log('params', params);
+    for(let pair of params.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]); 
+    } 
 
     const pageWidth = this.getPageWidth();
     const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
@@ -90,14 +93,22 @@ class DashboardEditView extends React.Component {
     }
   }
 
-  loadViewByDashboardName = (dashboardName) => {
+  loadViewByDashboardName = () => {
     const pageWidth = this.getPageWidth();
     const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
-    console.log('loadViewByDashboardName', pageWidth, widgetViewWidth);
+    
+    const url = this.props.location.search;
+    const params = new URLSearchParams(url);
+    const dashboardName = params.get('name');
+    const showFilter = params.get('showFilter');
+
+    const showFilterViewPanel = showFilter == 'true';
     this.setState({
       pageWidth: pageWidth,
       widgetViewWidth: widgetViewWidth,
-      isReadOnly: true
+      isReadOnly: true,
+      name: dashboardName,
+      showFilterViewPanel: showFilterViewPanel
     }, () => {
       axios.get(`/ws/dashboard/name/${dashboardName}`)
         .then(res => {

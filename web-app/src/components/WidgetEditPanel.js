@@ -40,8 +40,8 @@ class WidgetEditPanel extends React.Component {
       columns: [],
       queryResultData: [],
       chartType: Constants.TABLE,
-      aggrKey: '',
-      aggrValue: '',
+      pieKey: '',
+      pieValue: '',
       chartOption: {},
       drills: [],
       drillDashboards: [],
@@ -96,6 +96,18 @@ class WidgetEditPanel extends React.Component {
       axios.get('/ws/widget/' + widgetId)
         .then(res => {
           const result = res.data;
+          const { chartType } = result;
+          if (chartType === Constants.PIE) {
+            const {
+              pieKey,
+              pieValue
+            } = result.data;
+            this.setState({
+              pieKey: pieKey,
+              pieValue: pieValue
+            });
+          }
+
           this.setState({
             widgetId: widgetId,
             name: result.name,
@@ -107,7 +119,10 @@ class WidgetEditPanel extends React.Component {
             chartType: result.chartType,
             jdbcDataSourceId: result.jdbcDataSourceId,
             drills: result.drillThrough
+          }, () => {
+            this.runQuery();
           });
+
         });
     }
   }
@@ -157,8 +172,7 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       widgetId,
       name,
@@ -181,12 +195,12 @@ class WidgetEditPanel extends React.Component {
 
     } else if (chartType === Constants.PIE) {
       const {
-        aggrKey,
-        aggrValue
+        pieKey,
+        pieValue
       } = this.state;
       widget.data = {
-        name: aggrKey,
-        value: aggrValue
+        pieKey: pieKey,
+        pieValue: pieValue
       }
     }
 
@@ -204,8 +218,7 @@ class WidgetEditPanel extends React.Component {
     }
   }
 
-  runQuery = (event) => {
-    event.preventDefault();
+  runQuery = () => {
     const queryRequest ={
       jdbcDataSourceId: this.state.jdbcDataSourceId,
       sqlQuery: this.state.sqlQuery
@@ -223,8 +236,7 @@ class WidgetEditPanel extends React.Component {
       });
   }
 
-  addDrillThrough = (event) => {
-    event.preventDefault();
+  addDrillThrough = () => {
     const { 
       drills,
       drillColumnName,
@@ -244,8 +256,7 @@ class WidgetEditPanel extends React.Component {
     } 
   }
 
-  removeDrillThrough = (drill, event) => {
-    event.preventDefault();
+  removeDrillThrough = (drill) => {
     const { drills } = this.state;
     const index = drills.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardId === drill.dashboardId));
     if (index !== -1) {
@@ -257,26 +268,15 @@ class WidgetEditPanel extends React.Component {
     } 
   }
 
-  generateChart = (event) => {
-    event.preventDefault();
+  generateChart = () => {
     if (this.state.chartType === Constants.PIE) {
       const { 
-        aggrKey, 
-        aggrValue, 
+        pieKey, 
+        pieValue, 
         queryResultData 
       } = this.state;
       if (!Util.isArrayEmpty(queryResultData)) {
-        let legend = [];
-        let series = [];
-        for (let i = 0; i < queryResultData.length; i++) {
-          const row = queryResultData[i];
-          legend.push(row[aggrKey]);
-          series.push({
-            name: row[aggrKey],
-            value: row[aggrValue]
-          });
-        }
-        const chartOption = EchartsApi.getPieOption(legend, series);
+        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
         this.setState({
           chartOption: chartOption
         });
@@ -287,9 +287,9 @@ class WidgetEditPanel extends React.Component {
   renderChartPreview = () => {
     const { 
       chartType,
-      columns 
+      columns = [],
     } = this.state;
-    const columnOptions = (columns || []).map(col =>
+    const columnOptions = columns.map(col =>
       <option value={col.name} key={col.name}>{col.name}</option>
     );
 
@@ -302,12 +302,12 @@ class WidgetEditPanel extends React.Component {
           <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
           <div>Count "value" by "key"</div>
           <label>Aggr Key (string)</label>
-          <select value={this.state.aggrKey} onChange={(event) => this.handleColumnChange('aggrKey', event)}>
+          <select value={this.state.pieKey} onChange={(event) => this.handleColumnChange('pieKey', event)}>
             {columnOptions}
           </select>
 
           <label>By Aggr Value (number)</label>
-          <select value={this.state.aggrValue} onChange={(event) => this.handleColumnChange('aggrValue', event)}>
+          <select value={this.state.pieValue} onChange={(event) => this.handleColumnChange('pieValue', event)}>
             {columnOptions}
           </select>
           <button onClick={this.generateChart}>Generete Chart</button>
@@ -350,7 +350,7 @@ class WidgetEditPanel extends React.Component {
       <div key={drill.columnName}>
         <div>Column: {drill.columnName}</div>
         <div>Dashboard: {drill.dashboardId}</div>
-        <button onClick={(event) => this.removeDrillThrough(drill, event)}>delete</button>
+        <button onClick={() => this.removeDrillThrough(drill)}>delete</button>
       </div>
     );
 

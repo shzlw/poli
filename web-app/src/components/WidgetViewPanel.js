@@ -5,8 +5,8 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
-import ColorPicker from '../components/ColorPicker';
-import Checkbox from '../components/Checkbox';
+import ColorPicker from './ColorPicker';
+import Checkbox from './Checkbox';
 
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
@@ -22,7 +22,7 @@ class WidgetViewPanel extends React.Component {
       widgets: [],
       gridWidth: 1200,
       snapToGrid: false,
-      showGridlines: true
+      showGridlines: false
     };
   }
 
@@ -97,7 +97,7 @@ class WidgetViewPanel extends React.Component {
           const result = res.data;
           const index = widgets.findIndex(w => w.id === result.id);
           const newWidgets = [...widgets];
-          newWidgets[index].queryResult = JSON.parse(result.data);
+          newWidgets[index].queryResultData = JSON.parse(result.data);
           this.setState({
             widgets: newWidgets
           });

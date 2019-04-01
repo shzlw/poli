@@ -56,7 +56,7 @@ class Dashboard extends Component {
       name: name,
       style: {
         height: Constants.DEFAULT_DASHBOARD_HEIGHT,
-        backgroundColor: 'rgba(255, 255, 255, 1)'
+        backgroundColor: 'rgba(233, 235, 238, 1)'
       }
     };
 

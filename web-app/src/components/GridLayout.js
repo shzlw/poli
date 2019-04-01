@@ -15,7 +15,9 @@ class GridLayout extends React.Component {
     const {
       width,
       height,
-      backgroundColor
+      backgroundColor,
+      widgets = [],
+      showGridlines
     } = this.props;
 
     let style = {
@@ -24,12 +26,12 @@ class GridLayout extends React.Component {
       backgroundColor: backgroundColor
     };
 
-    if (this.props.showGridlines) {
+    if (showGridlines) {
       style.backgroundSize = '15px 15px';
       style.backgroundImage = 'radial-gradient(rgb(63, 93, 131) 10%, transparent 10%)';
     }
 
-    const boxItems = this.props.widgets.map((widget, index) => 
+    const boxItems = widgets.map((widget, index) => 
       <GridItem
         key={index}
         snapToGrid={this.props.snapToGrid}
