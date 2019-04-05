@@ -1,10 +1,16 @@
 import React from 'react';
+import './Toast.css';
 
 class Toast extends React.Component {
 
-  state = {
-    showToast: false,
-    message: ''
+  constructor(props) {
+    super(props);
+    this.state = {
+      showToast: false,
+      message: ''
+    };
+
+    Toast._toastRef = this;
   }
 
   show = (message) => {
@@ -25,13 +31,24 @@ class Toast extends React.Component {
     });
   }
 
+  static show = () => {
+    Toast._toastRef.show();
+  }
+
   render() {
+    const {
+      showToast,
+      message
+    } = this.state;
+
+    const toastStatus = showToast ? 'display-block' : 'display-none';
+
     return (
-      <div>
+      <div className={`toast-container ${toastStatus}`}>
         <button onClick={this.hide}>X</button>
-        <dvi>
-          {this.state.message}
-        </dvi>
+        <div>
+          {message}
+        </div>
       </div>
     );
   }

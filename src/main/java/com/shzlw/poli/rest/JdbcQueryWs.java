@@ -1,19 +1,14 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
-import com.shzlw.poli.model.Filter;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +30,7 @@ public class JdbcQueryWs {
     public QueryResult runQuery(@RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
+        JdbcDataSource ds = jdbcDataSourceDao.findById(dsId);
         QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
         return queryResult;
     }
@@ -45,7 +40,7 @@ public class JdbcQueryWs {
                                       @RequestBody List<FilterParameter> filterParams) {
         Widget widget = widgetDao.fetchById(widgetId);
         String sql = widget.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.fetchByWidgetId(widgetId);
+        JdbcDataSource ds = jdbcDataSourceDao.findByWidgetId(widgetId);
         QueryResult queryResult = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);
         queryResult.setId(widgetId);
         return queryResult;
@@ -56,7 +51,7 @@ public class JdbcQueryWs {
                                       @RequestBody QueryRequest queryRequest) {
         long dsId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(dsId);
+        JdbcDataSource ds = jdbcDataSourceDao.findById(dsId);
         QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
         queryResult.setId(filterId);
         return queryResult;

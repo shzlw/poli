@@ -1,6 +1,7 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,12 +22,12 @@ public class JdbcDataSourceDao {
     @Autowired
     JdbcTemplate jt;
 
-    public List<JdbcDataSource> fetchAll() {
+    public List<JdbcDataSource> findAll() {
         String sql = "SELECT id, name, connection_url, driver_class_name, username, password, ping FROM p_datasource";
         return jt.query(sql, new Object[] {}, new JdbcDataSourceRowMapper());
     }
 
-    public JdbcDataSource fetchById(long id) {
+    public JdbcDataSource findById(long id) {
         String sql = "SELECT id, name, connection_url, driver_class_name, username, password, ping FROM p_datasource WHERE id=?";
         try {
             return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
@@ -35,7 +36,9 @@ public class JdbcDataSourceDao {
         }
     }
 
-    public long add(JdbcDataSource ds) {
+    public long insert(JdbcDataSource ds) {
+        String rawPassword = ds.getPassword();
+        String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
         String sql = "INSERT INTO p_datasource(name, connection_url, driver_class_name, username, password, ping) VALUES(?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
@@ -44,7 +47,7 @@ public class JdbcDataSourceDao {
             ps.setString(2, ds.getConnectionUrl());
             ps.setString(3, ds.getDriverClassName());
             ps.setString(4, ds.getUsername());
-            ps.setString(5, ds.getPassword());
+            ps.setString(5, encryptedPassword);
             ps.setString(6, ds.getPing());
             return ps;
         }, keyHolder);
@@ -53,13 +56,15 @@ public class JdbcDataSourceDao {
     }
 
     public int update(JdbcDataSource ds) {
+        String rawPassword = ds.getPassword();
+        String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
         String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, password=?, ping=? WHERE id=?";
         return jt.update(sql, new Object[]{
                 ds.getName(),
                 ds.getConnectionUrl(),
                 ds.getDriverClassName(),
                 ds.getUsername(),
-                ds.getPassword(),
+                encryptedPassword,
                 ds.getPing(),
                 ds.getId()
         });
@@ -70,23 +75,23 @@ public class JdbcDataSourceDao {
         return jt.update(sql, new Object[]{ id });
     }
 
-    public JdbcDataSource fetchByWidgetId(long id) {
+    public JdbcDataSource findByWidgetId(long widgetId) {
         String sql = "SELECT d.id, d.name, d.connection_url, driver_class_name, d.username, d.password, d.ping "
                     + "FROM p_datasource d, p_widget w "
                     + "WHERE w.id = ? AND d.id = w.datasource_id";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ widgetId }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public JdbcDataSource fetchByFilterId(long id) {
+    public JdbcDataSource findByFilterId(long filterId) {
         String sql = "SELECT d.id, d.name, d.connection_url, driver_class_name, d.username, d.password, d.ping "
                 + "FROM p_datasource d, p_filter f "
                 + "WHERE f.id = ? AND d.id = f.datasource_id";
         try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceRowMapper());
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ filterId }, new JdbcDataSourceRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -101,7 +106,9 @@ public class JdbcDataSourceDao {
             ds.setConnectionUrl(rs.getString(JdbcDataSource.CONNECTION_URL));
             ds.setDriverClassName(rs.getString(JdbcDataSource.DRIVER_CLASS_NAME));
             ds.setUsername(rs.getString(JdbcDataSource.USERNAME));
-            ds.setPassword(rs.getString(JdbcDataSource.PASSWORD));
+            String encryptedPassword = rs.getString(JdbcDataSource.PASSWORD);
+            String rawPassword = PasswordUtil.getDecryptedPassword(encryptedPassword);
+            ds.setPassword(rawPassword);
             ds.setPing(rs.getString(JdbcDataSource.PING));
             return ds;
         }

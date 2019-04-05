@@ -9,11 +9,11 @@
 }
 
 .model-title {
-  font-size: 25px;
+  font-size: 24px;
   float: left;
 }
 
-.model-close-btn {
+.model-close-button {
   float: right;
   cursor: pointer;
 }

@@ -28,19 +28,19 @@ public class JdbcDataSourceWs {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<JdbcDataSource> all() {
-        return jdbcDataSourceDao.fetchAll();
+        return jdbcDataSourceDao.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public JdbcDataSource one(@PathVariable("id") long id) {
-        return jdbcDataSourceDao.fetchById(id);
+        return jdbcDataSourceDao.findById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody JdbcDataSource ds) {
-        long id = jdbcDataSourceDao.add(ds);
+        long id = jdbcDataSourceDao.insert(ds);
         jdbcDataSourceService.save(ds);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
@@ -56,7 +56,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(id);
+        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
         jdbcDataSourceService.remove(ds);
         jdbcDataSourceDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -65,7 +65,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String ping(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.fetchById(id);
+        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
         return jdbcQueryService.ping(ds);
     }
 }

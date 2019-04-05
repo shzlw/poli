@@ -1,11 +1,21 @@
 
 
 .datasource-card {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   background-color: #FFFFFF;
   padding: 5px;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
 }
 
 .datasource-card-title {
   font-size: 20px;
+}
+
+.datasource-icon-button {
+  margin: 0px 2px 0px 2px;
+}
+
+.datasource-row-name {
+  font-size: 24px;
+  margin-left: 5px;
 }

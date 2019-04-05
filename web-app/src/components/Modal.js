@@ -18,8 +18,8 @@ class Modal extends React.Component {
         <div className={`modal-panel ${modalClass}`}>
           <div className="model-header row">
             <div className="model-title">{title}</div>
-            <button className="model-close-btn button icon-button" onClick={() => this.props.onClose()}>
-              <FontAwesomeIcon icon="times" />
+            <button className="model-close-button icon-button" onClick={() => this.props.onClose()}>
+              <FontAwesomeIcon icon="times" size="lg" />
             </button>
           </div>
           <hr/>

@@ -40,6 +40,7 @@
   bottom: 0;
   background-color: #eeeeee;
   overflow: auto;
+  padding: 10px 10px 10px 20px;
 }
 
 .dashboard-full-width {
@@ -59,6 +60,11 @@
 .dashboard-add-button {
   margin-top: 5px;
   width: 100%;
+}
+
+.dashboard-name {
+  margin: 8px 0px;
+  padding: 10px 14px;
 }
 
 .dashboard-attribute-edit-panel {

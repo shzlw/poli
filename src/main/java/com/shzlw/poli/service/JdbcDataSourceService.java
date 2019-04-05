@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,7 +28,7 @@ public class JdbcDataSourceService {
 
     @PostConstruct
     public void init() {
-        List<JdbcDataSource> dataSources = jdbcDataSourceDao.fetchAll();
+        List<JdbcDataSource> dataSources = jdbcDataSourceDao.findAll();
         for (JdbcDataSource dataSource : dataSources) {
             save(dataSource);
         }
@@ -50,7 +51,9 @@ public class JdbcDataSourceService {
         newDs.setJdbcUrl(dataSource.getConnectionUrl());
         newDs.setUsername(dataSource.getUsername());
         newDs.setPassword(dataSource.getPassword());
-        newDs.setDriverClassName(dataSource.getDriverClassName());
+        if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
+            newDs.setDriverClassName(dataSource.getDriverClassName());
+        }
         newDs.setMaximumPoolSize(10);
         DATA_SOURCE_CACHE.put(dataSource.getName(), newDs);
         return newDs;

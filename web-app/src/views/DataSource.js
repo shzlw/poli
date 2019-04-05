@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
+import Toast from '../components/Toast';
 import './Datasource.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +16,10 @@ class DataSource extends Component {
     this.state = {
       jdbcDataSources: [],
       showEditPanel: false,
+      showConfirmDeletionPanel: false,
+      datasourceToDelete: {},
       showUpdatePassword: false,
+      searchValue: '',
       id: null,
       name: '',
       connectionUrl: '',
@@ -40,25 +44,19 @@ class DataSource extends Component {
   }
 
   componentDidMount() {
-    // Fetch all datasources
     this.fetchDataSources();
-    
+  }
+
+  handleInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
   async fetchDataSources() {
     const jdbcDataSources = await webApi.fetchDataSources();
     this.setState({ 
       jdbcDataSources: jdbcDataSources 
-    });
-  }
-
-  handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
     });
   }
 
@@ -92,7 +90,11 @@ class DataSource extends Component {
       // Update
       axios.put('/ws/jdbcdatasource', ds)
         .then(res => {
+          this.closeEditPanel();
           this.fetchDataSources();
+        })
+        .catch(error => {
+          console.log(error);
         });
     } else {
       ds.password = password;
@@ -102,22 +104,28 @@ class DataSource extends Component {
         .then(res => {
           this.closeEditPanel();
           this.fetchDataSources();
+        })
+        .catch(error => {
+          console.log(error);
         });
     } 
   }
 
-  delete = (id) => {
-    console.log('delete', id);
-    axios.delete('/ws/jdbcdatasource/' + id)
+  confirmDelete = () => {
+    const { 
+      datasourceToDelete = {} 
+    } = this.state;
+    axios.delete('/ws/jdbcdatasource/' + datasourceToDelete.id)
       .then(res => {
         this.fetchDataSources();
+        this.closeConfirmDeletionPanel();
       });
   }
 
   ping = (id) => {
     axios.get(`/ws/jdbcdatasource/ping/${id}`)
       .then(res => {
-        console.log('ping', res.data);
+        Toast.show('ping' + res.data);
       });
   }
 
@@ -152,8 +160,18 @@ class DataSource extends Component {
     });
   }
 
-  openDeletePanel = () => {
+  openConfirmDeletionPanel = (datasource) => {
+    this.setState({
+      datasourceToDelete: datasource,
+      showConfirmDeletionPanel: true
+    });
+  }
 
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      datasourceToDelete: {},
+      showConfirmDeletionPanel: false
+    });
   }
 
   toggleUpdatePassword = () => {
@@ -162,44 +180,67 @@ class DataSource extends Component {
     })); 
   }
 
+  clearSearch = () => {
+    this.setState({
+      searchValue: ''
+    });
+  }
+
   render() {
     const { 
       showUpdatePassword,
+      showConfirmDeletionPanel,
+      searchValue,
       id,
-      jdbcDataSources = []
+      jdbcDataSources = [],
+      datasourceToDelete = {}
     } = this.state;
 
-    const jdbcDataSourceItems = jdbcDataSources.map((ds, index) => 
-      <div key={index} className="datasource-card row">
-        <div className="float-left ellipsis">
-          {ds.name}
-        </div>
-        <div className="float-right">
-          <button className="button icon-button" onClick={() => this.openEditPanel(ds)}>
-            <FontAwesomeIcon icon="edit" fixedWidth />
-          </button>
-          <button className="button icon-button" onClick={() => this.delete(ds.id)}>
-            <FontAwesomeIcon icon="trash-alt" fixedWidth />
-          </button>
-          <button className="button icon-button" onClick={() => this.ping(ds.id)}>
-            <FontAwesomeIcon icon="plug" fixedWidth />
-          </button>
-        </div>
-      </div>
-    );
+    const mode = id === null ? 'New' : 'Edit';
 
-    let mode = id === null ? 'New' : 'Update';
+    const jdbcDataSourceItems = [];
+    for (let i = 0; i < jdbcDataSources.length; i++) {
+      const ds = jdbcDataSources[i];
+      const name = ds.name;
+      if (!searchValue || (searchValue && name.includes(searchValue))) {
+        jdbcDataSourceItems.push(
+          (
+            <div key={i} className="datasource-card row">
+              <div className="float-left ellipsis datasource-row-name">
+                {name}
+              </div>
+              <div className="float-right">
+                <button className="icon-button datasource-icon-button" onClick={() => this.openEditPanel(ds)}>
+                  <FontAwesomeIcon icon="edit" size="lg" />
+                </button>
+                <button className="icon-button datasource-icon-button" onClick={() => this.openConfirmDeletionPanel(ds)}>
+                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+                </button>
+                <button className="icon-button datasource-icon-button" onClick={() => this.ping(ds.id)}>
+                  <FontAwesomeIcon icon="plug" size="lg" />
+                </button>
+              </div>
+            </div>
+          )
+        )
+      }
+    }
+
     return (
       <div>
         <input
           type="text"
           name="searchValue"
+          value={this.state.searchValue}
+          onChange={this.handleInputChange}
           placeholder="Datasource name..."
+          style={{width: '200px'}}
           />
+        <button className="button" onClick={this.clearSearch}>Clear</button>
         <button className="button" onClick={() => this.openEditPanel(null)}>
           <FontAwesomeIcon icon="plus" /> New datasource
         </button>
-        <div>
+        <div className="table-panel">
           {jdbcDataSourceItems}
         </div>
 
@@ -210,7 +251,7 @@ class DataSource extends Component {
           title={mode} >
 
           <div>
-            <label>Name</label>
+            <label>Name <span className="required">*</span></label>
             <input 
               type="text" 
               name="name" 
@@ -240,9 +281,14 @@ class DataSource extends Component {
               value={this.state.username}
               onChange={this.handleInputChange} />
             
-            <br/>
-            <button onClick={this.toggleUpdatePassword}>Update password</button>
-            { this.props.showUpdatePassword ? 
+            { mode === 'Edit' ? 
+              (
+                <div style={{margin: '3px 0px 8px 0px'}}>
+                  <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+                </div>
+              ) : null
+            }
+            { mode === 'New' || showUpdatePassword ? 
               (
                 <div>
                   <label>Password</label>
@@ -255,17 +301,26 @@ class DataSource extends Component {
               ) : null
             }
 
-            <br/>
-            <label>Ping</label>
+            <label className="mt-3">Ping</label>
             <input 
               type="text" 
               name="ping" 
               value={this.state.ping}
               onChange={this.handleInputChange} />
 
-            <button className="button"onClick={this.save}>Save</button>
+            <button className="button mt-3" onClick={this.save}>Save</button>
           </div>
+        </Modal>
 
+        <Modal 
+          show={showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete {datasourceToDelete.name}?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
       </div>
     );

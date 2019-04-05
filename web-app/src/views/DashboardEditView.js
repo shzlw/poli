@@ -94,15 +94,16 @@ class DashboardEditView extends React.Component {
   }
 
   loadViewByDashboardName = () => {
-    const pageWidth = this.getPageWidth();
-    const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
-    
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
     const showFilter = params.get('showFilter');
 
     const showFilterViewPanel = showFilter == 'true';
+
+    const pageWidth = this.getPageWidth();
+    const widgetViewWidth = showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
+    
     this.setState({
       pageWidth: pageWidth,
       widgetViewWidth: widgetViewWidth,
@@ -126,7 +127,7 @@ class DashboardEditView extends React.Component {
 
   getPageWidth = () => {
     const thisNode = ReactDOM.findDOMNode(this);
-    return thisNode.clientWidth;
+    return thisNode.clientWidth - 40;
   }
 
   handleInputChange = (event) => {
@@ -367,14 +368,23 @@ class DashboardEditView extends React.Component {
       <React.Fragment>
         <div className="dashboard-menu-panel row">
           <div className="float-left">
-            <input 
-              type="text" 
-              name="name" 
-              value={this.state.name}
-              onChange={this.handleInputChange} 
-              style={{width: '200px'}}
-              readOnly={isReadOnly || !isEditMode}
-              />
+            {
+              isReadOnly || !isEditMode ?
+              (
+                <div className="dashboard-name">
+                  {this.state.name}
+                </div>
+              ) :(
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={this.state.name}
+                  onChange={this.handleInputChange} 
+                  style={{width: '200px'}}
+                  />
+              )
+            }
+            
           </div>
           <div className="float-right">
             {fullScreenButtonPanel}

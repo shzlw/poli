@@ -13,8 +13,9 @@ export const getPieOptionTemplate = (legend, series) => {
     tooltip: {
     },
     legend: {
-      data: legend,
+      type: 'scroll',
       orient: 'vertical',
+      data: legend,
       right: 10,
       top: 10,
       bottom: 10

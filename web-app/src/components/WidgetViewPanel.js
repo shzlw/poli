@@ -37,7 +37,7 @@ class WidgetViewPanel extends React.Component {
       this.resizeWidgetsToBase(newWidgets, preGridWidth);
     }
 
-    const gridWidth = width;
+    const gridWidth = width - 10;
     this.resizeWidgetsToActual(newWidgets, gridWidth);
     this.setState({
       widgets: newWidgets,

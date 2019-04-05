@@ -3,9 +3,10 @@ import { Route, Link, Switch, withRouter } from "react-router-dom";
 import DataSource from './DataSource';
 import Dashboard from './Dashboard';
 import DashboardFullScreenView from './DashboardFullScreenView';
-
 import UserManagement from './UserManagement';
 import Account from './Account';
+
+import Toast from '../components/Toast';
 
 import * as Constants from '../api/Constants';
 import AuthStore from '../api/AuthStore';
@@ -126,6 +127,7 @@ class Workspace extends React.Component {
             <Route path="/workspace/user-management" component={UserManagement} />
           </Switch>
         </div>
+        <Toast />
       </React.Fragment>
     );
   }

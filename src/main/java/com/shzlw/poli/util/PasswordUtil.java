@@ -85,11 +85,17 @@ public final class PasswordUtil {
     }
 
     public static String getEncryptedPassword(String password) {
-        return encrypt(Constants.PASSWORD_SALT + password);
+        String p = password == null ? "" : password;
+        return encrypt(Constants.PASSWORD_SALT + p);
     }
 
     public static String getDecryptedPassword(String password) {
         String p = decrypt(password);
-        return p.substring(Constants.PASSWORD_SALT.length(), p.length());
+        int saltLength = Constants.PASSWORD_SALT.length();
+        if (p.length() < saltLength) {
+            // FIXME: Something is wrong here but the app should not crash.
+            return "";
+        }
+        return p.substring(saltLength);
     }
 }

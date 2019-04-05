@@ -1,13 +1,15 @@
 
 .nav-menu {
   list-style-type: none;
-  padding: 0px;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-menu li {
+  display: inline-block;
+  list-style: none;
   font-size: 16px; 
-  display: inline;
+  padding: 11px 14px;
 }
 
 .nav-menu-text {
