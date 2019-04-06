@@ -182,6 +182,10 @@ class WidgetEditPanel extends React.Component {
       drills
     } = this.state;
 
+    if (!name) {
+      return;
+    }
+
     const widget = {
       name: name,
       dashboardId: this.props.dashboardId,

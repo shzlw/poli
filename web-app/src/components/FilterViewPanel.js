@@ -121,10 +121,10 @@ class FilterViewPanel extends Component {
                 { this.props.isEditMode ? 
                   (
                     <div className="icon-button-group">
-                      <div className="icon-btn" onClick={() => this.edit(filter.id)}>
+                      <div className="inline-block" onClick={() => this.edit(filter.id)}>
                         <FontAwesomeIcon icon="edit" fixedWidth />
                       </div>
-                      <div className="icon-btn" onClick={() => this.remove(filter.id)}>
+                      <div className="inline-block" onClick={() => this.remove(filter.id)}>
                         <FontAwesomeIcon icon="trash-alt" fixedWidth />
                       </div>
                     </div>

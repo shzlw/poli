@@ -60,8 +60,7 @@ class DataSource extends Component {
     });
   }
 
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       showUpdatePassword,
       id,
@@ -72,6 +71,10 @@ class DataSource extends Component {
       name,
       ping,
     } = this.state;
+
+    if (!name) {
+      return;
+    }
 
     let ds = {
       connectionUrl: connectionUrl,
@@ -233,7 +236,7 @@ class DataSource extends Component {
           name="searchValue"
           value={this.state.searchValue}
           onChange={this.handleInputChange}
-          placeholder="Datasource name..."
+          placeholder="Search..."
           style={{width: '200px'}}
           />
         <button className="button" onClick={this.clearSearch}>Clear</button>

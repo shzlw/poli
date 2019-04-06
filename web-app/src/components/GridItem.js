@@ -17,6 +17,7 @@ import * as EchartsApi from '../api/EchartsApi';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import TableWidget from './TableWidget';
 
 class GridItem extends React.Component {
 
@@ -136,13 +137,9 @@ class GridItem extends React.Component {
     if (chartType === Constants.TABLE) {
       const headers = EchartsApi.getTableHeaders(queryResultData);
       widgetItem = (
-        <ReactTable
+        <TableWidget
           data={queryResultData}
-          columns={headers}
-          minRows={0}
-          showPagination={false}
-          getTdProps={this.onTableTdPropsChange}
-          widgetDrillThrough={drillThrough}  
+          drillThrough={drillThrough}
         />
       );
     } else if (chartType === Constants.PIE) {
@@ -161,6 +158,17 @@ class GridItem extends React.Component {
       }
       
     } 
+
+    /*
+    <ReactTable
+          data={queryResultData}
+          columns={headers}
+          minRows={0}
+          showPagination={false}
+          getTdProps={this.onTableTdPropsChange}
+          widgetDrillThrough={drillThrough}  
+        />
+        */
 
     return widgetItem;
   }
@@ -181,20 +189,20 @@ class GridItem extends React.Component {
 
           { this.props.isEditMode ? (
             <div className="float-right" style={{marginRight: '20px'}}>
-              <div className="icon-btn" onClick={() => this.editWidget(this.props.id)}>
+              <div className="inline-block" onClick={() => this.editWidget(this.props.id)}>
                 <FontAwesomeIcon icon="edit" fixedWidth />
               </div>
-              <div className="icon-btn" onClick={() => this.removeWidget(this.props.id)}>
+              <div className="inline-block" onClick={() => this.removeWidget(this.props.id)}>
                 <FontAwesomeIcon icon="trash-alt" fixedWidth />
               </div>
             </div>
           ) : (
             <div className="grid-box-file-button-group">
-              <div className="icon-btn" onClick={() => this.exportJson(this.props.id)}>
+              <div className="inline-block" onClick={() => this.exportJson(this.props.id)}>
                 <FontAwesomeIcon icon="file-export" fixedWidth />
               </div>
               
-              <div className="icon-btn" onClick={() => this.exportCsv(this.props.id)}>
+              <div className="inline-block" onClick={() => this.exportCsv(this.props.id)}>
                 <FontAwesomeIcon icon="file-csv" fixedWidth />
               </div>
             </div>

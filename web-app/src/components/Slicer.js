@@ -1,5 +1,6 @@
 import React from 'react';
 import Checkbox from './Checkbox';
+import './Slicer.css';
 
 class Slicer extends React.Component {
 
@@ -48,19 +49,18 @@ class Slicer extends React.Component {
   }
 
   render() {
-    const checkBoxes = this.props.checkBoxes;
-    let checkBoxItems = [];
-    if (checkBoxes !== undefined && checkBoxes.length !== 0) {
-      checkBoxItems = this.props.checkBoxes.map((box, index) => 
-        <Checkbox 
-          key={index} 
-          name={box.value} 
-          value={box.value} 
-          checked={box.isChecked} 
-          onChange={this.handleCheckBoxChange} 
-        />
-      );
-    }
+    const { 
+      checkBoxes = []
+    } = this.props;
+    const checkBoxItems = checkBoxes.map((box, index) => 
+      <Checkbox 
+        key={index} 
+        name={box.value} 
+        value={box.value} 
+        checked={box.isChecked} 
+        onChange={this.handleCheckBoxChange} 
+      />
+    );
 
     return (
       <div>
@@ -72,7 +72,7 @@ class Slicer extends React.Component {
             onChange={this.handleSearchValueChange} 
           />
         
-        <div>
+        <div className="slicer-body">
           {checkBoxItems}
         </div>
       </div>

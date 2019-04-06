@@ -3,6 +3,7 @@
   position: relative;
   background-color: #FFFFFF;
 }
+
 .grid-box {
   position: absolute;
   border: 2px solid #4b4f56;
@@ -21,6 +22,7 @@
 
 .grid-box-content {
   flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 .grid-draggable {

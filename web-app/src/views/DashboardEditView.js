@@ -319,8 +319,8 @@ class DashboardEditView extends React.Component {
     let fullScreenButtonPanel = null;
     const controlButtons = (
       <React.Fragment>
-        <span>Last refreshed: {lastRefreshed}</span>
-        <button className="button icon-button" onClick={this.toggleAutoRefresh}>
+        <span className="mr-3">Last refreshed: {lastRefreshed}</span>
+        <button className="button square-button mr-3" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
             (
@@ -331,10 +331,10 @@ class DashboardEditView extends React.Component {
             )
           }
         </button>
-        <button className="button icon-button" onClick={this.refresh}>
+        <button className="button mr-3" onClick={this.toggleFilterViewPanel}>Show Filters</button>
+        <button className="button square-button" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button" onClick={this.toggleFilterViewPanel}>Show Filters</button>
       </React.Fragment>
     );
 
@@ -342,21 +342,21 @@ class DashboardEditView extends React.Component {
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
-            <button className="button" onClick={this.cancelEdit}>Cancel</button>
-            <button className="button" onClick={this.save}>Save</button>
-            <button className="button" onClick={this.delete}>Delete</button>
-            <button className="button" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
+            <button className="button mr-3" onClick={this.cancelEdit}>Cancel</button>
+            <button className="button mr-3" onClick={this.save}>Save</button>
+            <button className="button mr-3" onClick={this.delete}>Delete</button>
+            <button className="button mr-3" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
             <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
           </React.Fragment>
         );
       } else {
         editButtonPanel = (
           <React.Fragment>
-            {controlButtons}
-            <button className="button icon-button" onClick={this.fullScreen}>
+            <button className="button square-button mr-3" onClick={this.fullScreen}>
               <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
             </button>
             <button className="button" onClick={this.edit}>Edit</button>
+            {controlButtons}
           </React.Fragment>
         );
       }
@@ -380,7 +380,7 @@ class DashboardEditView extends React.Component {
                   name="name" 
                   value={this.state.name}
                   onChange={this.handleInputChange} 
-                  style={{width: '200px'}}
+                  className="dashboard-name"
                   />
               )
             }
