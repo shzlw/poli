@@ -19,12 +19,21 @@ public class Widget {
     private long dashboardId;
     private String sqlQuery;
     private String chartType;
+
     /**
      * Json column
      */
     private String data;
 
+    /**
+     * Json column
+     */
     private String drillThrough;
+
+    /**
+     * Json column
+     */
+    private String style;
 
     public long getId() {
         return id;
@@ -124,5 +133,15 @@ public class Widget {
     @JsonDeserialize(using = RawStringDeserialzier.class)
     public void setDrillThrough(String drillThrough) {
         this.drillThrough = drillThrough;
+    }
+
+    @JsonRawValue
+    public String getStyle() {
+        return style;
+    }
+
+    @JsonDeserialize(using = RawStringDeserialzier.class)
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

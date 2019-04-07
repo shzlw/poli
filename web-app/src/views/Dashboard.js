@@ -16,6 +16,7 @@ class Dashboard extends Component {
       searchValue: '',
       dashboards: [],
       showEditPanel: false,
+      activeDashboardId: 0,
       name: ''
     }
   }
@@ -73,6 +74,9 @@ class Dashboard extends Component {
   }
 
   view = (dashboardId) => {
+    this.setState({
+      activeDashboardId: dashboardId
+    });
     this.props.history.push(`/workspace/dashboard/${dashboardId}`);
   }
 
@@ -80,23 +84,40 @@ class Dashboard extends Component {
     this.fetchBoards();
   }
 
+  onDeleteDashboard = (dashboardId) => {
+    this.fetchBoards();
+  }
+
   render() {
     const {
-      dashboards = []
+      dashboards = [],
+      activeDashboardId,
+      searchValue
     } = this.state;
+
     
-    const dashboardRows = dashboards.map((d, index) => 
-      <div key={index} className="dashboard-menu-item ellipsis" onClick={() => this.view(d.id)}>
-        {d.name}
-      </div>
-    );
+    const dashboardRows = [];
+    for (let i = 0; i < dashboards.length; i++) {
+      const dashboard = dashboards[i];
+      const name = dashboard.name;
+      const menuActive = activeDashboardId === dashboard.id ? 'dashboard-menu-item-active' : '';
+      if (!searchValue || (searchValue && name.includes(searchValue))) {
+        dashboardRows.push(
+          (
+            <div key={i} className={`dashboard-menu-item ellipsis ${menuActive}`} onClick={() => this.view(dashboard.id)}>
+              {name}
+            </div>
+          )
+        )
+      }
+    }
 
     return (
       <div>
         <div className="dashboard-sidebar">
           <div style={{margin: '5px'}}>
             <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
-              <FontAwesomeIcon icon="plus" /> New dashboard
+              <FontAwesomeIcon icon="plus" /> New
             </button>
             <input 
               type="text" 
@@ -112,7 +133,7 @@ class Dashboard extends Component {
         <div className="dashboard-content">
           <Route 
             path="/workspace/dashboard/:id" 
-            render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} />} 
+            render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} onDeleteDashboard={this.onDeleteDashboard} />} 
             />
         </div>
 
@@ -122,7 +143,7 @@ class Dashboard extends Component {
           modalClass={'small-modal-panel'} 
           title={'New'} >
           <div>
-            <label>Name</label>
+            <label className="form-label">Name</label>
             <input 
               type="text" 
               name="name" 

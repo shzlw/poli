@@ -28,8 +28,14 @@
 }
 
 .dashboard-menu-item:hover {
-  border-left: 3px solid green;
-  background-color: black;
+  border-left: 3px solid #0065FF;
+  background-color: #B3BAC5;
+  color: white;
+}
+
+.dashboard-menu-item-active {
+  border-left: 3px solid #0065FF;
+  background-color: #000000;
   color: white;
 }
 

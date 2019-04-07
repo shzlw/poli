@@ -13,6 +13,10 @@ body,
   text-rendering: optimizeLegibility;
 }
 
+.form-label {
+  width: 100%;
+}
+
 .form-panel {
   border: 0;
   outline: 0;

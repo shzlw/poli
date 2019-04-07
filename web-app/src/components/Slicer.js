@@ -64,12 +64,13 @@ class Slicer extends React.Component {
 
     return (
       <div>
-        <button className="button" onClick={this.toggleSelectAll}>Toggle Select All {this.state.isSelectAll}</button>
+        <button className="button" onClick={this.toggleSelectAll}>Select All {this.state.isSelectAll}</button>
         <input 
             type="text" 
             name="name" 
             value={this.state.searchValue}
-            onChange={this.handleSearchValueChange} 
+            onChange={this.handleSearchValueChange}
+            placeholder="Search..."
           />
         
         <div className="slicer-body">

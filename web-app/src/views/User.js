@@ -256,34 +256,34 @@ class User extends React.Component {
           <div>
             <h3>{'User'}</h3>
             <form>
-              <label>Username</label>
+              <label className="form-label">Username</label>
               <input 
                 type="text" 
                 name="username" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
 
-              <label>Name</label>
+              <label className="form-label">Name</label>
               <input 
                 type="text" 
                 name="name" 
                 value={this.state.name}
                 onChange={this.handleInputChange} />
 
-              <label>Temp password</label>
+              <label className="form-label">Temp password</label>
               <input 
                 type="password" 
                 name="tempPassword" 
                 value={this.state.tempPassword}
                 onChange={this.handleInputChange} />
               
-              <label>System Role</label>
+              <label className="form-label">System Role</label>
               <select value={this.state.sysRole} onChange={(event) => this.handleOptionChange('sysRole', event)}>
                 {sysRoleOptions}
               </select>
               <br/>
               
-              <label>Groups</label>
+              <label className="form-label">Groups</label>
               <select value={this.state.userGroupId} onChange={(event) => this.handleOptionChange('userGroupId', event)}>
                 {groupOptions}
               </select>

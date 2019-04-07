@@ -255,14 +255,14 @@ class DataSource extends Component {
           title={mode} >
 
           <div>
-            <label>Name <span className="required">*</span></label>
+            <label className="form-label">Name <span className="required">*</span></label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} />
 
-            <label>Connection Url</label>
+            <label className="form-label">Connection Url</label>
             <textarea
               rows="4"
               type="text" 
@@ -271,14 +271,14 @@ class DataSource extends Component {
               onChange={this.handleInputChange} >
             </textarea>
 
-            <label>Driver class name</label>
+            <label className="form-label">Driver class name</label>
             <input 
               type="text" 
               name="driverClassName" 
               value={this.state.driverClassName}
               onChange={this.handleInputChange} />
 
-            <label>Username</label>
+            <label className="form-label">Username</label>
             <input 
               type="text" 
               name="username" 
@@ -295,7 +295,7 @@ class DataSource extends Component {
             { mode === 'New' || showUpdatePassword ? 
               (
                 <div>
-                  <label>Password</label>
+                  <label className="form-label">Password</label>
                   <input 
                     type="password" 
                     name="password" 
@@ -305,7 +305,7 @@ class DataSource extends Component {
               ) : null
             }
 
-            <label className="mt-3">Ping</label>
+            <label className="form-label" className="mt-3">Ping</label>
             <input 
               type="text" 
               name="ping" 

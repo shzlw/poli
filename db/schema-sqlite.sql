@@ -50,6 +50,7 @@ IF NOT EXISTS p_widget (
     sql_query TEXT,
     data TEXT,
     drill_through TEXT,
+    style TEXT,
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
     FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );

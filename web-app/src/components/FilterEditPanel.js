@@ -4,16 +4,14 @@ import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-
-
 import axios from 'axios';
 
 import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 import TableWidget from './TableWidget';
+
+import './FilterEditPanel.css';
 
 class FilterEditPanel extends React.Component {
 
@@ -197,7 +195,7 @@ class FilterEditPanel extends React.Component {
         <button className="button" onClick={this.runQuery}>Run</button>
 
         <div className="form-panel">
-          <label>Name</label>
+          <label className="form-label">Name</label>
           <input 
             type="text" 
             name="name" 
@@ -205,17 +203,17 @@ class FilterEditPanel extends React.Component {
             onChange={this.handleInputChange} 
           />
 
-          <label>Type</label>
+          <label className="form-label">Type</label>
           <select value={this.state.type} onChange={this.handleTypeChange}>
             {typeOptions}
           </select>
 
-          <label>DataSource</label>
+          <label className="form-label">DataSource</label>
           <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
             {dataSourceOptions}
           </select>
         
-          <label>SQL Query</label>
+          <label className="form-label">SQL Query</label>
           <AceEditor
             style={{marginTop: '8px'}}
             value={this.state.sqlQuery}
@@ -235,14 +233,14 @@ class FilterEditPanel extends React.Component {
             }}
           />
 
-          <label>Result</label>
+          <label className="form-label">Result</label>
           <TableWidget
             data={data}
             columns={columns}
             error={error}
           />
 
-          <label>Param</label>
+          <label className="form-label">Param</label>
           <input 
             type="text" 
             name="param" 

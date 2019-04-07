@@ -29,10 +29,13 @@ class DashboardEditView extends React.Component {
       showWidgetEditPanel: false,
       showFilterEditPanel: false,
       showFilterViewPanel: true,
+      showConfirmDeletionPanel: false,
+      widgetToDelete: {},
       isEditMode: false,
       isReadOnly: false,
       autoRefreshTimerId: '',
       lastRefreshed: '',
+      refreshInterval: 15,
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -144,9 +147,13 @@ class DashboardEditView extends React.Component {
         autoRefreshTimerId: ''
       });
     } else {
+      const { refreshInterval } = this.state;
+      let interval = parseInt(refreshInterval, 10) || 15;
+      interval = interval < 1 ? 1 : interval;
       const timerId = setInterval(() => {
-        this.refreshWidgetView();
-      }, 1000);
+        this.filterViewPanel.current.applyFilters();
+        this.updateLastRefreshed();
+      }, interval * 1000);
       this.setState({
         autoRefreshTimerId: timerId
       });
@@ -154,9 +161,9 @@ class DashboardEditView extends React.Component {
   }
 
   refresh = () => {
-    console.log('refresh');
     this.refreshWidgetView();
     this.refreshFilterView();
+    this.updateLastRefreshed();
   }
 
   refreshFilterView = () => {
@@ -172,12 +179,14 @@ class DashboardEditView extends React.Component {
       widgetViewWidth
     } = this.state;
     this.widgetViewPanel.current.fetchWidgets(dashboardId, widgetViewWidth, null);
+  } 
 
+  updateLastRefreshed = () => {
     const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
     this.setState({
       lastRefreshed: now
     });
-  } 
+  }
 
   save = () => {
     console.log('save');
@@ -218,12 +227,15 @@ class DashboardEditView extends React.Component {
     });
   }
 
-  delete = () => {
-    const { dashboardId } = this.state;
-    console.log('delete', dashboardId);
-    axios.delete(`/ws/dashboard/${dashboardId}`)
+  confirmDelete = () => {
+    const { 
+      dashboardToDelete = {} 
+    } = this.state;
+    const id = dashboardToDelete.id;
+    axios.delete(`/ws/dashboard/${id}`)
       .then(res => {
-        //this.fetchBoards();
+        this.props.onDeleteDashboard(id);
+        this.closeConfirmDeletionPanel();
       });
   }
 
@@ -320,6 +332,19 @@ class DashboardEditView extends React.Component {
     const controlButtons = (
       <React.Fragment>
         <span className="mr-3">Last refreshed: {lastRefreshed}</span>
+        {
+          autoRefreshStatus === 'OFF' ? 
+          (
+            <input 
+              type="text" 
+              name="refreshInterval" 
+              value={this.state.refreshInterval}
+              onChange={this.handleInputChange}
+              className="inline-block" 
+              style={{width: '50px'}}
+            />
+          ) : null
+        }
         <button className="button square-button mr-3" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
@@ -331,6 +356,7 @@ class DashboardEditView extends React.Component {
             )
           }
         </button>
+        
         <button className="button mr-3" onClick={this.toggleFilterViewPanel}>Show Filters</button>
         <button className="button square-button" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
@@ -344,7 +370,7 @@ class DashboardEditView extends React.Component {
           <React.Fragment>
             <button className="button mr-3" onClick={this.cancelEdit}>Cancel</button>
             <button className="button mr-3" onClick={this.save}>Save</button>
-            <button className="button mr-3" onClick={this.delete}>Delete</button>
+            <button className="button mr-3" onClick={this.confirmDelete}>Delete</button>
             <button className="button mr-3" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
             <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
           </React.Fragment>

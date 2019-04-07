@@ -219,14 +219,14 @@ class Group extends React.Component {
           <div>
             <h3>{'Group'}</h3>
             <form>
-              <label>Name</label>
+              <label className="form-label">Name</label>
               <input 
                 type="text" 
                 name="name" 
                 value={this.state.name}
                 onChange={this.handleInputChange} />
               
-              <label>Dashboards</label>
+              <label className="form-label">Dashboards</label>
               <select value={this.state.groupDashboardId} onChange={(event) => this.handleOptionChange('groupDashboardId', event)}>
                 {dashboardOptions}
               </select>

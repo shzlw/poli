@@ -111,30 +111,30 @@ class FilterViewPanel extends Component {
       }
 
       filterPanel.push(
-          (
-            <div className="filter-card">
-              <div className="filter-card-title">
-                {filter.name}
+        (
+          <div className="filter-card">
+            <div className="filter-card-title">
+              {filter.name}
 
-                { this.props.isEditMode ? 
-                  (
-                    <div className="icon-button-group">
-                      <div className="inline-block" onClick={() => this.edit(filter.id)}>
-                        <FontAwesomeIcon icon="edit" fixedWidth />
-                      </div>
-                      <div className="inline-block" onClick={() => this.remove(filter.id)}>
-                        <FontAwesomeIcon icon="trash-alt" fixedWidth />
-                      </div>
+              { this.props.isEditMode ? 
+                (
+                  <div className="icon-button-group">
+                    <div className="inline-block" onClick={() => this.edit(filter.id)}>
+                      <FontAwesomeIcon icon="edit" fixedWidth />
                     </div>
-                  ): null 
-                }
-              </div>
-              <div>
-                {filterComponent}
-              </div>
+                    <div className="inline-block" onClick={() => this.remove(filter.id)}>
+                      <FontAwesomeIcon icon="trash-alt" fixedWidth />
+                    </div>
+                  </div>
+                ): null 
+              }
             </div>
-          )
-        );
+            <div>
+              {filterComponent}
+            </div>
+          </div>
+        )
+      );
     }
     return filterPanel;
   }
@@ -221,7 +221,7 @@ class FilterViewPanel extends Component {
       <div className="dashboard-content-filter-panel" style={style}>
         <div>Filters</div>
         <button className="button" onClick={this.applyFilters}>Run</button>
-        <div className="filterViewPanel">
+        <div className="filter-view-panel">
           {this.renderFilterPanel()}
         </div>
       </div>

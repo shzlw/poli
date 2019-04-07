@@ -176,8 +176,10 @@ class WidgetViewPanel extends React.Component {
               style={{width: '200px'}}
               />
 
-            <div className="inline-block">Background Color</div>
-            <ColorPicker value={this.props.backgroundColor} onChange={this.onBackgroundColorChange} />
+            <div>
+              Background Color
+              <ColorPicker value={this.props.backgroundColor} onChange={this.onBackgroundColorChange} />
+            </div>
 
             <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />
             <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />

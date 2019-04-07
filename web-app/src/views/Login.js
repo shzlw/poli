@@ -77,13 +77,13 @@ class Login extends React.Component {
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <form>
             <div className="form-group">
-              <label>Username</label>
+              <label className="form-label">Username</label>
               <input 
                 type="text" 
                 name="username" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
-              <label>Password</label>
+              <label className="form-label">Password</label>
               <input 
                 type="password" 
                 name="password" 

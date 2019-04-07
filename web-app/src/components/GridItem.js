@@ -162,35 +162,49 @@ class GridItem extends React.Component {
   }
 
   render() {
+    const {
+      id,
+      name,
+      isEditMode,
+      style = {}
+    } = this.props;
+
+    const { 
+      showBorder = false 
+    } = style;
+
+    const borderStyle = showBorder ? '2px solid #4b4f56' : '2px solid #FFFFFF';
+
     let styles = {
       left: this.props.x + 'px',
       top: this.props.y + 'px',
       width: this.props.width + 'px',
       height: this.props.height + 'px',
-      zIndex: 1
+      zIndex: 1,
+      border: borderStyle
     };
 
     return (
       <div className="grid-box" style={styles}>
         <div className="grid-box-title">
-          {this.props.name}
+          {name}
 
-          { this.props.isEditMode ? (
+          { isEditMode ? (
             <div className="float-right" style={{marginRight: '20px'}}>
-              <div className="inline-block" onClick={() => this.editWidget(this.props.id)}>
+              <div className="inline-block" onClick={() => this.editWidget(id)}>
                 <FontAwesomeIcon icon="edit" fixedWidth />
               </div>
-              <div className="inline-block" onClick={() => this.removeWidget(this.props.id)}>
+              <div className="inline-block" onClick={() => this.removeWidget(id)}>
                 <FontAwesomeIcon icon="trash-alt" fixedWidth />
               </div>
             </div>
           ) : (
             <div className="grid-box-file-button-group">
-              <div className="inline-block" onClick={() => this.exportJson(this.props.id)}>
+              <div className="inline-block" onClick={() => this.exportJson(id)}>
                 <FontAwesomeIcon icon="file-export" fixedWidth />
               </div>
               
-              <div className="inline-block" onClick={() => this.exportCsv(this.props.id)}>
+              <div className="inline-block" onClick={() => this.exportCsv(id)}>
                 <FontAwesomeIcon icon="file-csv" fixedWidth />
               </div>
             </div>
@@ -201,7 +215,7 @@ class GridItem extends React.Component {
           {this.renderWidgetContent()}
         </div>
 
-        { this.props.isEditMode ? (
+        { isEditMode ? (
           <GridDraggable 
             onMouseUp={this.onMouseUp}
             onMouseDown={this.onMouseDown}
@@ -210,7 +224,7 @@ class GridItem extends React.Component {
             snapToGrid={this.props.snapToGrid} />
         ): null}
 
-        { this.props.isEditMode ? (
+        { isEditMode ? (
           <GridResizable 
             onMouseUp={this.onMouseUp}
             onMouseDown={this.onMouseDown}

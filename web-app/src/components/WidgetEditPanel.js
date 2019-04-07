@@ -19,6 +19,7 @@ import ReactEcharts from 'echarts-for-react';
 
 import './WidgetEditPanel.css';
 
+import Checkbox from './Checkbox';
 import Tabs from '../components/Tabs';
 
 class WidgetEditPanel extends React.Component {
@@ -37,6 +38,9 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSourceId: '',
       queryResult: {},
       chartType: Constants.TABLE,
+      style: {
+        showBorder: false
+      },
       pieKey: '',
       pieValue: '',
       chartOption: {},
@@ -115,7 +119,8 @@ class WidgetEditPanel extends React.Component {
             sqlQuery: result.sqlQuery,
             chartType: result.chartType,
             jdbcDataSourceId: result.jdbcDataSourceId,
-            drills: result.drillThrough
+            drills: result.drillThrough,
+            style: result.style
           }, () => {
             this.runQuery();
           });
@@ -128,6 +133,16 @@ class WidgetEditPanel extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     });
+  }
+
+  handleCheckBoxChange = (name, isChecked) => {
+    if (name === 'showBorder') {
+      const style = {...this.state.style};
+      style.showBorder = isChecked;
+      this.setState({
+        style: style
+      });
+    }
   }
 
   handleAceEditorChange = (newValue) => {
@@ -176,7 +191,8 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSourceId,
       sqlQuery,
       chartType,
-      drills
+      drills,
+      style
     } = this.state;
 
     if (!name) {
@@ -189,7 +205,8 @@ class WidgetEditPanel extends React.Component {
       chartType: chartType,
       jdbcDataSourceId: jdbcDataSourceId,
       sqlQuery: sqlQuery,
-      drillThrough: drills
+      drillThrough: drills,
+      style: style
     }
 
     if (chartType === Constants.TABLE) {
@@ -297,14 +314,14 @@ class WidgetEditPanel extends React.Component {
     } else if (chartType === Constants.PIE) {
       chartPreview = (
         <div>
-          <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
+          <label className="form-label"><i class="fas fa-chart-pie"></i> Pie Chart</label>
           <div>Count "value" by "key"</div>
-          <label>Aggr Key (string)</label>
+          <label className="form-label">Aggr Key (string)</label>
           <select value={this.state.pieKey} onChange={(event) => this.handleColumnChange('pieKey', event)}>
             {columnOptions}
           </select>
 
-          <label>By Aggr Value (number)</label>
+          <label className="form-label">By Aggr Value (number)</label>
           <select value={this.state.pieValue} onChange={(event) => this.handleColumnChange('pieValue', event)}>
             {columnOptions}
           </select>
@@ -366,22 +383,24 @@ class WidgetEditPanel extends React.Component {
         <div className="form-panel">
           <Tabs activeTab="basic">
             <div title="basic">
-              <label>Name</label>
+              <label className="form-label">Name</label>
               <input 
                 type="text" 
                 name="name" 
                 value={this.state.name}
                 onChange={this.handleInputChange} 
               />
+
+              <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.handleCheckBoxChange} />
             </div>
 
             <div title="Query">
-              <label>DataSource</label>
+              <label className="form-label">DataSource</label>
               <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
                 {dataSourceOptions}
               </select>
             
-              <label>SQL Query</label>
+              <label className="form-label">SQL Query</label>
               <AceEditor
                 style={{ marginTop: '8px' }}
                 value={this.state.sqlQuery}
@@ -401,38 +420,40 @@ class WidgetEditPanel extends React.Component {
                 }}
               />
 
-              <button className="button" onClick={this.runQuery}>Run Query</button>
+              <div className="mt-3">
+                <button className="button" onClick={this.runQuery}>Run Query</button>
+              </div>
 
-              <label>Result</label>
+              <label className="form-label">Result</label>
               <TableWidget
                 data={data}
                 columns={columns}
                 error={error}
               />
 
-              <label>Columns Mapping</label>
+              <label className="form-label">Columns Mapping</label>
               <div>
                 {columnItems}
               </div>
             </div>
 
             <div title="Chart">
-              <label>Chart Options</label>
+              <label className="form-label">Chart Options</label>
               <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
                 {chartOptionList}
               </select>
 
-              <label>Preview</label>
+              <label className="form-label">Preview</label>
               {this.renderChartPreview()}  
             </div>
 
             <div title="Drill through">
-              <label>Drill through</label>
-              <label>Column</label>
+              <label className="form-label">Drill through</label>
+              <label className="form-label">Column</label>
               <select value={this.state.drillColumnName} onChange={this.handleDrillColumnChange}>
                 {columnOptions}
               </select>
-              <label>Dashboard</label>
+              <label className="form-label">Dashboard</label>
               <select value={this.state.drillDashboardId} onChange={this.handleDrillDashboardChange}>
                 {dashboardOptions}
               </select>
