@@ -46,30 +46,28 @@ class FilterViewPanel extends Component {
         const queryRequest = filter.data;
         axios.post('/ws/jdbcquery/filter/' + filter.id, queryRequest)
           .then(res => {
-            const result = res.data;
-            const queryResult = JSON.parse(result.data);
+            const queryResult = res.data;
+            const queryResultData = Util.jsonToArray(queryResult.data);
 
-            const index = filters.findIndex(f => f.id === result.id);
+            const index = filters.findIndex(f => f.id === queryResult.id);
             const newFilters = [...this.state.filters];
             newFilters[index].queryResult = queryResult;
             const type = newFilters[index].type;
             if (type === Constants.SLICER) {
               const checkBoxes = [];
-              if (!Util.isArrayEmpty(queryResult)) {
-                for (let i = 0; i < queryResult.length; i++) {
-                  const values = Object.values(queryResult[i]);
-                  for (const val of values) {
-                    checkBoxes.push({
-                      value: val,
-                      isChecked: false
-                    });
-                  }
+              for (let i = 0; i < queryResultData.length; i++) {
+                const values = Object.values(queryResultData[i]);
+                for (const val of values) {
+                  checkBoxes.push({
+                    value: val,
+                    isChecked: false
+                  });
                 }
               }
 
               newFilters[index].checkBoxes = checkBoxes;
             } else if (type === Constants.SINGLE_VALUE) {
-              const values = Object.values(queryResult);
+              const values = Object.values(queryResultData);
               let value = '';
               for (const val of values) {
                 value = val;

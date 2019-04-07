@@ -1,12 +1,15 @@
 package com.shzlw.poli.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueryResult {
 
     private long id;
-    private List<Column> columns;
+    private List<Column> columns = new ArrayList<>();
+    // JSON array value
     private String data;
+    private String error;
 
     public QueryResult() {
     }
@@ -33,5 +36,13 @@ public class QueryResult {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

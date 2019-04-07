@@ -13,6 +13,7 @@ import axios from 'axios';
 import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
+import TableWidget from './TableWidget';
 
 class FilterEditPanel extends React.Component {
 
@@ -30,7 +31,7 @@ class FilterEditPanel extends React.Component {
       data: {},
       sqlQuery: '',
       jdbcDataSourceId: '',
-      queryResult: [],
+      queryResult: {},
       param: '',
     };
   }
@@ -155,8 +156,7 @@ class FilterEditPanel extends React.Component {
     }
   }
 
-  runQuery = (event) => {
-    event.preventDefault();
+  runQuery = () => {
     const queryRequest ={
       jdbcDataSourceId: this.state.jdbcDataSourceId,
       sqlQuery: this.state.sqlQuery
@@ -175,9 +175,13 @@ class FilterEditPanel extends React.Component {
   render() {
 
     const { 
-      queryResult = [],
-      jdbcDataSources = [],
+      queryResult = {},
+      jdbcDataSources = []
     } = this.state;
+
+    const data = Util.jsonToArray(queryResult.data);
+    const columns = queryResult.columns || [];
+    const error = queryResult.error;
 
     const dataSourceOptions = jdbcDataSources.map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
@@ -186,33 +190,6 @@ class FilterEditPanel extends React.Component {
     const typeOptions = Constants.FILTER_TYPES.map(t =>
       <option value={t} key={t}>{t}</option>
     );
-
-    const headers = [];
-    let queryResultItem;
-    if (!Util.isArrayEmpty(queryResult)) {
-      console.log('queryResult', queryResult);
-      const obj = queryResult[0];
-      const keys = Object.keys(obj);
-      for (const key of keys) {
-        headers.push({
-          Header: key,
-          accessor: key
-        })
-      }
-
-      queryResultItem = (
-        <ReactTable
-          data={this.state.queryResult}
-          columns={headers}
-          minRows={0}
-          showPagination={false}
-        />
-      );
-    } else {
-      queryResultItem = (
-        <div>{queryResult}</div>
-      );
-    }
 
     return (
       <div>
@@ -240,7 +217,7 @@ class FilterEditPanel extends React.Component {
         
           <label>SQL Query</label>
           <AceEditor
-            style={{ marginTop: '8px' }}
+            style={{marginTop: '8px'}}
             value={this.state.sqlQuery}
             mode="mysql"
             theme="xcode"
@@ -259,7 +236,11 @@ class FilterEditPanel extends React.Component {
           />
 
           <label>Result</label>
-          {queryResultItem}
+          <TableWidget
+            data={data}
+            columns={columns}
+            error={error}
+          />
 
           <label>Param</label>
           <input 

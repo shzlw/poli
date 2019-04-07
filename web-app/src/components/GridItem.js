@@ -5,10 +5,6 @@ import GridResizable from './GridResizable';
 
 import { withRouter } from 'react-router-dom';
 
-
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
@@ -101,14 +97,12 @@ class GridItem extends React.Component {
         const header = column.Header;
         const row = rowInfo.row;
         const value = row[header];
-        const drills = instance.props.widgetDrillThrough; 
+        const drills = instance.props.widgetDrillThrough || []; 
         console.log('onTableTdPropsChange', header, value, drills);
-        if (!Util.isArrayEmpty(drills)) {
-          const index = drills.findIndex(d => d.columnName === header);
-          if (index !== -1) {
-            const dashboardId = drills[index].dashboardId;
-            this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
-          }
+        const index = drills.findIndex(d => d.columnName === header);
+        if (index !== -1) {
+          const dashboardId = drills[index].dashboardId;
+          this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
         }
       }
     };
@@ -130,15 +124,22 @@ class GridItem extends React.Component {
 
     const { 
       chartType,
-      queryResultData,
-      drillThrough
+      queryResult = {},
+      drillThrough,
+      data = {}
     } = this.props;
+
+    const queryResultData = Util.jsonToArray(queryResult.data);
+    const columns = queryResult.columns || [];
+    const error = queryResult.error;
+
     let widgetItem = (<div></div>);
     if (chartType === Constants.TABLE) {
-      const headers = EchartsApi.getTableHeaders(queryResultData);
       widgetItem = (
         <TableWidget
           data={queryResultData}
+          columns={columns}
+          error={error}
           drillThrough={drillThrough}
         />
       );
@@ -146,29 +147,16 @@ class GridItem extends React.Component {
       const { 
         pieKey,
         pieValue
-      } = this.props.data;
-      if (!Util.isArrayEmpty(queryResultData)) {
-        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
-        widgetItem = (
-          <ReactEcharts 
-            option={chartOption}   
-            className="echarts"
-            onEvents={onChartEvents}  />
-        );
-      }
-      
-    } 
-
-    /*
-    <ReactTable
-          data={queryResultData}
-          columns={headers}
-          minRows={0}
-          showPagination={false}
-          getTdProps={this.onTableTdPropsChange}
-          widgetDrillThrough={drillThrough}  
+      } = data;
+      const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
+      widgetItem = (
+        <ReactEcharts 
+          option={chartOption}   
+          className="echarts"
+          onEvents={onChartEvents}  
         />
-        */
+      );
+    } 
 
     return widgetItem;
   }

@@ -20,7 +20,7 @@ class Toast extends React.Component {
     }, () => {
       setTimeout(() => {
         this.hide();
-      }, 3000);
+      }, 3500);
     });
   }
 
@@ -31,8 +31,8 @@ class Toast extends React.Component {
     });
   }
 
-  static show = () => {
-    Toast._toastRef.show();
+  static show = (message) => {
+    Toast._toastRef.show(message);
   }
 
   render() {

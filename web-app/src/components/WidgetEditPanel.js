@@ -6,9 +6,7 @@ import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-
+import TableWidget from './TableWidget';
 
 import axios from 'axios';
 
@@ -37,8 +35,7 @@ class WidgetEditPanel extends React.Component {
       name: '',
       sqlQuery: '',
       jdbcDataSourceId: '',
-      columns: [],
-      queryResultData: [],
+      queryResult: {},
       chartType: Constants.TABLE,
       pieKey: '',
       pieValue: '',
@@ -231,11 +228,8 @@ class WidgetEditPanel extends React.Component {
     axios.post('/ws/jdbcquery/query', queryRequest)
       .then(res => {
         const result = res.data;
-        const columns = result.columns;
-        const data = JSON.parse(result.data);
         this.setState({
-          queryResultData: data,
-          columns: columns 
+          queryResult: result
         });
       });
   }
@@ -277,22 +271,22 @@ class WidgetEditPanel extends React.Component {
       const { 
         pieKey, 
         pieValue, 
-        queryResultData 
+        queryResult = {}
       } = this.state;
-      if (!Util.isArrayEmpty(queryResultData)) {
-        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
-        this.setState({
-          chartOption: chartOption
-        });
-      }
+      const data = Util.jsonToArray(queryResult.data);
+      const chartOption = EchartsApi.getPieOption(data, pieKey, pieValue);
+      this.setState({
+        chartOption: chartOption
+      });
     }
   }
 
   renderChartPreview = () => {
     const { 
       chartType,
-      columns = [],
+      queryResult = {},
     } = this.state;
+    const columns = queryResult.columns || [];
     const columnOptions = columns.map(col =>
       <option value={col.name} key={col.name}>{col.name}</option>
     );
@@ -327,18 +321,21 @@ class WidgetEditPanel extends React.Component {
 
   render() {
     const { 
-      columns,
-      queryResultData,
+      queryResult,
       jdbcDataSources,
       drills,
       drillDashboards
     } = this.state;
 
+    const data = Util.jsonToArray(queryResult.data);
+    const columns = queryResult.columns || [];
+    const error = queryResult.error;
+
     const dataSourceOptions = (jdbcDataSources || []).map(ds =>
       <option value={ds.id} key={ds.id}>{ds.name}</option>
     );
 
-    const columnOptions = (columns || []).map(col =>
+    const columnOptions = columns.map(col =>
       <option value={col.name} key={col.name}>{col.name}</option>
     );
 
@@ -358,33 +355,7 @@ class WidgetEditPanel extends React.Component {
       </div>
     );
 
-    const headers = [];
-    let queryResultItem;
-    if (!Util.isArrayEmpty(queryResultData)) {
-      const obj = queryResultData[0];
-      const keys = Object.keys(obj);
-      for (const key of keys) {
-        headers.push({
-          Header: key,
-          accessor: key
-        });
-      }
-
-      queryResultItem = (
-        <ReactTable
-          data={queryResultData}
-          columns={headers}
-          minRows={0}
-          showPagination={false}
-        />
-      );
-    } else {
-      queryResultItem = (
-        <div>{queryResultData}</div>
-      );
-    }
-
-    const columnItems = (columns || []).map(col =>
+    const columnItems = columns.map(col =>
       <div key={col.name}>{col.name} {col.dataType}</div>
     );
 
@@ -433,7 +404,11 @@ class WidgetEditPanel extends React.Component {
               <button className="button" onClick={this.runQuery}>Run Query</button>
 
               <label>Result</label>
-              {queryResultItem}
+              <TableWidget
+                data={data}
+                columns={columns}
+                error={error}
+              />
 
               <label>Columns Mapping</label>
               <div>

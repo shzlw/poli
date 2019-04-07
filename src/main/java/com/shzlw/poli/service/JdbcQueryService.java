@@ -164,9 +164,9 @@ public class JdbcQueryService {
                     queryResult.setColumns(columns);
                     return data;
                 } catch (Exception e) {
-                    String data = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    queryResult.setData(data);
-                    return data;
+                    String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    queryResult.setError(error);
+                    return error;
                 }
             }
         });
@@ -216,10 +216,10 @@ public class JdbcQueryService {
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
         LOGGER.info("[fetchJsonWithParams] parsedSql: {}", parsedSql);
         LOGGER.info("[fetchJsonWithParams] namedParameters: {}", namedParameters);
-        String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
+        npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<Void>() {
             @Nullable
             @Override
-            public String extractData(ResultSet rs) {
+            public Void extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
@@ -246,12 +246,11 @@ public class JdbcQueryService {
                     String data = array.toString();
                     queryResult.setData(data);
                     queryResult.setColumns(columns);
-                    return data;
                 } catch (Exception e) {
-                    String data = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    queryResult.setData(data);
-                    return data;
+                    String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    queryResult.setData(error);
                 }
+                return null;
             }
         });
 

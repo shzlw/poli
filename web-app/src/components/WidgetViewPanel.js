@@ -97,7 +97,7 @@ class WidgetViewPanel extends React.Component {
           const result = res.data;
           const index = widgets.findIndex(w => w.id === result.id);
           const newWidgets = [...widgets];
-          newWidgets[index].queryResultData = JSON.parse(result.data);
+          newWidgets[index].queryResult = result;
           this.setState({
             widgets: newWidgets
           });

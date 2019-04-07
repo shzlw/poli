@@ -44,18 +44,3 @@ export const getPieOption = (queryResultData, pieKey, pieValue) => {
   }
   return getPieOptionTemplate(legend, series);
 }
-
-export const getTableHeaders = (queryResultData) => {
-  const headers = [];
-  if (!Util.isArrayEmpty(queryResultData)) {
-    const obj = queryResultData[0];
-    const keys = Object.keys(obj);
-    for (const key of keys) {
-      headers.push({
-        Header: key,
-        accessor: key
-      })
-    }
-  }
-  return headers;
-}

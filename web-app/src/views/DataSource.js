@@ -128,7 +128,8 @@ class DataSource extends Component {
   ping = (id) => {
     axios.get(`/ws/jdbcdatasource/ping/${id}`)
       .then(res => {
-        Toast.show('ping' + res.data);
+        const result = res.data;
+        Toast.show(result);
       });
   }
 
