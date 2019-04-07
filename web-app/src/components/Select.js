@@ -1,20 +1,60 @@
-
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Select extends React.Component {
 
-  handleOptionChange = () => {
-    
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    optionDisplay: PropTypes.string,
+    optionValue: PropTypes.string
+  };
+
+  handleOptionChange = (event) => {
+    const name = this.props.name;
+    const value = event.target.value;
+    this.props.onChange(name, value);
   }
   
   render() {
-    const options = ['A', 'B', 'C'];
-    const optionList = options.map(o =>
-      <option value={o} key={o}>{o}</option>
+    const {
+      value,
+      options = [],
+      optionValue,
+      optionDisplay
+    } = this.props;
+
+    const optionList = [];
+    optionList.push(
+      <option value="" key=""></option>
     );
+    options.forEach((option, index) => {
+      let value;
+      let display;
+      if (optionValue && optionDisplay) {
+        // The options contain objects.
+        value = option[optionValue];
+        display = option[optionDisplay];
+      } else {
+        // The options contain string or number.
+        value = option;
+        display = option;
+      }
+      
+      optionList.push(
+        <option value={value} key={index}>{display}</option>
+      )
+    });
 
     return (
-      <select value={this.state.optionValue} onChange={this.handleOptionChange}>
+      <select value={value} onChange={this.handleOptionChange}>
         {optionList}
       </select>
     )

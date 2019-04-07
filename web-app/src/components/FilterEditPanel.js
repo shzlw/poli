@@ -10,6 +10,8 @@ import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 import TableWidget from './TableWidget';
+import Select from './Select';
+
 
 import './FilterEditPanel.css';
 
@@ -96,15 +98,16 @@ class FilterEditPanel extends React.Component {
     });
   }
 
-  handleDataSourceChange = (event) => {
+  handleOptionChange = (name, value) => {
     this.setState({ 
-      jdbcDataSourceId: event.target.value
+      [name]: value
     });
   }
 
-  handleTypeChange = (event) => {
+  handleIntegerOptionChange = (name, value) => {
+    const intValue = parseInt(value, 10) || 0;
     this.setState({ 
-      type: event.target.value
+      [name]: intValue
     });
   }
 
@@ -174,20 +177,15 @@ class FilterEditPanel extends React.Component {
 
     const { 
       queryResult = {},
-      jdbcDataSources = []
+      jdbcDataSources = [],
+      type
     } = this.state;
 
     const data = Util.jsonToArray(queryResult.data);
     const columns = queryResult.columns || [];
     const error = queryResult.error;
 
-    const dataSourceOptions = jdbcDataSources.map(ds =>
-      <option value={ds.id} key={ds.id}>{ds.name}</option>
-    );
-
-    const typeOptions = Constants.FILTER_TYPES.map(t =>
-      <option value={t} key={t}>{t}</option>
-    );
+    const requireSql = type === Constants.SLICER;
 
     return (
       <div>
@@ -204,41 +202,56 @@ class FilterEditPanel extends React.Component {
           />
 
           <label className="form-label">Type</label>
-          <select value={this.state.type} onChange={this.handleTypeChange}>
-            {typeOptions}
-          </select>
-
-          <label className="form-label">DataSource</label>
-          <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
-            {dataSourceOptions}
-          </select>
-        
-          <label className="form-label">SQL Query</label>
-          <AceEditor
-            style={{marginTop: '8px'}}
-            value={this.state.sqlQuery}
-            mode="mysql"
-            theme="xcode"
-            name="blah2"
-            onChange={this.handleAceEditorChange}
-            height={'300px'}
-            width={'100%'}
-            fontSize={15}
-            showPrintMargin={false}
-            showGutter={true}
-            highlightActiveLine={true}
-            setOptions={{
-              showLineNumbers: true,
-              tabSize: 2
-            }}
+          <Select
+            name={'type'} 
+            value={this.state.type} 
+            onChange={this.handleOptionChange}
+            options={Constants.FILTER_TYPES}
           />
 
-          <label className="form-label">Result</label>
-          <TableWidget
-            data={data}
-            columns={columns}
-            error={error}
-          />
+          {
+            requireSql ?
+            (
+              <React.Fragment>
+                <label className="form-label">DataSource</label>
+                <Select
+                  name={'jdbcDataSourceId'} 
+                  value={this.state.jdbcDataSourceId} 
+                  onChange={this.handleIntegerOptionChange}
+                  options={jdbcDataSources}
+                  optionDisplay={'name'}
+                  optionValue={'id'}
+                />
+    
+                <label className="form-label">SQL Query</label>
+                <AceEditor
+                  style={{marginTop: '8px'}}
+                  value={this.state.sqlQuery}
+                  mode="mysql"
+                  theme="xcode"
+                  name="blah2"
+                  onChange={this.handleAceEditorChange}
+                  height={'300px'}
+                  width={'100%'}
+                  fontSize={15}
+                  showPrintMargin={false}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  setOptions={{
+                    showLineNumbers: true,
+                    tabSize: 2
+                  }}
+                />
+
+                <label className="form-label">Result</label>
+                <TableWidget
+                  data={data}
+                  columns={columns}
+                  error={error}
+                />
+              </React.Fragment>
+            ) : null
+          }
 
           <label className="form-label">Param</label>
           <input 

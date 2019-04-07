@@ -221,7 +221,7 @@ class DataSource extends Component {
                   <FontAwesomeIcon icon="trash-alt" size="lg" />
                 </button>
                 <button className="icon-button datasource-icon-button" onClick={() => this.ping(ds.id)}>
-                  <FontAwesomeIcon icon="plug" size="lg" />
+                  <FontAwesomeIcon icon="faHandshake" size="lg" />
                 </button>
               </div>
             </div>

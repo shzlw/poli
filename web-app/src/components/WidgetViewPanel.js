@@ -2,9 +2,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-
 import ColorPicker from './ColorPicker';
 import Checkbox from './Checkbox';
 

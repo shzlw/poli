@@ -21,6 +21,7 @@ import './WidgetEditPanel.css';
 
 import Checkbox from './Checkbox';
 import Tabs from '../components/Tabs';
+import Select from '../components/Select';
 
 class WidgetEditPanel extends React.Component {
 
@@ -151,36 +152,16 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  handleDataSourceChange = (event) => {
-    const jdbcDataSourceId = parseInt(event.target.value, 10);
+  handleIntegerOptionChange = (name, value) => {
+    const intValue = parseInt(value, 10) || 0;
     this.setState({ 
-      jdbcDataSourceId: jdbcDataSourceId
+      [name]: intValue
     });
   }
 
-  handleChartTypeChange = (event) => {
-    this.setState({ 
-      chartType: event.target.value
-    });
-  }
-
-  handleColumnChange = (name, event) => {
-    const value = event.target.value;
+  handleOptionChange = (name, value) => {
     this.setState({
       [name]: value
-    });
-  }
-
-  handleDrillColumnChange = (event) => {
-    this.setState({ 
-      drillColumnName: event.target.value
-    });
-  }
-
-  handleDrillDashboardChange = (event) => {
-    const drillDashboardId = parseInt(event.target.value, 10);
-    this.setState({ 
-      drillDashboardId: drillDashboardId
     });
   }
 
@@ -290,6 +271,7 @@ class WidgetEditPanel extends React.Component {
         pieValue, 
         queryResult = {}
       } = this.state;
+      console.log("generateChart", pieKey, pieValue);
       const data = Util.jsonToArray(queryResult.data);
       const chartOption = EchartsApi.getPieOption(data, pieKey, pieValue);
       this.setState({
@@ -304,30 +286,44 @@ class WidgetEditPanel extends React.Component {
       queryResult = {},
     } = this.state;
     const columns = queryResult.columns || [];
-    const columnOptions = columns.map(col =>
-      <option value={col.name} key={col.name}>{col.name}</option>
-    );
 
     let chartPreview = (<div>NOT SUPPORTED</div>);
     if (chartType === Constants.TABLE) {
 
     } else if (chartType === Constants.PIE) {
+      const { 
+        chartOption,
+        pieKey,
+        pieValue
+      } = this.state;
+
       chartPreview = (
         <div>
           <label className="form-label"><i class="fas fa-chart-pie"></i> Pie Chart</label>
           <div>Count "value" by "key"</div>
           <label className="form-label">Aggr Key (string)</label>
-          <select value={this.state.pieKey} onChange={(event) => this.handleColumnChange('pieKey', event)}>
-            {columnOptions}
-          </select>
+          <Select
+            name={'pieKey'}
+            value={pieKey}
+            onChange={this.handleOptionChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+            />
+
 
           <label className="form-label">By Aggr Value (number)</label>
-          <select value={this.state.pieValue} onChange={(event) => this.handleColumnChange('pieValue', event)}>
-            {columnOptions}
-          </select>
+          <Select
+            name={'pieValue'}
+            value={pieValue}
+            onChange={this.handleOptionChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+            />
           <button onClick={this.generateChart}>Generete Chart</button>
           <ReactEcharts 
-            option={this.state.chartOption} 
+            option={chartOption} 
             style={{height: '350px', width: '100%'}}  
             className='react_for_echarts' />
         </div>
@@ -339,30 +335,14 @@ class WidgetEditPanel extends React.Component {
   render() {
     const { 
       queryResult,
-      jdbcDataSources,
+      jdbcDataSources = [],
       drills,
-      drillDashboards
+      drillDashboards = []
     } = this.state;
 
     const data = Util.jsonToArray(queryResult.data);
     const columns = queryResult.columns || [];
     const error = queryResult.error;
-
-    const dataSourceOptions = (jdbcDataSources || []).map(ds =>
-      <option value={ds.id} key={ds.id}>{ds.name}</option>
-    );
-
-    const columnOptions = columns.map(col =>
-      <option value={col.name} key={col.name}>{col.name}</option>
-    );
-
-    const chartOptionList = Constants.CHART_TYPES.map(o =>
-      <option value={o} key={o}>{o}</option>
-    );
-
-    const dashboardOptions = (drillDashboards || []).map(dash =>
-      <option value={dash.id} key={dash.id}>{dash.name}</option>
-    );
 
     const drillItems = (drills || []).map(drill =>
       <div key={drill.columnName}>
@@ -396,9 +376,14 @@ class WidgetEditPanel extends React.Component {
 
             <div title="Query">
               <label className="form-label">DataSource</label>
-              <select value={this.state.jdbcDataSourceId} onChange={this.handleDataSourceChange}>
-                {dataSourceOptions}
-              </select>
+              <Select
+                name={'jdbcDataSourceId'}
+                value={this.state.jdbcDataSourceId}
+                onChange={this.handleIntegerOptionChange}
+                options={jdbcDataSources}
+                optionDisplay={'name'}
+                optionValue={'id'}
+                />
             
               <label className="form-label">SQL Query</label>
               <AceEditor
@@ -439,10 +424,12 @@ class WidgetEditPanel extends React.Component {
 
             <div title="Chart">
               <label className="form-label">Chart Options</label>
-              <select value={this.state.chartType} onChange={this.handleChartTypeChange}>
-                {chartOptionList}
-              </select>
-
+              <Select
+                name={'chartType'}
+                value={this.state.chartType}
+                onChange={this.handleOptionChange}
+                options={Constants.CHART_TYPES}
+              />
               <label className="form-label">Preview</label>
               {this.renderChartPreview()}  
             </div>
@@ -450,13 +437,24 @@ class WidgetEditPanel extends React.Component {
             <div title="Drill through">
               <label className="form-label">Drill through</label>
               <label className="form-label">Column</label>
-              <select value={this.state.drillColumnName} onChange={this.handleDrillColumnChange}>
-                {columnOptions}
-              </select>
+              <Select
+                name={'drillColumnName'}
+                value={this.state.drillColumnName}
+                options={columns}
+                onChange={this.handleOptionChange}
+                optionDisplay={'name'}
+                optionValue={'name'}
+              />
+
               <label className="form-label">Dashboard</label>
-              <select value={this.state.drillDashboardId} onChange={this.handleDrillDashboardChange}>
-                {dashboardOptions}
-              </select>
+              <Select
+                name={'drillDashboardId'}
+                value={this.state.drillDashboardId}
+                options={drillDashboards}
+                onChange={this.handleIntegerOptionChange}
+                optionDisplay={'name'}
+                optionValue={'id'}
+              />
               <div>
                 {drillItems}
               </div>
