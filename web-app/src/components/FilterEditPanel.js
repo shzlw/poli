@@ -26,7 +26,7 @@ class FilterEditPanel extends React.Component {
     return {
       jdbcDataSources: [],
       filterId: null,
-      name: '',
+      title: '',
       type: Constants.SLICER,
       data: {},
       sqlQuery: '',
@@ -45,11 +45,6 @@ class FilterEditPanel extends React.Component {
     });
 
     if (filterId === null) {
-      if (jdbcDataSources.length !== 0) {
-        this.setState({
-          jdbcDataSourceId: jdbcDataSources[0].id 
-        });
-      }
       this.setState({
         filterId: null
       })
@@ -63,21 +58,20 @@ class FilterEditPanel extends React.Component {
           } = result;
           this.setState({
             filterId: filterId,
-            name: result.name,
+            title: result.title,
             type: result.type,
+            jdbcDataSourceId: result.jdbcDataSourceId,
             data: data
           });
 
           if (type === Constants.SLICER) {
             this.setState({
               sqlQuery: data.sqlQuery,
-              jdbcDataSourceId: data.jdbcDataSourceId,
               param: data.param
             });
           } else if (type === Constants.SINGLE_VALUE) {
             this.setState({
               sqlQuery: data.sqlQuery,
-              jdbcDataSourceId: data.jdbcDataSourceId,
               param: data.param
             });
           }
@@ -111,11 +105,10 @@ class FilterEditPanel extends React.Component {
     });
   }
 
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       filterId,
-      name,
+      title,
       type,
       jdbcDataSourceId,
       sqlQuery,
@@ -123,21 +116,20 @@ class FilterEditPanel extends React.Component {
     } = this.state;
 
     const filter = {
-      name: name,
+      title: title,
       type: type,
-      dashboardId: this.props.dashboardId
+      dashboardId: this.props.dashboardId,
+      jdbcDataSourceId: jdbcDataSourceId
     };
 
     if (type === Constants.SLICER) {
       filter.data = {
-        jdbcDataSourceId: jdbcDataSourceId,
         sqlQuery: sqlQuery,
         param: param
       }
     } else if (type === Constants.SINGLE_VALUE) {
       filter.data = {
         useQuery: false,
-        jdbcDataSourceId: jdbcDataSourceId,
         sqlQuery: sqlQuery,
         param: param,
       }
@@ -193,11 +185,11 @@ class FilterEditPanel extends React.Component {
         <button className="button" onClick={this.runQuery}>Run</button>
 
         <div className="form-panel">
-          <label className="form-label">Name</label>
+          <label className="form-label">Title</label>
           <input 
             type="text" 
-            name="name" 
-            value={this.state.name}
+            name="title" 
+            value={this.state.title}
             onChange={this.handleInputChange} 
           />
 

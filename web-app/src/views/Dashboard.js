@@ -80,12 +80,16 @@ class Dashboard extends Component {
     this.props.history.push(`/workspace/dashboard/${dashboardId}`);
   }
 
-  onSaveDashboard = (dashboardId) => {
+  onDashboardSave = (dashboardId) => {
     this.fetchBoards();
   }
 
-  onDeleteDashboard = (dashboardId) => {
+  onDashboardDelete = (dashboardId) => {
     this.fetchBoards();
+    this.setState({
+      activeDashboardId: 0
+    });
+    this.props.history.push('/workspace/dashboard');
   }
 
   render() {
@@ -133,7 +137,7 @@ class Dashboard extends Component {
         <div className="dashboard-content">
           <Route 
             path="/workspace/dashboard/:id" 
-            render={(props) => <DashboardEditView key={props.match.params.id} onSaveDashboard={this.onSaveDashboard} onDeleteDashboard={this.onDeleteDashboard} />} 
+            render={(props) => <DashboardEditView key={props.match.params.id} onDashboardSave={this.onDashboardSave} onDashboardDelete={this.onDashboardDelete} />} 
             />
         </div>
 

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './FilterViewPanel.css';
+import Modal from '../components/Modal';
 
 class FilterViewPanel extends Component {
 
@@ -16,7 +17,9 @@ class FilterViewPanel extends Component {
     super(props);
     this.state = {
       dashboardId: null,
-      filters: []
+      filters: [],
+      showConfirmDeletionPanel: false,
+      objectToDelete: {}
     };
   }
 
@@ -114,7 +117,7 @@ class FilterViewPanel extends Component {
         (
           <div className="filter-card">
             <div className="filter-card-title">
-              {filter.name}
+              {filter.title}
 
               { this.props.isEditMode ? 
                 (
@@ -122,7 +125,7 @@ class FilterViewPanel extends Component {
                     <div className="inline-block" onClick={() => this.edit(filter.id)}>
                       <FontAwesomeIcon icon="edit" fixedWidth />
                     </div>
-                    <div className="inline-block" onClick={() => this.remove(filter.id)}>
+                    <div className="inline-block" onClick={() => this.openConfirmDeletionPanel(filter.id)}>
                       <FontAwesomeIcon icon="trash-alt" fixedWidth />
                     </div>
                   </div>
@@ -143,28 +146,13 @@ class FilterViewPanel extends Component {
     this.props.onEdit(filterId);
   }
 
-  remove = (filterId) => {
-    axios.delete('/ws/filter/' + filterId)
-      .then(res => {
-        const index = this.state.filters.findIndex(f => f.id === filterId);
-        const newFilters = [...this.state.filters];
-        newFilters.splice(index, 1);
-        this.setState({
-          filters: newFilters
-        });
-      });
-  }
-
   onSlicerChange = (filterId, checkBoxes) => {
     const index = this.state.filters.findIndex(f => f.id === filterId);
     const newFilters = [...this.state.filters];
     newFilters[index].checkBoxes = [...checkBoxes];
     this.setState({
       filters: newFilters
-    });
-
-    // TODO: select all.
-    // const isSelectAll = checked.length === checkBoxes.length;    
+    });  
   }
 
   onSingleValueChange = (filterId, event) => {
@@ -179,13 +167,17 @@ class FilterViewPanel extends Component {
   }
 
   applyFilters = () => {
-    const { filters } = this.state;
+    const { 
+      filters = []
+    } = this.state;
     const filterParams = [];
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
       const filterParam = {};
       if (filter.type === Constants.SLICER) {
-        const checkBoxes = filter.checkBoxes;
+        const { 
+          checkBoxes = []
+        } = filter;
         const paramValues = [];
         for (let j = 0; j < checkBoxes.length; j++) {
           const checkBox = checkBoxes[j];
@@ -208,6 +200,37 @@ class FilterViewPanel extends Component {
     this.props.onApplyFilters(filterParams);
   }
 
+  confirmDelete = () => {
+    const { 
+      objectToDelete
+    } = this.state;
+    const filterId = objectToDelete;
+    axios.delete(`/ws/filter/${filterId}`)
+      .then(res => {
+        const index = this.state.filters.findIndex(f => f.id === filterId);
+        const newFilters = [...this.state.filters];
+        newFilters.splice(index, 1);
+        this.setState({
+          filters: newFilters
+        });
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
+  openConfirmDeletionPanel = (filterId) => {
+    this.setState({
+      objectToDelete: filterId,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
+  }
+
   render() {
     const { show } = this.props;
     const style = {};
@@ -224,6 +247,17 @@ class FilterViewPanel extends Component {
         <div className="filter-view-panel">
           {this.renderFilterPanel()}
         </div>
+
+        <Modal 
+          show={this.state.showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete this filter?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
+        </Modal>
       </div>
     )
   };

@@ -34,7 +34,7 @@ class WidgetEditPanel extends React.Component {
     return {
       jdbcDataSources: [],
       widgetId: null,
-      name: '',
+      title: '',
       sqlQuery: '',
       jdbcDataSourceId: '',
       queryResult: {},
@@ -63,11 +63,6 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSources: jdbcDataSources 
     });
 
-    const filters = await webApi.fetchFiltersByDashboardId(dashboardId);
-    this.setState({ 
-      filters: filters 
-    });
-
     axios.get('/ws/dashboard')
       .then(res => {
         const dashboards = res.data;
@@ -77,17 +72,6 @@ class WidgetEditPanel extends React.Component {
       });
 
     if (widgetId === null) {
-      if (jdbcDataSources.length !== 0) {
-        this.setState({
-          jdbcDataSourceId: jdbcDataSources[0].id 
-        });
-      }
-
-      if (filters.length !== 0) {
-        this.setState({
-          filterId: filters[0].id
-        });
-      }
       this.setState({
         widgetId: null
       })
@@ -112,7 +96,7 @@ class WidgetEditPanel extends React.Component {
 
           this.setState({
             widgetId: widgetId,
-            name: result.name,
+            title: result.title,
             x: result.x,
             y: result.y,
             width: result.width,
@@ -168,7 +152,7 @@ class WidgetEditPanel extends React.Component {
   save = () => {
     const {
       widgetId,
-      name,
+      title,
       jdbcDataSourceId,
       sqlQuery,
       chartType,
@@ -176,12 +160,8 @@ class WidgetEditPanel extends React.Component {
       style
     } = this.state;
 
-    if (!name) {
-      return;
-    }
-
     const widget = {
-      name: name,
+      title: title,
       dashboardId: this.props.dashboardId,
       chartType: chartType,
       jdbcDataSourceId: jdbcDataSourceId,
@@ -363,11 +343,11 @@ class WidgetEditPanel extends React.Component {
         <div className="form-panel">
           <Tabs activeTab="basic">
             <div title="basic">
-              <label className="form-label">Name</label>
+              <label className="form-label">Title</label>
               <input 
                 type="text" 
-                name="name" 
-                value={this.state.name}
+                name="title" 
+                value={this.state.title}
                 onChange={this.handleInputChange} 
               />
 

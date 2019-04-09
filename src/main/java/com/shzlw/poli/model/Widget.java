@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.shzlw.poli.util.RawStringDeserialzier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Widget {
 
     private long id;
-    private String name;
+    private String title;
     private int x;
     private int y;
     private int width;
@@ -43,12 +40,12 @@ public class Widget {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getX() {

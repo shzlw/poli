@@ -13,12 +13,12 @@ import {
   faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
-  faFileExport, faFileCsv, faHandshake
+  faFileExport, faFileCsv
 } from '@fortawesome/free-solid-svg-icons';
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
-  faFileExport, faFileCsv, faHandshake
+  faFileExport, faFileCsv
 );
 
 class App extends React.Component {

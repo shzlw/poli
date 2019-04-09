@@ -19,7 +19,6 @@ import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
 class DashboardEditView extends React.Component {
 
   constructor(props) {
@@ -30,7 +29,7 @@ class DashboardEditView extends React.Component {
       showFilterEditPanel: false,
       showFilterViewPanel: true,
       showConfirmDeletionPanel: false,
-      widgetToDelete: {},
+      objectToDelete: {},
       isEditMode: false,
       isReadOnly: false,
       autoRefreshTimerId: '',
@@ -208,7 +207,7 @@ class DashboardEditView extends React.Component {
 
     this.widgetViewPanel.current.saveWidgets();
 
-    this.props.onSaveDashboard(dashboardId);
+    this.props.onDashboardSave(dashboardId);
 
     this.setState({
       isEditMode: false
@@ -225,18 +224,6 @@ class DashboardEditView extends React.Component {
     this.setState({
       isEditMode: false
     });
-  }
-
-  confirmDelete = () => {
-    const { 
-      dashboardToDelete = {} 
-    } = this.state;
-    const id = dashboardToDelete.id;
-    axios.delete(`/ws/dashboard/${id}`)
-      .then(res => {
-        this.props.onDeleteDashboard(id);
-        this.closeConfirmDeletionPanel();
-      });
   }
 
   onSaveWidget = () => {
@@ -318,6 +305,44 @@ class DashboardEditView extends React.Component {
     });
   }
 
+  confirmDelete = () => {
+    const { 
+      objectToDelete = {},
+    } = this.state;
+    const dashboardId = objectToDelete.id;
+    axios.delete(`/ws/dashboard/${dashboardId}`)
+      .then(res => {
+        this.props.onDashboardDelete(dashboardId);
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
+  deleteDashboard = () => {
+    const { 
+      dashboardId,
+      name
+    } = this.state;
+    const dashboard = {
+      id: dashboardId,
+      name: name
+    }
+    this.openConfirmDeletionPanel(dashboard);
+  }
+
+  openConfirmDeletionPanel = (dashboard) => {
+    this.setState({
+      objectToDelete: dashboard,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
+  }
+
   render() {
     const {
       autoRefreshTimerId,
@@ -370,7 +395,7 @@ class DashboardEditView extends React.Component {
           <React.Fragment>
             <button className="button mr-3" onClick={this.cancelEdit}>Cancel</button>
             <button className="button mr-3" onClick={this.save}>Save</button>
-            <button className="button mr-3" onClick={this.confirmDelete}>Delete</button>
+            <button className="button mr-3" onClick={this.deleteDashboard}>Delete</button>
             <button className="button mr-3" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
             <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
           </React.Fragment>
@@ -459,6 +484,17 @@ class DashboardEditView extends React.Component {
             dashboardId={this.state.dashboardId}
             onSave={this.onSaveFilter}
           />
+        </Modal>
+
+        <Modal 
+          show={this.state.showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete {this.state.objectToDelete.name}?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
 
       </React.Fragment>

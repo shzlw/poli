@@ -21,12 +21,6 @@ public class WidgetWs {
     @Autowired
     WidgetDao widgetDao;
 
-    @Autowired
-    JdbcDataSourceDao jdbcDataSourceDao;
-
-    @Autowired
-    JdbcQueryService jdbcQueryService;
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Widget one(@PathVariable("id") long id) {

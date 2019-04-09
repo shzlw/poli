@@ -9,7 +9,7 @@ import com.shzlw.poli.util.RawStringDeserialzier;
  *
  * multiple Strings => IN (:fields)
  *
- * select name from table group by name;
+ * select title from table group by title;
  *
  *
  * two numbers range => :min, :max
@@ -21,8 +21,9 @@ public class Filter {
 
     private long id;
     private long dashboardId;
-    private String name;
+    private String title;
     private String type;
+    private long jdbcDataSourceId;
 
     /**
      * json column
@@ -47,12 +48,12 @@ public class Filter {
         this.dashboardId = dashboardId;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getType() {
@@ -71,5 +72,13 @@ public class Filter {
     @JsonDeserialize(using = RawStringDeserialzier.class)
     public void setData(String data) {
         this.data = data;
+    }
+
+    public long getJdbcDataSourceId() {
+        return jdbcDataSourceId;
+    }
+
+    public void setJdbcDataSourceId(long jdbcDataSourceId) {
+        this.jdbcDataSourceId = jdbcDataSourceId;
     }
 }

@@ -1,6 +1,8 @@
 package com.shzlw.poli.rest;
 
+import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
+import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
@@ -24,6 +26,12 @@ public class JdbcDataSourceWs {
 
     @Autowired
     JdbcDataSourceService jdbcDataSourceService;
+
+    @Autowired
+    FilterDao filterDao;
+
+    @Autowired
+    WidgetDao widgetDao;
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -58,6 +66,8 @@ public class JdbcDataSourceWs {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         JdbcDataSource ds = jdbcDataSourceDao.findById(id);
         jdbcDataSourceService.remove(ds);
+        filterDao.updateByDataSourceId(id);
+        widgetDao.updateByDataSourceId(id);
         jdbcDataSourceDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }

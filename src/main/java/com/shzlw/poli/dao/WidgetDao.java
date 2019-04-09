@@ -22,13 +22,13 @@ public class WidgetDao {
     JdbcTemplate jt;
 
     public List<Widget> fetchAllByDashboardId(long dashboardId) {
-        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type, data, drill_through, style "
+        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
                     + "FROM p_widget WHERE dashboard_id=?";
         return jt.query(sql, new Object[] { dashboardId }, new WidgetRowMapper());
     }
 
     public Widget fetchById(long id) {
-        String sql = "SELECT id, datasource_id, dashboard_id, name, sql_query, width, height, x, y, chart_type, data, drill_through, style "
+        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
                     + "FROM p_widget WHERE id=?";
         try {
             return (Widget) jt.queryForObject(sql, new Object[]{ id }, new WidgetRowMapper());
@@ -43,10 +43,10 @@ public class WidgetDao {
     }
 
     public int update(Widget w) {
-        String sql = "UPDATE p_widget SET datasource_id=?, name=?, sql_query=?, chart_type=?, data=?, drill_through=?, style=? WHERE id=?";
+        String sql = "UPDATE p_widget SET datasource_id=?, title=?, sql_query=?, chart_type=?, data=?, drill_through=?, style=? WHERE id=?";
         return jt.update(sql, new Object[] {
                 w.getJdbcDataSourceId(),
-                w.getName(),
+                w.getTitle(),
                 w.getSqlQuery(),
                 w.getChartType(),
                 w.getData(),
@@ -56,15 +56,20 @@ public class WidgetDao {
         });
     }
 
+    public int updateByDataSourceId(long dataSourceId) {
+        String sql = "UPDATE p_widget SET dataSource_id = NULL WHERE dataSource_id = ?";
+        return jt.update(sql, new Object[]{ dataSourceId });
+    }
+
     public long add(Widget w) {
-        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, name, sql_query, width, height, x, y, chart_type, data, drill_through, style) "
+        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style) "
                     + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, w.getDashboardId());
             ps.setLong(2, w.getJdbcDataSourceId());
-            ps.setString(3, w.getName());
+            ps.setString(3, w.getTitle());
             ps.setString(4, w.getSqlQuery());
             ps.setInt(5, w.getWidth());
             ps.setInt(6, w.getHeight());
@@ -103,7 +108,7 @@ public class WidgetDao {
             w.setId(rs.getLong("id"));
             w.setDashboardId(rs.getLong("dashboard_id"));
             w.setJdbcDataSourceId(rs.getLong("datasource_id"));
-            w.setName(rs.getString("name"));
+            w.setTitle(rs.getString("title"));
             w.setSqlQuery(rs.getString("sql_query"));
             w.setX(rs.getInt("x"));
             w.setY(rs.getInt("y"));

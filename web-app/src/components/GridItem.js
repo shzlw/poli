@@ -164,7 +164,7 @@ class GridItem extends React.Component {
   render() {
     const {
       id,
-      name,
+      title,
       isEditMode,
       style = {}
     } = this.props;
@@ -187,7 +187,7 @@ class GridItem extends React.Component {
     return (
       <div className="grid-box" style={styles}>
         <div className="grid-box-title">
-          {name}
+          {title}
 
           { isEditMode ? (
             <div className="float-right" style={{marginRight: '20px'}}>

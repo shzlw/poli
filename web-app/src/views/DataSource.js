@@ -17,7 +17,7 @@ class DataSource extends Component {
       jdbcDataSources: [],
       showEditPanel: false,
       showConfirmDeletionPanel: false,
-      datasourceToDelete: {},
+      objectToDelete: {},
       showUpdatePassword: false,
       searchValue: '',
       id: null,
@@ -114,17 +114,6 @@ class DataSource extends Component {
     } 
   }
 
-  confirmDelete = () => {
-    const { 
-      datasourceToDelete = {} 
-    } = this.state;
-    axios.delete('/ws/jdbcdatasource/' + datasourceToDelete.id)
-      .then(res => {
-        this.fetchDataSources();
-        this.closeConfirmDeletionPanel();
-      });
-  }
-
   ping = (id) => {
     axios.get(`/ws/jdbcdatasource/ping/${id}`)
       .then(res => {
@@ -164,16 +153,27 @@ class DataSource extends Component {
     });
   }
 
+  confirmDelete = () => {
+    const { 
+      objectToDelete = {} 
+    } = this.state;
+    axios.delete('/ws/jdbcdatasource/' + objectToDelete.id)
+      .then(res => {
+        this.fetchDataSources();
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
   openConfirmDeletionPanel = (datasource) => {
     this.setState({
-      datasourceToDelete: datasource,
+      objectToDelete: datasource,
       showConfirmDeletionPanel: true
     });
   }
 
   closeConfirmDeletionPanel = () => {
     this.setState({
-      datasourceToDelete: {},
+      objectToDelete: {},
       showConfirmDeletionPanel: false
     });
   }
@@ -197,7 +197,7 @@ class DataSource extends Component {
       searchValue,
       id,
       jdbcDataSources = [],
-      datasourceToDelete = {}
+      objectToDelete = {}
     } = this.state;
 
     const mode = id === null ? 'New' : 'Edit';
@@ -221,7 +221,7 @@ class DataSource extends Component {
                   <FontAwesomeIcon icon="trash-alt" size="lg" />
                 </button>
                 <button className="icon-button datasource-icon-button" onClick={() => this.ping(ds.id)}>
-                  <FontAwesomeIcon icon="faHandshake" size="lg" />
+                  <FontAwesomeIcon icon="plug" size="lg" />
                 </button>
               </div>
             </div>
@@ -311,7 +311,6 @@ class DataSource extends Component {
               name="ping" 
               value={this.state.ping}
               onChange={this.handleInputChange} />
-
             <button className="button mt-3" onClick={this.save}>Save</button>
           </div>
         </Modal>
@@ -322,7 +321,7 @@ class DataSource extends Component {
           modalClass={'small-modal-panel'}
           title={'Confirm Deletion'} >
           <div className="confirm-deletion-panel">
-            Are you sure you want to delete {datasourceToDelete.name}?
+            Are you sure you want to delete {objectToDelete.name}?
           </div>
           <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>

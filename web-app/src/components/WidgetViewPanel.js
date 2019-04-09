@@ -7,7 +7,7 @@ import Checkbox from './Checkbox';
 
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
-
+import Modal from '../components/Modal';
 
 const BASE_WIDTH = 1200;
 
@@ -19,7 +19,9 @@ class WidgetViewPanel extends React.Component {
       widgets: [],
       gridWidth: 1200,
       snapToGrid: false,
-      showGridlines: false
+      showGridlines: false,
+      showConfirmDeletionPanel: false,
+      objectToDelete: {}
     };
   }
 
@@ -138,8 +140,12 @@ class WidgetViewPanel extends React.Component {
     });
   }
 
-  onWidgetRemove = (widgetId) => {
-    axios.delete('/ws/widget/' + widgetId)
+  confirmDelete = () => {
+    const { 
+      objectToDelete
+    } = this.state;
+    const widgetId = objectToDelete;
+    axios.delete(`/ws/widget/${widgetId}`)
       .then(res => {
         const { widgets } = this.state;
         const index = widgets.findIndex(w => w.id === widgetId);
@@ -148,7 +154,22 @@ class WidgetViewPanel extends React.Component {
         this.setState({
           widgets: newWidgets
         });
+        this.closeConfirmDeletionPanel();
       });
+  }
+
+  openConfirmDeletionPanel = (widgetId) => {
+    this.setState({
+      objectToDelete: widgetId,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
   }
 
   render() {
@@ -194,7 +215,18 @@ class WidgetViewPanel extends React.Component {
           isEditMode={this.props.isEditMode}
           onWidgetMove={this.onWidgetMove}
           onWidgetEdit={this.props.onWidgetEdit} 
-          onWidgetRemove={this.onWidgetRemove} />
+          onWidgetRemove={this.openConfirmDeletionPanel} />
+        
+        <Modal 
+          show={this.state.showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete this widget?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
+        </Modal>
       </div>
     )
   };
