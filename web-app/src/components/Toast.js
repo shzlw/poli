@@ -45,7 +45,7 @@ class Toast extends React.Component {
 
     return (
       <div className={`toast-container ${toastStatus}`}>
-        <button onClick={this.hide}>X</button>
+        <button className="button" onClick={this.hide}>X</button>
         <div>
           {message}
         </div>

@@ -2,7 +2,6 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.model.Filter;
-import com.shzlw.poli.model.Widget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +20,19 @@ public class FilterWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Filter one(@PathVariable("id") long id) {
-        return filterDao.fetchById(id);
+        return filterDao.findById(id);
     }
 
     @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Filter> allByDashboardId(@PathVariable("id") long id) {
-        return filterDao.fetchAllByDashboardId(id);
+        return filterDao.findByDashboardId(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Filter filter) {
-        long id = filterDao.add(filter);
+        long id = filterDao.insert(filter);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 

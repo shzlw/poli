@@ -21,13 +21,13 @@ public class FilterDao {
     @Autowired
     JdbcTemplate jt;
 
-    public List<Filter> fetchAllByDashboardId(long dashboardId) {
+    public List<Filter> findByDashboardId(long dashboardId) {
         String sql = "SELECT id, title, type, dashboard_id, data, datasource_id "
                     + "FROM p_filter WHERE dashboard_id=?";
         return jt.query(sql, new Object[] { dashboardId }, new FilterRowMapper());
     }
 
-    public Filter fetchById(long id) {
+    public Filter findById(long id) {
         String sql = "SELECT id, title, type, dashboard_id, data, datasource_id "
                     + "FROM p_filter WHERE id=?";
         try {
@@ -37,7 +37,7 @@ public class FilterDao {
         }
     }
 
-    public long add(Filter f) {
+    public long insert(Filter f) {
         String sql = "INSERT INTO p_filter(dashboard_id, title, type, data, datasource_id) "
                     + "VALUES(?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

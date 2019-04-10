@@ -1,11 +1,7 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.dao.WidgetDao;
-import com.shzlw.poli.dto.QueryResult;
-import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
-import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +20,13 @@ public class WidgetWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Widget one(@PathVariable("id") long id) {
-        return widgetDao.fetchById(id);
+        return widgetDao.findById(id);
     }
 
     @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Widget> allByDashboardId(@PathVariable("id") long id) {
-        return widgetDao.fetchAllByDashboardId(id);
+        return widgetDao.findByDashboardId(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -40,7 +36,7 @@ public class WidgetWs {
         widget.setY(0);
         widget.setWidth(200);
         widget.setHeight(200);
-        long id = widgetDao.add(widget);
+        long id = widgetDao.insert(widget);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 

@@ -21,13 +21,13 @@ public class WidgetDao {
     @Autowired
     JdbcTemplate jt;
 
-    public List<Widget> fetchAllByDashboardId(long dashboardId) {
+    public List<Widget> findByDashboardId(long dashboardId) {
         String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
                     + "FROM p_widget WHERE dashboard_id=?";
         return jt.query(sql, new Object[] { dashboardId }, new WidgetRowMapper());
     }
 
-    public Widget fetchById(long id) {
+    public Widget findById(long id) {
         String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
                     + "FROM p_widget WHERE id=?";
         try {
@@ -61,7 +61,7 @@ public class WidgetDao {
         return jt.update(sql, new Object[]{ dataSourceId });
     }
 
-    public long add(Widget w) {
+    public long insert(Widget w) {
         String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style) "
                     + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

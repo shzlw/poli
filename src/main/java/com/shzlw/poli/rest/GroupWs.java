@@ -2,6 +2,8 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.GroupDao;
 import com.shzlw.poli.model.Group;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +17,21 @@ import java.util.List;
 @RequestMapping("/ws/group")
 public class GroupWs {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupWs.class);
+
     @Autowired
     GroupDao groupDao;
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Group> all() {
-        return groupDao.findAll();
+        // FIXME: n + 1 query;
+        List<Group> groups = groupDao.findAll();
+        for (Group group : groups) {
+            List<Long> groupDashboards = groupDao.findGroupDashboards(group.getId());
+            group.setGroupDashboards(groupDashboards);
+        }
+        return groups;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -32,7 +42,6 @@ public class GroupWs {
         group.setGroupDashboards(groupDashboards);
         return group;
     }
-
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional(readOnly = true)

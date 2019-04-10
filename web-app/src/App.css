@@ -11,6 +11,8 @@ body,
   background-color: #f6f9fc;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  -webkit-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .form-label {
@@ -87,7 +89,6 @@ body,
   width: 30px;
   outline: none;
   cursor: pointer;
-  transition: all 0.15s ease;
 }
 
 .square-button {
@@ -105,18 +106,11 @@ body,
   height: 36px;
   outline: none;
   cursor: pointer;
-  transition: all 0.15s ease;
 }
 
 
 .button:focus {
   background: #0052CC;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1),
-    0 3px 6px 0 rgba(0, 0, 0, 0.08);
 }
 
 .button:active {
@@ -127,7 +121,6 @@ body,
   color: #fff;
   cursor: pointer;
   background-color: #2684FF;
-  transform: translateY(-1px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
 }
 
@@ -140,9 +133,9 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   margin: 8px 0px;
-  padding: 9px 12px;
+  padding: 7px 10px;
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
-  border: 0;
+  border: 2px solid #FFFFFF;
   outline: 0;
   border-radius: 4px;
   background: white;
@@ -154,9 +147,7 @@ input::placeholder {
 }
 
 input:focus {
-  box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px, rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
-  -webkit-transition: all 150ms ease;
-  transition: all 150ms ease;
+  border: 2px solid #0052CC; 
 }
 
 h1 {

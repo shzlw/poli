@@ -31,6 +31,9 @@ public class QueryResult {
     }
 
     public String getData() {
+        if (data == null || data == "") {
+            return "[]";
+        }
         return data;
     }
 

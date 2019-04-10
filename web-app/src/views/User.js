@@ -2,6 +2,8 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
+import Select from '../components/Select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const SYS_ROLES = ['developer', 'viewer'];
 
@@ -30,9 +32,16 @@ class User extends React.Component {
     });
   }
 
-  handleOptionChange = (name, event) => {
+  handleOptionChange = (name, value) => {
     this.setState({
-      [name]: event.target.value
+      [name]: value
+    });
+  }
+
+  handleIntegerOptionChange = (name, value) => {
+    const intValue = parseInt(value, 10) || 0;
+    this.setState({ 
+      [name]: intValue
     });
   }
 
@@ -88,6 +97,7 @@ class User extends React.Component {
     }
 
     this.setState({
+      userGroupId: '',
       showEditPanel: true
     }); 
   }
@@ -102,12 +112,7 @@ class User extends React.Component {
     this.setState(this.initialEditPanelState);
   }
 
-  search = () => {
-    const { searchValue } = this.state;
-  }
-
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       id,
       username,
@@ -130,6 +135,7 @@ class User extends React.Component {
       axios.put('/ws/user', user)
         .then(res => {
           this.clearEditPanel();
+          this.closeEditPanel();
           this.fetchUsers();
         });
     } else {
@@ -138,6 +144,7 @@ class User extends React.Component {
       axios.post('/ws/user', user)
         .then(res => {
           this.clearEditPanel();
+          this.closeEditPanel();
           this.fetchUsers();
         });
     } 
@@ -150,8 +157,7 @@ class User extends React.Component {
       });
   }
 
-  addUserGroup = (event) => {
-    event.preventDefault();
+  addUserGroup = () => {
     const { 
       userGroupId,
       userGroups = []
@@ -166,8 +172,7 @@ class User extends React.Component {
     }
   }
 
-  removeUserGroup = (groupId, event) => {
-    event.preventDefault();
+  removeUserGroup = (groupId) => {
     const { 
       userGroups = [] 
     } = this.state;
@@ -194,30 +199,22 @@ class User extends React.Component {
           {user.username}
           {user.name}
           {user.sysRole}
-          <button onClick={() => this.openEditPanel(user)}>update</button>
-          <button onClick={() => this.delete(user.id)}>delete</button>
+          <button className="button" onClick={() => this.openEditPanel(user)}>update</button>
+          <button className="button" onClick={() => this.delete(user.id)}>delete</button>
         </p>
       </div>
     );
 
-    const groupOptions = groups.map(group => 
-      <option value={group.id} key={group.id}>{group.name}</option>
-    );
-
-    const sysRoleOptions = SYS_ROLES.map(groupName => 
-      <option value={groupName} key={groupName}>{groupName}</option>
-    );
-
     const userGroupItems = [];
-    for (let i = 0; i < userGroups; i++) {
+    for (let i = 0; i < userGroups.length; i++) {
       const groupId = userGroups[i];
-      for (let j = 0; j < groups; j++) {
+      for (let j = 0; j < groups.length; j++) {
         if (groupId === groups[j].id) {
           userGroupItems.push(
             (
               <div key={groupId}>
                 <div>Group: {groups[j].name}</div>
-                <button onClick={(event) => this.removeUserGroup(groupId, event)}>delete</button>
+                <button className="button" onClick={() => this.removeUserGroup(groupId)}>delete</button>
               </div>
             )
           );
@@ -231,74 +228,74 @@ class User extends React.Component {
         <div>User</div>
         <input
           type="text"
-          name=""
-          placeholder="By Username..."
-          />
-        <input
-          type="text"
-          name=""
-          placeholder="By Group..."
-          />
-        <button onClick={this.search}>Search</button>
+          name="searchValue"
+          value={this.state.searchValue}
+          onChange={this.handleInputChange}
+          placeholder="Search..."
+          style={{width: '200px'}}
+        />
+        <button className="button" onClick={this.clearSearch}>Clear</button>
+        <button className="button" onClick={() => this.openEditPanel(null)}>
+          <FontAwesomeIcon icon="plus" /> New User
+        </button>
         <div className="row">
           {userItems}
         </div>
-        <button onClick={() => this.openEditPanel(null)}>
-          Add
-        </button>
 
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'lg-modal-panel'} 
+          modalClass={'small-modal-panel'} 
           title={'User'} >
 
-          <div>
-            <h3>{'User'}</h3>
-            <form>
-              <label className="form-label">Username</label>
-              <input 
-                type="text" 
-                name="username" 
-                value={this.state.username}
-                onChange={this.handleInputChange} />
+          <div className="form-panel">
+            <label className="form-label">Username</label>
+            <input 
+              type="text" 
+              name="username" 
+              value={this.state.username}
+              onChange={this.handleInputChange} />
 
-              <label className="form-label">Name</label>
-              <input 
-                type="text" 
-                name="name" 
-                value={this.state.name}
-                onChange={this.handleInputChange} />
+            <label className="form-label">Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={this.state.name}
+              onChange={this.handleInputChange} />
 
-              <label className="form-label">Temp password</label>
-              <input 
-                type="password" 
-                name="tempPassword" 
-                value={this.state.tempPassword}
-                onChange={this.handleInputChange} />
-              
-              <label className="form-label">System Role</label>
-              <select value={this.state.sysRole} onChange={(event) => this.handleOptionChange('sysRole', event)}>
-                {sysRoleOptions}
-              </select>
-              <br/>
-              
-              <label className="form-label">Groups</label>
-              <select value={this.state.userGroupId} onChange={(event) => this.handleOptionChange('userGroupId', event)}>
-                {groupOptions}
-              </select>
-              <button onClick={this.addUserGroup}>Add</button>
-              <div>
-                {userGroupItems}
-              </div>
-
-            </form>
-
+            <label className="form-label">Temp password</label>
+            <input 
+              type="password" 
+              name="tempPassword" 
+              value={this.state.tempPassword}
+              onChange={this.handleInputChange} />
+            
+            <label className="form-label">System Role</label>
+            <Select
+              name={'sysRole'}
+              value={this.state.sysRole}
+              onChange={this.handleOptionChange}
+              options={SYS_ROLES}
+            />
+            
+            <br/>
+            
+            <label className="form-label">Groups</label>
+            <Select
+              name={'userGroupId'}
+              value={this.state.userGroupId}
+              onChange={this.handleIntegerOptionChange}
+              options={groups}
+              optionDisplay={'name'}
+              optionValue={'id'}
+            />
+            <button className="button" onClick={this.addUserGroup}>Add</button>
             <div>
-              <button onClick={this.save}>Save</button>
+              {userGroupItems}
             </div>
-          </div>
 
+            <button className="button" className="button" onClick={this.save}>Save</button>
+          </div>
         </Modal>
         
       </div>

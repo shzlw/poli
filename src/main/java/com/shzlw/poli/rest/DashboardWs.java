@@ -4,9 +4,6 @@ import com.shzlw.poli.dao.DashboardDao;
 import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
-import com.shzlw.poli.model.Filter;
-import com.shzlw.poli.model.Widget;
-import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,27 +28,27 @@ public class DashboardWs {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<Dashboard> all() {
-        return dashboardDao.fetchAll();
+        return dashboardDao.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Dashboard one(@PathVariable("id") long id) {
-        Dashboard dashboard = dashboardDao.fetchById(id);
+        Dashboard dashboard = dashboardDao.findById(id);
         return dashboard;
     }
 
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Dashboard fetchOneByName(@PathVariable("name") String name) {
-        Dashboard dashboard = dashboardDao.fetchByName(name);
+        Dashboard dashboard = dashboardDao.findByName(name);
         return dashboard;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Dashboard dashboard) {
-        long id = dashboardDao.add(dashboard.getName(), dashboard.getStyle());
+        long id = dashboardDao.insert(dashboard.getName(), dashboard.getStyle());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 

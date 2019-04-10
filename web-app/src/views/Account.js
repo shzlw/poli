@@ -38,8 +38,7 @@ class Account extends React.Component {
   generateApiKey = () => {
   }
 
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       showUpdatePassword,
       name,

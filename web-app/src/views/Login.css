@@ -1,5 +1,4 @@
 .login-panel {
-  background-color: rgba(18, 91, 152, 0.1);
   padding: 15px;
   position: fixed;
   top: 50%;
@@ -10,11 +9,16 @@
   border-radius: 6px;
 }
 
+.long-panel-body {
+  padding: 15px;
+  background-color: rgba(18, 91, 152, 0.1);
+}
+
 .login-app-title {
-  font-size: 30px;
+  font-size: 35px;
   text-align: center;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 25px;
 }
 
 .login-button {

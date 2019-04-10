@@ -21,12 +21,12 @@ public class DashboardDao {
     @Autowired
     JdbcTemplate jt;
 
-    public List<Dashboard> fetchAll() {
+    public List<Dashboard> findAll() {
         String sql = "SELECT id, name, style FROM p_dashboard";
         return jt.query(sql, new Object[] {}, new DashboardRowMapper());
     }
 
-    public Dashboard fetchById(long id) {
+    public Dashboard findById(long id) {
         String sql = "SELECT id, name, style FROM p_dashboard WHERE id=?";
         try {
             return (Dashboard) jt.queryForObject(sql, new Object[]{ id }, new DashboardRowMapper());
@@ -35,7 +35,7 @@ public class DashboardDao {
         }
     }
 
-    public Dashboard fetchByName(String name) {
+    public Dashboard findByName(String name) {
         String sql = "SELECT id, name, style FROM p_dashboard WHERE name=?";
         try {
             return (Dashboard) jt.queryForObject(sql, new Object[]{ name }, new DashboardRowMapper());
@@ -44,7 +44,7 @@ public class DashboardDao {
         }
     }
 
-    public long add(String name, String style) {
+    public long insert(String name, String style) {
         String sql = "INSERT INTO p_dashboard(name, style) VALUES(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {

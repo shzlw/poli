@@ -50,7 +50,11 @@ public class GroupDao {
     }
 
     public void insertGroupDashboards(long groupId, List<Long> groupDashboards) {
-
+        String sql = "INSERT INTO p_group_dashboard(group_id, dashboard_id) VALUES(?, ?)";
+        // TODO: batch
+        for (Long dashboardId: groupDashboards) {
+            jt.update(sql, new Object[]{ groupId, dashboardId });
+        }
     }
 
     public int updateGroup(Group group) {

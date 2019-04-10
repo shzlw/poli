@@ -38,7 +38,7 @@ public class JdbcQueryWs {
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
     public QueryResult runWidgetQuery(@PathVariable("id") long widgetId,
                                       @RequestBody List<FilterParameter> filterParams) {
-        Widget widget = widgetDao.fetchById(widgetId);
+        Widget widget = widgetDao.findById(widgetId);
         String sql = widget.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.findByWidgetId(widgetId);
         QueryResult queryResult = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);

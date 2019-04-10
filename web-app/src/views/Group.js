@@ -2,6 +2,8 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal';
+import Select from '../components/Select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Group extends React.Component {
 
@@ -11,6 +13,7 @@ class Group extends React.Component {
       groups: [],
       dashboards: [],
       showEditPanel: false,
+      searchValue: '',
       id: null,
       name: '',
       groupDashboardId: '',
@@ -24,9 +27,10 @@ class Group extends React.Component {
     });
   }
 
-  handleOptionChange = (name, event) => {
-    this.setState({
-      [name]: event.target.value
+  handleIntegerOptionChange = (name, value) => {
+    const intValue = parseInt(value, 10) || 0;
+    this.setState({ 
+      [name]: intValue
     });
   }
 
@@ -34,6 +38,7 @@ class Group extends React.Component {
     return {
       id: null,
       name: '',
+      groupDashboardId: '',
       groupDashboards: []
     };
   }
@@ -74,6 +79,7 @@ class Group extends React.Component {
       this.clearEditPanel();
     }
     this.setState({
+      groupDashboardId: '',
       showEditPanel: true
     }); 
   }
@@ -88,8 +94,7 @@ class Group extends React.Component {
     this.setState(this.initialEditPanelState);
   }
 
-  save = (event) => {
-    event.preventDefault();
+  save = () => {
     const {
       id,
       name,
@@ -107,12 +112,14 @@ class Group extends React.Component {
         .then(res => {
           this.clearEditPanel();
           this.fetchGroups();
+          this.closeEditPanel();
         });
     } else {
       axios.post('/ws/group', group)
         .then(res => {
           this.clearEditPanel();
           this.fetchGroups();
+          this.closeEditPanel();
         });
     } 
   }
@@ -124,24 +131,28 @@ class Group extends React.Component {
       });
   }
 
-  addGroupDashboard= (event) => {
-    event.preventDefault();
+  addGroupDashboard= () => {
     const { 
       groupDashboardId,
       groupDashboards = []
     } = this.state;
-    const index = groupDashboards.findIndex(dashboardId => dashboardId === groupDashboardId);
-    if (index === -1) {
-      const newGroupDashboards = [...groupDashboards];
-      newGroupDashboards.push(groupDashboardId);
-      this.setState({
-        groupDashboards: newGroupDashboards
-      });
+
+    console.log('addGroupDashboard', groupDashboardId);
+    console.log('addGroupDashboard', groupDashboards);
+
+    if (groupDashboardId) {
+      const index = groupDashboards.findIndex(dashboardId => dashboardId === groupDashboardId);
+      if (index === -1) {
+        const newGroupDashboards = [...groupDashboards];
+        newGroupDashboards.push(groupDashboardId);
+        this.setState({
+          groupDashboards: newGroupDashboards
+        });
+      }
     }
   }
 
-  removeGroupDashboard = (dashboardId, event) => {
-    event.preventDefault();
+  removeGroupDashboard = (dashboardId) => {
     const { 
       groupDashboards = [] 
     } = this.state;
@@ -157,35 +168,34 @@ class Group extends React.Component {
 
   render() {
     const { 
+      id,
       groups = [],
       dashboards = [],
       groupDashboards = []
     } = this.state;
 
-    const dashboardOptions = dashboards.map(dash => 
-      <option value={dash.id} key={dash.id}>{dash.name}</option>
-    );
+    const mode = id === null ? 'New' : 'Edit';
 
     const groupItems = groups.map(group => 
       <div key={group.id} className="group-card">
         <p>
           {group.name}
-          <button onClick={() => this.openEditPanel(group)}>update</button>
-          <button onClick={() => this.delete(group.id)}>delete</button>
+          <button className="button" onClick={() => this.openEditPanel(group)}>update</button>
+          <button className="button" onClick={() => this.delete(group.id)}>delete</button>
         </p>
       </div>
     );
 
     const groupDashboardItems = [];
-    for (let i = 0; i < groupDashboards; i++) {
+    for (let i = 0; i < groupDashboards.length; i++) {
       const dashboardId = groupDashboards[i];
-      for (let j = 0; j < dashboards; j++) {
+      for (let j = 0; j < dashboards.length; j++) {
         if (dashboardId === dashboards[j].id) {
           groupDashboardItems.push(
             (
               <div key={dashboardId}>
                 <div>Name: {dashboards[j].name}</div>
-                <button onClick={(event) => this.removeGroupDashboard(dashboardId, event)}>delete</button>
+                <button className="button" onClick={() => this.removeGroupDashboard(dashboardId)}>delete</button>
               </div>
             )
           );
@@ -196,52 +206,52 @@ class Group extends React.Component {
 
     return (
       <div>
-        <h1>Group</h1>
         <input
           type="text"
-          name=""
-          placeholder="By Group..."
+          name="searchValue"
+          value={this.state.searchValue}
+          onChange={this.handleInputChange}
+          placeholder="Search..."
+          style={{width: '200px'}}
           />
-        <button onClick={this.search}>Search</button>
+        <button className="button" onClick={this.clearSearch}>Clear</button>
+        <button className="button" onClick={() => this.openEditPanel(null)}>
+          <FontAwesomeIcon icon="plus" /> New Group
+        </button>
         <div className="row">
           {groupItems}
         </div>
-        <button onClick={() => this.openEditPanel(null)}>
-          Add
-        </button>
 
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'lg-modal-panel'} 
-          title={'Group'} >
+          modalClass={'small-modal-panel'} 
+          title={mode} >
 
-          <div>
-            <h3>{'Group'}</h3>
-            <form>
-              <label className="form-label">Name</label>
-              <input 
-                type="text" 
-                name="name" 
-                value={this.state.name}
-                onChange={this.handleInputChange} />
-              
-              <label className="form-label">Dashboards</label>
-              <select value={this.state.groupDashboardId} onChange={(event) => this.handleOptionChange('groupDashboardId', event)}>
-                {dashboardOptions}
-              </select>
-              <button onClick={this.addGroupDashboard}>Add</button>
-              <div>
-                {groupDashboardItems}
-              </div>
-
-            </form>
-
+          <div className="form-panel">
+            <label className="form-label">Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={this.state.name}
+              onChange={this.handleInputChange} />
+            
+            <label className="form-label">Dashboards</label>
+            <Select
+              name={'groupDashboardId'}
+              value={this.state.groupDashboardId}
+              onChange={this.handleIntegerOptionChange}
+              options={dashboards}
+              optionDisplay={'name'}
+              optionValue={'id'}
+            />
+            <button className="button" onClick={this.addGroupDashboard}>Add</button>
             <div>
-              <button onClick={this.save}>Save</button>
+              {groupDashboardItems}
             </div>
+            
+            <button className="button" onClick={this.save}>Save</button>
           </div>
-
         </Modal>
         
       </div>

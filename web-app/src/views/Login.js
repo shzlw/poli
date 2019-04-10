@@ -33,8 +33,7 @@ class Login extends React.Component {
       });
   }
 
-  login = (event) => {
-    event.preventDefault();
+  login = () => {
     const {
       username,
       password
@@ -75,7 +74,7 @@ class Login extends React.Component {
         <div className="login-panel">
           <div className="login-app-title">Poli</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
-          <form>
+          <div className="long-panel-body">
             <div className="form-group">
               <label className="form-label">Username</label>
               <input 
@@ -91,7 +90,7 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} />
             </div>
             <button className="button login-button" onClick={this.login}>Login</button>
-          </form>
+          </div>
         </div>
       </React.Fragment>
     )

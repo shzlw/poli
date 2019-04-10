@@ -87,12 +87,13 @@ public class UserDao {
 
     public long insertUser(String username, String name, String rawTempPassword, String sysRole) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
-        String sql = "INSERT INTO p_user(username, name, temp_password, sys_role) "
-                + "VALUES(:username, :name, :temp_password, :sys_role)";
+        String sql = "INSERT INTO p_user(username, name, temp_password, password, sys_role) "
+                + "VALUES(:username, :name, :temp_password, :password, :sys_role)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(User.USERNAME, username);
         params.addValue(User.NAME, name);
         params.addValue(User.TEMP_PASSWORD, encryptedPassword);
+        params.addValue(User.PASSWORD, encryptedPassword);
         params.addValue(User.SYS_ROLE, sysRole);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -102,6 +103,10 @@ public class UserDao {
 
     public void insertUserGroups(long userId, List<Long> userGroups) {
         String sql = "INSERT INTO p_group_user(group_id, user_id) VALUES(?, ?)";
+        // TODO: batch
+        for (Long groupId: userGroups) {
+            jt.update(sql, new Object[]{ groupId, userId });
+        }
     }
 
     public long updateUser(User user) {
