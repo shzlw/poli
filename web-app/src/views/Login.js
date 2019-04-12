@@ -76,13 +76,13 @@ class Login extends React.Component {
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="long-panel-body">
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label>Username</label>
               <input 
                 type="text" 
                 name="username" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
-              <label className="form-label">Password</label>
+              <label>Password</label>
               <input 
                 type="password" 
                 name="password" 

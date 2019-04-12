@@ -225,19 +225,20 @@ class User extends React.Component {
 
     return (
       <div>
-        <div>User</div>
-        <input
-          type="text"
-          name="searchValue"
-          value={this.state.searchValue}
-          onChange={this.handleInputChange}
-          placeholder="Search..."
-          style={{width: '200px'}}
-        />
-        <button className="button" onClick={this.clearSearch}>Clear</button>
-        <button className="button" onClick={() => this.openEditPanel(null)}>
-          <FontAwesomeIcon icon="plus" /> New User
-        </button>
+        <div>
+          <input
+            type="text"
+            name="searchValue"
+            value={this.state.searchValue}
+            onChange={this.handleInputChange}
+            placeholder="Search..."
+            style={{width: '200px'}}
+          />
+          <button className="button" onClick={this.clearSearch}>Clear</button>
+          <button className="button" onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> New User
+          </button>
+        </div>
         <div className="row">
           {userItems}
         </div>
@@ -249,28 +250,28 @@ class User extends React.Component {
           title={'User'} >
 
           <div className="form-panel">
-            <label className="form-label">Username</label>
+            <label>Username</label>
             <input 
               type="text" 
               name="username" 
               value={this.state.username}
               onChange={this.handleInputChange} />
 
-            <label className="form-label">Name</label>
+            <label>Name</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} />
 
-            <label className="form-label">Temp password</label>
+            <label>Temp password</label>
             <input 
               type="password" 
               name="tempPassword" 
               value={this.state.tempPassword}
               onChange={this.handleInputChange} />
             
-            <label className="form-label">System Role</label>
+            <label>System Role</label>
             <Select
               name={'sysRole'}
               value={this.state.sysRole}
@@ -280,7 +281,7 @@ class User extends React.Component {
             
             <br/>
             
-            <label className="form-label">Groups</label>
+            <label>Groups</label>
             <Select
               name={'userGroupId'}
               value={this.state.userGroupId}

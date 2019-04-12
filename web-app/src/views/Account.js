@@ -78,20 +78,20 @@ class Account extends React.Component {
       <div>
         <div>Account</div>
         <div className="form-panel">   
-          <label className="form-label">Username</label>
+          <label>Username</label>
           <div>{username}</div>
 
-          <label className="form-label">Name</label>
+          <label>Name</label>
           <input 
             type="text" 
             name="name" 
             value={this.state.name}
             onChange={this.handleInputChange} />
 
-          <label className="form-label">System Role</label>
+          <label>System Role</label>
           <div>{sysRole}</div>
 
-          <label className="form-label">API Key</label>
+          <label>API Key</label>
           <div>{apiKey}</div>
           <button className="button" onClick={this.generateApiKey}>Generate new API Key</button>
           <br/>
@@ -102,13 +102,13 @@ class Account extends React.Component {
             (
               <React.Fragment>
                 <br/>
-                <label className="form-label">Password</label>
+                <label>Password</label>
                 <input 
                   type="password" 
                   name="password" 
                   value={this.state.password}
                   onChange={this.handleInputChange} />
-                <label className="form-label">Confirm Password</label>
+                <label>Confirm Password</label>
                 <input 
                   type="password" 
                   name="confirmedPassword" 

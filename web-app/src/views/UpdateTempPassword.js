@@ -53,16 +53,16 @@ class UpdateTempPassword extends React.Component {
 
     return (
       <React.Fragment>
-        <label className="form-label">{this.state.errorMsg}</label>
+        <label>{this.state.errorMsg}</label>
         <form>
           <div class="form-group">
-            <label className="form-label">New password</label>
+            <label>New password</label>
             <input 
               type="text" 
               name="username" 
               value={this.state.username}
               onChange={this.handleInputChange} />
-            <label className="form-label">Confirm password</label>
+            <label>Confirm password</label>
             <input 
               type="password" 
               name="password" 

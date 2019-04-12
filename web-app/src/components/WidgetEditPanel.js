@@ -279,9 +279,9 @@ class WidgetEditPanel extends React.Component {
 
       chartPreview = (
         <div>
-          <label className="form-label"><i class="fas fa-chart-pie"></i> Pie Chart</label>
+          <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
           <div>Count "value" by "key"</div>
-          <label className="form-label">Aggr Key (string)</label>
+          <label>Aggr Key (string)</label>
           <Select
             name={'pieKey'}
             value={pieKey}
@@ -292,7 +292,7 @@ class WidgetEditPanel extends React.Component {
             />
 
 
-          <label className="form-label">By Aggr Value (number)</label>
+          <label>By Aggr Value (number)</label>
           <Select
             name={'pieValue'}
             value={pieValue}
@@ -343,7 +343,7 @@ class WidgetEditPanel extends React.Component {
         <div className="form-panel">
           <Tabs activeTab="basic">
             <div title="basic">
-              <label className="form-label">Title</label>
+              <label>Title</label>
               <input 
                 type="text" 
                 name="title" 
@@ -355,7 +355,7 @@ class WidgetEditPanel extends React.Component {
             </div>
 
             <div title="Query">
-              <label className="form-label">DataSource</label>
+              <label>DataSource</label>
               <Select
                 name={'jdbcDataSourceId'}
                 value={this.state.jdbcDataSourceId}
@@ -365,7 +365,7 @@ class WidgetEditPanel extends React.Component {
                 optionValue={'id'}
                 />
             
-              <label className="form-label">SQL Query</label>
+              <label>SQL Query</label>
               <AceEditor
                 style={{ marginTop: '8px' }}
                 value={this.state.sqlQuery}
@@ -389,34 +389,34 @@ class WidgetEditPanel extends React.Component {
                 <button className="button" onClick={this.runQuery}>Run Query</button>
               </div>
 
-              <label className="form-label">Result</label>
+              <label>Result</label>
               <TableWidget
                 data={data}
                 columns={columns}
                 error={error}
               />
 
-              <label className="form-label">Columns Mapping</label>
+              <label>Columns Mapping</label>
               <div>
                 {columnItems}
               </div>
             </div>
 
             <div title="Chart">
-              <label className="form-label">Chart Options</label>
+              <label>Chart Options</label>
               <Select
                 name={'chartType'}
                 value={this.state.chartType}
                 onChange={this.handleOptionChange}
                 options={Constants.CHART_TYPES}
               />
-              <label className="form-label">Preview</label>
+              <label>Preview</label>
               {this.renderChartPreview()}  
             </div>
 
             <div title="Drill through">
-              <label className="form-label">Drill through</label>
-              <label className="form-label">Column</label>
+              <label>Drill through</label>
+              <label>Column</label>
               <Select
                 name={'drillColumnName'}
                 value={this.state.drillColumnName}
@@ -426,7 +426,7 @@ class WidgetEditPanel extends React.Component {
                 optionValue={'name'}
               />
 
-              <label className="form-label">Dashboard</label>
+              <label>Dashboard</label>
               <Select
                 name={'drillDashboardId'}
                 value={this.state.drillDashboardId}

@@ -185,7 +185,7 @@ class FilterEditPanel extends React.Component {
         <button className="button" onClick={this.runQuery}>Run</button>
 
         <div className="form-panel">
-          <label className="form-label">Title</label>
+          <label>Title</label>
           <input 
             type="text" 
             name="title" 
@@ -193,7 +193,7 @@ class FilterEditPanel extends React.Component {
             onChange={this.handleInputChange} 
           />
 
-          <label className="form-label">Type</label>
+          <label>Type</label>
           <Select
             name={'type'} 
             value={this.state.type} 
@@ -205,7 +205,7 @@ class FilterEditPanel extends React.Component {
             requireSql ?
             (
               <React.Fragment>
-                <label className="form-label">DataSource</label>
+                <label>DataSource</label>
                 <Select
                   name={'jdbcDataSourceId'} 
                   value={this.state.jdbcDataSourceId} 
@@ -215,7 +215,7 @@ class FilterEditPanel extends React.Component {
                   optionValue={'id'}
                 />
     
-                <label className="form-label">SQL Query</label>
+                <label>SQL Query</label>
                 <AceEditor
                   style={{marginTop: '8px'}}
                   value={this.state.sqlQuery}
@@ -235,7 +235,7 @@ class FilterEditPanel extends React.Component {
                   }}
                 />
 
-                <label className="form-label">Result</label>
+                <label>Result</label>
                 <TableWidget
                   data={data}
                   columns={columns}
@@ -245,7 +245,7 @@ class FilterEditPanel extends React.Component {
             ) : null
           }
 
-          <label className="form-label">Param</label>
+          <label>Param</label>
           <input 
             type="text" 
             name="param" 

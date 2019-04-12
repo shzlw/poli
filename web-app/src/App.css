@@ -15,18 +15,23 @@ body,
   transition: all 0.15s ease;
 }
 
-.form-label {
-  width: 100%;
-}
-
 .form-panel {
   border: 0;
   outline: 0;
-  border-radius: 4px;
-  padding: 10px;
+  padding: 10px 0px;
   margin: 5px;
-  background-color: rgba(18, 91, 152, 0.05);
-  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+}
+
+.form-panel input,
+.form-panel textarea,
+.form-pane ul {
+  margin-bottom: 8px;
+}
+
+.form-panel label {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 .panel {
@@ -132,8 +137,10 @@ textarea {
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
   width: 100%;
-  margin: 8px 0px;
   padding: 7px 10px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
   border: 2px solid #FFFFFF;
   outline: 0;

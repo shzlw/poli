@@ -1,18 +1,20 @@
 .tab-header {
   list-style-type: none;
   border-bottom: 1px solid #ccc;
-  padding-left: 0;
+  padding: 0px;
+  margin: 0px;
 }
 
 .tab-header-item {
   display: inline-block;
   list-style: none;
   margin-bottom: -1px;
-  padding: 0.5rem 0.75rem;
+  padding: 10px 25px;
+  min-width: 80px;
 }
 
 .tab-header-active {
   background-color: white;
-  border: solid #ccc;
-  border-width: 1px 1px 0 1px;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #0065FF;
 }

@@ -206,18 +206,20 @@ class Group extends React.Component {
 
     return (
       <div>
-        <input
-          type="text"
-          name="searchValue"
-          value={this.state.searchValue}
-          onChange={this.handleInputChange}
-          placeholder="Search..."
-          style={{width: '200px'}}
-          />
-        <button className="button" onClick={this.clearSearch}>Clear</button>
-        <button className="button" onClick={() => this.openEditPanel(null)}>
-          <FontAwesomeIcon icon="plus" /> New Group
-        </button>
+        <div>
+          <input
+            type="text"
+            name="searchValue"
+            value={this.state.searchValue}
+            onChange={this.handleInputChange}
+            placeholder="Search..."
+            style={{width: '200px'}}
+            />
+          <button className="button" onClick={this.clearSearch}>Clear</button>
+          <button className="button" onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> New Group
+          </button>
+        </div>
         <div className="row">
           {groupItems}
         </div>
@@ -229,14 +231,14 @@ class Group extends React.Component {
           title={mode} >
 
           <div className="form-panel">
-            <label className="form-label">Name</label>
+            <label>Name</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} />
             
-            <label className="form-label">Dashboards</label>
+            <label>Dashboards</label>
             <Select
               name={'groupDashboardId'}
               value={this.state.groupDashboardId}

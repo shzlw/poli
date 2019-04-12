@@ -232,18 +232,21 @@ class DataSource extends Component {
 
     return (
       <div>
-        <input
-          type="text"
-          name="searchValue"
-          value={this.state.searchValue}
-          onChange={this.handleInputChange}
-          placeholder="Search..."
-          style={{width: '200px'}}
-          />
-        <button className="button" onClick={this.clearSearch}>Clear</button>
-        <button className="button" onClick={() => this.openEditPanel(null)}>
-          <FontAwesomeIcon icon="plus" /> New datasource
-        </button>
+        <div>
+          <input
+            type="text"
+            name="searchValue"
+            value={this.state.searchValue}
+            onChange={this.handleInputChange}
+            placeholder="Search..."
+            style={{width: '200px'}}
+            className="float-left"
+            />
+          <button className="button float-left" onClick={this.clearSearch}>Clear</button>
+          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> New datasource
+          </button>
+          </div>
         <div className="table-panel">
           {jdbcDataSourceItems}
         </div>
@@ -254,15 +257,15 @@ class DataSource extends Component {
           modalClass={'small-modal-panel'}
           title={mode} >
 
-          <div>
-            <label className="form-label">Name <span className="required">*</span></label>
+          <div className="form-panel">
+            <label>Name <span className="required">*</span></label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} />
 
-            <label className="form-label">Connection Url</label>
+            <label>Connection Url</label>
             <textarea
               rows="4"
               type="text" 
@@ -271,14 +274,14 @@ class DataSource extends Component {
               onChange={this.handleInputChange} >
             </textarea>
 
-            <label className="form-label">Driver class name</label>
+            <label>Driver class name</label>
             <input 
               type="text" 
               name="driverClassName" 
               value={this.state.driverClassName}
               onChange={this.handleInputChange} />
 
-            <label className="form-label">Username</label>
+            <label>Username</label>
             <input 
               type="text" 
               name="username" 
@@ -295,7 +298,7 @@ class DataSource extends Component {
             { mode === 'New' || showUpdatePassword ? 
               (
                 <div>
-                  <label className="form-label">Password</label>
+                  <label>Password</label>
                   <input 
                     type="password" 
                     name="password" 

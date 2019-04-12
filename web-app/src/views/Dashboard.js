@@ -147,7 +147,7 @@ class Dashboard extends Component {
           modalClass={'small-modal-panel'} 
           title={'New'} >
           <div>
-            <label className="form-label">Name</label>
+            <label>Name</label>
             <input 
               type="text" 
               name="name" 

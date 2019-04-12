@@ -123,8 +123,8 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
             <Route exact path="/workspace/account" component={Account} />
+            <Route exact path="/workspace/user-management" component={UserManagement} />
             <Route path="/workspace/dashboard" component={Dashboard} />
-            <Route path="/workspace/user-management" component={UserManagement} />
           </Switch>
         </div>
         <Toast />
