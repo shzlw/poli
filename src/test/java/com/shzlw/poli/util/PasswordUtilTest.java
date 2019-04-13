@@ -28,4 +28,10 @@ public class PasswordUtilTest {
     public void test_getUniqueId() {
         Assert.assertEquals(22, PasswordUtil.getUniqueId().length());
     }
+
+    @Test
+    public void test_generateAdminPassword() {
+        String password = "adminadmin";
+        System.out.println(PasswordUtil.getMd5Hash(password));
+    }
 }

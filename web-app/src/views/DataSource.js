@@ -1,13 +1,12 @@
 
 import React, { Component } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
 import './Datasource.css';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 
 class DataSource extends Component {
 
@@ -240,10 +239,9 @@ class DataSource extends Component {
             onChange={this.handleInputChange}
             placeholder="Search..."
             style={{width: '200px'}}
-            className="float-left"
             />
-          <button className="button float-left" onClick={this.clearSearch}>Clear</button>
-          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
+          <button className="button" onClick={this.clearSearch}>Clear</button>
+          <button className="button" onClick={() => this.openEditPanel(null)}>
             <FontAwesomeIcon icon="plus" /> New datasource
           </button>
           </div>

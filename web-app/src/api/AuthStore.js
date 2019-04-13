@@ -23,7 +23,7 @@ class AuthStore {
   }
 
   get isAuthenticated() {
-    return true; // this._sysRole !== '';
+    return this._sysRole !== '';
   }
 }
 

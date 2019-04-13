@@ -1,13 +1,11 @@
 import React from 'react';
-import { Route, Switch, Redirect, Component } from "react-router-dom";
+import { Route, Switch, Redirect, withRouter, Component } from "react-router-dom";
+import axios from 'axios';
 import './App.css';
 
 import Login from './views/Login';
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
-
-import AuthStore from './api/AuthStore';
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
   faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
@@ -25,23 +23,67 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: '',
+      sysRole: '',
+      isAuthorizing: false
     }
   }
 
   componentDidMount() {
-    console.log('App - componentDidMount', AuthStore.isAuthenticated);
+    const {
+      sysRole = ''
+    } = this.state;
+
+    let isAuthenticated = false;
+    if (sysRole) {
+      isAuthenticated = true;
+    }
+
+    console.log('App - componentDidMount',isAuthenticated);
+
+    if (!isAuthenticated) {
+      console.log('App - componentDidMount', 'cookie');
+      axios.post('/auth/login/cookie')
+        .then(res => {
+          const result = res.data;
+          if (result == 'error') {
+            this.setState({
+              sysRole: ''
+            });
+          } else {
+            this.setState({
+              sysRole: result
+            });
+          }
+        });
+    }
+  }
+
+  onLoginSuccess = (sysRole) => {
+    console.log('App - onLoginSuccess', sysRole);
+    this.setState({
+      sysRole: sysRole
+    });
   }
    
   render() {
-    console.log('App - render', AuthStore.isAuthenticated);
+    const {
+      sysRole = ''
+    } = this.state;
+
+    let isAuthenticated = false;
+    if (sysRole) {
+      isAuthenticated = true;
+    }
+    console.log('App - render', sysRole, isAuthenticated);
     return (
       <div className="app">
-        <Switch>
-          <Route exact path="/" component={Login} />
-          <Route path="/login" component={Login} />
-          <PrivateRoute authenticated={AuthStore.isAuthenticated} path='/workspace' component={Workspace} />
-          <Route component={PageNotFound} />
-        </Switch>
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route path="/login" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
+        <PrivateRoute authenticated={isAuthenticated} path='/workspace' component={Workspace} />
+        <Route component={PageNotFound} />
+      </Switch>
       </div>
     );
   }
@@ -60,4 +102,4 @@ function PrivateRoute({component: Component, authenticated, ...rest}) {
   )
 }
 
-export default App;
+export default withRouter(App);

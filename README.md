@@ -1,7 +1,7 @@
 # Poli
 
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![license: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
@@ -18,5 +18,3 @@
 ## Build
 
 ## License
-
-[Apache License 2.0](https://opensource.org/licenses/Apache-2.0)

@@ -2,7 +2,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import AuthStore from '../api/AuthStore';
 import './Login.css';
 
 class Login extends React.Component {
@@ -23,14 +22,25 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    this.tryLogin();
-  }
-
-  tryLogin = () => {
+    console.log('Login', 'componentDidMount');
+    console.log('Login - componentDidMount', 'cookie');
     axios.post('/auth/login/cookie')
       .then(res => {
         const result = res.data;
+        if (result == 'error') {
+          this.setState({
+            errorMsg: 'Wrong username or password'
+          });
+        } else {
+          this.props.onLoginSuccess(result);
+        }
       });
+  }
+
+  handleKeyPress = (event) => {
+    if(event.keyCode == 13) {
+      this.login();
+    }
   }
 
   login = () => {
@@ -58,17 +68,22 @@ class Login extends React.Component {
       return;
     }
 
-    AuthStore.username = 'testuser';
-    AuthStore.sysRole = 'developer';
-    this.props.history.push('/workspace/dashboard');
-
     axios.post('/auth/login/user', user)
       .then(res => {
         const result = res.data;
+        if (result == 'error') {
+          this.setState({
+            errorMsg: 'Wrong username or password'
+          });
+        } else {
+          this.props.onLoginSuccess(result);
+        }
       });
   }
 
   render() {
+    console.log('Login', 'render');
+
     return (
       <React.Fragment>
         <div className="login-panel">
@@ -81,13 +96,17 @@ class Login extends React.Component {
                 type="text" 
                 name="username" 
                 value={this.state.username}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange} 
+                onKeyDown={this.handleKeyPress} 
+              />
               <label>Password</label>
               <input 
                 type="password" 
                 name="password" 
                 value={this.state.password}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange} 
+                onKeyDown={this.handleKeyPress} 
+              />
             </div>
             <button className="button login-button" onClick={this.login}>Login</button>
           </div>

@@ -3,7 +3,6 @@ import React from 'react';
 
 import User from './User';
 import Group from './Group';
-import './UserManagement.css';
 import Tabs from '../components/Tabs';
 
 class UserManagement extends React.Component {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
+import axios from 'axios';
 import DataSource from './DataSource';
 import Dashboard from './Dashboard';
 import DashboardFullScreenView from './DashboardFullScreenView';
@@ -26,7 +27,7 @@ const MENU_ITEMS = [
     icon: 'database'
   }, 
   {
-    link: '/workspace/user-management',
+    link: '/workspace/usermanagement',
     value: 'User Management',
     icon: 'users-cog'
   }
@@ -40,7 +41,8 @@ class Workspace extends React.Component {
     this.state = {
       currentMenuLink: '/workspace/dashboard',
       username: '',
-      sysRole: ''
+      sysRole: '',
+      requestingLogin: false
     }
   }
 
@@ -65,6 +67,13 @@ class Workspace extends React.Component {
     this.setState({
       currentMenuLink: menuLink
     });
+  }
+
+  logout = () => {
+    axios.get('/auth/logout')
+      .then(res => {
+        this.props.history.push('/login');
+      });
   }
 
   render() {
@@ -111,10 +120,8 @@ class Workspace extends React.Component {
                 <span className="workspace-nav-menu-text">Account</span>
               </Link>
             </div>
-            <div className="workspace-logout-button inline-block">
-              <Link to="/login">
-                <FontAwesomeIcon icon="sign-out-alt" fixedWidth />
-              </Link>
+            <div className="workspace-logout-button inline-block" onClick={this.logout}>
+              <FontAwesomeIcon icon="sign-out-alt" fixedWidth />
             </div>
           </div>
         </div>
@@ -123,7 +130,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
             <Route exact path="/workspace/account" component={Account} />
-            <Route exact path="/workspace/user-management" component={UserManagement} />
+            <Route exact path="/workspace/usermanagement" component={UserManagement} />
             <Route path="/workspace/dashboard" component={Dashboard} />
           </Switch>
         </div>

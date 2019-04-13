@@ -42,7 +42,7 @@ public class UserDao {
 
     public User findBySessionKey(String sessionKey) {
         String sql = "SELECT id, username, name, sys_role "
-                + "FROM p_user WHERE sessionKey=?";
+                + "FROM p_user WHERE session_key=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{sessionKey}, new UserInfoRowMapper());
             return user;

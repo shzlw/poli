@@ -31,7 +31,7 @@ public class AuthWs {
             return "error";
         }
 
-        String sessionKey = Constants.SESSION_KEY + PasswordUtil.getUniqueId();
+        String sessionKey = PasswordUtil.getUniqueId();
         userDao.updateSessionKey(existUser.getId(), sessionKey);
 
         Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, sessionKey);
@@ -44,11 +44,29 @@ public class AuthWs {
 
     @RequestMapping(value="/login/cookie", method= RequestMethod.POST)
     @Transactional
-    public String loginBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
+    public String loginBySessionKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
+        if (sessionKey.isEmpty()) {
+            return "error";
+        }
+
         User user = userDao.findBySessionKey(sessionKey);
         if (user == null) {
             return "error";
         }
         return user.getSysRole();
+    }
+
+    @RequestMapping(value="/logout", method= RequestMethod.GET)
+    @Transactional
+    public void logout(@CookieValue(Constants.SESSION_KEY) String sessionKey, HttpServletResponse response) throws IOException {
+        User user = userDao.findBySessionKey(sessionKey);
+        if (user != null) {
+            userDao.updateSessionKey(user.getId(), null);
+
+            Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, "");
+            sessionKeyCookie.setMaxAge(0);
+            sessionKeyCookie.setPath("/");
+            response.addCookie(sessionKeyCookie);
+        }
     }
 }

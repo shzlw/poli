@@ -92,3 +92,6 @@ IF NOT EXISTS p_group_dashboard (
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
     FOREIGN KEY (group_id) REFERENCES p_group(id)
 );
+
+INSERT INTO p_user(username, password, temp_password, sys_role)
+VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');
