@@ -1,6 +1,7 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.UserDao;
+import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
 import com.shzlw.poli.util.PasswordUtil;
@@ -22,13 +23,19 @@ public class AuthWs {
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
-    public String loginByUser(@RequestBody User user, HttpServletResponse response) {
+    public LoginResponse loginByUser(@RequestBody User user, HttpServletResponse response) {
         String username = user.getUsername();
         String password = user.getPassword();
 
+        boolean isTempPassword = false;
         User existUser = userDao.findByUsernameAndPassword(username, password);
         if (existUser == null) {
-            return "error";
+            existUser = userDao.findByUsernameAndTempPassword(username, password);
+            if (existUser == null) {
+                return LoginResponse.ofError("Invalid username or password");
+            } else {
+                isTempPassword = true;
+            }
         }
 
         String sessionKey = PasswordUtil.getUniqueId();
@@ -39,21 +46,21 @@ public class AuthWs {
         sessionKeyCookie.setPath("/");
         response.addCookie(sessionKeyCookie);
 
-        return existUser.getSysRole();
+        return LoginResponse.ofSucess(existUser.getUsername(), existUser.getSysRole(), isTempPassword);
     }
 
     @RequestMapping(value="/login/cookie", method= RequestMethod.POST)
     @Transactional
-    public String loginBySessionKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
+    public LoginResponse loginBySessionKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
         if (sessionKey.isEmpty()) {
-            return "error";
+            return LoginResponse.ofError("Invalid username or password");
         }
 
         User user = userDao.findBySessionKey(sessionKey);
         if (user == null) {
-            return "error";
+            return LoginResponse.ofError("Invalid username or password");
         }
-        return user.getSysRole();
+        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
 
     @RequestMapping(value="/logout", method= RequestMethod.GET)
@@ -68,5 +75,19 @@ public class AuthWs {
             sessionKeyCookie.setPath("/");
             response.addCookie(sessionKeyCookie);
         }
+    }
+
+    @RequestMapping(value="/login/changepassword", method= RequestMethod.POST)
+    @Transactional
+    public String changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
+        if (sessionKey.isEmpty()) {
+            return "error";
+        }
+
+        User user = userDao.findBySessionKey(sessionKey);
+        if (user == null) {
+            return "error";
+        }
+        return user.getSysRole();
     }
 }

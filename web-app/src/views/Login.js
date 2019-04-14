@@ -26,19 +26,15 @@ class Login extends React.Component {
     console.log('Login - componentDidMount', 'cookie');
     axios.post('/auth/login/cookie')
       .then(res => {
-        const result = res.data;
-        if (result == 'error') {
-          this.setState({
-            errorMsg: 'Wrong username or password'
-          });
-        } else {
-          this.props.onLoginSuccess(result);
+        const loginResponse = res.data || {};
+        if (!loginResponse.error) {
+          this.props.onLoginSuccess(loginResponse);
         }
       });
   }
 
   handleKeyPress = (event) => {
-    if(event.keyCode == 13) {
+    if(event.keyCode === 13) {
       this.login();
     }
   }
@@ -70,13 +66,13 @@ class Login extends React.Component {
 
     axios.post('/auth/login/user', user)
       .then(res => {
-        const result = res.data;
-        if (result == 'error') {
+        const loginResponse = res.data || {};
+        if (loginResponse.error) {
           this.setState({
-            errorMsg: 'Wrong username or password'
+            errorMsg: loginResponse.error
           });
         } else {
-          this.props.onLoginSuccess(result);
+          this.props.onLoginSuccess(loginResponse);
         }
       });
   }

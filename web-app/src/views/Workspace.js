@@ -10,7 +10,6 @@ import Account from './Account';
 import Toast from '../components/Toast';
 
 import * as Constants from '../api/Constants';
-import AuthStore from '../api/AuthStore';
 import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,28 +38,15 @@ class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuLink: '/workspace/dashboard',
-      username: '',
-      sysRole: '',
-      requestingLogin: false
+      currentMenuLink: '/workspace/dashboard'
     }
   }
 
   componentDidMount() {
-    console.log('Workspace - componentDidMount');
     const pathname = this.props.location.pathname;
-    // TODO: fetch user information
     this.setState({
       currentMenuLink: pathname,
     });
-    if (AuthStore.isAuthenticated) {
-      const sysRole = AuthStore.sysRole;
-      this.setState({
-        sysRole: sysRole
-      });
-    } else {
-      // Try login. If not, redirect
-    }
   }
 
   handleMenuClick = (menuLink) => {
@@ -79,13 +65,19 @@ class Workspace extends React.Component {
   render() {
     const {
       currentMenuLink,
-      sysRole
     } = this.state;
+
+    const {
+      username,
+      sysRole
+    } = this.props;
+
+    console.log('Workspace - render', sysRole);
 
     let menuItems = [];
     let menuList = [];
     if (sysRole === Constants.SYS_ROLE_VIEWER) {
-      menuList = MENU_ITEMS.filter(m => m.name === 'dashboard' || m.name === 'account');
+      menuList = MENU_ITEMS.filter(m => m.link === '/workspace/dashboard');
     } else {
       menuList = MENU_ITEMS;
     }
@@ -117,7 +109,7 @@ class Workspace extends React.Component {
             <div className={`workspace-account-button inline-block ${isAccountMenuActive}`}>
               <Link to="/workspace/account" onClick={() => this.handleMenuClick(ACCOUNT_MENU_LINK)}>
                 <FontAwesomeIcon icon="user" fixedWidth />
-                <span className="workspace-nav-menu-text">Account</span>
+                <span className="workspace-nav-menu-text">{username}</span>
               </Link>
             </div>
             <div className="workspace-logout-button inline-block" onClick={this.logout}>

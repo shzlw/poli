@@ -67,4 +67,11 @@ public class UserWs {
         userDao.deleteUser(userId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
+
+    @RequestMapping(value = "/account", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public User findUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
+        User myUser = userDao.findBySessionKey(sessionKey);
+        return myUser;
+    }
 }

@@ -61,7 +61,7 @@ IF NOT EXISTS p_user (
     id INTEGER NOT NULL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
     name TEXT,
-    password TEXT NOT NULL,
+    password TEXT,
     temp_password TEXT,
     session_key TEXT,
     session_timeout INTEGER, 
@@ -93,5 +93,5 @@ IF NOT EXISTS p_group_dashboard (
     FOREIGN KEY (group_id) REFERENCES p_group(id)
 );
 
-INSERT INTO p_user(username, password, temp_password, sys_role)
-VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');
+INSERT INTO p_user(username, temp_password, sys_role)
+VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');

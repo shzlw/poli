@@ -30,8 +30,21 @@ public class UserDao {
     public User findByUsernameAndPassword(String username, String rawPassword) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawPassword);
         String sql = "SELECT id, username, name, sys_role "
-                + "FROM p_user "
-                + "WHERE username=? AND password=?";
+                    + "FROM p_user "
+                    + "WHERE username=? AND password=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{username, encryptedPassword}, new UserInfoRowMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public User findByUsernameAndTempPassword(String username, String rawTempPassword) {
+        String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
+        String sql = "SELECT id, username, name, sys_role "
+                    + "FROM p_user "
+                    + "WHERE username=? AND temp_password=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{username, encryptedPassword}, new UserInfoRowMapper());
             return user;
@@ -87,13 +100,12 @@ public class UserDao {
 
     public long insertUser(String username, String name, String rawTempPassword, String sysRole) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
-        String sql = "INSERT INTO p_user(username, name, temp_password, password, sys_role) "
-                + "VALUES(:username, :name, :temp_password, :password, :sys_role)";
+        String sql = "INSERT INTO p_user(username, name, temp_password, sys_role) "
+                + "VALUES(:username, :name, :temp_password, :sys_role)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(User.USERNAME, username);
         params.addValue(User.NAME, name);
         params.addValue(User.TEMP_PASSWORD, encryptedPassword);
-        params.addValue(User.PASSWORD, encryptedPassword);
         params.addValue(User.SYS_ROLE, sysRole);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
