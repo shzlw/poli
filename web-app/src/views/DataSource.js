@@ -85,7 +85,7 @@ class DataSource extends Component {
 
     if (id !== null) {
       ds.id = id;
-      if (showUpdatePassword) {
+      if (showUpdatePassword && password) {
         ds.password = password;
       }
 
@@ -306,7 +306,7 @@ class DataSource extends Component {
               ) : null
             }
 
-            <label className="form-label" className="mt-3">Ping</label>
+            <label>Ping</label>
             <input 
               type="text" 
               name="ping" 

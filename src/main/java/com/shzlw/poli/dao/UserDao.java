@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -81,6 +82,12 @@ public class UserDao {
         return jt.update(sql, new Object[] { sessionKey, sessionTimeout, userId});
     }
 
+    public int updateTempPassword(long userId, String rawNewPassword) {
+        String encryptedPassword = PasswordUtil.getMd5Hash(rawNewPassword);
+        String sql = "UPDATE p_user SET temp_password=NULL, password=? WHERE id=?";
+        return jt.update(sql, new Object[] { encryptedPassword, userId });
+    }
+
     public List<User> findNonAdminUsers(long myUserId) {
         String sql = "SELECT id, username, name, sys_role "
                     + "FROM p_user WHERE sys_role IN ('viewer', 'developer') AND id != ?";
@@ -122,8 +129,26 @@ public class UserDao {
     }
 
     public long updateUser(User user) {
-        String sql = "UPDATE p_user SET username=?, name=?, sys_role=? WHERE id=?";
-        return jt.update(sql, new Object[]{ user.getUsername(), user.getName(), user.getSysRole() });
+        String rawTempPassword = user.getTempPassword();
+        if (StringUtils.isEmpty(rawTempPassword)) {
+            String sql = "UPDATE p_user SET username=?, name=?, sys_role=? WHERE id=?";
+            return jt.update(sql, new Object[]{
+                    user.getUsername(),
+                    user.getName(),
+                    user.getSysRole(),
+                    user.getId()
+            });
+        } else {
+            String sql = "UPDATE p_user SET username=?, name=?, sys_role=?, password=NULL, temp_password=? "
+                        + "WHERE id=?";
+            return jt.update(sql, new Object[]{
+                    user.getUsername(),
+                    user.getName(),
+                    user.getSysRole(),
+                    user.getTempPassword(),
+                    user.getId()
+            });
+        }
     }
 
     public int deleteUser(long userId) {

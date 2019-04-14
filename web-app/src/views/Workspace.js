@@ -72,8 +72,6 @@ class Workspace extends React.Component {
       sysRole
     } = this.props;
 
-    console.log('Workspace - render', sysRole);
-
     let menuItems = [];
     let menuList = [];
     if (sysRole === Constants.SYS_ROLE_VIEWER) {

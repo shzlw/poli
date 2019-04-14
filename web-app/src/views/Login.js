@@ -22,7 +22,6 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Login', 'componentDidMount');
     console.log('Login - componentDidMount', 'cookie');
     axios.post('/auth/login/cookie')
       .then(res => {
@@ -78,8 +77,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('Login', 'render');
-
     return (
       <React.Fragment>
         <div className="login-panel">

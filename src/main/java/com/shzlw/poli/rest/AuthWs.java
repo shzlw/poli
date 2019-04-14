@@ -79,15 +79,12 @@ public class AuthWs {
 
     @RequestMapping(value="/login/changepassword", method= RequestMethod.POST)
     @Transactional
-    public String changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
-        if (sessionKey.isEmpty()) {
-            return "error";
-        }
+    public void changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey,
+        @RequestBody User user) {
 
-        User user = userDao.findBySessionKey(sessionKey);
-        if (user == null) {
-            return "error";
+        User existUser = userDao.findBySessionKey(sessionKey);
+        if (user != null) {
+            userDao.updateTempPassword(existUser.getId(), user.getPassword());
         }
-        return user.getSysRole();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,17 +58,29 @@ public class JdbcDataSourceDao {
 
     public int update(JdbcDataSource ds) {
         String rawPassword = ds.getPassword();
-        String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
-        String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, password=?, ping=? WHERE id=?";
-        return jt.update(sql, new Object[]{
-                ds.getName(),
-                ds.getConnectionUrl(),
-                ds.getDriverClassName(),
-                ds.getUsername(),
-                encryptedPassword,
-                ds.getPing(),
-                ds.getId()
-        });
+        if (StringUtils.isEmpty(rawPassword)) {
+            String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, ping=? WHERE id=?";
+            return jt.update(sql, new Object[]{
+                    ds.getName(),
+                    ds.getConnectionUrl(),
+                    ds.getDriverClassName(),
+                    ds.getUsername(),
+                    ds.getPing(),
+                    ds.getId()
+            });
+        } else {
+            String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
+            String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, password=?, ping=? WHERE id=?";
+            return jt.update(sql, new Object[]{
+                    ds.getName(),
+                    ds.getConnectionUrl(),
+                    ds.getDriverClassName(),
+                    ds.getUsername(),
+                    encryptedPassword,
+                    ds.getPing(),
+                    ds.getId()
+            });
+        }
     }
 
     public int delete(long id) {

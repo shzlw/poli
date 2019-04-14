@@ -15,6 +15,7 @@ class User extends React.Component {
       users: [],
       groups: [],
       searchValue: '',
+      showUpdatePassword: false,
       showEditPanel: false,
       id: null,
       username: '',
@@ -112,8 +113,15 @@ class User extends React.Component {
     this.setState(this.initialEditPanelState);
   }
 
+  toggleUpdatePassword = () => {
+    this.setState(prevState => ({
+      showUpdatePassword: !prevState.showUpdatePassword
+    })); 
+  }
+
   save = () => {
     const {
+      showUpdatePassword,
       id,
       username,
       name,
@@ -131,6 +139,9 @@ class User extends React.Component {
 
     if (id !== null) {
       user.id = id;
+      if (showUpdatePassword && tempPassword) {
+        user.tempPassword = tempPassword;
+      }
       
       axios.put('/ws/user', user)
         .then(res => {
@@ -139,8 +150,6 @@ class User extends React.Component {
           this.fetchUsers();
         });
     } else {
-      user.tempPassword = tempPassword;
-
       axios.post('/ws/user', user)
         .then(res => {
           this.clearEditPanel();
@@ -188,10 +197,14 @@ class User extends React.Component {
 
   render() {
     const { 
+      id,
+      showUpdatePassword,
       users = [],
       groups = [],
       userGroups = []
     } = this.state;
+
+    const mode = id === null ? 'New' : 'Edit';
 
     const userItems = users.map(user => 
       <div key={user.id} className="user-card">
@@ -247,7 +260,7 @@ class User extends React.Component {
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
           modalClass={'small-modal-panel'} 
-          title={'User'} >
+          title={mode} >
 
           <div className="form-panel">
             <label>Username</label>
@@ -264,12 +277,25 @@ class User extends React.Component {
               value={this.state.name}
               onChange={this.handleInputChange} />
 
-            <label>Temp password</label>
-            <input 
-              type="password" 
-              name="tempPassword" 
-              value={this.state.tempPassword}
-              onChange={this.handleInputChange} />
+            { mode === 'Edit' ? 
+              (
+                <div style={{margin: '3px 0px 8px 0px'}}>
+                  <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+                </div>
+              ) : null
+            }
+            { mode === 'New' || showUpdatePassword ? 
+              (
+                <div>
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    name="tempPassword" 
+                    value={this.state.tempPassword}
+                    onChange={this.handleInputChange} />
+                </div>
+              ) : null
+            }
             
             <label>System Role</label>
             <Select
@@ -295,7 +321,7 @@ class User extends React.Component {
               {userGroupItems}
             </div>
 
-            <button className="button" className="button" onClick={this.save}>Save</button>
+            <button className="button" onClick={this.save}>Save</button>
           </div>
         </Modal>
         

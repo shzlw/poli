@@ -5,7 +5,7 @@ public class LoginResponse {
     private String username;
     private String sysRole;
     private String error;
-    private boolean isTempPassowrd;
+    private boolean isTempPassword;
 
     public static LoginResponse ofError(String error) {
         return new LoginResponse(error);
@@ -21,10 +21,10 @@ public class LoginResponse {
         this.error = error;
     }
 
-    private LoginResponse(String username, String sysRole, boolean isTempPassowrd) {
+    private LoginResponse(String username, String sysRole, boolean isTempPassword) {
         this.username = username;
         this.sysRole = sysRole;
-        this.isTempPassowrd = isTempPassowrd;
+        this.isTempPassword = isTempPassword;
     }
 
     public String getUsername() {
@@ -39,7 +39,7 @@ public class LoginResponse {
         return error;
     }
 
-    public boolean isTempPassowrd() {
-        return isTempPassowrd;
+    public boolean isTempPassword() {
+        return isTempPassword;
     }
 }

@@ -31,7 +31,14 @@ class Account extends React.Component {
   fetchUser = () => {
     axios.get('/ws/user/account')
       .then(res => {
-        const result = res.data;
+        const user = res.data;
+        this.setState({
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          sysRole: user.sysRole,
+          apiKey: user.apiKey
+        });
       });
   }
 
