@@ -139,17 +139,30 @@ public class UserDao {
                     user.getId()
             });
         } else {
+            String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
             String sql = "UPDATE p_user SET username=?, name=?, sys_role=?, password=NULL, temp_password=? "
                         + "WHERE id=?";
             return jt.update(sql, new Object[]{
                     user.getUsername(),
                     user.getName(),
                     user.getSysRole(),
-                    user.getTempPassword(),
+                    encryptedPassword,
                     user.getId()
             });
         }
     }
+    public long updateUserAccount(long userId, String name, String rawPassword) {
+        if (StringUtils.isEmpty(rawPassword)) {
+            String sql = "UPDATE p_user SET name=? WHERE id=?";
+            return jt.update(sql, new Object[]{ name, userId });
+        } else {
+            String encryptedPassword = PasswordUtil.getMd5Hash(rawPassword);
+            String sql = "UPDATE p_user SET name=?, password=? WHERE id=?";
+            return jt.update(sql, new Object[]{ name, encryptedPassword, userId });
+        }
+    }
+
+
 
     public int deleteUser(long userId) {
         String sql = "DELETE FROM p_user WHERE id=?";

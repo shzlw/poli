@@ -101,7 +101,6 @@ class DataSource extends Component {
     } else {
       ds.password = password;
 
-      // New
       axios.post('/ws/jdbcdatasource', ds)
         .then(res => {
           this.closeEditPanel();

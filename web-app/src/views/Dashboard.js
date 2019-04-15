@@ -99,7 +99,11 @@ class Dashboard extends Component {
       searchValue
     } = this.state;
 
-    
+    const {
+      sysRole
+    } = this.props;
+    const showEdit = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
+
     const dashboardRows = [];
     for (let i = 0; i < dashboards.length; i++) {
       const dashboard = dashboards[i];
@@ -120,9 +124,13 @@ class Dashboard extends Component {
       <div>
         <div className="dashboard-sidebar">
           <div style={{margin: '5px'}}>
-            <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
-              <FontAwesomeIcon icon="plus" /> New
-            </button>
+            {
+              showEdit ? (
+                <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
+                  <FontAwesomeIcon icon="plus" /> New
+                </button>
+              ) : null
+            }
             <input 
               type="text" 
               name="searchValue" 

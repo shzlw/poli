@@ -59,12 +59,15 @@ class Account extends React.Component {
 
     if (showUpdatePassword) {
       if (password !== confirmedPassword) {
-        alert('confirm password');
         return;
-      }
-      
+      }  
+
       user.password = password;
     }
+
+    axios.put('/ws/user/account', user)
+      .then(res => {
+      });
   }
 
   toggleUpdatePassword = () => {

@@ -74,4 +74,11 @@ public class UserWs {
         User myUser = userDao.findBySessionKey(sessionKey);
         return myUser;
     }
+
+    @RequestMapping(value = "/account", method = RequestMethod.PUT)
+    @Transactional
+    public void updateUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey, @RequestBody User user) {
+        User myUser = userDao.findBySessionKey(sessionKey);
+        userDao.updateUserAccount(myUser.getId(), user.getName(), user.getPassword());
+    }
 }

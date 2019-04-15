@@ -14,7 +14,8 @@ class Select extends React.Component {
     onChange: PropTypes.func.isRequired,
     options: PropTypes.array.isRequired,
     optionDisplay: PropTypes.string,
-    optionValue: PropTypes.string
+    optionValue: PropTypes.string,
+    allowEmpty: PropTypes.bool
   };
 
   handleOptionChange = (event) => {
@@ -28,13 +29,17 @@ class Select extends React.Component {
       value,
       options = [],
       optionValue,
-      optionDisplay
+      optionDisplay,
+      allowEmpty = true
     } = this.props;
 
     const optionList = [];
-    optionList.push(
-      <option value="" key=""></option>
-    );
+    if (allowEmpty) {
+      optionList.push(
+        <option value="" key=""></option>
+      );
+    }
+    
     options.forEach((option, index) => {
       let value;
       let display;
@@ -50,7 +55,7 @@ class Select extends React.Component {
       
       optionList.push(
         <option value={value} key={index}>{display}</option>
-      )
+      ) 
     });
 
     return (

@@ -5,7 +5,7 @@ import Modal from '../components/Modal';
 import Select from '../components/Select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const SYS_ROLES = ['developer', 'viewer'];
+const SYS_ROLES = ['viewer', 'developer'];
 
 class User extends React.Component {
 
@@ -150,6 +150,8 @@ class User extends React.Component {
           this.fetchUsers();
         });
     } else {
+      user.tempPassword = tempPassword;
+
       axios.post('/ws/user', user)
         .then(res => {
           this.clearEditPanel();
@@ -303,6 +305,7 @@ class User extends React.Component {
               value={this.state.sysRole}
               onChange={this.handleOptionChange}
               options={SYS_ROLES}
+              allowEmpty={false}
             />
             
             <br/>
