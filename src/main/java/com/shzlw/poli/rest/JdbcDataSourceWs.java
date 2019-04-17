@@ -49,7 +49,7 @@ public class JdbcDataSourceWs {
     @Transactional
     public ResponseEntity<Long> add(@RequestBody JdbcDataSource ds) {
         long id = jdbcDataSourceDao.insert(ds);
-        jdbcDataSourceService.save(ds);
+        jdbcDataSourceService.put(ds);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
@@ -57,7 +57,7 @@ public class JdbcDataSourceWs {
     @Transactional
     public ResponseEntity<?> update(@RequestBody JdbcDataSource ds) {
         jdbcDataSourceDao.update(ds);
-        jdbcDataSourceService.save(ds);
+        jdbcDataSourceService.put(ds);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,54 +20,53 @@ public class JdbcDataSourceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSourceService.class);
 
-    private static final Map<String, HikariDataSource> DATA_SOURCE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Long, HikariDataSource> DATA_SOURCE_CACHE = new ConcurrentHashMap<>();
 
     @Autowired
     JdbcDataSourceDao jdbcDataSourceDao;
 
     @PostConstruct
     public void init() {
-        List<JdbcDataSource> dataSources = jdbcDataSourceDao.findAll();
-        for (JdbcDataSource dataSource : dataSources) {
-            save(dataSource);
-        }
     }
 
     @PreDestroy
     public void shutdown() {
-        for (HikariDataSource ds : DATA_SOURCE_CACHE.values()) {
-            ds.close();
+        for (HikariDataSource hiDs : DATA_SOURCE_CACHE.values()) {
+            hiDs.close();
         }
     }
 
-    public HikariDataSource save(JdbcDataSource dataSource) {
-        LOGGER.info("HikariDataSource - save: {}", dataSource);
-        HikariDataSource ds = DATA_SOURCE_CACHE.get(dataSource.getName());
-        if (ds != null) {
-            ds.close();
+    public DataSource put(JdbcDataSource dataSource) {
+        LOGGER.info("HikariDataSource - put: {}", dataSource);
+        HikariDataSource hiDs = DATA_SOURCE_CACHE.get(dataSource.getId());
+        if (hiDs != null) {
+            hiDs.close();
         }
-        HikariDataSource newDs = new HikariDataSource();
-        newDs.setJdbcUrl(dataSource.getConnectionUrl());
-        newDs.setUsername(dataSource.getUsername());
-        newDs.setPassword(dataSource.getPassword());
+        HikariDataSource newHiDs = new HikariDataSource();
+        newHiDs.setJdbcUrl(dataSource.getConnectionUrl());
+        newHiDs.setUsername(dataSource.getUsername());
+        newHiDs.setPassword(dataSource.getPassword());
         if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
-            newDs.setDriverClassName(dataSource.getDriverClassName());
+            newHiDs.setDriverClassName(dataSource.getDriverClassName());
         }
-        newDs.setMaximumPoolSize(10);
-        DATA_SOURCE_CACHE.put(dataSource.getName(), newDs);
-        return newDs;
+        newHiDs.setMaximumPoolSize(10);
+        DATA_SOURCE_CACHE.put(dataSource.getId(), newHiDs);
+        return newHiDs;
     }
-
 
     public void remove(JdbcDataSource dataSource) {
-        DATA_SOURCE_CACHE.remove(dataSource.getName());
+        DATA_SOURCE_CACHE.remove(dataSource.getId());
     }
 
     public DataSource getDataSource(JdbcDataSource dataSource) {
-        HikariDataSource ds = DATA_SOURCE_CACHE.get(dataSource.getName());
-        if (ds == null) {
-            ds = save(dataSource);
+        long id = dataSource.getId();
+        DataSource hiDs = DATA_SOURCE_CACHE.get(id);
+        if (hiDs == null) {
+            JdbcDataSource ds = jdbcDataSourceDao.findById(id);
+            if (ds != null) {
+                hiDs = put(dataSource);
+            }
         }
-        return ds;
+        return hiDs;
     }
 }

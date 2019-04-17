@@ -25,9 +25,9 @@ public class UserWs {
     public List<User> all(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
         User myUser = userDao.findBySessionKey(sessionKey);
         List<User> users = new ArrayList<>();
-        if ("admin".equals(myUser.getSysRole())) {
+        if (Constants.SYS_ROLE_ADMIN.equals(myUser.getSysRole())) {
             users = userDao.findNonAdminUsers(myUser.getId());
-        } else if ("developer".equals(myUser.getSysRole())) {
+        } else if (Constants.SYS_ROLE_DEVELOPER.equals(myUser.getSysRole())) {
             users = userDao.findViewerUsers(myUser.getId());
         }
         return users;

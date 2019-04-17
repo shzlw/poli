@@ -13,7 +13,7 @@ public final class PasswordUtil {
 
     private PasswordUtil() {}
 
-    public static String getUniqueId() {
+    public static synchronized String getUniqueId() {
         return uuidToBase64(UUID.randomUUID().toString());
     }
 
