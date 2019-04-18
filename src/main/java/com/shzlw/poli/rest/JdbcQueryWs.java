@@ -36,24 +36,13 @@ public class JdbcQueryWs {
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
-    public QueryResult runWidgetQuery(@PathVariable("id") long widgetId,
-                                      @RequestBody List<FilterParameter> filterParams) {
+    public QueryResult queryWidget(@PathVariable("id") long widgetId,
+                                        @RequestBody List<FilterParameter> filterParams) {
         Widget widget = widgetDao.findById(widgetId);
         String sql = widget.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.findByWidgetId(widgetId);
         QueryResult queryResult = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);
         queryResult.setId(widgetId);
-        return queryResult;
-    }
-
-    @RequestMapping(value = "/filter/{id}", method = RequestMethod.POST)
-    public QueryResult runWidgetQuery(@PathVariable("id") long filterId,
-                                      @RequestBody QueryRequest queryRequest) {
-        long dsId = queryRequest.getJdbcDataSourceId();
-        String sql = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.findById(dsId);
-        QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
-        queryResult.setId(filterId);
         return queryResult;
     }
 }

@@ -14,6 +14,7 @@ import * as EchartsApi from '../api/EchartsApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import TableWidget from './TableWidget';
+import Slicer from "./Slicer";
 
 class GridItem extends React.Component {
 
@@ -116,6 +117,26 @@ class GridItem extends React.Component {
     console.log('onChartLegendselectchanged', param, echart);
   };
 
+  onSlicerChange = (filterId, checkBoxes) => {
+    const index = this.state.filters.findIndex(f => f.id === filterId);
+    const newFilters = [...this.state.filters];
+    newFilters[index].checkBoxes = [...checkBoxes];
+    this.setState({
+      filters: newFilters
+    });  
+  }
+
+  onSingleValueChange = (filterId, event) => {
+    const { filters } = this.state;
+    const value = event.target.value;
+    const index = filters.findIndex(f => f.id === filterId);
+    const newFilters = [...filters];
+    newFilters[index].value = value;
+    this.setState({
+      filters: newFilters
+    });
+  }
+
   renderWidgetContent = () => {
     const onChartEvents = {
       'click': this.onChartClick,
@@ -123,10 +144,15 @@ class GridItem extends React.Component {
     };
 
     const { 
+      id,
+      type,
       chartType,
+      filterType,
       queryResult = {},
       drillThrough,
-      data = {}
+      data = {},
+      checkBoxes,
+      value
     } = this.props;
 
     const queryResultData = Util.jsonToArray(queryResult.data);
@@ -134,29 +160,50 @@ class GridItem extends React.Component {
     const error = queryResult.error;
 
     let widgetItem = (<div></div>);
-    if (chartType === Constants.TABLE) {
-      widgetItem = (
-        <TableWidget
-          data={queryResultData}
-          columns={columns}
-          error={error}
-          drillThrough={drillThrough}
-        />
-      );
-    } else if (chartType === Constants.PIE) {
-      const { 
-        pieKey,
-        pieValue
-      } = data;
-      const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
-      widgetItem = (
-        <ReactEcharts 
-          option={chartOption}   
-          className="echarts"
-          onEvents={onChartEvents}  
-        />
-      );
-    } 
+    if (type === Constants.CHART) {
+      if (chartType === Constants.TABLE) {
+        widgetItem = (
+          <TableWidget
+            data={queryResultData}
+            columns={columns}
+            error={error}
+            drillThrough={drillThrough}
+          />
+        );
+      } else if (chartType === Constants.PIE) {
+        const { 
+          pieKey,
+          pieValue
+        } = data;
+        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
+        widgetItem = (
+          <ReactEcharts 
+            option={chartOption}   
+            className="echarts"
+            onEvents={onChartEvents}  
+          />
+        );
+      } 
+    } else if (type === Constants.FILTER) {
+      if (filterType === Constants.SLICER) {
+        widgetItem = (
+          <Slicer 
+            filterId={id} 
+            checkBoxes={checkBoxes} 
+            onChange={this.onSlicerChange} 
+          />
+        );
+      } else if (filterType === Constants.SINGLE_VALUE) {
+        widgetItem = (
+          <input 
+            type="text"  
+            value={value}
+            onChange={(event) => this.onSingleValueChange(id, event)} 
+          />
+        );
+      }
+    }
+    
 
     return widgetItem;
   }

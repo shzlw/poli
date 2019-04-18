@@ -1,7 +1,6 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.DashboardDao;
-import com.shzlw.poli.dao.FilterDao;
 import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class DashboardWs {
 
     @Autowired
     DashboardDao dashboardDao;
-
-    @Autowired
-    FilterDao filterDao;
 
     @Autowired
     WidgetDao widgetDao;
@@ -62,7 +58,6 @@ public class DashboardWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        filterDao.deleteByDashboardId(id);
         widgetDao.deleteByDashboardId(id);
         dashboardDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

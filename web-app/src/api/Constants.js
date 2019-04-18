@@ -1,6 +1,10 @@
 /**
  * Constants
  */
+export const CHART = 'chart';
+export const FILTER = 'filter';
+export const WIDGET_TYPES = [CHART, FILTER];
+
 export const SLICER = 'slicer';
 export const SINGLE_VALUE= 'single';
 export const FILTER_TYPES = [SLICER, SINGLE_VALUE];

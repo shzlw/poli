@@ -8,6 +8,8 @@ import Checkbox from './Checkbox';
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
 import Modal from '../components/Modal';
+import * as Constants from '../api/Constants';
+
 
 const BASE_WIDTH = 1200;
 
@@ -28,13 +30,9 @@ class WidgetViewPanel extends React.Component {
   componentDidMount() {
   }
 
-  resizeGrid = (width, isResizeToBase) => {
-    const preGridWidth = this.state.gridWidth;
+  resizeGrid = (width) => {
     const { widgets } = this.state;
     const newWidgets = [...widgets];
-    if (isResizeToBase) {
-      this.resizeWidgetsToBase(newWidgets, preGridWidth);
-    }
 
     const gridWidth = width - 10;
     this.resizeWidgetsToActual(newWidgets, gridWidth);
@@ -80,27 +78,91 @@ class WidgetViewPanel extends React.Component {
         this.setState({
           widgets: result
         }, () => {
-          this.resizeGrid(width, false);
+          this.resizeGrid(width);
           this.queryWidgets(filterParams);
         });
       });
   }
 
-  queryWidgets = (filterParams) => {
-    const params = filterParams === null ? [] : filterParams;
+  queryWidgets(filterParams) {
     const { widgets } = this.state;
     for (let i = 0; i < widgets.length; i++) {
       const widget = widgets[i];
-      axios.post('/ws/jdbcquery/widget/' + widget.id, params)
+      if (widget.type === Constants.CHART) {
+        this.queryChart(widget, filterParams);
+      } else if (widget.type === Constants.FILTER) {
+        this.queryFilter(widget);
+      }
+    }
+  }
+
+  queryChart(widget, filterParams) {
+    const params = filterParams === null ? [] : filterParams;
+    const { widgets } = this.state;
+    axios.post(`/ws/jdbcquery/widget/${widget.id}`, params)
+      .then(res => {
+        const queryResult = res.data;
+        const index = widgets.findIndex(w => w.id === queryResult.id);
+        const newWidgets = [...widgets];
+        newWidgets[index].queryResult = queryResult;
+        this.setState({
+          widgets: newWidgets
+        });
+      });
+  }
+ 
+  queryCharts(filterParams) {
+    const { widgets } = this.state;
+    for (let i = 0; i < widgets.length; i++) {
+      const widget = widgets[i];
+      if (widget.type === Constants.CHART) {
+        this.queryChart(widget, filterParams);
+      }
+    }
+  }
+
+  queryFilter(widget) {
+    const { widgets } = this.state;
+    const { filterType } = widget;
+    if (filterType === Constants.SLICER) {
+      axios.post(`/ws/jdbcquery/widget/${widget.id}`)
         .then(res => {
-          const result = res.data;
-          const index = widgets.findIndex(w => w.id === result.id);
+          const queryResult = res.data;
+          const queryResultData = Util.jsonToArray(queryResult.data);
+          const checkBoxes = [];
+          for (let i = 0; i < queryResultData.length; i++) {
+            const values = Object.values(queryResultData[i]);
+            for (const val of values) {
+              checkBoxes.push({
+                value: val,
+                isChecked: false
+              });
+            }
+          }
+          const index = widgets.findIndex(w => w.id === queryResult.id);
           const newWidgets = [...widgets];
-          newWidgets[index].queryResult = result;
+          newWidgets[index].queryResult = queryResult;
+          newWidgets[index].checkBoxes = checkBoxes;
           this.setState({
             widgets: newWidgets
           });
         });
+    } else if (filterType === Constants.SINGLE_VALUE) {
+      /*
+        const values = Object.values(queryResultData);
+        let value = '';
+        for (const val of values) {
+          value = val;
+          break;
+        }
+        newFilters[index].value = value;
+      */
+      const index = widgets.findIndex(w => w.id === widget.id);
+      const newWidgets = [...widgets];
+      newWidgets[index].value = '';
+      this.setState({
+        widgets: newWidgets
+      });
     }
   }
 
@@ -138,6 +200,45 @@ class WidgetViewPanel extends React.Component {
     this.setState({
       widgets: newWidgets
     });
+  }
+
+  applyFilters = () => {
+    const { 
+      widgets = []
+    } = this.state;
+    const filterParams = [];
+    for (let i = 0; i < widgets.length; i++) {
+      const widget = widgets[i];
+      if (widget.type === Constants.FILTER) {
+        const { filterType } = widget;
+        const filterParam = {};
+        if (filterType === Constants.SLICER) {
+          const { 
+            checkBoxes = []
+          } = widget;
+          const paramValues = [];
+          for (let j = 0; j < checkBoxes.length; j++) {
+            const checkBox = checkBoxes[j];
+            if (checkBox.isChecked) {
+              paramValues.push(checkBox.value);
+            }
+          }
+          filterParam.value = paramValues;
+          if (paramValues.length === checkBoxes.length) {
+            filterParam.remark = 'select all';
+          }
+        } else if (filterType === Constants.SINGLE_VALUE) {
+          filterParam.value = widget.value;
+        }
+        filterParam.param = widget.data.queryParameter;
+        filterParam.type = widget.filterType;
+        filterParams.push(filterParam);
+      }
+    }
+  }
+
+  getCharts = () => {
+
   }
 
   confirmDelete = () => {

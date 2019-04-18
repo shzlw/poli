@@ -1,5 +1,6 @@
 package com.shzlw.poli.service;
 
+import com.shzlw.poli.SystemProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;
@@ -25,6 +26,9 @@ public class JdbcDataSourceService {
     @Autowired
     JdbcDataSourceDao jdbcDataSourceDao;
 
+    @Autowired
+    SystemProperties systemProperties;
+
     @PostConstruct
     public void init() {
     }
@@ -49,7 +53,7 @@ public class JdbcDataSourceService {
         if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
             newHiDs.setDriverClassName(dataSource.getDriverClassName());
         }
-        newHiDs.setMaximumPoolSize(10);
+        newHiDs.setMaximumPoolSize(systemProperties.getDataSourceMaximumPoolSize());
         DATA_SOURCE_CACHE.put(dataSource.getId(), newHiDs);
         return newHiDs;
     }

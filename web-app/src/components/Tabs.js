@@ -23,7 +23,7 @@ class Tabs extends React.Component {
 
   render() {
     const {
-      children = []
+      children
     } = this.props;
 
     const {
@@ -33,18 +33,20 @@ class Tabs extends React.Component {
     const tabHeaders = [];
     let tabContent = null;
     for (let i = 0; i < children.length; i++) {
-      const title = children[i].props.title;
-      let active = '';
-      if (title === activeTab) {
-        active = 'tab-header-active';
-        tabContent = children[i].props.children;
+      if (children[i]) {
+        const title = children[i].props.title;
+        let active = '';
+        if (title === activeTab) {
+          active = 'tab-header-active';
+          tabContent = children[i].props.children;
+        }
+        
+        tabHeaders.push(
+          <li className={`tab-header-item ${active}`} key={i} onClick={() => this.handleTabClick(title)}>{title}</li>
+        );
       }
-      
-      tabHeaders.push(
-        <li className={`tab-header-item ${active}`} key={i} onClick={() => this.handleTabClick(title)}>{title}</li>
-      );
     }
-
+    
     return (
       <div className="tab-container">
         <ul className="tab-header">

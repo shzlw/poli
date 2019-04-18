@@ -3,10 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 
-import FilterViewPanel from '../components/FilterViewPanel';
 import WidgetViewPanel from '../components/WidgetViewPanel';
 import WidgetEditPanel from '../components/WidgetEditPanel';
-import FilterEditPanel from '../components/FilterEditPanel';
 
 import Modal from '../components/Modal';
 
@@ -26,8 +24,6 @@ class DashboardEditView extends React.Component {
     
     this.state = {
       showWidgetEditPanel: false,
-      showFilterEditPanel: false,
-      showFilterViewPanel: true,
       showConfirmDeletionPanel: false,
       objectToDelete: {},
       isEditMode: false,
@@ -42,8 +38,6 @@ class DashboardEditView extends React.Component {
       widgetViewWidth: 1000
     }
 
-    this.filterViewPanel = React.createRef();
-    this.filterEditPanel = React.createRef();
     this.widgetViewPanel = React.createRef();
     this.widgetEditPanel = React.createRef();
   }
@@ -61,11 +55,8 @@ class DashboardEditView extends React.Component {
       console.log(pair[0]+ ', '+ pair[1]); 
     } 
 
-    const pageWidth = this.getPageWidth();
-    const widgetViewWidth = this.state.showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
-    console.log('componentDidMount', pageWidth, widgetViewWidth);
+    const widgetViewWidth = this.getPageWidth();
     this.setState({
-      pageWidth: pageWidth,
       widgetViewWidth: widgetViewWidth
     }, () => {
       if (dashboardId === null) {
@@ -99,19 +90,13 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
-    const showFilter = params.get('showFilter');
 
-    const showFilterViewPanel = showFilter == 'true';
+    const widgetViewWidth = this.getPageWidth();
 
-    const pageWidth = this.getPageWidth();
-    const widgetViewWidth = showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
-    
     this.setState({
-      pageWidth: pageWidth,
-      widgetViewWidth: widgetViewWidth,
       isReadOnly: true,
       name: dashboardName,
-      showFilterViewPanel: showFilterViewPanel
+      widgetViewWidth: widgetViewWidth
     }, () => {
       axios.get(`/ws/dashboard/name/${dashboardName}`)
         .then(res => {
@@ -127,15 +112,15 @@ class DashboardEditView extends React.Component {
     });
   }
 
-  getPageWidth = () => {
-    const thisNode = ReactDOM.findDOMNode(this);
-    return thisNode.clientWidth - 40;
-  }
-
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     });
+  }
+
+  getPageWidth = () => {
+    const thisNode = ReactDOM.findDOMNode(this);
+    return thisNode.clientWidth - 40;
   }
 
   toggleAutoRefresh = () => {
@@ -150,7 +135,8 @@ class DashboardEditView extends React.Component {
       let interval = parseInt(refreshInterval, 10) || 15;
       interval = interval < 1 ? 1 : interval;
       const timerId = setInterval(() => {
-        this.filterViewPanel.current.applyFilters();
+        // FIXME
+        // this.filterViewPanel.current.applyFilters();
         this.updateLastRefreshed();
       }, interval * 1000);
       this.setState({
@@ -161,15 +147,7 @@ class DashboardEditView extends React.Component {
 
   refresh = () => {
     this.refreshWidgetView();
-    this.refreshFilterView();
     this.updateLastRefreshed();
-  }
-
-  refreshFilterView = () => {
-    const { 
-      dashboardId
-    } = this.state;
-    this.filterViewPanel.current.fetchFilters(dashboardId);
   }
 
   refreshWidgetView = () => {
@@ -234,42 +212,8 @@ class DashboardEditView extends React.Component {
     this.refreshWidgetView();
   }
 
-  onSaveFilter = () => {
-    this.setState({ 
-      showFilterEditPanel: false 
-    });
-    // FIXME: not need to refresh. Just add to state.widgets
-    this.refreshFilterView();
-  }
-
-  toggleFilterViewPanel = () => {
-    const { 
-      showFilterViewPanel
-    } = this.state;
-    this.resizePageLayout(!showFilterViewPanel);
-  }
-
-  resizePageLayout = (showFilterViewPanel) => {
-    const pageWidth = this.getPageWidth();;
-    let widgetViewWidth = showFilterViewPanel ? pageWidth - Constants.DEFAULT_FILTER_VIEW_WIDTH : pageWidth;
-    this.widgetViewPanel.current.resizeGrid(widgetViewWidth, true);
-
-    this.setState({
-      showFilterViewPanel: showFilterViewPanel,
-      widgetViewWidth: widgetViewWidth
-    }); 
-  }
-
-  openFilterEditPanel = (filterId) => {
-    this.filterEditPanel.current.fetchFilter(filterId);
-    this.setState({
-      showFilterEditPanel: true
-    });
-  }
-
   openWidgetEditPanel = (widgetId) => {
-    const { dashboardId } = this.state;
-    this.widgetEditPanel.current.fetchWidget(widgetId, dashboardId);
+    this.widgetEditPanel.current.fetchWidget(widgetId);
     this.setState({
       showWidgetEditPanel: true
     });
@@ -452,13 +396,6 @@ class DashboardEditView extends React.Component {
           onBackgroundColorChange={this.onBackgroundColorChange}
           {...this.state.style}
         />
-        <FilterViewPanel 
-          ref={this.filterViewPanel} 
-          onEdit={this.openFilterEditPanel}
-          onApplyFilters={this.applyFilters}
-          isEditMode={this.state.isEditMode}
-          show={this.state.showFilterViewPanel}
-        />
 
         <Modal 
           show={this.state.showWidgetEditPanel}
@@ -470,19 +407,6 @@ class DashboardEditView extends React.Component {
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
             onSave={this.onSaveWidget}
-          />
-        </Modal>
-
-        <Modal 
-          show={this.state.showFilterEditPanel}
-          onClose={() => this.setState({ showFilterEditPanel: false })}
-          modalClass={'dashboard-edit-filter-dialog'} 
-          title={'Filter Edit'}>
-          <FilterEditPanel
-            ref={this.filterEditPanel}
-            jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
-            dashboardId={this.state.dashboardId}
-            onSave={this.onSaveFilter}
           />
         </Modal>
 

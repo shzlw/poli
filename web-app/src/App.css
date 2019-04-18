@@ -138,9 +138,6 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   padding: 7px 10px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
   border: 2px solid #FFFFFF;
   outline: 0;

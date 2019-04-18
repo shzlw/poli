@@ -22,13 +22,13 @@ public class WidgetDao {
     JdbcTemplate jt;
 
     public List<Widget> findByDashboardId(long dashboardId) {
-        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
+        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style, type, filter_type "
                     + "FROM p_widget WHERE dashboard_id=?";
         return jt.query(sql, new Object[] { dashboardId }, new WidgetRowMapper());
     }
 
     public Widget findById(long id) {
-        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style "
+        String sql = "SELECT id, datasource_id, dashboard_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style, type, filter_type "
                     + "FROM p_widget WHERE id=?";
         try {
             return (Widget) jt.queryForObject(sql, new Object[]{ id }, new WidgetRowMapper());
@@ -43,7 +43,8 @@ public class WidgetDao {
     }
 
     public int update(Widget w) {
-        String sql = "UPDATE p_widget SET datasource_id=?, title=?, sql_query=?, chart_type=?, data=?, drill_through=?, style=? WHERE id=?";
+        String sql = "UPDATE p_widget SET datasource_id=?, title=?, sql_query=?, chart_type=?, data=?, drill_through=?, style=?, type=?, filter_type=? "
+                    + "WHERE id=?";
         return jt.update(sql, new Object[] {
                 w.getJdbcDataSourceId(),
                 w.getTitle(),
@@ -52,6 +53,8 @@ public class WidgetDao {
                 w.getData(),
                 w.getDrillThrough(),
                 w.getStyle(),
+                w.getType(),
+                w.getFilterType(),
                 w.getId()
         });
     }
@@ -62,8 +65,8 @@ public class WidgetDao {
     }
 
     public long insert(Widget w) {
-        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style) "
-                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO p_widget(dashboard_id, datasource_id, title, sql_query, width, height, x, y, chart_type, data, drill_through, style, type, filter_type) "
+                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jt.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -79,6 +82,8 @@ public class WidgetDao {
             ps.setString(10, w.getData());
             ps.setString(11, w.getDrillThrough());
             ps.setString(12, w.getStyle());
+            ps.setString(13, w.getType());
+            ps.setString(14, w.getFilterType());
             return ps;
         }, keyHolder);
 
@@ -118,6 +123,8 @@ public class WidgetDao {
             w.setData(rs.getString("data"));
             w.setDrillThrough(rs.getString("drill_through"));
             w.setStyle(rs.getString("style"));
+            w.setType(rs.getString("type"));
+            w.setFilterType(rs.getString("filter_type"));
             return w;
         }
     }

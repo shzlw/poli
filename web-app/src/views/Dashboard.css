@@ -44,24 +44,10 @@
   top: 50px;
   left: 0;
   bottom: 0;
+  right: 0;
   background-color: #eeeeee;
   overflow: auto;
   padding: 5px 10px 10px 20px;
-}
-
-.dashboard-full-width {
-  right: 0px;
-}
-
-.dashboard-content-filter-panel {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  bottom: 0;
-  width: 200px;
-  background-color: #eeeeee;
-  overflow: auto;
-  padding: 5px 0px;
 }
 
 .dashboard-add-button {

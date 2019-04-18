@@ -38,24 +38,28 @@ class WidgetEditPanel extends React.Component {
       sqlQuery: '',
       jdbcDataSourceId: '',
       queryResult: {},
+      type: Constants.CHART,
+      filterType: Constants.SINGLE_VALUE,
       chartType: Constants.TABLE,
       style: {
-        showBorder: false
+        showBorder: false,
+        showTitle: true
       },
-      pieKey: '',
-      pieValue: '',
-      chartOption: {},
-      drills: [],
+      queryParameter: '',
+      drillThrough: [],
       drillDashboards: [],
       drillColumnName: '',
-      drillDashboardId: ''
+      drillDashboardId: '',
+      pieKey: '',
+      pieValue: '',
+      chartOption: {}
     };
   }
 
   componentDidMount() {
   }
 
-  fetchWidget = async (widgetId, dashboardId) => {
+  fetchWidget = async (widgetId) => {
     this.setState(this.initialState);
 
     const jdbcDataSources = await webApi.fetchDataSources();
@@ -81,31 +85,53 @@ class WidgetEditPanel extends React.Component {
       })
       axios.get('/ws/widget/' + widgetId)
         .then(res => {
-          const result = res.data;
-          const { chartType } = result;
-          if (chartType === Constants.PIE) {
-            const {
-              pieKey,
-              pieValue
-            } = result.data;
+          const widget = res.data;
+          const {
+            type,
+            chartType,
+            filterType,
+            queryParameter,
+            drillThrough
+          } = widget;
+          if (type === Constants.CHART) {
             this.setState({
-              pieKey: pieKey,
-              pieValue: pieValue
+              chartType: chartType,
+              drillThrough: drillThrough
             });
-          }
 
+            if (chartType === Constants.PIE) {
+              const {
+                pieKey,
+                pieValue
+              } = widget.data;
+              this.setState({
+                pieKey: pieKey,
+                pieValue: pieValue
+              });
+            }
+          } else if (type === Constants.FILTER) {
+            this.setState({
+              filterType: filterType,
+              queryParameter: queryParameter
+            });
+            if (filterType === Constants.SLICER) {
+
+            } else if (filterType === Constants.SINGLE_VALUE) {
+
+            }
+          }
+          
           this.setState({
             widgetId: widgetId,
-            title: result.title,
-            x: result.x,
-            y: result.y,
-            width: result.width,
-            height: result.height,
-            sqlQuery: result.sqlQuery,
-            chartType: result.chartType,
-            jdbcDataSourceId: result.jdbcDataSourceId,
-            drills: result.drillThrough,
-            style: result.style
+            title: widget.title,
+            x: widget.x,
+            y: widget.y,
+            width: widget.width,
+            height: widget.height,
+            sqlQuery: widget.sqlQuery,
+            type: type,
+            jdbcDataSourceId: widget.jdbcDataSourceId,
+            style: widget.style
           }, () => {
             this.runQuery();
           });
@@ -121,13 +147,11 @@ class WidgetEditPanel extends React.Component {
   }
 
   handleCheckBoxChange = (name, isChecked) => {
-    if (name === 'showBorder') {
-      const style = {...this.state.style};
-      style.showBorder = isChecked;
-      this.setState({
-        style: style
-      });
-    }
+    const style = {...this.state.style};
+    style[[name]] = isChecked;
+    this.setState({
+      style: style
+    });
   }
 
   handleAceEditorChange = (newValue) => {
@@ -155,33 +179,55 @@ class WidgetEditPanel extends React.Component {
       title,
       jdbcDataSourceId,
       sqlQuery,
-      chartType,
-      drills,
+      type,
       style
     } = this.state;
 
     const widget = {
       title: title,
       dashboardId: this.props.dashboardId,
-      chartType: chartType,
+      type: type,
       jdbcDataSourceId: jdbcDataSourceId,
       sqlQuery: sqlQuery,
-      drillThrough: drills,
       style: style
     }
 
-    if (chartType === Constants.TABLE) {
-
-    } else if (chartType === Constants.PIE) {
+    if (type === Constants.CHART) {
       const {
-        pieKey,
-        pieValue
+        chartType,
+        drillThrough
       } = this.state;
+      widget.drillThrough = drillThrough;
+      widget.chartType = chartType;
+
+      if (chartType === Constants.TABLE) {
+
+      } else if (chartType === Constants.PIE) {
+        const {
+          pieKey,
+          pieValue
+        } = this.state;
+        widget.data = {
+          pieKey: pieKey,
+          pieValue: pieValue
+        }
+      }
+    } else if (type === Constants.FILTER) {
+      const  {
+        filterType,
+        queryParameter
+      } = this.state;
+      widget.filterType = filterType;
       widget.data = {
-        pieKey: pieKey,
-        pieValue: pieValue
+        queryParameter: queryParameter
+      }
+      if (filterType === Constants.SLICER) {
+
+      } else if (filterType === Constants.SINGLE_VALUE) {
+
       }
     }
+    
 
     if (widgetId === null) {
       axios.post('/ws/widget', widget)
@@ -214,32 +260,31 @@ class WidgetEditPanel extends React.Component {
 
   addDrillThrough = () => {
     const { 
-      drills,
+      drillThrough,
       drillColumnName,
       drillDashboardId
     } = this.state;
-    const filterId = this.state.filterId;
-    const index = drills.findIndex(d => d.columnName === drillColumnName);
+    const index = drillThrough.findIndex(d => d.columnName === drillColumnName);
     if (index === -1) {
-      const newDrills = [...drills];
-      newDrills.push({
+      const newDrillThrough = [...drillThrough];
+      newDrillThrough.push({
         columnName: drillColumnName,
         dashboardId: drillDashboardId
       });
       this.setState({
-        drills: newDrills
+        drillThrough: newDrillThrough
       });
     } 
   }
 
   removeDrillThrough = (drill) => {
-    const { drills } = this.state;
-    const index = drills.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardId === drill.dashboardId));
+    const { drillThrough } = this.state;
+    const index = drillThrough.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardId === drill.dashboardId));
     if (index !== -1) {
-      const newDrills = [...drills];
-      newDrills.splice(index, 1);
+      const newDrillThrough = [...drillThrough];
+      newDrillThrough.splice(index, 1);
       this.setState({
-        drills: newDrills
+        drillThrough: newDrillThrough
       });
     } 
   }
@@ -316,7 +361,7 @@ class WidgetEditPanel extends React.Component {
     const { 
       queryResult,
       jdbcDataSources = [],
-      drills,
+      drillThrough = [],
       drillDashboards = []
     } = this.state;
 
@@ -324,7 +369,7 @@ class WidgetEditPanel extends React.Component {
     const columns = queryResult.columns || [];
     const error = queryResult.error;
 
-    const drillItems = (drills || []).map(drill =>
+    const drillItems = drillThrough.map(drill =>
       <div key={drill.columnName}>
         <div>Column: {drill.columnName}</div>
         <div>Dashboard: {drill.dashboardId}</div>
@@ -339,6 +384,13 @@ class WidgetEditPanel extends React.Component {
     return (
       <div>
         <button className="button" onClick={this.save}>Save</button>
+        <Select
+          name={'type'}
+          value={this.state.type}
+          onChange={this.handleOptionChange}
+          options={Constants.WIDGET_TYPES}
+          allowEmpty={false}
+        />
         
         <div className="form-panel">
           <Tabs activeTab="basic">
@@ -352,6 +404,7 @@ class WidgetEditPanel extends React.Component {
               />
 
               <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.handleCheckBoxChange} />
+              <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.handleCheckBoxChange} />
             </div>
 
             <div title="Query">
@@ -402,44 +455,87 @@ class WidgetEditPanel extends React.Component {
               </div>
             </div>
 
-            <div title="Chart">
-              <label>Chart Options</label>
-              <Select
-                name={'chartType'}
-                value={this.state.chartType}
-                onChange={this.handleOptionChange}
-                options={Constants.CHART_TYPES}
-              />
-              <label>Preview</label>
-              {this.renderChartPreview()}  
-            </div>
+            {
+              this.state.type === Constants.CHART ?
+              (
+                <div title="Chart">
+                  <label>Chart Options</label>
+                  <Select
+                    name={'chartType'}
+                    value={this.state.chartType}
+                    onChange={this.handleOptionChange}
+                    options={Constants.CHART_TYPES}
+                    allowEmpty={false}
+                  />
+                  <label>Preview</label>
+                  {this.renderChartPreview()}  
+                </div>
+              ) : null
+            }
+            
+            {
+              this.state.type === Constants.CHART ?
+              (
+                <div title="Drill through">
+                  <label>Drill through</label>
+                  <label>Column</label>
+                  <Select
+                    name={'drillColumnName'}
+                    value={this.state.drillColumnName}
+                    options={columns}
+                    onChange={this.handleOptionChange}
+                    optionDisplay={'name'}
+                    optionValue={'name'}
+                  />
 
-            <div title="Drill through">
-              <label>Drill through</label>
-              <label>Column</label>
-              <Select
-                name={'drillColumnName'}
-                value={this.state.drillColumnName}
-                options={columns}
-                onChange={this.handleOptionChange}
-                optionDisplay={'name'}
-                optionValue={'name'}
-              />
+                  <label>Dashboard</label>
+                  <Select
+                    name={'drillDashboardId'}
+                    value={this.state.drillDashboardId}
+                    options={drillDashboards}
+                    onChange={this.handleIntegerOptionChange}
+                    optionDisplay={'name'}
+                    optionValue={'id'}
+                  />
+                  <div>
+                    {drillItems}
+                  </div>
+                  <button className="button" onClick={this.addDrillThrough}>Add</button>
+                </div>
+              ) : null
+            }
 
-              <label>Dashboard</label>
-              <Select
-                name={'drillDashboardId'}
-                value={this.state.drillDashboardId}
-                options={drillDashboards}
-                onChange={this.handleIntegerOptionChange}
-                optionDisplay={'name'}
-                optionValue={'id'}
-              />
-              <div>
-                {drillItems}
-              </div>
-              <button className="button" onClick={this.addDrillThrough}>Add</button>
-            </div>
+            {
+              this.state.type === Constants.FILTER ?
+              (
+                <div title="Filter">
+                  <label>Filter Options</label>
+                  <Select
+                    name={'filterType'}
+                    value={this.state.filterType}
+                    onChange={this.handleOptionChange}
+                    options={Constants.FILTER_TYPES}
+                    allowEmpty={false}
+                  />
+                </div>
+              ) : null
+            }
+
+            {
+              this.state.type === Constants.FILTER ?
+              (
+                <div title="Query parameter">
+                  <label>Parameter</label>
+                  <input 
+                    type="text" 
+                    name="param" 
+                    value={this.state.queryParameter}
+                    onChange={this.handleInputChange} 
+                  />
+                </div>
+              ) : null
+            }
+
           </Tabs>
 
         </div>

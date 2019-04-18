@@ -15,6 +15,11 @@ public class Widget {
     private long jdbcDataSourceId;
     private long dashboardId;
     private String sqlQuery;
+
+    private String type;
+
+    private String filterType;
+
     private String chartType;
 
     /**
@@ -110,6 +115,22 @@ public class Widget {
 
     public void setChartType(String chartType) {
         this.chartType = chartType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getFilterType() {
+        return filterType;
+    }
+
+    public void setFilterType(String filterType) {
+        this.filterType = filterType;
     }
 
     @JsonRawValue

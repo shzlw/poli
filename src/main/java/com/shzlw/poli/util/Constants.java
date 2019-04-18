@@ -24,4 +24,7 @@ public final class Constants {
     public static final String SYS_ROLE_VIEWER = "viewer";
     public static final String SYS_ROLE_DEVELOPER = "developer";
     public static final String SYS_ROLE_ADMIN = "admin";
+
+    public static final String WIDGET_TYPE_FILTER = "filter";
+    public static final String WIDGET_TYPE_CHART = "chart";
 }
