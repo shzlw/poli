@@ -35,6 +35,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const pathname = this.props.location.pathname;
+    const search = this.props.location.search;
+    const currentPath = pathname + search;
     const {
       sysRole
     } = this.state;
@@ -44,7 +47,7 @@ class App extends React.Component {
       isAuthenticated = true;
     }
 
-    console.log('App - componentDidMount',isAuthenticated);
+    console.log('App - componentDidMount', isAuthenticated, currentPath);
 
     if (!isAuthenticated) {
       console.log('App - componentDidMount', 'cookie');
@@ -62,7 +65,7 @@ class App extends React.Component {
                 this.props.history.push('/login');
               });
             } else {
-              this.onLoginSuccess(loginResponse);
+              this.onLoginSuccess(loginResponse, currentPath);
             }
           });
       });
@@ -70,7 +73,7 @@ class App extends React.Component {
     }
   }
 
-  onLoginSuccess = (loginResponse = {}) => {
+  onLoginSuccess = (loginResponse = {}, pathname = null) => {
     if (loginResponse.tempPassword) {
       this.props.history.push('/changepassword');
     } else {
@@ -79,7 +82,12 @@ class App extends React.Component {
         sysRole: loginResponse.sysRole,
         isAuthorizing: false
       }, () => {
-        this.props.history.push('/workspace/dashboard');
+        let directUrl = '/workspace/dashboard';
+        if (pathname) {
+          directUrl = pathname;
+        }
+        console.log('onLoginSuccess', pathname);
+        this.props.history.push(directUrl);
       });
     }
   }
@@ -117,7 +125,7 @@ class App extends React.Component {
       <div className="app">
         <Switch>
           <Route exact path="/" component={Login} />
-          <Route path="/login" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
+          <Route path="/login" render={() => <Login sysRole={sysRole} onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="/changepassword" component={ChangeTempPassword} />
           <PrivateRoute 
             authenticated={isAuthenticated} 

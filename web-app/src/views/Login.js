@@ -22,14 +22,21 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Login - componentDidMount', 'cookie');
-    axios.post('/auth/login/cookie')
-      .then(res => {
-        const loginResponse = res.data;
-        if (!loginResponse.error) {
-          this.props.onLoginSuccess(loginResponse);
-        }
-      });
+    const { sysRole } = this.props;
+    let isAuthenticated = false;
+    if (sysRole) {
+      isAuthenticated = true;
+    }
+    console.log('Login - componentDidMount', isAuthenticated);
+    if (!isAuthenticated) {
+      axios.post('/auth/login/cookie')
+        .then(res => {
+          const loginResponse = res.data;
+          if (!loginResponse.error) {
+            this.props.onLoginSuccess(loginResponse);
+          }
+        });
+    }
   }
 
   handleKeyPress = (event) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import './TableWidget.css';
+import { withRouter } from "react-router-dom";
 
 class TableWidget extends React.Component {
 
@@ -9,6 +10,10 @@ class TableWidget extends React.Component {
     super(props);
     this.state = { 
     };
+  }
+
+  goToLink = (link) => {
+    this.props.history.push(link);
   }
 
   render() {   
@@ -30,7 +35,12 @@ class TableWidget extends React.Component {
         const index = drillThrough.findIndex(d => d.columnName === columnName);
         if (index !== -1) {
           const dashboardId = drillThrough[index].dashboardId;
-          header.Cell = (props => <a href={`/poli/workspace/dashboard/${dashboardId}?${columnName}=${props.value}`}>{props.value}</a>);
+          header.Cell = (props => 
+            <span className="link-label" 
+              onClick={() => this.goToLink(`/workspace/dashboard/${dashboardId}?${columnName}=${props.value}`)}>
+              {props.value}
+            </span>
+          );
         }
       }
 
@@ -57,4 +67,4 @@ class TableWidget extends React.Component {
   }
 }
 
-export default TableWidget;
+export default withRouter(TableWidget);

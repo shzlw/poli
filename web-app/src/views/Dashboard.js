@@ -8,6 +8,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Constants from '../api/Constants';
 
+const ROUTE_WORKSPACE_DASHBOARD = '/workspace/dashboard/';
+
 class Dashboard extends Component {
 
   constructor(props) {
@@ -22,7 +24,16 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    console.log('Dashboard - componentDidMount');
+    const pathname = this.props.location.pathname;
+    console.log('Dashboard - componentDidMount', pathname);
+    const index = pathname.indexOf(ROUTE_WORKSPACE_DASHBOARD);
+    if (index !== -1) {
+      const activeDashboardId = Number(pathname.substring(index + ROUTE_WORKSPACE_DASHBOARD.length));
+      console.log('Dashboard - componentDidMount', activeDashboardId);
+      this.setState({
+        activeDashboardId: activeDashboardId
+      })
+    }
     this.fetchBoards();
   }
 

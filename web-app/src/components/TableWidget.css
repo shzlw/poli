@@ -68,3 +68,8 @@
 .ReactTable .rt-thead .rt-td.-sort-desc {
   box-shadow: inset 0 -3px 0 0 red;
 }
+
+.link-label {
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
