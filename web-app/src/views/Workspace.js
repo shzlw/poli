@@ -3,9 +3,9 @@ import { Route, Link, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 import DataSource from './DataSource';
 import Dashboard from './Dashboard';
-import DashboardFullScreenView from './DashboardFullScreenView';
 import UserManagement from './UserManagement';
 import Account from './Account';
+import DashboardFullScreenView from './DashboardFullScreenView';
 
 import Toast from '../components/Toast';
 
@@ -44,8 +44,10 @@ class Workspace extends React.Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
+    console.log('Workspace - componentDidMount', pathname);
+    const menuItem = MENU_ITEMS.find(m => pathname.startsWith(m.link));
     this.setState({
-      currentMenuLink: pathname,
+      currentMenuLink: menuItem.link,
     });
   }
 
@@ -58,7 +60,7 @@ class Workspace extends React.Component {
   logout = () => {
     axios.get('/auth/logout')
       .then(res => {
-        this.props.history.push('/login');
+        this.props.onLogout();
       });
   }
 
@@ -66,6 +68,8 @@ class Workspace extends React.Component {
     const {
       currentMenuLink,
     } = this.state;
+    
+    console.log('Workspace - render');
 
     const {
       username,
@@ -118,10 +122,10 @@ class Workspace extends React.Component {
         <div className="workspace-content">
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
-            <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
             <Route exact path="/workspace/account" component={Account} />
+            <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
             <Route exact path="/workspace/usermanagement" component={UserManagement} />
-            <Route path="/workspace/dashboard" component={() => <Dashboard {...this.props} />} />
+            <Route path="/workspace/dashboard" render={() => <Dashboard {...this.props} />} />
           </Switch>
         </div>
         <Toast />

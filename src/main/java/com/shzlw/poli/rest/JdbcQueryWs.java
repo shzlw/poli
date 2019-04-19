@@ -37,7 +37,7 @@ public class JdbcQueryWs {
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
     public QueryResult queryWidget(@PathVariable("id") long widgetId,
-                                        @RequestBody List<FilterParameter> filterParams) {
+                                   @RequestBody List<FilterParameter> filterParams) {
         Widget widget = widgetDao.findById(widgetId);
         String sql = widget.getSqlQuery();
         JdbcDataSource ds = jdbcDataSourceDao.findByWidgetId(widgetId);

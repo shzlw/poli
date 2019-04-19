@@ -30,11 +30,11 @@ class WidgetViewPanel extends React.Component {
   componentDidMount() {
   }
 
-  resizeGrid = (width) => {
+  resizeGrid = (viewWidth) => {
     const { widgets } = this.state;
     const newWidgets = [...widgets];
 
-    const gridWidth = width - 10;
+    const gridWidth = viewWidth - 10;
     this.resizeWidgetsToActual(newWidgets, gridWidth);
     this.setState({
       widgets: newWidgets,
@@ -68,38 +68,55 @@ class WidgetViewPanel extends React.Component {
     return Math.round(num * BASE_WIDTH / gridWidth);
   }
 
-  fetchWidgets = (dashboardId, width, filterParams) => {
+  fetchWidgets = (dashboardId, viewWidth) => {
     if (dashboardId === null) {
       return;
     }
-    axios.get('/ws/widget/dashboard/' + dashboardId)
+    axios.get(`/ws/widget/dashboard/${dashboardId}`)
       .then(res => {
         const result = res.data;
         this.setState({
           widgets: result
         }, () => {
-          this.resizeGrid(width);
-          this.queryWidgets(filterParams);
+          this.resizeGrid(viewWidth);
+          this.queryFilters();
+          this.queryCharts();
         });
       });
   }
-
-  queryWidgets(filterParams) {
+ 
+  queryCharts() {
+    const filterParams = this.getFilterParams();
     const { widgets } = this.state;
     for (let i = 0; i < widgets.length; i++) {
-      const widget = widgets[i];
-      if (widget.type === Constants.CHART) {
-        this.queryChart(widget, filterParams);
-      } else if (widget.type === Constants.FILTER) {
-        this.queryFilter(widget);
+      const {
+        id,
+        type,
+      } = widgets[i];
+      if (type === Constants.CHART) {
+        this.queryChart(id, filterParams);
       }
     }
   }
 
-  queryChart(widget, filterParams) {
+  queryFilters() {
+    const { widgets } = this.state;
+    for (let i = 0; i < widgets.length; i++) {
+      const {
+        id,
+        type,
+        filterType
+      }  = widgets[i];
+      if (type === Constants.FILTER) {
+        this.queryFilter(id, filterType);
+      }
+    }
+  }
+
+  queryChart(widgetId, filterParams) {
     const params = filterParams === null ? [] : filterParams;
     const { widgets } = this.state;
-    axios.post(`/ws/jdbcquery/widget/${widget.id}`, params)
+    axios.post(`/ws/jdbcquery/widget/${widgetId}`, params)
       .then(res => {
         const queryResult = res.data;
         const index = widgets.findIndex(w => w.id === queryResult.id);
@@ -110,22 +127,11 @@ class WidgetViewPanel extends React.Component {
         });
       });
   }
- 
-  queryCharts(filterParams) {
-    const { widgets } = this.state;
-    for (let i = 0; i < widgets.length; i++) {
-      const widget = widgets[i];
-      if (widget.type === Constants.CHART) {
-        this.queryChart(widget, filterParams);
-      }
-    }
-  }
 
-  queryFilter(widget) {
+  queryFilter(widgetId, filterType) {
     const { widgets } = this.state;
-    const { filterType } = widget;
     if (filterType === Constants.SLICER) {
-      axios.post(`/ws/jdbcquery/widget/${widget.id}`)
+      axios.post(`/ws/jdbcquery/widget/${widgetId}`, [])
         .then(res => {
           const queryResult = res.data;
           const queryResultData = Util.jsonToArray(queryResult.data);
@@ -157,7 +163,7 @@ class WidgetViewPanel extends React.Component {
         }
         newFilters[index].value = value;
       */
-      const index = widgets.findIndex(w => w.id === widget.id);
+      const index = widgets.findIndex(w => w.id === widgetId);
       const newWidgets = [...widgets];
       newWidgets[index].value = '';
       this.setState({
@@ -202,7 +208,66 @@ class WidgetViewPanel extends React.Component {
     });
   }
 
-  applyFilters = () => {
+  confirmDelete = () => {
+    const { 
+      objectToDelete
+    } = this.state;
+    const widgetId = objectToDelete;
+    axios.delete(`/ws/widget/${widgetId}`)
+      .then(res => {
+        const { widgets } = this.state;
+        const index = widgets.findIndex(w => w.id === widgetId);
+        const newWidgets = [...widgets];
+        newWidgets.splice(index, 1);
+        this.setState({
+          widgets: newWidgets
+        });
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
+  openConfirmDeletionPanel = (widgetId) => {
+    this.setState({
+      objectToDelete: widgetId,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
+  }
+
+  onWidgetFilterInputChange = (widgetId, data) => {
+    const { 
+      widgets = []
+    } = this.state;
+    const index = widgets.findIndex(w => w.id === widgetId);
+    const newWidgets = [...widgets];
+    const widget = widgets[index];
+    if (widget.filterType === Constants.SLICER) {
+      const {
+        checkBoxes
+      } = data;
+      newWidgets[index].checkBoxes = checkBoxes;
+    } else if (widget.filterType === Constants.SINGLE_VALUE) {
+      const {
+        value
+      } = data;
+      newWidgets[index].value = value;
+    }
+
+    this.setState({
+      widgets: newWidgets
+    });   
+  }
+
+  /**
+   * FIXME: optimize it. No need to calculate this every time.
+   */
+  getFilterParams = () => {
     const { 
       widgets = []
     } = this.state;
@@ -235,42 +300,7 @@ class WidgetViewPanel extends React.Component {
         filterParams.push(filterParam);
       }
     }
-  }
-
-  getCharts = () => {
-
-  }
-
-  confirmDelete = () => {
-    const { 
-      objectToDelete
-    } = this.state;
-    const widgetId = objectToDelete;
-    axios.delete(`/ws/widget/${widgetId}`)
-      .then(res => {
-        const { widgets } = this.state;
-        const index = widgets.findIndex(w => w.id === widgetId);
-        const newWidgets = [...widgets];
-        newWidgets.splice(index, 1);
-        this.setState({
-          widgets: newWidgets
-        });
-        this.closeConfirmDeletionPanel();
-      });
-  }
-
-  openConfirmDeletionPanel = (widgetId) => {
-    this.setState({
-      objectToDelete: widgetId,
-      showConfirmDeletionPanel: true
-    });
-  }
-
-  closeConfirmDeletionPanel = () => {
-    this.setState({
-      objectToDelete: {},
-      showConfirmDeletionPanel: false
-    });
+    return filterParams;
   }
 
   render() {
@@ -316,7 +346,9 @@ class WidgetViewPanel extends React.Component {
           isEditMode={this.props.isEditMode}
           onWidgetMove={this.onWidgetMove}
           onWidgetEdit={this.props.onWidgetEdit} 
-          onWidgetRemove={this.openConfirmDeletionPanel} />
+          onWidgetRemove={this.openConfirmDeletionPanel} 
+          onWidgetFilterInputChange={this.onWidgetFilterInputChange}
+        />
         
         <Modal 
           show={this.state.showConfirmDeletionPanel}

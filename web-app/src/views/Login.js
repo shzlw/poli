@@ -25,7 +25,7 @@ class Login extends React.Component {
     console.log('Login - componentDidMount', 'cookie');
     axios.post('/auth/login/cookie')
       .then(res => {
-        const loginResponse = res.data || {};
+        const loginResponse = res.data;
         if (!loginResponse.error) {
           this.props.onLoginSuccess(loginResponse);
         }
@@ -65,7 +65,7 @@ class Login extends React.Component {
 
     axios.post('/auth/login/user', user)
       .then(res => {
-        const loginResponse = res.data || {};
+        const loginResponse = res.data;
         if (loginResponse.error) {
           this.setState({
             errorMsg: loginResponse.error
@@ -77,6 +77,9 @@ class Login extends React.Component {
   }
 
   render() {
+
+    console.log('Login - render');
+    
     return (
       <React.Fragment>
         <div className="login-panel">

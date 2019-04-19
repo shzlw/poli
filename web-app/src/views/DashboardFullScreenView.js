@@ -1,6 +1,5 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import DashboardEditView from './DashboardEditView';
 
 class DashboardFullScreenView extends React.Component {
@@ -12,6 +11,7 @@ class DashboardFullScreenView extends React.Component {
   }
 
   componentDidMount() {
+    console.log('DashboardFullScreenView', 'componentDidMount');
     this.dashboardEditView.loadViewByDashboardName();
   }
 

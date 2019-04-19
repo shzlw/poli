@@ -1,0 +1,10 @@
+
+.paginator-button {
+  border: 1px solid black;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}

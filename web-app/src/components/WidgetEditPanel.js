@@ -90,7 +90,6 @@ class WidgetEditPanel extends React.Component {
             type,
             chartType,
             filterType,
-            queryParameter,
             drillThrough
           } = widget;
           if (type === Constants.CHART) {
@@ -110,6 +109,9 @@ class WidgetEditPanel extends React.Component {
               });
             }
           } else if (type === Constants.FILTER) {
+            const {
+              queryParameter
+            } = widget.data;
             this.setState({
               filterType: filterType,
               queryParameter: queryParameter
@@ -359,6 +361,7 @@ class WidgetEditPanel extends React.Component {
 
   render() {
     const { 
+      type,
       queryResult,
       jdbcDataSources = [],
       drillThrough = [],
@@ -381,12 +384,14 @@ class WidgetEditPanel extends React.Component {
       <div key={col.name}>{col.name} {col.dataType}</div>
     );
 
+    const showQueryTab = type === Constants.CHART || (type === Constants.FILTER && this.state.filterType === Constants.SLICER);
+
     return (
       <div>
         <button className="button" onClick={this.save}>Save</button>
         <Select
           name={'type'}
-          value={this.state.type}
+          value={type}
           onChange={this.handleOptionChange}
           options={Constants.WIDGET_TYPES}
           allowEmpty={false}
@@ -407,134 +412,124 @@ class WidgetEditPanel extends React.Component {
               <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.handleCheckBoxChange} />
             </div>
 
-            <div title="Query">
-              <label>DataSource</label>
-              <Select
-                name={'jdbcDataSourceId'}
-                value={this.state.jdbcDataSourceId}
-                onChange={this.handleIntegerOptionChange}
-                options={jdbcDataSources}
-                optionDisplay={'name'}
-                optionValue={'id'}
+            { type === Constants.FILTER && (  
+              <div title="Filter">
+                <label>Filter Options</label>
+                <Select
+                  name={'filterType'}
+                  value={this.state.filterType}
+                  onChange={this.handleOptionChange}
+                  options={Constants.FILTER_TYPES}
+                  allowEmpty={false}
                 />
-            
-              <label>SQL Query</label>
-              <AceEditor
-                style={{ marginTop: '8px' }}
-                value={this.state.sqlQuery}
-                mode="mysql"
-                theme="xcode"
-                name="blah2"
-                onChange={this.handleAceEditorChange}
-                height={'300px'}
-                width={'100%'}
-                fontSize={15}
-                showPrintMargin={false}
-                showGutter={true}
-                highlightActiveLine={true}
-                setOptions={{
-                  showLineNumbers: true,
-                  tabSize: 2
-                }}
-              />
-
-              <div className="mt-3">
-                <button className="button" onClick={this.runQuery}>Run Query</button>
               </div>
+            )}
 
-              <label>Result</label>
-              <TableWidget
-                data={data}
-                columns={columns}
-                error={error}
-              />
+            { showQueryTab && (
+              <div title="Query">
+                <label>DataSource</label>
+                <Select
+                  name={'jdbcDataSourceId'}
+                  value={this.state.jdbcDataSourceId}
+                  onChange={this.handleIntegerOptionChange}
+                  options={jdbcDataSources}
+                  optionDisplay={'name'}
+                  optionValue={'id'}
+                  />
+              
+                <label>SQL Query</label>
+                <AceEditor
+                  style={{ marginTop: '8px' }}
+                  value={this.state.sqlQuery}
+                  mode="mysql"
+                  theme="xcode"
+                  name="blah2"
+                  onChange={this.handleAceEditorChange}
+                  height={'300px'}
+                  width={'100%'}
+                  fontSize={15}
+                  showPrintMargin={false}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  setOptions={{
+                    showLineNumbers: true,
+                    tabSize: 2
+                  }}
+                />
 
-              <label>Columns Mapping</label>
-              <div>
-                {columnItems}
+                <div className="mt-3">
+                  <button className="button" onClick={this.runQuery}>Run Query</button>
+                </div>
+
+                <label>Result</label>
+                <TableWidget
+                  data={data}
+                  columns={columns}
+                  error={error}
+                />
+
+                <label>Columns Mapping</label>
+                <div>
+                  {columnItems}
+                </div>
               </div>
-            </div>
+            )}
 
-            {
-              this.state.type === Constants.CHART ?
-              (
-                <div title="Chart">
-                  <label>Chart Options</label>
-                  <Select
-                    name={'chartType'}
-                    value={this.state.chartType}
-                    onChange={this.handleOptionChange}
-                    options={Constants.CHART_TYPES}
-                    allowEmpty={false}
-                  />
-                  <label>Preview</label>
-                  {this.renderChartPreview()}  
-                </div>
-              ) : null
-            }
+            { type === Constants.CHART && (
+              <div title="Chart">
+                <label>Chart Options</label>
+                <Select
+                  name={'chartType'}
+                  value={this.state.chartType}
+                  onChange={this.handleOptionChange}
+                  options={Constants.CHART_TYPES}
+                  allowEmpty={false}
+                />
+                <label>Preview</label>
+                {this.renderChartPreview()}  
+              </div>
+            )}
             
-            {
-              this.state.type === Constants.CHART ?
-              (
-                <div title="Drill through">
-                  <label>Drill through</label>
-                  <label>Column</label>
-                  <Select
-                    name={'drillColumnName'}
-                    value={this.state.drillColumnName}
-                    options={columns}
-                    onChange={this.handleOptionChange}
-                    optionDisplay={'name'}
-                    optionValue={'name'}
-                  />
+            { type === Constants.CHART && (
+              <div title="Drill through">
+                <label>Drill through</label>
+                <label>Column</label>
+                <Select
+                  name={'drillColumnName'}
+                  value={this.state.drillColumnName}
+                  options={columns}
+                  onChange={this.handleOptionChange}
+                  optionDisplay={'name'}
+                  optionValue={'name'}
+                />
 
-                  <label>Dashboard</label>
-                  <Select
-                    name={'drillDashboardId'}
-                    value={this.state.drillDashboardId}
-                    options={drillDashboards}
-                    onChange={this.handleIntegerOptionChange}
-                    optionDisplay={'name'}
-                    optionValue={'id'}
-                  />
-                  <div>
-                    {drillItems}
-                  </div>
-                  <button className="button" onClick={this.addDrillThrough}>Add</button>
+                <label>Dashboard</label>
+                <Select
+                  name={'drillDashboardId'}
+                  value={this.state.drillDashboardId}
+                  options={drillDashboards}
+                  onChange={this.handleIntegerOptionChange}
+                  optionDisplay={'name'}
+                  optionValue={'id'}
+                />
+                <div>
+                  {drillItems}
                 </div>
-              ) : null
-            }
+                <button className="button" onClick={this.addDrillThrough}>Add</button>
+              </div>
+            )}
 
-            {
-              this.state.type === Constants.FILTER ?
-              (
-                <div title="Filter">
-                  <label>Filter Options</label>
-                  <Select
-                    name={'filterType'}
-                    value={this.state.filterType}
-                    onChange={this.handleOptionChange}
-                    options={Constants.FILTER_TYPES}
-                    allowEmpty={false}
-                  />
-                </div>
-              ) : null
-            }
-
-            {
-              this.state.type === Constants.FILTER ?
-              (
-                <div title="Query parameter">
-                  <label>Parameter</label>
-                  <input 
-                    type="text" 
-                    name="param" 
-                    value={this.state.queryParameter}
-                    onChange={this.handleInputChange} 
-                  />
-                </div>
-              ) : null
-            }
+            { type === Constants.FILTER && (
+              <div title="Query parameter">
+                <label>Parameter</label>
+                <input 
+                  type="text" 
+                  name="queryParameter" 
+                  value={this.state.queryParameter}
+                  onChange={this.handleInputChange} 
+                />
+              </div>
+            )}
 
           </Tabs>
 

@@ -22,6 +22,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    console.log('Dashboard - componentDidMount');
     this.fetchBoards();
   }
 
@@ -74,10 +75,12 @@ class Dashboard extends Component {
   }
 
   view = (dashboardId) => {
+    console.log('view', dashboardId);
     this.setState({
       activeDashboardId: dashboardId
+    }, () => {
+      this.props.history.push(`/workspace/dashboard/${dashboardId}`);
     });
-    this.props.history.push(`/workspace/dashboard/${dashboardId}`);
   }
 
   onDashboardSave = (dashboardId) => {
@@ -88,8 +91,9 @@ class Dashboard extends Component {
     this.fetchBoards();
     this.setState({
       activeDashboardId: 0
+    }, () => {
+      this.props.history.push('/workspace/dashboard');
     });
-    this.props.history.push('/workspace/dashboard');
   }
 
   render() {
@@ -102,7 +106,9 @@ class Dashboard extends Component {
     const {
       sysRole
     } = this.props;
-    const showEdit = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
+    const showEdit = true;//= sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
+
+    console.log('Dashboard - render', activeDashboardId);
 
     const dashboardRows = [];
     for (let i = 0; i < dashboards.length; i++) {
@@ -145,7 +151,13 @@ class Dashboard extends Component {
         <div className="dashboard-content">
           <Route 
             path="/workspace/dashboard/:id" 
-            render={(props) => <DashboardEditView key={props.match.params.id} onDashboardSave={this.onDashboardSave} onDashboardDelete={this.onDashboardDelete} />} 
+            render={(props) => 
+              <DashboardEditView 
+                key={props.match.params.id} 
+                onDashboardSave={this.onDashboardSave} 
+                onDashboardDelete={this.onDashboardDelete} 
+              />
+            } 
             />
         </div>
 

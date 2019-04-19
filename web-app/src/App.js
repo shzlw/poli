@@ -1,12 +1,6 @@
 import React from 'react';
 import { Route, Switch, Redirect, withRouter, Component } from "react-router-dom";
 import axios from 'axios';
-import './App.css';
-
-import Login from './views/Login';
-import ChangeTempPassword from './views/ChangeTempPassword';
-import Workspace from './views/Workspace';
-import PageNotFound from './views/PageNotFound';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
   faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
@@ -15,6 +9,14 @@ import {
   faFileExport, faFileCsv, faCircleNotch
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import './App.css';
+
+import Login from './views/Login';
+import ChangeTempPassword from './views/ChangeTempPassword';
+import Workspace from './views/Workspace';
+import PageNotFound from './views/PageNotFound';
+
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
@@ -34,7 +36,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const {
-      sysRole = ''
+      sysRole
     } = this.state;
 
     let isAuthenticated = false;
@@ -81,6 +83,16 @@ class App extends React.Component {
       });
     }
   }
+
+  onLogout = () => {
+    this.setState({
+      username: '',
+      sysRole: '',
+      isAuthorizing: false
+    }, () => {
+      this.props.history.push('/login');
+    });
+  }
    
   render() {
     const {
@@ -97,7 +109,7 @@ class App extends React.Component {
 
     if (isAuthorizing) {
       return (
-        <FontAwesomeIcon icon='cicle-north' spin={true} size="3x" />
+        <FontAwesomeIcon icon='cicle-notch' spin={true} size="3x" />
       )
     }
     
@@ -113,6 +125,7 @@ class App extends React.Component {
             component={Workspace} 
             username={username}
             sysRole={sysRole} 
+            onLogout={this.onLogout}
           />
           <Route component={PageNotFound} />
         </Switch>
@@ -127,7 +140,7 @@ function PrivateRoute({component: Component, authenticated, ...rest}) {
       {...rest}
       render={
         (props) => authenticated === true
-        ? <Component {...props} {...rest}/>
+        ? <Component {...props} {...rest} />
         : <Redirect to={{pathname: '/login', state: {from: props.location}}} />
       }
     />

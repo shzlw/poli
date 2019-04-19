@@ -45,12 +45,10 @@ class DashboardEditView extends React.Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
-    console.log('DashboardEditView', dashboardId);
+    console.log('DashboardEditView - componentDidMount', dashboardId);
 
     const url = this.props.location.search;
-    console.log('url', url);
     const params = new URLSearchParams(url);
-    console.log('params', params);
     for(let pair of params.entries()) {
       console.log(pair[0]+ ', '+ pair[1]); 
     } 
@@ -90,6 +88,7 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
+    const apiKey = params.get('apiKey');
 
     const widgetViewWidth = this.getPageWidth();
 
@@ -135,8 +134,7 @@ class DashboardEditView extends React.Component {
       let interval = parseInt(refreshInterval, 10) || 15;
       interval = interval < 1 ? 1 : interval;
       const timerId = setInterval(() => {
-        // FIXME
-        // this.filterViewPanel.current.applyFilters();
+        this.queryWidgets();
         this.updateLastRefreshed();
       }, interval * 1000);
       this.setState({
@@ -157,6 +155,10 @@ class DashboardEditView extends React.Component {
     } = this.state;
     this.widgetViewPanel.current.fetchWidgets(dashboardId, widgetViewWidth, null);
   } 
+
+  queryWidgets = () => {
+    this.widgetViewPanel.current.queryCharts();
+  }
 
   updateLastRefreshed = () => {
     const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
@@ -326,7 +328,7 @@ class DashboardEditView extends React.Component {
           }
         </button>
         
-        <button className="button mr-3" onClick={this.toggleFilterViewPanel}>Show Filters</button>
+        <button className="button mr-3" onClick={this.queryWidgets}>Apply Filters</button>
         <button className="button square-button" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
@@ -340,7 +342,6 @@ class DashboardEditView extends React.Component {
             <button className="button mr-3" onClick={this.cancelEdit}>Cancel</button>
             <button className="button mr-3" onClick={this.save}>Save</button>
             <button className="button mr-3" onClick={this.deleteDashboard}>Delete</button>
-            <button className="button mr-3" onClick={() => this.openFilterEditPanel(null)}>Add Filter</button>
             <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
           </React.Fragment>
         );

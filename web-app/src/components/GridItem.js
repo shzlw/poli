@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GridDraggable from './GridDraggable';
-import GridResizable from './GridResizable';
-
 import { withRouter } from 'react-router-dom';
+import ReactEcharts from 'echarts-for-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import * as EchartsApi from '../api/EchartsApi';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
-import ReactEcharts from 'echarts-for-react';
-import * as EchartsApi from '../api/EchartsApi';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import GridDraggable from './GridDraggable';
+import GridResizable from './GridResizable';
 import TableWidget from './TableWidget';
 import Slicer from "./Slicer";
 
@@ -117,24 +114,19 @@ class GridItem extends React.Component {
     console.log('onChartLegendselectchanged', param, echart);
   };
 
-  onSlicerChange = (filterId, checkBoxes) => {
-    const index = this.state.filters.findIndex(f => f.id === filterId);
-    const newFilters = [...this.state.filters];
-    newFilters[index].checkBoxes = [...checkBoxes];
-    this.setState({
-      filters: newFilters
-    });  
+  onSlicerChange = (widgetId, checkBoxes) => {
+    const data = {
+      checkBoxes: checkBoxes
+    };
+    this.props.onWidgetFilterInputChange(widgetId, data);
   }
 
-  onSingleValueChange = (filterId, event) => {
-    const { filters } = this.state;
+  onSingleValueChange = (widgetId, event) => {
     const value = event.target.value;
-    const index = filters.findIndex(f => f.id === filterId);
-    const newFilters = [...filters];
-    newFilters[index].value = value;
-    this.setState({
-      filters: newFilters
-    });
+    const data = {
+      value: value
+    };
+    this.props.onWidgetFilterInputChange(widgetId, data);
   }
 
   renderWidgetContent = () => {
@@ -204,7 +196,6 @@ class GridItem extends React.Component {
       }
     }
     
-
     return widgetItem;
   }
 
@@ -217,7 +208,8 @@ class GridItem extends React.Component {
     } = this.props;
 
     const { 
-      showBorder = false 
+      showBorder = false,
+      showTitle = true
     } = style;
 
     const borderStyle = showBorder ? '2px solid #4b4f56' : '2px solid #FFFFFF';
@@ -258,26 +250,27 @@ class GridItem extends React.Component {
           )}
           
         </div>
+
         <div className="grid-box-content">
           {this.renderWidgetContent()}
         </div>
 
-        { isEditMode ? (
+        { isEditMode && (
           <GridDraggable 
             onMouseUp={this.onMouseUp}
             onMouseDown={this.onMouseDown}
             onMouseMove={this.onMouseMove}
             mode={this.state.mode}
             snapToGrid={this.props.snapToGrid} />
-        ): null}
+        )}
 
-        { isEditMode ? (
+        { isEditMode && (
           <GridResizable 
             onMouseUp={this.onMouseUp}
             onMouseDown={this.onMouseDown}
             onMouseMove={this.onMouseMove}
             mode={this.state.mode} />
-        ): null}
+        )}
         
       </div>
     )
