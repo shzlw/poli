@@ -114,6 +114,10 @@ class GridItem extends React.Component {
     console.log('onChartLegendselectchanged', param, echart);
   };
 
+  onTableTdClick = (link) => {
+    this.props.history.push(link);
+  }
+
   onSlicerChange = (widgetId, checkBoxes) => {
     const data = {
       checkBoxes: checkBoxes
@@ -160,6 +164,7 @@ class GridItem extends React.Component {
             columns={columns}
             error={error}
             drillThrough={drillThrough}
+            onTableTdClick={this.onTableTdClick}
           />
         );
       } else if (chartType === Constants.PIE) {

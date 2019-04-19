@@ -88,7 +88,6 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
-    const apiKey = params.get('apiKey');
 
     const widgetViewWidth = this.getPageWidth();
 
@@ -327,11 +326,10 @@ class DashboardEditView extends React.Component {
             )
           }
         </button>
-        
-        <button className="button mr-3" onClick={this.queryWidgets}>Apply Filters</button>
         <button className="button square-button" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
+        <button className="button mr-3" onClick={this.queryWidgets}>Apply Filters</button>
       </React.Fragment>
     );
 
@@ -348,11 +346,11 @@ class DashboardEditView extends React.Component {
       } else {
         editButtonPanel = (
           <React.Fragment>
+            {controlButtons}
             <button className="button square-button mr-3" onClick={this.fullScreen}>
               <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
             </button>
             <button className="button" onClick={this.edit}>Edit</button>
-            {controlButtons}
           </React.Fragment>
         );
       }

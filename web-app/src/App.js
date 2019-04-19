@@ -37,6 +37,11 @@ class App extends React.Component {
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const search = this.props.location.search;
+
+    const params = new URLSearchParams(search);
+    const apiKey = params.get('apiKey');
+
+
     const currentPath = pathname + search;
     const {
       sysRole
@@ -58,15 +63,15 @@ class App extends React.Component {
           .then(res => {
             const loginResponse = res.data;
             if (loginResponse.error) {
-              this.setState({
-                sysRole: '',
-                isAuthorizing: false
-              }, () => {
-                this.props.history.push('/login');
-              });
-            } else {
-              this.onLoginSuccess(loginResponse, currentPath);
-            }
+                this.setState({
+                  sysRole: '',
+                  isAuthorizing: false
+                }, () => {
+                  this.props.history.push('/login');
+                });
+              } else {
+                this.onLoginSuccess(loginResponse, currentPath);
+              }
           });
       });
       

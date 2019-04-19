@@ -25,11 +25,9 @@ class Dashboard extends Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
-    console.log('Dashboard - componentDidMount', pathname);
     const index = pathname.indexOf(ROUTE_WORKSPACE_DASHBOARD);
     if (index !== -1) {
       const activeDashboardId = Number(pathname.substring(index + ROUTE_WORKSPACE_DASHBOARD.length));
-      console.log('Dashboard - componentDidMount', activeDashboardId);
       this.setState({
         activeDashboardId: activeDashboardId
       })
@@ -86,7 +84,6 @@ class Dashboard extends Component {
   }
 
   view = (dashboardId) => {
-    console.log('view', dashboardId);
     this.setState({
       activeDashboardId: dashboardId
     }, () => {
@@ -117,9 +114,7 @@ class Dashboard extends Component {
     const {
       sysRole
     } = this.props;
-    const showEdit = true;//= sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
-
-    console.log('Dashboard - render', activeDashboardId);
+    const showEdit = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
 
     const dashboardRows = [];
     for (let i = 0; i < dashboards.length; i++) {

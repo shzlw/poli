@@ -2,7 +2,6 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import './TableWidget.css';
-import { withRouter } from "react-router-dom";
 
 class TableWidget extends React.Component {
 
@@ -13,7 +12,7 @@ class TableWidget extends React.Component {
   }
 
   goToLink = (link) => {
-    this.props.history.push(link);
+    this.props.onTableTdClick(link);
   }
 
   render() {   
@@ -67,4 +66,4 @@ class TableWidget extends React.Component {
   }
 }
 
-export default withRouter(TableWidget);
+export default TableWidget;

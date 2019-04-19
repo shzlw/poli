@@ -44,7 +44,6 @@ class Workspace extends React.Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
-    console.log('Workspace - componentDidMount', pathname);
     const menuItem = MENU_ITEMS.find(m => pathname.startsWith(m.link));
     this.setState({
       currentMenuLink: menuItem.link,
