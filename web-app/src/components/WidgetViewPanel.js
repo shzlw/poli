@@ -312,8 +312,7 @@ class WidgetViewPanel extends React.Component {
     return (
       <div className="dashboard-content-widget-panel" style={style}>
 
-        {this.props.isEditMode ?
-        (
+        {this.props.isEditMode && (
           <div className="dashboard-attribute-edit-panel">
             <div className="inline-block">Height:</div>
             <input 
@@ -334,7 +333,7 @@ class WidgetViewPanel extends React.Component {
             <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />
   
           </div>
-        ) : null}
+        )}
         
         <GridLayout 
           width={this.state.gridWidth}

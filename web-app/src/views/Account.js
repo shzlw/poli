@@ -108,8 +108,7 @@ class Account extends React.Component {
 
           <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
           {
-            showUpdatePassword ?
-            (
+            showUpdatePassword && (
               <React.Fragment>
                 <br/>
                 <label>Password</label>
@@ -125,8 +124,7 @@ class Account extends React.Component {
                   value={this.state.confirmedPassword}
                   onChange={this.handleInputChange} />
               </React.Fragment>
-            ) : null
-          }
+          )}
 
           <br/>
           <button className="button" onClick={this.save}>Save</button>

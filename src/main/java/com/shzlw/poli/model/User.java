@@ -3,6 +3,7 @@ package com.shzlw.poli.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class User {
 
@@ -108,5 +109,20 @@ public class User {
 
     public void setUserGroups(List<Long> userGroups) {
         this.userGroups = userGroups;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                username.equals(user.username) &&
+                sysRole.equals(user.sysRole);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, sysRole);
     }
 }

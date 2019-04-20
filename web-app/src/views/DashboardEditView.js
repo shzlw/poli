@@ -302,19 +302,16 @@ class DashboardEditView extends React.Component {
     const controlButtons = (
       <React.Fragment>
         <span className="mr-3">Last refreshed: {lastRefreshed}</span>
-        {
-          autoRefreshStatus === 'OFF' ? 
-          (
-            <input 
-              type="text" 
-              name="refreshInterval" 
-              value={this.state.refreshInterval}
-              onChange={this.handleInputChange}
-              className="inline-block" 
-              style={{width: '50px'}}
-            />
-          ) : null
-        }
+        { autoRefreshStatus === 'OFF' && (
+          <input 
+            type="text" 
+            name="refreshInterval" 
+            value={this.state.refreshInterval}
+            onChange={this.handleInputChange}
+            className="inline-block" 
+            style={{width: '50px'}}
+          />
+        )}
         <button className="button square-button mr-3" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 

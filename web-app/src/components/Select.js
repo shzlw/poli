@@ -15,7 +15,7 @@ class Select extends React.Component {
     options: PropTypes.array.isRequired,
     optionDisplay: PropTypes.string,
     optionValue: PropTypes.string,
-    allowEmpty: PropTypes.bool
+    preloadOneEmpty: PropTypes.bool
   };
 
   handleOptionChange = (event) => {
@@ -30,11 +30,11 @@ class Select extends React.Component {
       options = [],
       optionValue,
       optionDisplay,
-      allowEmpty = true
+      preloadOneEmpty = true
     } = this.props;
 
     const optionList = [];
-    if (allowEmpty) {
+    if (preloadOneEmpty) {
       optionList.push(
         <option value="" key=""></option>
       );

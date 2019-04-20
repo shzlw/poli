@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -62,7 +63,11 @@ public class JdbcDataSourceService {
         DATA_SOURCE_CACHE.remove(dataSource.getId());
     }
 
-    public DataSource getDataSource(JdbcDataSource dataSource) {
+    public DataSource getDataSource(@Nullable JdbcDataSource dataSource) {
+        if (dataSource == null) {
+            return null;
+        }
+
         long id = dataSource.getId();
         DataSource hiDs = DATA_SOURCE_CACHE.get(id);
         if (hiDs == null) {

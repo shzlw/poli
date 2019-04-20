@@ -136,13 +136,12 @@ class Dashboard extends Component {
       <div>
         <div className="dashboard-sidebar">
           <div style={{margin: '5px'}}>
-            {
-              showEdit ? (
+            { showEdit && (
                 <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
                   <FontAwesomeIcon icon="plus" /> New
                 </button>
-              ) : null
-            }
+            )}
+            
             <input 
               type="text" 
               name="searchValue" 

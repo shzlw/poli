@@ -1,11 +1,12 @@
 
 import React from 'react';
 import axios from 'axios';
-import Modal from '../components/Modal';
-import Select from '../components/Select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const SYS_ROLES = ['viewer', 'developer'];
+import * as Constants from '../api/Constants';
+
+import Modal from '../components/Modal';
+import Select from '../components/Select';
 
 class User extends React.Component {
 
@@ -21,7 +22,7 @@ class User extends React.Component {
       username: '',
       name: '',
       tempPassword: '',
-      sysRole: '',
+      sysRole: Constants.SYS_ROLE_VIEWER,
       userGroupId: '',
       userGroups: []
     };
@@ -130,10 +131,25 @@ class User extends React.Component {
       userGroups
     } = this.state;
 
+    if (!username) {
+      return;
+    }
+
+    let selectedSysRole = Constants.SYS_ROLE_VIEWER;
+    if (Constants.SYS_ROLE_ADMIN === this.props.sysRole) {
+      if (sysRole) {
+        selectedSysRole = sysRole;
+      } else {
+        // TODO: throw errors.
+        return;
+      }
+    }
+
+
     let user = {
       username: username,
       name: name,
-      sysRole: sysRole,
+      sysRole: selectedSysRole,
       userGroups: userGroups
     };
 
@@ -206,6 +222,10 @@ class User extends React.Component {
       userGroups = []
     } = this.state;
 
+    const {
+      sysRole
+    } = this.props;
+
     const mode = id === null ? 'New' : 'Edit';
 
     const userItems = users.map(user => 
@@ -261,7 +281,7 @@ class User extends React.Component {
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'small-modal-panel'} 
+          modalClass={'mid-modal-panel'} 
           title={mode} >
 
           <div className="form-panel">
@@ -279,34 +299,35 @@ class User extends React.Component {
               value={this.state.name}
               onChange={this.handleInputChange} />
 
-            { mode === 'Edit' ? 
-              (
+            { mode === 'Edit' && (
                 <div style={{margin: '3px 0px 8px 0px'}}>
                   <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
                 </div>
-              ) : null
-            }
-            { mode === 'New' || showUpdatePassword ? 
-              (
-                <div>
-                  <label>Password</label>
-                  <input 
-                    type="password" 
-                    name="tempPassword" 
-                    value={this.state.tempPassword}
-                    onChange={this.handleInputChange} />
-                </div>
-              ) : null
-            }
+            )}
+            { (mode === 'New' || showUpdatePassword) && ( 
+              <div>
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  name="tempPassword" 
+                  value={this.state.tempPassword}
+                  onChange={this.handleInputChange} />
+              </div>
+            )}
             
             <label>System Role</label>
-            <Select
-              name={'sysRole'}
-              value={this.state.sysRole}
-              onChange={this.handleOptionChange}
-              options={SYS_ROLES}
-              allowEmpty={false}
-            />
+            { Constants.SYS_ROLE_ADMIN === sysRole && (
+              <Select
+                name={'sysRole'}
+                value={this.state.sysRole}
+                onChange={this.handleOptionChange}
+                options={[Constants.SYS_ROLE_VIEWER, Constants.SYS_ROLE_DEVELOPER]}
+              />
+            )}
+
+            { Constants.SYS_ROLE_DEVELOPER === sysRole && (
+              <div>{Constants.SYS_ROLE_VIEWER}</div>
+            )}
             
             <br/>
             

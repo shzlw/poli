@@ -137,9 +137,6 @@ class Group extends React.Component {
       groupDashboards = []
     } = this.state;
 
-    console.log('addGroupDashboard', groupDashboardId);
-    console.log('addGroupDashboard', groupDashboards);
-
     if (groupDashboardId) {
       const index = groupDashboards.findIndex(dashboardId => dashboardId === groupDashboardId);
       if (index === -1) {
@@ -227,7 +224,7 @@ class Group extends React.Component {
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'small-modal-panel'} 
+          modalClass={'mid-modal-panel'} 
           title={mode} >
 
           <div className="form-panel">

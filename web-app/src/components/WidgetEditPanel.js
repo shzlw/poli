@@ -336,7 +336,7 @@ class WidgetEditPanel extends React.Component {
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
-            />
+          />
 
 
           <label>By Aggr Value (number)</label>
@@ -347,7 +347,7 @@ class WidgetEditPanel extends React.Component {
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
-            />
+          />
           <button onClick={this.generateChart}>Generete Chart</button>
           <ReactEcharts 
             option={chartOption} 
@@ -394,7 +394,7 @@ class WidgetEditPanel extends React.Component {
           value={type}
           onChange={this.handleOptionChange}
           options={Constants.WIDGET_TYPES}
-          allowEmpty={false}
+          preloadOneEmpty={false}
         />
         
         <div className="form-panel">
@@ -420,7 +420,7 @@ class WidgetEditPanel extends React.Component {
                   value={this.state.filterType}
                   onChange={this.handleOptionChange}
                   options={Constants.FILTER_TYPES}
-                  allowEmpty={false}
+                  preloadOneEmpty={false}
                 />
               </div>
             )}
@@ -483,7 +483,7 @@ class WidgetEditPanel extends React.Component {
                   value={this.state.chartType}
                   onChange={this.handleOptionChange}
                   options={Constants.CHART_TYPES}
-                  allowEmpty={false}
+                  preloadOneEmpty={false}
                 />
                 <label>Preview</label>
                 {this.renderChartPreview()}  

@@ -64,6 +64,13 @@ body,
   margin-left: -150px;
 }
 
+.mid-modal-panel {
+  left: 50%;
+  width: 500px;
+  top: 20px;
+  margin-left: -250px;
+}
+
 .full-screen-view {
   background-color: #FFF;
   position: fixed;

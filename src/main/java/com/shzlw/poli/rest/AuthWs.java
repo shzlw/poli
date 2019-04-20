@@ -3,6 +3,7 @@ package com.shzlw.poli.rest;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import com.shzlw.poli.util.PasswordUtil;
 import org.apache.tomcat.util.bcel.Const;
@@ -20,6 +21,9 @@ public class AuthWs {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
@@ -39,6 +43,7 @@ public class AuthWs {
         }
 
         String sessionKey = PasswordUtil.getUniqueId();
+        userService.newOrUpdateSessionUserCache(user, sessionKey);
         userDao.updateSessionKey(existUser.getId(), sessionKey);
 
         Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, sessionKey);
@@ -60,6 +65,8 @@ public class AuthWs {
         if (user == null) {
             return LoginResponse.ofError("Invalid username or password");
         }
+
+        userService.newOrUpdateSessionUserCache(user, sessionKey);
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
 
@@ -68,6 +75,7 @@ public class AuthWs {
     public void logout(@CookieValue(Constants.SESSION_KEY) String sessionKey, HttpServletResponse response) throws IOException {
         User user = userDao.findBySessionKey(sessionKey);
         if (user != null) {
+            userService.removeFromSessionCache(sessionKey);
             userDao.updateSessionKey(user.getId(), null);
 
             Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, "");

@@ -41,8 +41,12 @@ class App extends React.Component {
     const params = new URLSearchParams(search);
     const apiKey = params.get('apiKey');
 
+    let currentPath = pathname + search;
+    // Redirect to login page if it hits the context root.
+    if (currentPath === '/') {
+      currentPath = '/login';
+    }
 
-    const currentPath = pathname + search;
     const {
       sysRole
     } = this.state;

@@ -26,6 +26,15 @@ public class DashboardDao {
         return jt.query(sql, new Object[] {}, new DashboardRowMapper());
     }
 
+    public List<Dashboard> findByViewer(long userId) {
+        String sql = "SELECT d.id, d.name, d.style "
+                    + "FROM p_group_dashboard gd, p_dashboard d, p_group_user gu "
+                    + "WHERE gd.dashboard_id = d.id "
+                    + "AND gd.group_id = gu.group_id "
+                    + "AND gu.user_id = ?";
+        return jt.query(sql, new Object[] { userId }, new DashboardRowMapper());
+    }
+
     public Dashboard findById(long id) {
         String sql = "SELECT id, name, style FROM p_dashboard WHERE id=?";
         try {

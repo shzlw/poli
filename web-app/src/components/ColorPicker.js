@@ -64,13 +64,12 @@ class ColorPicker extends React.Component {
         <div style={swatch} onClick={this.handleClick}>
           <div style={color} />
         </div>
-        { this.state.showPalette ? 
-          (
-            <div style={popover}>
-              <div style={cover} onClick={this.handleClose} />
-              <ChromePicker color={this.props.value} onChange={this.handleChange} />
-            </div>
-          ) : null }
+        { this.state.showPalette && (
+          <div style={popover}>
+            <div style={cover} onClick={this.handleClose} />
+            <ChromePicker color={this.props.value} onChange={this.handleChange} />
+          </div>
+        )}
       </div>
     )
   };

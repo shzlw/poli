@@ -21,7 +21,7 @@ class UserManagement extends React.Component {
             <Group />
           </div>
           <div title="User">
-            <User />
+            <User {...this.props} />
           </div>
         </Tabs>
       </React.Fragment>
