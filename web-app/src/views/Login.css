@@ -4,14 +4,14 @@
   top: 50%;
   left: 50%;
   width: 300px;
-  margin-top: -200px;
+  margin-top: -230px;
   margin-left: -150px;
-  border-radius: 6px;
 }
 
 .long-panel-body {
-  padding: 15px;
+  padding: 0px 10px 1px 10px;
   background-color: rgba(18, 91, 152, 0.1);
+  border-radius: 5px;
 }
 
 .login-app-title {
@@ -28,6 +28,7 @@
 
 .login-error-msg {
   text-align: center;
-  margin: 3px 0px;
-  color: #DE350B;
+  margin-bottom: 5px;
+  color: #FF5630;
+  font-weight: bold;
 }

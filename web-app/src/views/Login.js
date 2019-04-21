@@ -2,6 +2,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+
 import './Login.css';
 
 class Login extends React.Component {
@@ -15,19 +16,13 @@ class Login extends React.Component {
     };
   }
 
-  handleInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
   componentDidMount() {
     const { sysRole } = this.props;
     let isAuthenticated = false;
     if (sysRole) {
       isAuthenticated = true;
     }
-    console.log('Login - componentDidMount', isAuthenticated);
+
     if (!isAuthenticated) {
       axios.post('/auth/login/cookie')
         .then(res => {
@@ -37,6 +32,12 @@ class Login extends React.Component {
           }
         });
     }
+  }
+
+  handleInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
   handleKeyPress = (event) => {
@@ -84,16 +85,13 @@ class Login extends React.Component {
   }
 
   render() {
-
-    console.log('Login - render');
-    
     return (
       <React.Fragment>
         <div className="login-panel">
           <div className="login-app-title">Poli</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="long-panel-body">
-            <div className="form-group">
+            <div className="form-panel">
               <label>Username</label>
               <input 
                 type="text" 
@@ -110,8 +108,8 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} 
                 onKeyDown={this.handleKeyPress} 
               />
+              <button className="button login-button" onClick={this.login}>Login</button>
             </div>
-            <button className="button login-button" onClick={this.login}>Login</button>
           </div>
         </div>
       </React.Fragment>

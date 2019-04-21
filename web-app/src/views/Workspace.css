@@ -30,16 +30,19 @@
   display: block;
   color: #d6d7e1;
   text-decoration: none;
-  padding: 11px 14px;
+  padding: 9px 14px;
 }
 
 .workspace-nav-menu li:hover {
-  background-color: #0065FF;
+  background-color: #C1C7D0;
+  color: #4b4f56;
+  border-bottom: 3px solid #0065FF;
 }
 
 .menu-item-active {
-  color: #e9ebee;
-  background-color: #0065FF;
+  color: #FFFFFF;
+  background-color: #091E42;
+  border-bottom: 3px solid #0065FF;
 }
 
 .workspace-content {
@@ -60,13 +63,13 @@
 .workspace-account-button a {
   display: block;
   color: #d6d7e1;
-  padding: 11px 14px;
+  padding: 9px 14px;
   text-decoration: none;
 }
 
-.workspace-logout-button a {
-  display: block;
+.workspace-logout-button {
   color: #d6d7e1;
-  padding: 11px 14px;
+  padding: 9px 14px;
   text-decoration: none;
+  cursor: pointer;
 }

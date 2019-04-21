@@ -50,13 +50,6 @@ body,
   width: 100%;
 }
 
-.testGrid {
-  border: 1px solid green;
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-}
-
 .small-modal-panel {
   left: 50%;
   width: 300px;
@@ -126,11 +119,11 @@ body,
 }
 
 .button:active {
-  background: #0747A6;
+  background: #0052CC;
 }
 
 .button:hover {
-  color: #fff;
+  color: #FFFFFF;
   cursor: pointer;
   background-color: #2684FF;
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
@@ -145,11 +138,11 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   padding: 7px 10px;
-  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   border: 2px solid #FFFFFF;
   outline: 0;
   border-radius: 4px;
-  background: white;
+  background: #FFFFFF;
   font-size: 16px;
 }
 
@@ -158,7 +151,7 @@ input::placeholder {
 }
 
 input:focus {
-  border: 2px solid #0052CC; 
+  border: 2px solid #0065FF; 
 }
 
 h1 {
@@ -171,7 +164,7 @@ h1 {
 }
 
 .required {
-  color: red;
+  color: #FF5630;
 }
 
 label {

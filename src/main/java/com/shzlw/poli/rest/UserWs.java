@@ -30,6 +30,11 @@ public class UserWs {
         } else if (Constants.SYS_ROLE_DEVELOPER.equals(myUser.getSysRole())) {
             users = userDao.findViewerUsers(myUser.getId());
         }
+
+        for (User user : users) {
+            List<Long> userGroups = userDao.findUserGroups(user.getId());
+            user.setUserGroups(userGroups);
+        }
         return users;
     }
 

@@ -35,8 +35,8 @@
 
 .dashboard-menu-item-active {
   border-left: 3px solid #0065FF;
-  background-color: #000000;
-  color: white;
+  background-color: #091E42;
+  color: #FFFFFF;
 }
 
 .dashboard-content-widget-panel {

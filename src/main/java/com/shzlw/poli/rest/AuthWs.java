@@ -8,6 +8,8 @@ import com.shzlw.poli.util.Constants;
 import com.shzlw.poli.util.PasswordUtil;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,12 +89,19 @@ public class AuthWs {
 
     @RequestMapping(value="/login/changepassword", method= RequestMethod.POST)
     @Transactional
-    public void changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey,
+    public ResponseEntity<LoginResponse> changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey,
         @RequestBody User user) {
+        String password = user.getPassword();
+        if (password.length() < 8) {
+            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Use 8 or more characters"), HttpStatus.OK);
+        }
 
         User existUser = userDao.findBySessionKey(sessionKey);
-        if (user != null) {
-            userDao.updateTempPassword(existUser.getId(), user.getPassword());
+        if (existUser == null) {
+            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Invalid session"), HttpStatus.OK);
         }
+
+        userDao.updateTempPassword(existUser.getId(), user.getPassword());
+        return new ResponseEntity<LoginResponse>(HttpStatus.OK);
     }
 }

@@ -42,10 +42,6 @@ class App extends React.Component {
     const apiKey = params.get('apiKey');
 
     let currentPath = pathname + search;
-    // Redirect to login page if it hits the context root.
-    if (currentPath === '/') {
-      currentPath = '/login';
-    }
 
     const {
       sysRole
@@ -56,10 +52,7 @@ class App extends React.Component {
       isAuthenticated = true;
     }
 
-    console.log('App - componentDidMount', isAuthenticated, currentPath);
-
     if (!isAuthenticated) {
-      console.log('App - componentDidMount', 'cookie');
       this.setState({
         isAuthorizing: true
       }, () => {
@@ -95,7 +88,6 @@ class App extends React.Component {
         if (pathname) {
           directUrl = pathname;
         }
-        console.log('onLoginSuccess', pathname);
         this.props.history.push(directUrl);
       });
     }
@@ -122,7 +114,6 @@ class App extends React.Component {
     if (sysRole) {
       isAuthenticated = true;
     }
-    console.log('App - render', sysRole, isAuthenticated);
 
     if (isAuthorizing) {
       return (
@@ -133,7 +124,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <Switch>
-          <Route exact path="/" component={Login} />
+          <Route exact path="/" render={() => <Login sysRole={sysRole} onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="/login" render={() => <Login sysRole={sysRole} onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="/changepassword" component={ChangeTempPassword} />
           <PrivateRoute 
