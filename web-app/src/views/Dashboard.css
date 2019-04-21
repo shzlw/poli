@@ -15,7 +15,7 @@
   left: 200px;
   right: 0;
   bottom: 0;
-  background-color: #eeeeee;
+  background-color: #F4F5F7;
   overflow: auto;
 }
 
@@ -48,7 +48,6 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: #eeeeee;
   overflow: auto;
   padding: 5px 10px 10px 20px;
 }
@@ -59,8 +58,12 @@
 }
 
 .dashboard-name {
-  margin: 0px 0px 0px 10px;
-  padding: 10px 14px;
+  padding: 7px 14px;
+  font-size: 18px;
+}
+
+.dashboard-name-input {
+  margin-left: 10px;
 }
 
 .dashboard-attribute-edit-panel {

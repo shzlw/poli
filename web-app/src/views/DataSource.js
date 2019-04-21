@@ -192,10 +192,10 @@ class DataSource extends Component {
   render() {
     const { 
       showUpdatePassword,
-      showConfirmDeletionPanel,
-      searchValue,
       id,
       jdbcDataSources = [],
+      searchValue,
+      showConfirmDeletionPanel,
       objectToDelete = {}
     } = this.state;
 
@@ -241,11 +241,11 @@ class DataSource extends Component {
             style={{width: '200px'}}
           />
           <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button" onClick={() => this.openEditPanel(null)}>
+          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
             <FontAwesomeIcon icon="plus" /> New
           </button>
           </div>
-        <div className="table-panel">
+        <div className="row mt-10">
           {jdbcDataSourceItems}
         </div>
 

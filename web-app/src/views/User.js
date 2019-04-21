@@ -15,6 +15,8 @@ class User extends React.Component {
     this.state = {
       users: [],
       groups: [],
+      showConfirmDeletionPanel: false,
+      objectToDelete: {},
       searchValue: '',
       showUpdatePassword: false,
       showEditPanel: false,
@@ -177,13 +179,6 @@ class User extends React.Component {
     } 
   }
 
-  delete = (id) => {
-    axios.delete('/ws/user/' + id)
-      .then(res => {
-        this.fetchUsers();
-      });
-  }
-
   addUserGroup = () => {
     const { 
       userGroupId,
@@ -213,13 +208,41 @@ class User extends React.Component {
     } 
   }
 
+  confirmDelete = () => {
+    const { 
+      objectToDelete = {} 
+    } = this.state;
+    axios.delete('/ws/user/' + objectToDelete.id)
+      .then(res => {
+        this.fetchUsers();
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
+  openConfirmDeletionPanel = (user) => {
+    this.setState({
+      objectToDelete: user,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
+  }
+
   render() {
     const { 
       id,
       showUpdatePassword,
       users = [],
       groups = [],
-      userGroups = []
+      userGroups = [],
+      searchValue,
+      showConfirmDeletionPanel,
+      objectToDelete = {}
     } = this.state;
 
     const {
@@ -228,17 +251,33 @@ class User extends React.Component {
 
     const mode = id === null ? 'New' : 'Edit';
 
-    const userItems = users.map(user => 
-      <div key={user.id} className="user-card">
-        <p>
-          {user.username}
-          {user.name}
-          {user.sysRole}
-          <button className="button" onClick={() => this.openEditPanel(user)}>update</button>
-          <button className="button" onClick={() => this.delete(user.id)}>delete</button>
-        </p>
-      </div>
-    );
+    const userItems = [];
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const name = user.name;
+      const username = user.username;
+      if (!searchValue || (searchValue && (username.includes(searchValue) || name.includes(searchValue)))) {
+        userItems.push(
+          (
+            <div key={i} className="datasource-card row">
+              <div className="float-left ellipsis datasource-row-name">
+                {user.username}
+                {user.name}
+                {user.sysRole}
+              </div>
+              <div className="float-right">
+                <button className="icon-button datasource-icon-button" onClick={() => this.openEditPanel(user)}>
+                  <FontAwesomeIcon icon="edit" size="lg" />
+                </button>
+                <button className="icon-button datasource-icon-button" onClick={() => this.openConfirmDeletionPanel(user)}>
+                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+                </button>
+              </div>
+            </div>
+          )
+        )
+      }
+    }
 
     const userGroupItems = [];
     for (let i = 0; i < userGroups.length; i++) {
@@ -270,11 +309,11 @@ class User extends React.Component {
             style={{width: '200px'}}
           />
           <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> New User
+          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> New
           </button>
         </div>
-        <div className="row">
+        <div className="row mt-10">
           {userItems}
         </div>
 
@@ -290,14 +329,16 @@ class User extends React.Component {
               type="text" 
               name="username" 
               value={this.state.username}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
 
             <label>Name</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
 
             { mode === 'Edit' && (
                 <div style={{margin: '3px 0px 8px 0px'}}>
@@ -347,6 +388,17 @@ class User extends React.Component {
 
             <button className="button" onClick={this.save}>Save</button>
           </div>
+        </Modal>
+
+        <Modal 
+          show={showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete {objectToDelete.name}?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
         
       </div>

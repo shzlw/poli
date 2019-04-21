@@ -301,7 +301,7 @@ class DashboardEditView extends React.Component {
     let fullScreenButtonPanel = null;
     const controlButtons = (
       <React.Fragment>
-        <span className="mr-3">Last refreshed: {lastRefreshed}</span>
+        <span>Last refreshed: {lastRefreshed}</span>
         { autoRefreshStatus === 'OFF' && (
           <input 
             type="text" 
@@ -323,7 +323,7 @@ class DashboardEditView extends React.Component {
             )
           }
         </button>
-        <button className="button square-button" onClick={this.refresh}>
+        <button className="button square-button mr-3" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
         <button className="button mr-3" onClick={this.queryWidgets}>Apply Filters</button>
@@ -347,7 +347,9 @@ class DashboardEditView extends React.Component {
             <button className="button square-button mr-3" onClick={this.fullScreen}>
               <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
             </button>
-            <button className="button" onClick={this.edit}>Edit</button>
+            <button className="button" onClick={this.edit}>
+              <FontAwesomeIcon icon="edit" size="lg" fixedWidth />
+            </button>
           </React.Fragment>
         );
       }
@@ -371,8 +373,8 @@ class DashboardEditView extends React.Component {
                   name="name" 
                   value={this.state.name}
                   onChange={this.handleInputChange} 
-                  className="dashboard-name"
-                  />
+                  className="dashboard-name-input"
+                />
               )
             }
             

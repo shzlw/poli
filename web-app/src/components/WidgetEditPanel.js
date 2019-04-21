@@ -389,7 +389,7 @@ class WidgetEditPanel extends React.Component {
     return (
       <div>
         <button className="button" onClick={this.save}>Save</button>
-        <div className="row mt-5">
+        <div className="row mt-10">
           <div className="float-left">Type:</div>
           <div className="float-left">
             <Select
@@ -402,7 +402,7 @@ class WidgetEditPanel extends React.Component {
           </div>
         </div>
         
-        <div className="mt-5">
+        <div className="mt-10">
           <Tabs activeTab="Basic">
             <div title="Basic">
               <div className="form-panel">

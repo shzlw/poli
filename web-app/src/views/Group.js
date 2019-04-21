@@ -12,6 +12,8 @@ class Group extends React.Component {
     this.state = {
       groups: [],
       dashboards: [],
+      showConfirmDeletionPanel: false,
+      objectToDelete: {},
       showEditPanel: false,
       searchValue: '',
       id: null,
@@ -124,13 +126,6 @@ class Group extends React.Component {
     } 
   }
 
-  delete = (id) => {
-    axios.delete('/ws/group/' + id)
-      .then(res => {
-        this.fetchGroups();
-      });
-  }
-
   addGroupDashboard= () => {
     const { 
       groupDashboardId,
@@ -163,25 +158,68 @@ class Group extends React.Component {
     } 
   }
 
+  confirmDelete = () => {
+    const { 
+      objectToDelete = {} 
+    } = this.state;
+    axios.delete('/ws/group/' + objectToDelete.id)
+      .then(res => {
+        this.fetchGroups();
+        this.closeConfirmDeletionPanel();
+      });
+  }
+
+  openConfirmDeletionPanel = (group) => {
+    this.setState({
+      objectToDelete: group,
+      showConfirmDeletionPanel: true
+    });
+  }
+
+  closeConfirmDeletionPanel = () => {
+    this.setState({
+      objectToDelete: {},
+      showConfirmDeletionPanel: false
+    });
+  }
+
   render() {
     const { 
       id,
       groups = [],
       dashboards = [],
-      groupDashboards = []
+      groupDashboards = [],
+      searchValue,
+      showConfirmDeletionPanel,
+      objectToDelete = {}
     } = this.state;
 
     const mode = id === null ? 'New' : 'Edit';
 
-    const groupItems = groups.map(group => 
-      <div key={group.id} className="group-card">
-        <p>
-          {group.name}
-          <button className="button" onClick={() => this.openEditPanel(group)}>update</button>
-          <button className="button" onClick={() => this.delete(group.id)}>delete</button>
-        </p>
-      </div>
-    );
+    const groupItems = [];
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i];
+      const name = group.name;
+      if (!searchValue || (searchValue && name.includes(searchValue))) {
+        groupItems.push(
+          (
+            <div key={i} className="datasource-card row">
+              <div className="float-left ellipsis datasource-row-name">
+                {name}
+              </div>
+              <div className="float-right">
+                <button className="icon-button datasource-icon-button" onClick={() => this.openEditPanel(group)}>
+                  <FontAwesomeIcon icon="edit" size="lg" />
+                </button>
+                <button className="icon-button datasource-icon-button" onClick={() => this.openConfirmDeletionPanel(group)}>
+                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+                </button>
+              </div>
+            </div>
+          )
+        )
+      }
+    }
 
     const groupDashboardItems = [];
     for (let i = 0; i < groupDashboards.length; i++) {
@@ -213,11 +251,11 @@ class Group extends React.Component {
             style={{width: '200px'}}
             />
           <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> New Group
+          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> New
           </button>
         </div>
-        <div className="row">
+        <div className="row mt-10">
           {groupItems}
         </div>
 
@@ -251,6 +289,17 @@ class Group extends React.Component {
             
             <button className="button" onClick={this.save}>Save</button>
           </div>
+        </Modal>
+
+        <Modal 
+          show={showConfirmDeletionPanel}
+          onClose={this.closeConfirmDeletionPanel}
+          modalClass={'small-modal-panel'}
+          title={'Confirm Deletion'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to delete {objectToDelete.name}?
+          </div>
+          <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
         
       </div>

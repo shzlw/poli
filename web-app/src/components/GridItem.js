@@ -217,7 +217,7 @@ class GridItem extends React.Component {
       showTitle = true
     } = style;
 
-    const borderStyle = showBorder ? '2px solid #4b4f56' : '2px solid #FFFFFF';
+    const borderStyle = showBorder ? '2px solid #091E42' : '2px solid transparent';
 
     let styles = {
       left: this.props.x + 'px',

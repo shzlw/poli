@@ -30,6 +30,7 @@ body,
   display: inline-block;
   width: 100%;
   margin-bottom: 5px;
+  font-weight: 700;
 }
 
 .panel {
@@ -63,7 +64,7 @@ body,
 }
 
 .full-screen-view {
-  background-color: #FFF;
+  background-color: #F4F5F7;
   position: fixed;
   top: 0;
   left: 0;
@@ -111,6 +112,7 @@ body,
   border: 0;
   font-weight: 700;
   height: 36px;
+  line-height: 36px;
   outline: none;
   cursor: pointer;
 }
@@ -183,12 +185,16 @@ label {
   margin-top: 3px;
 }
 
-.mt-5 {
-  margin-top: 5px;
+.mt-10 {
+  margin-top: 10px;
 }
 
 .mr-3 {
   margin-right: 3px;
+}
+
+ml-5 {
+  margin-left: 5px;
 }
 
 .table-panel {

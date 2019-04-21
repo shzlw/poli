@@ -86,14 +86,13 @@ class Account extends React.Component {
 
     return (
       <div className="full-page-content">
-        <div>Account</div>
-        <div className="form-panel">   
+        <div className="form-panel" style={{width: '500px'}}>   
           <label>Username</label>
           <div>{username}</div>
 
           <label>Name</label>
           <input 
-            type="text" 
+            type="text"   
             name="name" 
             value={this.state.name}
             onChange={this.handleInputChange} />
