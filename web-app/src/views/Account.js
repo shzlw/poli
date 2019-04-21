@@ -85,7 +85,7 @@ class Account extends React.Component {
     } = this.state;
 
     return (
-      <div>
+      <div className="full-page-content">
         <div>Account</div>
         <div className="form-panel">   
           <label>Username</label>

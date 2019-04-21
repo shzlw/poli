@@ -5,7 +5,8 @@
   bottom: 0;
   width: 199px;
   overflow-y: auto;
-  border-right: 1px solid #1e1e1e;
+  border-right: 1px solid #C1C7D0;
+  background-color: #EBECF0;
 }
   
 .dashboard-content {
@@ -23,14 +24,16 @@
 }
 
 .dashboard-menu-item {
+  border-left: 3px solid #EBECF0;
   margin: 5px;
-  padding: 5px;
+  padding: 5px 8px;
+  color: #8993A4;
 }
 
 .dashboard-menu-item:hover {
   border-left: 3px solid #0065FF;
-  background-color: #B3BAC5;
-  color: white;
+  background-color: #C1C7D0;
+  cursor: pointer;
 }
 
 .dashboard-menu-item-active {

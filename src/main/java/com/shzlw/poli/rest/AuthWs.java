@@ -27,6 +27,8 @@ public class AuthWs {
     @Autowired
     UserService userService;
 
+    private static final String INVALID_USERNAME_PASSWORD = "Invalid username or password.";
+
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
     public LoginResponse loginByUser(@RequestBody User user, HttpServletResponse response) {
@@ -38,7 +40,7 @@ public class AuthWs {
         if (existUser == null) {
             existUser = userDao.findByUsernameAndTempPassword(username, password);
             if (existUser == null) {
-                return LoginResponse.ofError("Invalid username or password");
+                return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
             } else {
                 isTempPassword = true;
             }
@@ -60,12 +62,12 @@ public class AuthWs {
     @Transactional
     public LoginResponse loginBySessionKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
         if (sessionKey.isEmpty()) {
-            return LoginResponse.ofError("Invalid username or password");
+            return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
         }
 
         User user = userDao.findBySessionKey(sessionKey);
         if (user == null) {
-            return LoginResponse.ofError("Invalid username or password");
+            return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
         }
 
         userService.newOrUpdateSessionUserCache(user, sessionKey);
@@ -93,12 +95,12 @@ public class AuthWs {
         @RequestBody User user) {
         String password = user.getPassword();
         if (password.length() < 8) {
-            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Use 8 or more characters"), HttpStatus.OK);
+            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Use 8 or more characters."), HttpStatus.OK);
         }
 
         User existUser = userDao.findBySessionKey(sessionKey);
         if (existUser == null) {
-            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Invalid session"), HttpStatus.OK);
+            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Invalid session."), HttpStatus.OK);
         }
 
         userDao.updateTempPassword(existUser.getId(), user.getPassword());

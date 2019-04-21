@@ -9,12 +9,16 @@
   display: inline-block;
   list-style: none;
   margin-bottom: -1px;
-  padding: 10px 25px;
-  min-width: 80px;
+  padding: 8px 16px;
+  min-width: 60px;
 }
 
 .tab-header-active {
   background-color: white;
   border: 1px solid #ccc;
-  border-bottom: 2px solid #0065FF;
+  border-bottom: 3px solid #0065FF;
+}
+
+.tab-content {
+  padding-top: 10px;
 }

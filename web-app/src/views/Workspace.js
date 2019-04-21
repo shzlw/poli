@@ -22,7 +22,7 @@ const MENU_ITEMS = [
   }, 
   {
     link: '/workspace/datasource',
-    value: 'Data source',
+    value: 'Data Source',
     icon: 'database'
   }, 
   {

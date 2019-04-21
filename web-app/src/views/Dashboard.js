@@ -1,12 +1,14 @@
 
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
-import DashboardEditView from './DashboardEditView';
-import Modal from '../components/Modal';
-import './Dashboard.css';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import './Dashboard.css';
 import * as Constants from '../api/Constants';
+import DashboardEditView from './DashboardEditView';
+import Modal from '../components/Modal';
+import Toast from '../components/Toast';
 
 const ROUTE_WORKSPACE_DASHBOARD = '/workspace/dashboard/';
 
@@ -63,6 +65,11 @@ class Dashboard extends Component {
       name
     } = this.state;
 
+    if (!name) {
+      Toast.show('Enter a name.');
+      return;
+    }
+
     const dashboard = {
       name: name,
       style: {
@@ -79,7 +86,7 @@ class Dashboard extends Component {
         this.props.history.push(`/workspace/dashboard/${dashboardId}`);
       })
       .catch(error => {
-        console.log(error);
+        Toast.show('The name exists. Try another.');
       });
   }
 
@@ -133,7 +140,7 @@ class Dashboard extends Component {
     }
 
     return (
-      <div>
+      <React.Fragment>
         <div className="dashboard-sidebar">
           <div style={{margin: '5px'}}>
             { showEdit && (
@@ -147,7 +154,9 @@ class Dashboard extends Component {
               name="searchValue" 
               value={this.state.searchValue}
               placeholder="Search..."
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange}
+              style={{marginTop: '5px'}} 
+            />
           </div>
           <div>
             {dashboardRows}
@@ -171,19 +180,19 @@ class Dashboard extends Component {
           onClose={() => this.setState({ showEditPanel: false })}
           modalClass={'small-modal-panel'} 
           title={'New'} >
-          <div>
+          <div className="form-panel">
             <label>Name</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.name}
               onChange={this.handleInputChange} 
-              />
+            />
             <button className="button" onClick={this.save}>Save</button>
           </div>
         </Modal>
 
-      </div>
+      </React.Fragment>
     );
   }
 }

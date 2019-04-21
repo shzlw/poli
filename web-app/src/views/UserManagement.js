@@ -15,7 +15,7 @@ class UserManagement extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className="full-page-content">
         <Tabs activeTab="Group">
           <div title="Group">
             <Group />
@@ -24,7 +24,7 @@ class UserManagement extends React.Component {
             <User {...this.props} />
           </div>
         </Tabs>
-      </React.Fragment>
+      </div>
     )
   };
 }

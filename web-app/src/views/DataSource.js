@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import './Datasource.css';
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
-import './Datasource.css';
 
 class DataSource extends Component {
 
@@ -72,6 +72,7 @@ class DataSource extends Component {
     } = this.state;
 
     if (!name) {
+      Toast.show('Enter a name.');
       return;
     }
 
@@ -96,7 +97,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          console.log(error);
+          Toast.show('The name exists. Try another.');
         });
     } else {
       ds.password = password;
@@ -107,7 +108,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          console.log(error);
+          Toast.show('The name exists. Try another.');
         });
     } 
   }
@@ -229,7 +230,7 @@ class DataSource extends Component {
     }
 
     return (
-      <div>
+      <div className="full-page-content">
         <div>
           <input
             type="text"
@@ -238,10 +239,10 @@ class DataSource extends Component {
             onChange={this.handleInputChange}
             placeholder="Search..."
             style={{width: '200px'}}
-            />
+          />
           <button className="button" onClick={this.clearSearch}>Clear</button>
           <button className="button" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> New datasource
+            <FontAwesomeIcon icon="plus" /> New
           </button>
           </div>
         <div className="table-panel">
@@ -260,7 +261,8 @@ class DataSource extends Component {
               type="text" 
               name="name" 
               value={this.state.name}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
 
             <label>Connection Url</label>
             <textarea
@@ -271,46 +273,47 @@ class DataSource extends Component {
               onChange={this.handleInputChange} >
             </textarea>
 
-            <label>Driver class name</label>
+            <label>Driver Class Name</label>
             <input 
               type="text" 
               name="driverClassName" 
               value={this.state.driverClassName}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
 
             <label>Username</label>
             <input 
               type="text" 
               name="username" 
               value={this.state.username}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
             
-            { mode === 'Edit' ? 
-              (
-                <div style={{margin: '3px 0px 8px 0px'}}>
-                  <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
-                </div>
-              ) : null
-            }
-            { mode === 'New' || showUpdatePassword ? 
-              (
-                <div>
-                  <label>Password</label>
-                  <input 
-                    type="password" 
-                    name="password" 
-                    value={this.state.password}
-                    onChange={this.handleInputChange} />
-                </div>
-              ) : null
-            }
+            { mode === 'Edit' && (
+              <div style={{margin: '3px 0px 8px 0px'}}>
+                <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+              </div>
+            )}
+
+            { (mode === 'New' || showUpdatePassword) && ( 
+              <div>
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  name="password" 
+                  value={this.state.password}
+                  onChange={this.handleInputChange} 
+                />
+              </div>
+            )}
 
             <label>Ping</label>
             <input 
               type="text" 
               name="ping" 
               value={this.state.ping}
-              onChange={this.handleInputChange} />
+              onChange={this.handleInputChange} 
+            />
             <button className="button mt-3" onClick={this.save}>Save</button>
           </div>
         </Modal>

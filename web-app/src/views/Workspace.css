@@ -28,21 +28,20 @@
 
 .workspace-nav-menu li a {
   display: block;
-  color: #d6d7e1;
+  color: #8993A4;
   text-decoration: none;
-  padding: 9px 14px;
+  padding: 9px 14px;   
 }
 
-.workspace-nav-menu li:hover {
+.workspace-nav-menu li a:hover {
+  border-bottom: 3px solid #0065FF;
   background-color: #C1C7D0;
-  color: #4b4f56;
-  border-bottom: 3px solid #0065FF;
 }
 
-.menu-item-active {
-  color: #FFFFFF;
-  background-color: #091E42;
+.menu-item-active a {
   border-bottom: 3px solid #0065FF;
+  background-color: #091E42;
+  color: #FFFFFF !important;
 }
 
 .workspace-content {
@@ -52,8 +51,8 @@
   right: 0;
   bottom: 0;
   background-color: #e9ebee;
-  overflow: hidden; 
-  padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto; 
 }
 
 .workspace-account-menu {
@@ -62,13 +61,19 @@
 
 .workspace-account-button a {
   display: block;
-  color: #d6d7e1;
+  color: #8993A4;
   padding: 9px 14px;
   text-decoration: none;
 }
 
+.workspace-account-button a:hover {
+  background-color: #C1C7D0;
+  color: #091E42;
+  border-bottom: 3px solid #0065FF;
+}
+
 .workspace-logout-button {
-  color: #d6d7e1;
+  color: #8993A4;
   padding: 9px 14px;
   text-decoration: none;
   cursor: pointer;

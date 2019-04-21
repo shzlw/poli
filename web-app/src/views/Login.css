@@ -8,8 +8,8 @@
   margin-left: -150px;
 }
 
-.long-panel-body {
-  padding: 0px 10px 1px 10px;
+.login-panel-body {
+  padding: 10px;
   background-color: rgba(18, 91, 152, 0.1);
   border-radius: 5px;
 }

@@ -59,14 +59,14 @@ class Login extends React.Component {
 
     if (!username) {
       this.setState({
-        errorMsg: 'Enter username'
+        errorMsg: 'Enter username.'
       });
       return;
     }
 
     if (!password) {
       this.setState({
-        errorMsg: 'Enter password'
+        errorMsg: 'Enter password.'
       });
       return;
     }
@@ -90,7 +90,7 @@ class Login extends React.Component {
         <div className="login-panel">
           <div className="login-app-title">Poli</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
-          <div className="long-panel-body">
+          <div className="login-panel-body">
             <div className="form-panel">
               <label>Username</label>
               <input 

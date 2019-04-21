@@ -35,7 +35,7 @@ class ChangeTempPassword extends React.Component {
         && password === confirmedPassword) {
       if (password.length < 8) {
         this.setState({
-          errorMsg: `Use 8 or more characters`
+          errorMsg: `Use 8 or more characters.`
         });
         return;
       }
@@ -57,7 +57,7 @@ class ChangeTempPassword extends React.Component {
         });
     } else {
       this.setState({
-        errorMsg: `Those passwords didn't match`
+        errorMsg: `Those passwords didn't match.`
       });
     }
   }
@@ -81,7 +81,7 @@ class ChangeTempPassword extends React.Component {
         <div className="login-panel">
           <div style={titleStyle}>Change password</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
-          <div className="long-panel-body">
+          <div className="login-panel-body">
             <div className="form-panel">
               <div style={tipStyle}>* Use 8 or more characters</div>
               <label>New password</label>

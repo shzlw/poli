@@ -18,6 +18,11 @@
   cursor: pointer;
 }
 
+.model-close-button:hover {
+  background-color: #091E42;
+  color: #FFFFFF;
+}
+
 .modal-panel {
   background-color: #eee;
   position: fixed;
