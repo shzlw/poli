@@ -8,7 +8,7 @@
   position: absolute;
   overflow-x: hidden;
   overflow-y: hidden;
-  background-color: #FFFFFF;
+  background-color: #EBECF0;
   display: flex;
   flex-flow: column;
   height: 100%;
@@ -19,9 +19,19 @@
   flex: 0 1 auto;
 }
 
+.grid-box-title-value {
+  padding-left: 5px;
+  max-width: 200px;
+  font-size: 18px;
+}
+
 .grid-box-content {
   flex: 1 1 auto;
   overflow-y: auto;
+}
+
+.grid-box-content-panel {
+  padding: 0px 5px;
 }
 
 .grid-draggable {
@@ -52,4 +62,8 @@
   float: right;
   display: block;
   transition: 0.3s;
+}
+
+.grid-box-icon {
+  cursor: pointer;
 }

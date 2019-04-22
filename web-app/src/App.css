@@ -22,6 +22,7 @@ body,
 
 .form-panel input,
 .form-panel textarea,
+.form-panel select,
 .form-pane ul {
   margin-bottom: 8px;
 }
@@ -173,12 +174,6 @@ h1 {
 
 .required {
   color: #FF5630;
-}
-
-label {
-  color: #6b7c93;
-  font-weight: 300;
-  letter-spacing: 0.025em;
 }
 
 .mt-3 {

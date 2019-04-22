@@ -4,12 +4,12 @@
 }
 
 .ReactTable .rt-table {
-  background-color: #fff;
+  background-color: #FFFFFF;
 }
 
 .ReactTable .rt-thead.-header {
   box-shadow: none !important;
-  border-bottom: 2px solid black;
+  border-bottom: 1px solid #B3BAC5;
 }
 
 .ReactTable .rt-tbody .rt-td {
@@ -24,9 +24,16 @@
   margin-right: 5px;
 }
 
+.ReactTable .pagination-bottom {
+  border-top: 1px solid #B3BAC5;
+  background-color: #FFFFFF;
+}
+
 .ReactTable .-pagination .-previous {
   width: 60px !important;
   flex: none !important;
+  height: 30px;
+  margin-top: 4px;
 }
 
 .ReactTable .-pagination .-center {
@@ -37,6 +44,8 @@
 .ReactTable .-pagination .-next {
   width: 60px !important;
   flex: none !important;
+  height: 30px;
+  margin-top: 4px;
 }
 
 .ReactTable .-pagination .-pageInfo {
@@ -61,12 +70,12 @@
 
 .ReactTable .rt-thead .rt-th.-sort-asc, 
 .ReactTable .rt-thead .rt-td.-sort-asc {
-  box-shadow: inset 0 3px 0 0 red;
+  box-shadow: inset 0 3px 0 0 #0065FF;
 }
 
 .ReactTable .rt-thead .rt-th.-sort-desc, 
 .ReactTable .rt-thead .rt-td.-sort-desc {
-  box-shadow: inset 0 -3px 0 0 red;
+  box-shadow: inset 0 -3px 0 0 #0065FF;
 }
 
 .link-label {

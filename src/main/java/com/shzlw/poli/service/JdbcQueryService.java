@@ -21,6 +21,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -176,7 +177,12 @@ public class JdbcQueryService {
 
     public QueryResult fetchJsonWithParams(JdbcDataSource ds, String sql, List<FilterParameter> filterParams) {
         LOGGER.info("[fetchJsonWithParams] filterParams: {}", filterParams);
-        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
+        QueryResult queryResult = new QueryResult();
+        DataSource dataSource = jdbcDataSourceService.getDataSource(ds);
+        if (dataSource == null) {
+            return queryResult;
+        }
+        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
 
         Map<String, Object> namedParameters = new HashMap<>();
         if (filterParams != null) {
@@ -212,7 +218,7 @@ public class JdbcQueryService {
             }
         }
 
-        QueryResult queryResult = new QueryResult();
+
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
         LOGGER.info("[fetchJsonWithParams] parsedSql: {}", parsedSql);
         LOGGER.info("[fetchJsonWithParams] namedParameters: {}", namedParameters);

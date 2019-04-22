@@ -67,9 +67,8 @@
 }
 
 .workspace-account-button a:hover {
-  background-color: #C1C7D0;
-  color: #091E42;
   border-bottom: 3px solid #0065FF;
+  background-color: #C1C7D0;
 }
 
 .workspace-logout-button {

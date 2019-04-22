@@ -49,7 +49,7 @@
   bottom: 0;
   right: 0;
   overflow: auto;
-  padding: 5px 10px 10px 20px;
+  padding: 0px 10px 10px 20px;
 }
 
 .dashboard-add-button {
@@ -58,8 +58,8 @@
 }
 
 .dashboard-name {
-  padding: 7px 14px;
-  font-size: 18px;
+  padding: 6px 14px;
+  font-size: 20px;
 }
 
 .dashboard-name-input {

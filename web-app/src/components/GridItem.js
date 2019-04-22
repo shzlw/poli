@@ -11,7 +11,7 @@ import * as Constants from '../api/Constants';
 import GridDraggable from './GridDraggable';
 import GridResizable from './GridResizable';
 import TableWidget from './TableWidget';
-import Slicer from "./Slicer";
+import Slicer from './filters/Slicer';
 
 class GridItem extends React.Component {
 
@@ -184,19 +184,23 @@ class GridItem extends React.Component {
     } else if (type === Constants.FILTER) {
       if (filterType === Constants.SLICER) {
         widgetItem = (
-          <Slicer 
-            filterId={id} 
-            checkBoxes={checkBoxes} 
-            onChange={this.onSlicerChange} 
-          />
+          <div className="grid-box-content-panel">
+            <Slicer 
+              id={id} 
+              checkBoxes={checkBoxes} 
+              onChange={this.onSlicerChange} 
+            />
+          </div>
         );
       } else if (filterType === Constants.SINGLE_VALUE) {
         widgetItem = (
-          <input 
-            type="text"  
-            value={value}
-            onChange={(event) => this.onSingleValueChange(id, event)} 
-          />
+          <div className="grid-box-content-panel">
+            <input 
+              type="text"  
+              value={value}
+              onChange={(event) => this.onSingleValueChange(id, event)} 
+            />
+          </div>
         );
       }
     }
@@ -228,28 +232,30 @@ class GridItem extends React.Component {
       border: borderStyle
     };
 
+    /*
+    <div className="grid-box-file-button-group">
+      <div className="inline-block" onClick={() => this.exportJson(id)}>
+        <FontAwesomeIcon icon="file-export" fixedWidth />
+      </div>
+      
+      <div className="inline-block" onClick={() => this.exportCsv(id)}>
+        <FontAwesomeIcon icon="file-csv" fixedWidth />
+      </div>
+    </div>
+    */
+
     return (
       <div className="grid-box" style={styles}>
         <div className="grid-box-title">
-          {title}
+          <div className="grid-box-title-value float-left ellipsis">{title}</div>
 
-          { isEditMode ? (
+          { isEditMode && (
             <div className="float-right" style={{marginRight: '20px'}}>
-              <div className="inline-block" onClick={() => this.editWidget(id)}>
+              <div className="grid-box-icon inline-block" onClick={() => this.editWidget(id)}>
                 <FontAwesomeIcon icon="edit" fixedWidth />
               </div>
-              <div className="inline-block" onClick={() => this.removeWidget(id)}>
+              <div className="grid-box-icon inline-block" onClick={() => this.removeWidget(id)}>
                 <FontAwesomeIcon icon="trash-alt" fixedWidth />
-              </div>
-            </div>
-          ) : (
-            <div className="grid-box-file-button-group">
-              <div className="inline-block" onClick={() => this.exportJson(id)}>
-                <FontAwesomeIcon icon="file-export" fixedWidth />
-              </div>
-              
-              <div className="inline-block" onClick={() => this.exportCsv(id)}>
-                <FontAwesomeIcon icon="file-csv" fixedWidth />
               </div>
             </div>
           )}
@@ -266,7 +272,8 @@ class GridItem extends React.Component {
             onMouseDown={this.onMouseDown}
             onMouseMove={this.onMouseMove}
             mode={this.state.mode}
-            snapToGrid={this.props.snapToGrid} />
+            snapToGrid={this.props.snapToGrid} 
+          />
         )}
 
         { isEditMode && (
@@ -274,7 +281,8 @@ class GridItem extends React.Component {
             onMouseUp={this.onMouseUp}
             onMouseDown={this.onMouseDown}
             onMouseMove={this.onMouseMove}
-            mode={this.state.mode} />
+            mode={this.state.mode} 
+          />
         )}
         
       </div>

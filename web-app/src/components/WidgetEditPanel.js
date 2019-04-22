@@ -1,27 +1,24 @@
 
 import React from 'react';
-
+import axios from 'axios';
 import AceEditor from 'react-ace';
-
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReactEcharts from 'echarts-for-react';
 
-import TableWidget from './TableWidget';
-
-import axios from 'axios';
+import './WidgetEditPanel.css';
 
 import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
 import * as EchartsApi from '../api/EchartsApi';
 import * as Constants from '../api/Constants';
 
-import ReactEcharts from 'echarts-for-react';
-
-import './WidgetEditPanel.css';
-
 import Checkbox from './Checkbox';
-import Tabs from '../components/Tabs';
-import Select from '../components/Select';
+import Tabs from './Tabs';
+import Select from './Select';
+import TableWidget from './TableWidget';
+
 
 class WidgetEditPanel extends React.Component {
 
@@ -298,7 +295,6 @@ class WidgetEditPanel extends React.Component {
         pieValue, 
         queryResult = {}
       } = this.state;
-      console.log("generateChart", pieKey, pieValue);
       const data = Util.jsonToArray(queryResult.data);
       const chartOption = EchartsApi.getPieOption(data, pieKey, pieValue);
       this.setState({
@@ -373,10 +369,12 @@ class WidgetEditPanel extends React.Component {
     const error = queryResult.error;
 
     const drillItems = drillThrough.map(drill =>
-      <div key={drill.columnName}>
-        <div>Column: {drill.columnName}</div>
-        <div>Dashboard: {drill.dashboardId}</div>
-        <button onClick={() => this.removeDrillThrough(drill)}>delete</button>
+      <div key={drill.columnName} className="row">
+        <div className="float-left">Column: {drill.columnName}</div>
+        <div className="float-left">Dashboard: {drill.dashboardId}</div>
+        <button className="button float-right"onClick={() => this.removeDrillThrough(drill)}>
+          <FontAwesomeIcon icon="trash-alt" size="lg" />
+        </button>
       </div>
     );
 
@@ -489,7 +487,7 @@ class WidgetEditPanel extends React.Component {
             { type === Constants.CHART && (
               <div title="Chart">
                 <div className="form-panel">
-                  <label>Chart Options</label>
+                  <label>Chart Type</label>
                   <Select
                     name={'chartType'}
                     value={this.state.chartType}
@@ -504,9 +502,8 @@ class WidgetEditPanel extends React.Component {
             )}
             
             { type === Constants.CHART && (
-              <div title="Drill through">
+              <div title="Drill Through">
                 <div className="form-panel">
-                  <label>Drill through</label>
                   <label>Column</label>
                   <Select
                     name={'drillColumnName'}
@@ -526,7 +523,7 @@ class WidgetEditPanel extends React.Component {
                     optionDisplay={'name'}
                     optionValue={'id'}
                   />
-                  <div>
+                  <div class="row mt-10">
                     {drillItems}
                   </div>
                   <button className="button" onClick={this.addDrillThrough}>Add</button>

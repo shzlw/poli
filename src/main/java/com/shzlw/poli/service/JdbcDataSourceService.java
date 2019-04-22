@@ -42,7 +42,6 @@ public class JdbcDataSourceService {
     }
 
     public DataSource put(JdbcDataSource dataSource) {
-        LOGGER.info("HikariDataSource - put: {}", dataSource);
         HikariDataSource hiDs = DATA_SOURCE_CACHE.get(dataSource.getId());
         if (hiDs != null) {
             hiDs.close();
