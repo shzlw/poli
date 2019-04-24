@@ -24,6 +24,7 @@ public class Widget {
 
     /**
      * Json column
+     * Chart configuration
      */
     private String data;
 

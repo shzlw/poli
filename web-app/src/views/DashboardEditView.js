@@ -167,7 +167,6 @@ class DashboardEditView extends React.Component {
   }
 
   save = () => {
-    console.log('save');
     const {
       dashboardId,
       name,
@@ -183,8 +182,6 @@ class DashboardEditView extends React.Component {
     axios.put('/ws/dashboard/', dashboard)
       .then(res => {
       });
-
-    this.widgetViewPanel.current.saveWidgets();
 
     this.props.onDashboardSave(dashboardId);
 
@@ -234,17 +231,9 @@ class DashboardEditView extends React.Component {
     this.props.history.push(`/workspace/dashboard/drill?name=&`);
   }
 
-  onHeightChange = (height) => {
+  onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
-    style.height = height;
-    this.setState({
-      style: style
-    });
-  }
-
-  onBackgroundColorChange = (color) => {
-    const style = {...this.state.style};
-    style.backgroundColor = color;
+    style[[name]] = value;
     this.setState({
       style: style
     });
@@ -326,7 +315,9 @@ class DashboardEditView extends React.Component {
         <button className="button square-button mr-3" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button mr-3" onClick={this.queryWidgets}>Apply Filters</button>
+        <button className="button mr-3" onClick={this.queryWidgets}>
+          <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
+        </button>
       </React.Fragment>
     );
 
@@ -334,10 +325,18 @@ class DashboardEditView extends React.Component {
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
-            <button className="button mr-3" onClick={this.cancelEdit}>Cancel</button>
-            <button className="button mr-3" onClick={this.save}>Save</button>
-            <button className="button mr-3" onClick={this.deleteDashboard}>Delete</button>
-            <button className="button" onClick={() => this.openWidgetEditPanel(null)}>Add Widget</button>
+            <button className="button mr-3" onClick={this.cancelEdit}>
+               <FontAwesomeIcon icon="times" size="lg" fixedWidth />
+            </button>
+            <button className="button mr-3" onClick={this.save}>
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth />
+            </button>
+            <button className="button mr-3" onClick={this.deleteDashboard}>
+               <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
+            </button>
+            <button className="button" onClick={() => this.openWidgetEditPanel(null)}>
+              <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> New Widget
+            </button>
           </React.Fragment>
         );
       } else {
@@ -390,8 +389,7 @@ class DashboardEditView extends React.Component {
           isEditMode={this.state.isEditMode}
           widgetViewWidth={this.state.widgetViewWidth}
           onWidgetEdit={this.openWidgetEditPanel}
-          onHeightChange={this.onHeightChange}
-          onBackgroundColorChange={this.onBackgroundColorChange}
+          onStyleValueChange={this.onStyleValueChange}
           {...this.state.style}
         />
 

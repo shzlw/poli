@@ -40,7 +40,6 @@ class GridItem extends React.Component {
   }
 
   onMouseUp = () => {
-    console.log('GridItem onMouseUp');
     this.setState({
       mode: ''
     });
@@ -218,17 +217,20 @@ class GridItem extends React.Component {
 
     const { 
       showBorder = false,
-      showTitle = true
+      showTitle = true,
+      borderColor,
+      backgroundColor,
+      zIndex
     } = style;
 
-    const borderStyle = showBorder ? '2px solid #091E42' : '2px solid transparent';
+    const borderStyle = showBorder ? `2px solid ${borderColor}` : '2px solid transparent';
 
-    let styles = {
+    let gridBoxStyle = {
       left: this.props.x + 'px',
       top: this.props.y + 'px',
       width: this.props.width + 'px',
       height: this.props.height + 'px',
-      zIndex: 1,
+      zIndex: zIndex,
       border: borderStyle
     };
 
@@ -245,7 +247,7 @@ class GridItem extends React.Component {
     */
 
     return (
-      <div className="grid-box" style={styles}>
+      <div className="grid-box" style={gridBoxStyle}>
         <div className="grid-box-title">
           <div className="grid-box-title-value float-left ellipsis">{title}</div>
 

@@ -178,14 +178,6 @@ class WidgetViewPanel extends React.Component {
     });
   }
 
-  handleHeightChange = (event) => {
-    this.props.onHeightChange(event.target.value);
-  }
-
-  onBackgroundColorChange = (color) => {
-    this.props.onBackgroundColorChange(color);
-  }
-
   saveWidgets = () => {
     const newWidgets = JSON.parse(JSON.stringify(this.state.widgets));
     const { gridWidth } = this.state;
@@ -205,6 +197,9 @@ class WidgetViewPanel extends React.Component {
     newWidgets[index].height = widget.height;
     this.setState({
       widgets: newWidgets
+    }, () => {
+      // FIXME: only save this widget. Not all.
+      this.saveWidgets();
     });
   }
 
@@ -319,14 +314,14 @@ class WidgetViewPanel extends React.Component {
               type="text" 
               name="height" 
               value={this.props.height}
-              onChange={this.handleHeightChange} 
+              onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
               className="inline-block" 
               style={{width: '200px'}}
               />
 
             <div>
               Background Color
-              <ColorPicker value={this.props.backgroundColor} onChange={this.onBackgroundColorChange} />
+              <ColorPicker name={'backgroundColor'} value={this.props.backgroundColor} onChange={this.props.onStyleValueChange} />
             </div>
 
             <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />

@@ -1,0 +1,27 @@
+.search-input-container {
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
+  display: inline-block;
+}
+
+.search-input-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #FFFFFF;
+  border-radius: 4px 0px 0px 4px;
+}
+
+.search-input-input {
+  padding: 7px 0px;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.search-input-input:focus {
+  border: 2px solid #FFFFFF;
+}
+
+.search-input-reset-button {
+  border-radius: 0px 4px 4px 0px;
+  width: 36px;
+}
+

@@ -7,6 +7,7 @@ import * as Constants from '../api/Constants';
 
 import Modal from '../components/Modal';
 import Select from '../components/Select';
+import SearchInput from '../components/SearchInput';
 
 class User extends React.Component {
 
@@ -36,7 +37,7 @@ class User extends React.Component {
     });
   }
 
-  handleOptionChange = (name, value) => {
+  handleNameInputChange = (name, value) => {
     this.setState({
       [name]: value
     });
@@ -299,17 +300,16 @@ class User extends React.Component {
 
     return (
       <div>
-        <div>
-          <input
-            type="text"
-            name="searchValue"
-            value={this.state.searchValue}
-            onChange={this.handleInputChange}
-            placeholder="Search..."
-            style={{width: '200px'}}
-          />
-          <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
+        <div class="row">
+          <div className="float-left" style={{marginRight: '5px'}}>
+            <SearchInput 
+              name={'searchValue'} 
+              value={this.state.searchValue} 
+              onChange={this.handleNameInputChange} 
+              inputWidth={200}
+            />
+          </div>
+          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
             <FontAwesomeIcon icon="plus" /> New
           </button>
         </div>
@@ -361,7 +361,7 @@ class User extends React.Component {
               <Select
                 name={'sysRole'}
                 value={this.state.sysRole}
-                onChange={this.handleOptionChange}
+                onChange={this.handleNameInputChange}
                 options={[Constants.SYS_ROLE_VIEWER, Constants.SYS_ROLE_DEVELOPER]}
               />
             )}

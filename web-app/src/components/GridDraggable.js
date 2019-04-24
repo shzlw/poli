@@ -31,12 +31,14 @@ class GridDraggable extends React.Component {
     const xOffset = event.clientX - gridItemNode.offsetLeft;
     const yOffset = event.clientY - gridItemNode.offsetTop;
 
+    /*
     let boxes = document.getElementsByClassName("grid-box");
     for (let i = 0; i < boxes.length; i++) {
-        boxes[i].style.zIndex = 20;
+      boxes[i].style.zIndex = 20;
     }
     gridItemNode.style.zIndex = 30;
-
+    */
+   
     const { ownerDocument } = gridItemNode;
     ownerDocument.addEventListener('mouseup', this.onMouseUp);
     ownerDocument.addEventListener('mousemove', this.onMouseMove);

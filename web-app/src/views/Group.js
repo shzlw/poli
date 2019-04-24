@@ -1,9 +1,11 @@
 
 import React from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Modal from '../components/Modal';
 import Select from '../components/Select';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SearchInput from '../components/SearchInput';
 
 class Group extends React.Component {
 
@@ -26,6 +28,12 @@ class Group extends React.Component {
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
+    });
+  }
+
+  handleNameInputChange = (name, value) => {
+    this.setState({
+      [name]: value
     });
   }
 
@@ -241,17 +249,16 @@ class Group extends React.Component {
 
     return (
       <div>
-        <div>
-          <input
-            type="text"
-            name="searchValue"
-            value={this.state.searchValue}
-            onChange={this.handleInputChange}
-            placeholder="Search..."
-            style={{width: '200px'}}
+        <div class="row">
+          <div className="float-left" style={{marginRight: '5px'}}>
+            <SearchInput 
+              name={'searchValue'} 
+              value={this.state.searchValue} 
+              onChange={this.handleNameInputChange} 
+              inputWidth={200}
             />
-          <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
+          </div>
+          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
             <FontAwesomeIcon icon="plus" /> New
           </button>
         </div>

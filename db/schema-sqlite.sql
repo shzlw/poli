@@ -23,7 +23,7 @@ IF NOT EXISTS p_datasource (
 CREATE TABLE
 IF NOT EXISTS p_dashboard (
     id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
     style TEXT
 );
 
@@ -84,6 +84,8 @@ IF NOT EXISTS p_group_dashboard (
     FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
     FOREIGN KEY (group_id) REFERENCES p_group(id)
 );
+
+CREATE UNIQUE INDEX p_dashboard_unique_name_index ON p_dashboard(name);
 
 INSERT INTO p_user(username, temp_password, sys_role)
 VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');

@@ -23,9 +23,10 @@ class ColorPicker extends React.Component {
   };
 
   handleChange = (color) => {
+    const { name } = this.props;
     const rgb = color.rgb;
     const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
-    this.props.onChange(rgba);
+    this.props.onChange(name, rgba);
   };
 
   render() {
@@ -48,7 +49,7 @@ class ColorPicker extends React.Component {
 
     const popover = {
       position: 'absolute',
-      zIndex: '2'
+      zIndex: 2
     };
 
     const cover = {

@@ -18,6 +18,7 @@ import Checkbox from './Checkbox';
 import Tabs from './Tabs';
 import Select from './Select';
 import TableWidget from './TableWidget';
+import ColorPicker from './ColorPicker';
 
 
 class WidgetEditPanel extends React.Component {
@@ -40,7 +41,10 @@ class WidgetEditPanel extends React.Component {
       chartType: Constants.TABLE,
       style: {
         showBorder: false,
-        showTitle: true
+        borderColor: 'rgba(9, 30, 66, 1)',
+        showTitle: true,
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+        zIndex: 1
       },
       queryParameter: '',
       drillThrough: [],
@@ -145,9 +149,9 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  handleCheckBoxChange = (name, isChecked) => {
+  onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
-    style[[name]] = isChecked;
+    style[[name]] = value;
     this.setState({
       style: style
     });
@@ -171,6 +175,7 @@ class WidgetEditPanel extends React.Component {
       [name]: value
     });
   }
+
 
   save = () => {
     const {
@@ -411,10 +416,30 @@ class WidgetEditPanel extends React.Component {
                   value={this.state.title}
                   onChange={this.handleInputChange} 
                 />
-              </div>
 
-              <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.handleCheckBoxChange} />
-              <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.handleCheckBoxChange} />
+                <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
+                <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
+
+                <label>Z Index</label>
+                <input 
+                  type="number" 
+                  name="zIndex" 
+                  value={this.state.style.zIndex}
+                  onChange={(event) => this.onStyleValueChange('zIndex', event.target.value)} 
+                />
+
+                <div>
+                  Border Color
+                  <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
+                </div>
+
+                <div>
+                  Background Color
+                  <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.onStyleValueChange} />
+                </div>
+
+                
+              </div>
             </div>
 
             { type === Constants.FILTER && (  

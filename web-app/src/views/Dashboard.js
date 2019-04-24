@@ -9,6 +9,7 @@ import * as Constants from '../api/Constants';
 import DashboardEditView from './DashboardEditView';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
+import SearchInput from '../components/SearchInput';
 
 const ROUTE_WORKSPACE_DASHBOARD = '/workspace/dashboard/';
 
@@ -50,6 +51,12 @@ class Dashboard extends Component {
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
+    });
+  }
+
+  handleNameInputChange = (name, value) => {
+    this.setState({
+      [name]: value
     });
   }
 
@@ -144,19 +151,19 @@ class Dashboard extends Component {
         <div className="dashboard-sidebar">
           <div style={{margin: '5px'}}>
             { showEdit && (
-                <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
-                  <FontAwesomeIcon icon="plus" /> New
-                </button>
+              <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
+                <FontAwesomeIcon icon="plus" /> New
+              </button>
             )}
-            
-            <input 
-              type="text" 
-              name="searchValue" 
-              value={this.state.searchValue}
-              placeholder="Search..."
-              onChange={this.handleInputChange}
-              style={{marginTop: '5px'}} 
-            />
+
+            <div style={{marginTop: '5px'}}>
+              <SearchInput 
+                name={'searchValue'} 
+                value={this.state.searchValue} 
+                onChange={this.handleNameInputChange} 
+                inputWidth={117}
+              />
+            </div>
           </div>
           <div>
             {dashboardRows}

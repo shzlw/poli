@@ -7,6 +7,7 @@ import './Datasource.css';
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
+import SearchInput from '../components/SearchInput';
 
 class DataSource extends Component {
 
@@ -49,6 +50,12 @@ class DataSource extends Component {
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
+    });
+  }
+
+  handleNameInputChange = (name, value) => {
+    this.setState({
+      [name]: value
     });
   }
 
@@ -183,12 +190,6 @@ class DataSource extends Component {
     })); 
   }
 
-  clearSearch = () => {
-    this.setState({
-      searchValue: ''
-    });
-  }
-
   render() {
     const { 
       showUpdatePassword,
@@ -231,20 +232,19 @@ class DataSource extends Component {
 
     return (
       <div className="full-page-content">
-        <div>
-          <input
-            type="text"
-            name="searchValue"
-            value={this.state.searchValue}
-            onChange={this.handleInputChange}
-            placeholder="Search..."
-            style={{width: '200px'}}
-          />
-          <button className="button" onClick={this.clearSearch}>Clear</button>
-          <button className="button margin-left" onClick={() => this.openEditPanel(null)}>
+        <div class="row">
+          <div className="float-left" style={{marginRight: '5px'}}>
+            <SearchInput 
+              name={'searchValue'} 
+              value={this.state.searchValue} 
+              onChange={this.handleNameInputChange} 
+              inputWidth={200}
+            />
+          </div>
+          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
             <FontAwesomeIcon icon="plus" /> New
           </button>
-          </div>
+        </div>
         <div className="row mt-10">
           {jdbcDataSourceItems}
         </div>
