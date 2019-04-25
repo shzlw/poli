@@ -46,7 +46,7 @@ public class AuthWs {
             }
         }
 
-        String sessionKey = PasswordUtil.getUniqueId();
+        String sessionKey = Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
         userService.newOrUpdateSessionUserCache(user, sessionKey);
         userDao.updateSessionKey(existUser.getId(), sessionKey);
 
@@ -105,5 +105,14 @@ public class AuthWs {
 
         userDao.updateTempPassword(existUser.getId(), user.getPassword());
         return new ResponseEntity<LoginResponse>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/generateapikey", method= RequestMethod.GET)
+    @Transactional
+    public ResponseEntity<String> changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
+        User user = userDao.findBySessionKey(sessionKey);
+        String apiKey = Constants.API_KEY_PREFIX + PasswordUtil.getUniqueId();
+        userDao.updateApiKey(user.getId(), apiKey);
+        return new ResponseEntity<>(apiKey, HttpStatus.OK);
     }
 }

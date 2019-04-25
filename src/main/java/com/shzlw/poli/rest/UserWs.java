@@ -31,6 +31,7 @@ public class UserWs {
             users = userDao.findViewerUsers(myUser.getId());
         }
 
+        // FIXME: N + 1 query
         for (User user : users) {
             List<Long> userGroups = userDao.findUserGroups(user.getId());
             user.setUserGroups(userGroups);

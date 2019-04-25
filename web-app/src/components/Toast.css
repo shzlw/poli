@@ -4,11 +4,11 @@
   color: #000000;
   position: fixed;
   padding: 10px;
-  z-index: 100;
+  z-index: 300;
   left: 50%;
-  width: 300px;
+  width: 400px;
   top: 20px;
-  margin-left: -150px;
+  margin-left: -200px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   overflow-y: auto;
 }

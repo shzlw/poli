@@ -82,6 +82,11 @@ public class UserDao {
         return jt.update(sql, new Object[] { sessionKey, sessionTimeout, userId});
     }
 
+    public int updateApiKey(long userId, String apiKey) {
+        String sql = "UPDATE p_user SET api_key=? WHERE id=?";
+        return jt.update(sql, new Object[] { apiKey, apiKey });
+    }
+
     public int updateTempPassword(long userId, String rawNewPassword) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawNewPassword);
         String sql = "UPDATE p_user SET temp_password=NULL, password=? WHERE id=?";

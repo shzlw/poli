@@ -1,6 +1,7 @@
 
 import React from 'react';
 import axios from 'axios';
+import Toast from '../components/Toast';
 
 class Account extends React.Component {
 
@@ -43,6 +44,13 @@ class Account extends React.Component {
   }
 
   generateApiKey = () => {
+    axios.get('/auth/generateapikey')
+      .then(res => {
+        const apiKey = res.data;
+        this.setState({
+          apiKey: apiKey
+        });
+      });
   }
 
   save = () => {
@@ -59,8 +67,14 @@ class Account extends React.Component {
 
     if (showUpdatePassword) {
       if (password !== confirmedPassword) {
+        Toast.show(`Those passwords didn't match.`);
         return;
       }  
+
+      if (password.length < 8) {
+        Toast.show(`Use 8 or more characters for password.`);
+        return;
+      }
 
       user.password = password;
     }

@@ -8,7 +8,10 @@ public final class Constants {
     public static final String ERROR = "";
 
     public static final String SESSION_KEY = "pskey";
-    public static final int COOKIE_TIMEOUT = 864000;
+    public static final int COOKIE_TIMEOUT = 8640000;
+
+    public static final String API_KEY_PREFIX = "apk_";
+    public static final String SESSION_KEY_PREFIX = "sk_";
 
     public static final String PASSWORD_SALT = "awesome";
 

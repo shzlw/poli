@@ -8,6 +8,7 @@ import * as Constants from '../api/Constants';
 import Modal from '../components/Modal';
 import Select from '../components/Select';
 import SearchInput from '../components/SearchInput';
+import Toast from '../components/Toast';
 
 class User extends React.Component {
 
@@ -135,6 +136,12 @@ class User extends React.Component {
     } = this.state;
 
     if (!username) {
+      Toast.show('Enter a name.');
+      return;
+    }
+
+    if (!password || password.length < 8) {
+      Toast.show(`Use 8 or more characters for password.`);
       return;
     }
 

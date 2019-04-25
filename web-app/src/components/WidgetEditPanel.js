@@ -44,7 +44,7 @@ class WidgetEditPanel extends React.Component {
         borderColor: 'rgba(9, 30, 66, 1)',
         showTitle: true,
         backgroundColor: 'rgba(255, 255, 255, 1)',
-        zIndex: 1
+        zIndex: 50
       },
       queryParameter: '',
       drillThrough: [],
@@ -234,6 +234,14 @@ class WidgetEditPanel extends React.Component {
     
 
     if (widgetId === null) {
+      widget.style = {
+        showBorder: false,
+        borderColor: 'rgba(9, 30, 66, 1)',
+        showTitle: true,
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+        zIndex: 50
+      }
+
       axios.post('/ws/widget', widget)
         .then(res => {
           this.props.onSave();

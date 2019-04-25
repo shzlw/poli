@@ -1,7 +1,8 @@
 
+PRAGMA table_info(table_name);
+
 DROP TABLE IF EXISTS p_group_dashboard;
 DROP TABLE IF EXISTS p_widget;
-DROP TABLE IF EXISTS p_filter;
 DROP TABLE IF EXISTS p_dashboard;
 DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_group_user;
@@ -22,19 +23,8 @@ IF NOT EXISTS p_datasource (
 CREATE TABLE
 IF NOT EXISTS p_dashboard (
     id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
     style TEXT
-);
-
-CREATE TABLE
-IF NOT EXISTS p_filter (
-    id INTEGER NOT NULL PRIMARY KEY,
-    dashboard_id INTEGER NOT NULL,
-    datasource_id INTEGER,
-    type TEXT NOT NULL,
-    title TEXT,
-    data TEXT,
-    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id)
 );
 
 CREATE TABLE
@@ -47,7 +37,9 @@ IF NOT EXISTS p_widget (
     y INTEGER NOT NULL,
     width INTEGER NOT NULL,
     height INTEGER NOT NULL,
-    chart_type TEXT NOT NULL,
+    type TEXT NOT NULL,
+    chart_type TEXT,
+    filter_type TEXT,
     sql_query TEXT,
     data TEXT,
     drill_through TEXT,

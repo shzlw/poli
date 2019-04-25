@@ -18,9 +18,11 @@ class Toast extends React.Component {
       showToast: true,
       message: message
     }, () => {
+      /*
       setTimeout(() => {
         this.hide();
       }, 3500);
+      */
     });
   }
 
