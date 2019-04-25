@@ -16,6 +16,6 @@ public final class CommonUtil {
     }
 
     public static long toEpoch(@Nullable LocalDateTime dateTime) {
-        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 }
