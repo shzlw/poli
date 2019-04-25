@@ -44,7 +44,7 @@ class Account extends React.Component {
   }
 
   generateApiKey = () => {
-    axios.get('/auth/generateapikey')
+    axios.get('/auth/generate-apikey')
       .then(res => {
         const apiKey = res.data;
         this.setState({
@@ -67,12 +67,12 @@ class Account extends React.Component {
 
     if (showUpdatePassword) {
       if (password !== confirmedPassword) {
-        Toast.show(`Those passwords didn't match.`);
+        Toast.showError(`Those passwords didn't match.`);
         return;
       }  
 
       if (password.length < 8) {
-        Toast.show(`Use 8 or more characters for password.`);
+        Toast.showError(`Use 8 or more characters for password.`);
         return;
       }
 

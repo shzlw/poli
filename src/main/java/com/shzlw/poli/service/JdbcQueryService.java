@@ -49,7 +49,7 @@ public class JdbcQueryService {
             while (rs.next()) {
                 break;
             }
-            return "GOOD";
+            return Constants.SUCCESS;
         } catch (Exception e) {
             return "ERROR: " + e.getClass().getCanonicalName() + ": "+  e.getMessage();
         }

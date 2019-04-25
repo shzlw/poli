@@ -89,7 +89,7 @@ public class AuthWs {
         }
     }
 
-    @RequestMapping(value="/login/changepassword", method= RequestMethod.POST)
+    @RequestMapping(value="/login/change-password", method= RequestMethod.POST)
     @Transactional
     public ResponseEntity<LoginResponse> changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey,
         @RequestBody User user) {
@@ -107,7 +107,7 @@ public class AuthWs {
         return new ResponseEntity<LoginResponse>(HttpStatus.OK);
     }
 
-    @RequestMapping(value="/generateapikey", method= RequestMethod.GET)
+    @RequestMapping(value="/generate-apikey", method= RequestMethod.GET)
     @Transactional
     public ResponseEntity<String> changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
         User user = userDao.findBySessionKey(sessionKey);

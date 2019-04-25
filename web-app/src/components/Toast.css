@@ -1,13 +1,13 @@
 .toast-container {
-  background-color: #FFFFFF;
-  border: 2px solid #000000;
-  color: #000000;
+  text-align: center;
+  font-weight: 700;
+  color: #FFFFFF;
   position: fixed;
   padding: 10px;
   z-index: 300;
   left: 50%;
   width: 400px;
-  top: 20px;
+  top: 10px;
   margin-left: -200px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   overflow-y: auto;

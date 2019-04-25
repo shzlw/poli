@@ -44,7 +44,7 @@ class ChangeTempPassword extends React.Component {
         password: password
       }
 
-      axios.post('/auth/login/changepassword', user)
+      axios.post('/auth/login/change-password', user)
         .then(res => {
           const loginResponse = res.data || {};
           if (loginResponse.error) {

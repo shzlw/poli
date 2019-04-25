@@ -79,7 +79,7 @@ class DataSource extends Component {
     } = this.state;
 
     if (!name) {
-      Toast.show('Enter a name.');
+      Toast.showError('Enter a name.');
       return;
     }
 
@@ -104,7 +104,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          Toast.show('The name exists. Try another.');
+          Toast.showError('The name exists. Try another.');
         });
     } else {
       ds.password = password;
@@ -115,7 +115,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          Toast.show('The name exists. Try another.');
+          Toast.showError('The name exists. Try another.');
         });
     } 
   }
@@ -124,7 +124,11 @@ class DataSource extends Component {
     axios.get(`/ws/jdbcdatasource/ping/${id}`)
       .then(res => {
         const result = res.data;
-        Toast.show(result);
+        if (result == 'success') {
+          Toast.showSuccess('Ping Succeeded');
+        } else {
+          Toast.showError(result);
+        }
       });
   }
 

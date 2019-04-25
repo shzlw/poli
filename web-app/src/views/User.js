@@ -136,12 +136,12 @@ class User extends React.Component {
     } = this.state;
 
     if (!username) {
-      Toast.show('Enter a name.');
+      Toast.showError('Enter a name.');
       return;
     }
 
-    if (!password || password.length < 8) {
-      Toast.show(`Use 8 or more characters for password.`);
+    if (!tempPassword || tempPassword.length < 8) {
+      Toast.showError(`Use 8 or more characters for password.`);
       return;
     }
 

@@ -73,7 +73,7 @@ class Dashboard extends Component {
     } = this.state;
 
     if (!name) {
-      Toast.show('Enter a name.');
+      Toast.showError('Enter a name.');
       return;
     }
 
@@ -93,7 +93,7 @@ class Dashboard extends Component {
         this.props.history.push(`/workspace/dashboard/${dashboardId}`);
       })
       .catch(error => {
-        Toast.show('The name exists. Try another.');
+        Toast.showError('The name exists. Try another.');
       });
   }
 
