@@ -59,7 +59,6 @@ class TableWidget extends React.Component {
         data={data}
         columns={columnHeaders}
         defaultPageSize={10}
-        noDataText={''}
         previousText={'Prev'}
         nextText={'Next'}
       />

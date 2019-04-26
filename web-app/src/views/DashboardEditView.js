@@ -31,6 +31,7 @@ class DashboardEditView extends React.Component {
       autoRefreshTimerId: '',
       lastRefreshed: '',
       refreshInterval: 15,
+      lastRefreshLabelTimerId: '',
       jdbcDataSourceOptions: [],
       dashboardId: 0,
       name: '',
@@ -75,12 +76,25 @@ class DashboardEditView extends React.Component {
           });
       }
     });
+
+    const lastRefreshLabelTimerId = setInterval(() => {
+      const { lastRefreshed } = this.state;
+    }, 10000);
+    this.setState({
+      lastRefreshLabelTimerId: lastRefreshLabelTimerId
+    })
   }
 
   componentWillUnmount() {
-    const { autoRefreshTimerId } = this.state;
+    const { 
+      autoRefreshTimerId,
+      lastRefreshLabelTimerId
+    } = this.state;
     if (autoRefreshTimerId) {
       clearInterval(autoRefreshTimerId);
+    }
+    if (lastRefreshLabelTimerId) {
+      clearInterval(lastRefreshLabelTimerId);
     }
   }
 
@@ -290,17 +304,21 @@ class DashboardEditView extends React.Component {
     let fullScreenButtonPanel = null;
     const controlButtons = (
       <React.Fragment>
-        <span>Last refreshed: {lastRefreshed}</span>
-        { autoRefreshStatus === 'OFF' && (
-          <input 
-            type="text" 
-            name="refreshInterval" 
-            value={this.state.refreshInterval}
-            onChange={this.handleInputChange}
-            className="inline-block" 
-            style={{width: '50px'}}
-          />
-        )}
+        <div className="inline-block">
+          <div className="inline-block mr-3">
+            Last refreshed: {lastRefreshed}
+          </div>
+          { autoRefreshStatus === 'OFF' && (
+            <input 
+              type="text" 
+              name="refreshInterval" 
+              value={this.state.refreshInterval}
+              onChange={this.handleInputChange}
+              className="inline-block" 
+              style={{width: '50px'}}
+            />
+          )}
+        </div>
         <button className="button square-button mr-3" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 

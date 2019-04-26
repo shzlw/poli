@@ -236,9 +236,11 @@ class Group extends React.Component {
         if (dashboardId === dashboards[j].id) {
           groupDashboardItems.push(
             (
-              <div key={dashboardId}>
-                <div>Name: {dashboards[j].name}</div>
-                <button className="button" onClick={() => this.removeGroupDashboard(dashboardId)}>delete</button>
+              <div key={dashboardId} className="row">
+                <div className="float-left">Name: {dashboards[j].name}</div>
+                <button className="button float-right"onClick={() => this.removeGroupDashboard(dashboardId)}>
+                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+                </button>
               </div>
             )
           );
@@ -271,31 +273,33 @@ class Group extends React.Component {
           onClose={this.closeEditPanel}
           modalClass={'mid-modal-panel'} 
           title={mode} >
-
-          <div className="form-panel">
-            <label>Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              value={this.state.name}
-              onChange={this.handleInputChange} />
-            
-            <label>Dashboards</label>
-            <Select
-              name={'groupDashboardId'}
-              value={this.state.groupDashboardId}
-              onChange={this.handleIntegerOptionChange}
-              options={dashboards}
-              optionDisplay={'name'}
-              optionValue={'id'}
-            />
-            <button className="button" onClick={this.addGroupDashboard}>Add</button>
-            <div>
-              {groupDashboardItems}
+          <div className="row">
+            <div className="form-panel float-left" style={{width: '240px'}}>
+              <label>Name</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={this.state.name}
+                onChange={this.handleInputChange} />
             </div>
             
-            <button className="button" onClick={this.save}>Save</button>
+            <div className="form-panel float-right" style={{width: '240px'}}>
+              <label>Dashboards</label>
+              <Select
+                name={'groupDashboardId'}
+                value={this.state.groupDashboardId}
+                onChange={this.handleIntegerOptionChange}
+                options={dashboards}
+                optionDisplay={'name'}
+                optionValue={'id'}
+              />
+              <button className="button" onClick={this.addGroupDashboard}>Add</button>
+              <div>
+                {groupDashboardItems}
+              </div>
+            </div>
           </div>
+          <button className="button mt-3" onClick={this.save}>Save</button>
         </Modal>
 
         <Modal 

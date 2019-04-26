@@ -1,6 +1,6 @@
 # Poli
 
-[![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
+[![CircleCI](https://circleci.com/gh/shzlw/poli.svg?style=shield)](https://circleci.com/gh/shzlw/poli)
 [![license: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -18,3 +18,7 @@
 ## Build
 
 ## License
+
+MIT License
+
+Copyright (c) 2019 Zhonglu Wang

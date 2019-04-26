@@ -21,10 +21,10 @@ jobs:
             - ~/.m2
           key: poli-{{ checksum "pom.xml" }}
 
-      - run: mvn clean install
+      - run: mvn package
 
       - store_test_results:
           path: target/surefire-reports
 
       - store_artifacts:
-          path: target/poli-0.1.0.jar
+          path: target

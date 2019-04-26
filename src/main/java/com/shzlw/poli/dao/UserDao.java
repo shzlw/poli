@@ -56,9 +56,20 @@ public class UserDao {
 
     public User findBySessionKey(String sessionKey) {
         String sql = "SELECT id, username, name, sys_role "
-                + "FROM p_user WHERE session_key=?";
+                    + "FROM p_user WHERE session_key=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{sessionKey}, new UserInfoRowMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public User findAccount(String sessionKey) {
+        String sql = "SELECT id, username, name, sys_role, api_key "
+                    + "FROM p_user WHERE session_key=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{ sessionKey }, new UserAccountMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -191,15 +202,13 @@ public class UserDao {
         }
     }
 
-    private static class UserRowMapper implements RowMapper<User> {
+    private static class UserAccountMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int i) throws SQLException {
             User r = new User();
             r.setId(rs.getLong(User.ID));
             r.setUsername(rs.getString(User.USERNAME));
             r.setName(rs.getString(User.NAME));
-            r.setSessionKey(rs.getString(User.SESSION_KEY));
-            r.setSessionTimeout(CommonUtil.fromEpoch(rs.getLong(User.SESSION_TIMEOUT)));
             r.setSysRole(rs.getString(User.SYS_ROLE));
             r.setApiKey(rs.getString(User.API_KEY));
             return r;

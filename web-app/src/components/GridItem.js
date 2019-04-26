@@ -246,6 +246,11 @@ class GridItem extends React.Component {
       <div className="inline-block" onClick={() => this.exportCsv(id)}>
         <FontAwesomeIcon icon="file-csv" fixedWidth />
       </div>
+      <div className="grid-box-file-button-group">
+              <div className="inline-block">
+                <FontAwesomeIcon icon="external-link-alt" fixedWidth />
+              </div>
+            </div>
     </div>
     */
 
@@ -254,19 +259,13 @@ class GridItem extends React.Component {
         <div className="grid-box-title">
           <div className="grid-box-title-value float-left ellipsis">{title}</div>
 
-          { isEditMode ? (
+          { isEditMode && (
             <div className="float-right" style={{marginRight: '20px'}}>
               <div className="grid-box-icon inline-block" onClick={() => this.editWidget(id)}>
                 <FontAwesomeIcon icon="edit" fixedWidth />
               </div>
               <div className="grid-box-icon inline-block" onClick={() => this.removeWidget(id)}>
                 <FontAwesomeIcon icon="trash-alt" fixedWidth />
-              </div>
-            </div>
-          ) : (
-            <div className="grid-box-file-button-group">
-              <div className="inline-block">
-                <FontAwesomeIcon icon="external-link-alt" fixedWidth />
               </div>
             </div>
           )}

@@ -136,7 +136,7 @@ class User extends React.Component {
     } = this.state;
 
     if (!username) {
-      Toast.showError('Enter a name.');
+      Toast.showError('Enter a username.');
       return;
     }
 
@@ -294,9 +294,11 @@ class User extends React.Component {
         if (groupId === groups[j].id) {
           userGroupItems.push(
             (
-              <div key={groupId}>
-                <div>Group: {groups[j].name}</div>
-                <button className="button" onClick={() => this.removeUserGroup(groupId)}>delete</button>
+              <div key={groupId} className="row">
+                <div className="float-left">Group: {groups[j].name}</div>
+                <button className="button float-right"onClick={() => this.removeUserGroup(groupId)}>
+                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+                </button>
               </div>
             )
           );
@@ -330,71 +332,74 @@ class User extends React.Component {
           modalClass={'mid-modal-panel'} 
           title={mode} >
 
-          <div className="form-panel">
-            <label>Username</label>
-            <input 
-              type="text" 
-              name="username" 
-              value={this.state.username}
-              onChange={this.handleInputChange} 
-            />
-
-            <label>Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              value={this.state.name}
-              onChange={this.handleInputChange} 
-            />
-
-            { mode === 'Edit' && (
-                <div style={{margin: '3px 0px 8px 0px'}}>
-                  <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
-                </div>
-            )}
-            { (mode === 'New' || showUpdatePassword) && ( 
-              <div>
-                <label>Password</label>
-                <input 
-                  type="password" 
-                  name="tempPassword" 
-                  value={this.state.tempPassword}
-                  onChange={this.handleInputChange} />
-              </div>
-            )}
-            
-            <label>System Role</label>
-            { Constants.SYS_ROLE_ADMIN === sysRole && (
-              <Select
-                name={'sysRole'}
-                value={this.state.sysRole}
-                onChange={this.handleNameInputChange}
-                options={[Constants.SYS_ROLE_VIEWER, Constants.SYS_ROLE_DEVELOPER]}
+          <div className="row">
+            <div className="form-panel float-left" style={{width: '240px'}}>
+              <label>Username <span className="required">*</span></label>
+              <input 
+                type="text" 
+                name="username" 
+                value={this.state.username}
+                onChange={this.handleInputChange} 
               />
-            )}
 
-            { Constants.SYS_ROLE_DEVELOPER === sysRole && (
-              <div>{Constants.SYS_ROLE_VIEWER}</div>
-            )}
+              <label>Name</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={this.state.name}
+                onChange={this.handleInputChange} 
+              />
+
+              { mode === 'Edit' && (
+                  <div style={{margin: '3px 0px 8px 0px'}}>
+                    <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+                  </div>
+              )}
+              { (mode === 'New' || showUpdatePassword) && ( 
+                <div>
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    name="tempPassword" 
+                    value={this.state.tempPassword}
+                    onChange={this.handleInputChange} />
+                </div>
+              )}
+              
+              <label>System Role</label>
+              { Constants.SYS_ROLE_ADMIN === sysRole && (
+                <Select
+                  name={'sysRole'}
+                  value={this.state.sysRole}
+                  onChange={this.handleNameInputChange}
+                  options={[Constants.SYS_ROLE_VIEWER, Constants.SYS_ROLE_DEVELOPER]}
+                />
+              )}
+
+              { Constants.SYS_ROLE_DEVELOPER === sysRole && (
+                <div>{Constants.SYS_ROLE_VIEWER}</div>
+              )}
+              
+            </div>
+            <div className="form-panel float-right" style={{width: '240px'}}>
             
-            <br/>
-            
-            <label>Groups</label>
-            <Select
-              name={'userGroupId'}
-              value={this.state.userGroupId}
-              onChange={this.handleIntegerOptionChange}
-              options={groups}
-              optionDisplay={'name'}
-              optionValue={'id'}
-            />
-            <button className="button" onClick={this.addUserGroup}>Add</button>
-            <div>
-              {userGroupItems}
+              <label>Groups</label>
+              <Select
+                name={'userGroupId'}
+                value={this.state.userGroupId}
+                onChange={this.handleIntegerOptionChange}
+                options={groups}
+                optionDisplay={'name'}
+                optionValue={'id'}
+              />
+              <button className="button" onClick={this.addUserGroup}>Add</button>
+              <div>
+                {userGroupItems}
+              </div>
             </div>
 
-            <button className="button" onClick={this.save}>Save</button>
           </div>
+          <button className="button mt-3" onClick={this.save}>Save</button>
         </Modal>
 
         <Modal 

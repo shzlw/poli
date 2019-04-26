@@ -77,7 +77,7 @@ public class UserWs {
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public User findUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User myUser = userDao.findBySessionKey(sessionKey);
+        User myUser = userDao.findAccount(sessionKey);
         return myUser;
     }
 

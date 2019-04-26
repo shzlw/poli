@@ -10,7 +10,7 @@ public class SystemProperties {
     Integer dataSourceMaximumPoolSize;
 
     public SystemProperties() {
-        dataSourceMaximumPoolSize = 10;
+        dataSourceMaximumPoolSize = 50;
     }
 
     public Integer getDataSourceMaximumPoolSize() {

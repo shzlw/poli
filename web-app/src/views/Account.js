@@ -116,10 +116,10 @@ class Account extends React.Component {
 
           <label>API Key</label>
           <div>{apiKey}</div>
-          <button className="button" onClick={this.generateApiKey}>Generate new API Key</button>
+          <button className="button mt-10" onClick={this.generateApiKey}>Generate new API Key</button>
           <br/>
 
-          <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+          <button className="button mt-3" onClick={this.toggleUpdatePassword}>Update password</button>
           {
             showUpdatePassword && (
               <React.Fragment>
@@ -140,7 +140,7 @@ class Account extends React.Component {
           )}
 
           <br/>
-          <button className="button" onClick={this.save}>Save</button>
+          <button className="button mt-10" onClick={this.save}>Save</button>
         </div>
       </div>
     )
