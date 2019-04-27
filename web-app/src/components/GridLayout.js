@@ -36,6 +36,7 @@ class GridLayout extends React.Component {
         key={index}
         snapToGrid={this.props.snapToGrid}
         isEditMode={this.props.isEditMode}
+        isFullScreenView={this.props.isFullScreenView}
         {...widget}
         onWidgetMove={this.props.onWidgetMove}
         onWidgetEdit={this.props.onWidgetEdit}

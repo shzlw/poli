@@ -27,6 +27,7 @@
 .ReactTable .pagination-bottom {
   border-top: 1px solid #B3BAC5;
   background-color: #FFFFFF;
+  height: 45px;
 }
 
 .ReactTable .-pagination .-previous {

@@ -54,6 +54,12 @@ class TableWidget extends React.Component {
       )
     }
 
+    if (data.length == 0 || columns.length == 0) {
+      return (
+        <div>No data</div>
+      )
+    }
+
     return (
       <ReactTable
         data={data}

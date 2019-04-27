@@ -27,7 +27,7 @@ class DashboardEditView extends React.Component {
       showConfirmDeletionPanel: false,
       objectToDelete: {},
       isEditMode: false,
-      isReadOnly: false,
+      isFullScreenView: false,
       autoRefreshTimerId: '',
       lastRefreshed: '',
       refreshInterval: 15,
@@ -102,11 +102,12 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
+    const showControl = params.get('showControl');
 
     const widgetViewWidth = this.getPageWidth();
 
     this.setState({
-      isReadOnly: true,
+      isFullScreenView: true,
       name: dashboardName,
       widgetViewWidth: widgetViewWidth
     }, () => {
@@ -296,7 +297,7 @@ class DashboardEditView extends React.Component {
       autoRefreshTimerId,
       lastRefreshed,
       isEditMode,
-      isReadOnly
+      isFullScreenView
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
@@ -339,7 +340,7 @@ class DashboardEditView extends React.Component {
       </React.Fragment>
     );
 
-    if (!isReadOnly) {
+    if (!isFullScreenView) {
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
@@ -379,7 +380,7 @@ class DashboardEditView extends React.Component {
         <div className="dashboard-menu-panel row">
           <div className="float-left">
             {
-              isReadOnly || !isEditMode ?
+              isFullScreenView || !isEditMode ?
               (
                 <div className="dashboard-name">
                   {this.state.name}
@@ -405,6 +406,7 @@ class DashboardEditView extends React.Component {
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           isEditMode={this.state.isEditMode}
+          isFullScreenView={this.state.isFullScreenView}
           widgetViewWidth={this.state.widgetViewWidth}
           onWidgetEdit={this.openWidgetEditPanel}
           onStyleValueChange={this.onStyleValueChange}

@@ -33,7 +33,6 @@ class GridItem extends React.Component {
   }
 
   onMouseDown = (mode) => {
-    console.log('GridItem onMouseDown', mode);
     this.setState({
       mode: mode
     });

@@ -338,6 +338,7 @@ class WidgetViewPanel extends React.Component {
           showGridlines={this.state.showGridlines}
           widgets={this.state.widgets}
           isEditMode={this.props.isEditMode}
+          isFullScreenView={this.props.isFullScreenView}
           onWidgetMove={this.onWidgetMove}
           onWidgetEdit={this.props.onWidgetEdit} 
           onWidgetRemove={this.openConfirmDeletionPanel} 

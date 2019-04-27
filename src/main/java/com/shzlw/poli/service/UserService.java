@@ -6,6 +6,8 @@ import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -23,14 +25,12 @@ public class UserService {
     UserDao userDao;
 
     public User getSessionCache(String sessionKey) {
-        User user = SESSION_USER_CACHE.getIfPresent(sessionKey);
-        if (user == null) {
-            user = userDao.findBySessionKey(sessionKey);
-            if (user != null) {
-                SESSION_USER_CACHE.put(sessionKey, user);
-            }
+        try {
+            User user = SESSION_USER_CACHE.get(sessionKey, () -> userDao.findBySessionKey(sessionKey));
+            return user;
+        } catch (ExecutionException e) {
+            return null;
         }
-        return user;
     }
 
     public void newOrUpdateSessionCache(User user, String oldSessionKey, String newSessionKey) {

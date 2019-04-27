@@ -385,14 +385,17 @@ class WidgetEditPanel extends React.Component {
       <div key={drill.columnName} className="row">
         <div className="float-left">Column: {drill.columnName}</div>
         <div className="float-left">Dashboard: {drill.dashboardId}</div>
-        <button className="button float-right"onClick={() => this.removeDrillThrough(drill)}>
+        <button className="button icon-button float-right"onClick={() => this.removeDrillThrough(drill)}>
           <FontAwesomeIcon icon="trash-alt" size="lg" />
         </button>
       </div>
     );
 
     const columnItems = columns.map(col =>
-      <div key={col.name}>{col.name} {col.dataType}</div>
+      <div className="row" key={col.name}>
+        <div className="float-left">{col.name}</div>
+        <div className="float-right">{col.dataType}</div>
+      </div>
     );
 
     const showQueryTab = type === Constants.CHART || (type === Constants.FILTER && this.state.filterType === Constants.SLICER);
@@ -480,7 +483,6 @@ class WidgetEditPanel extends React.Component {
                 
                   <label>SQL Query</label>
                   <AceEditor
-                    style={{ marginTop: '8px' }}
                     value={this.state.sqlQuery}
                     mode="mysql"
                     theme="xcode"
@@ -498,7 +500,7 @@ class WidgetEditPanel extends React.Component {
                     }}
                   />
 
-                  <div className="mt-3">
+                  <div style={{margin: '5px 0px 5px 0px'}}>
                     <button className="button" onClick={this.runQuery}>Run Query</button>
                   </div>
 
@@ -509,7 +511,7 @@ class WidgetEditPanel extends React.Component {
                     error={error}
                   />
 
-                  <label>Columns Mapping</label>
+                  <label style={{marginTop: '5px'}}>Columns Mapping</label>
                   <div>
                     {columnItems}
                   </div>

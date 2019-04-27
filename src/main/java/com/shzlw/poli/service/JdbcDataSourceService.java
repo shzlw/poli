@@ -20,6 +20,7 @@ import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -61,27 +62,28 @@ public class JdbcDataSourceService {
     }
 
     public DataSource getDataSource(long dataSourceId) {
-        DataSource hiDs = DATA_SOURCE_CACHE.getIfPresent(dataSourceId);
-        if (hiDs == null) {
-            JdbcDataSource jdbcDs = jdbcDataSourceDao.findById(dataSourceId);
-            if (jdbcDs != null) {
-                putInCache(jdbcDs);
-                hiDs = DATA_SOURCE_CACHE.getIfPresent(dataSourceId);
-            }
+        LOGGER.info("[poli] getDataSource - dataSourceId: {}, size: {}", dataSourceId, DATA_SOURCE_CACHE.asMap().size());
+        try {
+            DataSource hiDs = DATA_SOURCE_CACHE.get(dataSourceId, () -> {
+                JdbcDataSource dataSource = jdbcDataSourceDao.findById(dataSourceId);
+                if (dataSource == null) {
+                    return null;
+                }
+                HikariDataSource newHiDs = new HikariDataSource();
+                newHiDs.setJdbcUrl(dataSource.getConnectionUrl());
+                newHiDs.setUsername(dataSource.getUsername());
+                newHiDs.setPassword(dataSource.getPassword());
+                if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
+                    newHiDs.setDriverClassName(dataSource.getDriverClassName());
+                }
+                newHiDs.setMaximumPoolSize(systemProperties.getDataSourceMaximumPoolSize());
+                newHiDs.setLeakDetectionThreshold(2000);
+                LOGGER.info("[poli] getDataSource - put: {}, size: {}", newHiDs, DATA_SOURCE_CACHE.asMap().size());
+                return newHiDs;
+            });
+            return hiDs;
+        } catch (ExecutionException e) {
+            return null;
         }
-        return hiDs;
-    }
-
-    public void putInCache(JdbcDataSource dataSource) {
-        HikariDataSource newHiDs = new HikariDataSource();
-        newHiDs.setJdbcUrl(dataSource.getConnectionUrl());
-        newHiDs.setUsername(dataSource.getUsername());
-        newHiDs.setPassword(dataSource.getPassword());
-        if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
-            newHiDs.setDriverClassName(dataSource.getDriverClassName());
-        }
-        newHiDs.setMaximumPoolSize(systemProperties.getDataSourceMaximumPoolSize());
-        newHiDs.setLeakDetectionThreshold(2000);
-        DATA_SOURCE_CACHE.put(dataSource.getId(), newHiDs);
     }
 }
