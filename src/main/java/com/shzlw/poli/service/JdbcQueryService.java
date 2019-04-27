@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
+import com.shzlw.poli.dto.WidgetQueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.util.Constants;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,10 +36,7 @@ public class JdbcQueryService {
     @Autowired
     ObjectMapper mapper;
 
-    @Autowired
-    JdbcDataSourceService jdbcDataSourceService;
-
-    public Connection getConnectionByType(JdbcDataSource ds) throws SQLException, ClassNotFoundException {
+    public Connection getConnectionByType(JdbcDataSource ds) throws SQLException {
         return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
     }
 
@@ -127,16 +125,14 @@ public class JdbcQueryService {
         }
     }
 
-    public QueryResult fetchJsonByQuery(JdbcDataSource ds, String sql) {
-        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(jdbcDataSourceService.getDataSource(ds));
-
-        QueryResult queryResult = new QueryResult();
+    public QueryResult queryBySql(DataSource dataSource, String sql) {
+        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = new HashMap();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
-        String result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<String>() {
+        QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
-            public String extractData(ResultSet rs) {
+            public QueryResult extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
@@ -161,27 +157,21 @@ public class JdbcQueryService {
                         array.add(node);
                     }
                     String data = array.toString();
-                    queryResult.setData(data);
-                    queryResult.setColumns(columns);
-                    return data;
+                    QueryResult queryResult = new QueryResult(data, columns);
+                    return queryResult;
                 } catch (Exception e) {
                     String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    queryResult.setError(error);
-                    return error;
+                    QueryResult queryResult = new QueryResult(error);
+                    return queryResult;
                 }
             }
         });
 
-        return queryResult;
+        return result;
     }
 
-    public QueryResult fetchJsonWithParams(JdbcDataSource ds, String sql, List<FilterParameter> filterParams) {
-        LOGGER.info("[fetchJsonWithParams] filterParams: {}", filterParams);
-        QueryResult queryResult = new QueryResult();
-        DataSource dataSource = jdbcDataSourceService.getDataSource(ds);
-        if (dataSource == null) {
-            return queryResult;
-        }
+    public WidgetQueryResult queryWidgetByParams(long widgetId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
+        LOGGER.info("[queryByParams] filterParams: {}", filterParams);
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
 
         Map<String, Object> namedParameters = new HashMap<>();
@@ -220,12 +210,12 @@ public class JdbcQueryService {
 
 
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
-        LOGGER.info("[fetchJsonWithParams] parsedSql: {}", parsedSql);
-        LOGGER.info("[fetchJsonWithParams] namedParameters: {}", namedParameters);
-        npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<Void>() {
+        LOGGER.info("[queryByParams] parsedSql: {}", parsedSql);
+        LOGGER.info("[queryByParams] namedParameters: {}", namedParameters);
+        WidgetQueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<WidgetQueryResult>() {
             @Nullable
             @Override
-            public Void extractData(ResultSet rs) {
+            public WidgetQueryResult extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
@@ -250,17 +240,17 @@ public class JdbcQueryService {
                         array.add(node);
                     }
                     String data = array.toString();
-                    queryResult.setData(data);
-                    queryResult.setColumns(columns);
+                    WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, data, columns);
+                    return queryResult;
                 } catch (Exception e) {
                     String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    queryResult.setData(error);
+                    WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, error);
+                    return queryResult;
                 }
-                return null;
             }
         });
 
-        return queryResult;
+        return result;
     }
 
     public static Map<Integer, String> getAllJdbcTypeNames() throws IllegalAccessException {

@@ -150,7 +150,7 @@ class User extends React.Component {
       if (sysRole) {
         selectedSysRole = sysRole;
       } else {
-        // TODO: throw errors.
+        Toast.showError('Select a role.');
         return;
       }
     }
@@ -269,8 +269,8 @@ class User extends React.Component {
           (
             <div key={i} className="datasource-card row">
               <div className="float-left ellipsis datasource-row-name">
-                {user.username}
-                {user.name}
+                {user.username},
+                {user.name},
                 {user.sysRole}
               </div>
               <div className="float-right">

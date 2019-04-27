@@ -5,29 +5,28 @@ import java.util.List;
 
 public class QueryResult {
 
-    private long id;
     private List<Column> columns = new ArrayList<>();
-    // JSON array value
+
+    /**
+     * JSON array value
+     */
     private String data;
     private String error;
 
-    public QueryResult() {
+    private QueryResult() {
     }
 
-    public long getId() {
-        return id;
+    public QueryResult(String error) {
+        this.error = error;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public QueryResult(String data, List<Column> columns) {
+        this.data = data;
+        this.columns = columns;
     }
 
     public List<Column> getColumns() {
         return columns;
-    }
-
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
     }
 
     public String getData() {
@@ -37,15 +36,7 @@ public class QueryResult {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
     public String getError() {
         return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 }

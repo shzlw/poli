@@ -31,31 +31,32 @@ public class AuthWs {
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
-    public LoginResponse loginByUser(@RequestBody User user, HttpServletResponse response) {
-        String username = user.getUsername();
-        String password = user.getPassword();
+    public LoginResponse loginByUser(@RequestBody User loginInfo, HttpServletResponse response) {
+        String username = loginInfo.getUsername();
+        String password = loginInfo.getPassword();
 
         boolean isTempPassword = false;
-        User existUser = userDao.findByUsernameAndPassword(username, password);
-        if (existUser == null) {
-            existUser = userDao.findByUsernameAndTempPassword(username, password);
-            if (existUser == null) {
+        User user = userDao.findByUsernameAndPassword(username, password);
+        if (user == null) {
+            user = userDao.findByUsernameAndTempPassword(username, password);
+            if (user == null) {
                 return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
             } else {
                 isTempPassword = true;
             }
         }
 
-        String sessionKey = Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
-        userService.newOrUpdateSessionUserCache(user, sessionKey);
-        userDao.updateSessionKey(existUser.getId(), sessionKey);
+        String oldSessionKey = user.getSessionKey();
+        String newSessionKey = Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
+        userDao.updateSessionKey(user.getId(), newSessionKey);
+        userService.newOrUpdateSessionCache(user, oldSessionKey, newSessionKey);
 
-        Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, sessionKey);
+        Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, newSessionKey);
         sessionKeyCookie.setMaxAge(Constants.COOKIE_TIMEOUT);
         sessionKeyCookie.setPath("/");
         response.addCookie(sessionKeyCookie);
 
-        return LoginResponse.ofSucess(existUser.getUsername(), existUser.getSysRole(), isTempPassword);
+        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), isTempPassword);
     }
 
     @RequestMapping(value="/login/cookie", method= RequestMethod.POST)
@@ -70,7 +71,7 @@ public class AuthWs {
             return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
         }
 
-        userService.newOrUpdateSessionUserCache(user, sessionKey);
+        userService.newOrUpdateSessionCache(user, user.getSessionKey(), sessionKey);
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
 

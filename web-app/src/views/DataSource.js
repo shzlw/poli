@@ -144,7 +144,6 @@ class DataSource extends Component {
         connectionUrl: ds.connectionUrl,
         driverClassName: ds.driverClassName,
         username: ds.username,
-        password: ds.password,
         name: ds.name,
         ping: ds.ping
       });

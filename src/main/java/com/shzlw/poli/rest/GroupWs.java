@@ -44,7 +44,7 @@ public class GroupWs {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<Long> add(@RequestBody Group group) {
         long groupId = groupDao.insertGroup(group.getName());
         groupDao.insertGroupDashboards(groupId, group.getGroupDashboards());

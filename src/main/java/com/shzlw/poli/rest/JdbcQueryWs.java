@@ -5,12 +5,15 @@ import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
+import com.shzlw.poli.dto.WidgetQueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
@@ -18,7 +21,7 @@ import java.util.List;
 public class JdbcQueryWs {
 
     @Autowired
-    JdbcDataSourceDao jdbcDataSourceDao;
+    JdbcDataSourceService jdbcDataSourceService;
 
     @Autowired
     JdbcQueryService jdbcQueryService;
@@ -28,21 +31,24 @@ public class JdbcQueryWs {
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     public QueryResult runQuery(@RequestBody QueryRequest queryRequest) {
-        long dsId = queryRequest.getJdbcDataSourceId();
+        long dataSourceId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.findById(dsId);
-        QueryResult queryResult = jdbcQueryService.fetchJsonByQuery(ds, sql);
+        DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
+        QueryResult queryResult = jdbcQueryService.queryBySql(dataSource, sql);
         return queryResult;
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
-    public QueryResult queryWidget(@PathVariable("id") long widgetId,
+    public WidgetQueryResult queryWidget(@PathVariable("id") long widgetId,
                                    @RequestBody List<FilterParameter> filterParams) {
         Widget widget = widgetDao.findById(widgetId);
+        if (widget.getJdbcDataSourceId() == 0) {
+            return new WidgetQueryResult(widgetId, "No data source found");
+        }
+
         String sql = widget.getSqlQuery();
-        JdbcDataSource ds = jdbcDataSourceDao.findByWidgetId(widgetId);
-        QueryResult queryResult = jdbcQueryService.fetchJsonWithParams(ds, sql, filterParams);
-        queryResult.setId(widgetId);
+        DataSource dataSource = jdbcDataSourceService.getDataSource(widget.getJdbcDataSourceId());
+        WidgetQueryResult queryResult = jdbcQueryService.queryWidgetByParams(widgetId, dataSource, sql, filterParams);
         return queryResult;
     }
 }

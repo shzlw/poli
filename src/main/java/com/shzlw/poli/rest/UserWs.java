@@ -1,8 +1,12 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.UserDao;
+import com.shzlw.poli.filter.AuthFilter;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,9 @@ public class UserWs {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -49,7 +56,7 @@ public class UserWs {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<Long> add(@RequestBody User user) {
         long userId = userDao.insertUser(user.getUsername(), user.getName(), user.getTempPassword(), user.getSysRole());
         userDao.insertUserGroups(userId, user.getUserGroups());
@@ -60,6 +67,9 @@ public class UserWs {
     @Transactional
     public ResponseEntity<?> update(@RequestBody User user) {
         long userId = user.getId();
+        User savedUser = userDao.findById(userId);
+        userService.removeFromSessionCache(savedUser.getSessionKey());
+
         userDao.updateUser(user);
         userDao.deleteUserGroups(userId);
         userDao.insertUserGroups(userId, user.getUserGroups());
@@ -69,15 +79,22 @@ public class UserWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long userId) {
+        User savedUser = userDao.findById(userId);
+        userService.removeFromSessionCache(savedUser.getSessionKey());
+
         userDao.deleteUserGroups(userId);
         userDao.deleteUser(userId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserWs.class);
+
+
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public User findUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
+    public User findAccountBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
         User myUser = userDao.findAccount(sessionKey);
+        LOGGER.info("findAccountBySessionKey sessionKey: {}, myUser: {}", sessionKey, myUser);
         return myUser;
     }
 

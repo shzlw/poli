@@ -81,6 +81,7 @@ class Account extends React.Component {
 
     axios.put('/ws/user/account', user)
       .then(res => {
+        Toast.showSuccess('Saved.');
       });
   }
 

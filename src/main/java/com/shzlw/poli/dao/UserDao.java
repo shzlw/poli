@@ -95,7 +95,7 @@ public class UserDao {
 
     public int updateApiKey(long userId, String apiKey) {
         String sql = "UPDATE p_user SET api_key=? WHERE id=?";
-        return jt.update(sql, new Object[] { apiKey, apiKey });
+        return jt.update(sql, new Object[] { apiKey, userId });
     }
 
     public int updateTempPassword(long userId, String rawNewPassword) {

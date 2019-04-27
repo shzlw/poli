@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -25,22 +26,30 @@ public class AuthFilter implements Filter {
     UserService userService;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
-    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getServletPath();
 
-        LOGGER.info("filter: {}", path);
+        LOGGER.info("filter - path: {}", path);
         if (path.startsWith("/ws/")) {
             String sessionKey = getSessionKey(httpRequest);
+            String sysRole = null;
             if (sessionKey != null) {
-                User user = userService.getOrCacheUser(sessionKey);
+                User user = userService.getSessionCache(sessionKey);
                 if (user != null) {
-                    String sysRole = user.getSysRole();
-                    // TODO validate sys role and url
+                    sysRole = user.getSysRole();
+                }
+            }
+
+            if (sysRole != null) {
+                boolean isValid = false;
+                if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
+                    isValid = validateViewer(httpRequest.getMethod(), path);
+                } else {
+                    isValid = true;
+                }
+
+                if (isValid) {
                     chain.doFilter(request, response);
                 }
             } else {
@@ -53,7 +62,6 @@ public class AuthFilter implements Filter {
 
     public String getSessionKey(HttpServletRequest httpRequest) {
         Cookie[] cookies = httpRequest.getCookies();
-        String sessionKey = null;
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 String name = cookies[i].getName();
@@ -63,11 +71,30 @@ public class AuthFilter implements Filter {
                 }
             }
         }
-        return sessionKey;
+        return null;
+    }
+
+    public boolean validateViewer(String requestMethod, String path) {
+        boolean isValid = false;
+        if ("GET".equals(requestMethod)) {
+            if (path.startsWith("/ws/dashboard")
+                    || path.startsWith("/ws/jdbcquery")
+                    || path.startsWith("/ws/user/account")) {
+                isValid = true;
+            }
+        } else if ("PUT".equals(requestMethod)) {
+            if (path.startsWith("/ws/user/account")) {
+                isValid = true;
+            }
+        }
+        return isValid;
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
     }
 
     @Override
     public void destroy() {
-
     }
 }

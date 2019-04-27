@@ -32,7 +32,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<JdbcDataSource> all() {
-        return jdbcDataSourceDao.findAll();
+        return jdbcDataSourceDao.findAllWithNoCredentials();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -45,23 +45,21 @@ public class JdbcDataSourceWs {
     @Transactional
     public ResponseEntity<Long> add(@RequestBody JdbcDataSource ds) {
         long id = jdbcDataSourceDao.insert(ds);
-        jdbcDataSourceService.put(ds);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
     public ResponseEntity<?> update(@RequestBody JdbcDataSource ds) {
+        jdbcDataSourceService.removeFromCache(ds.getId());
         jdbcDataSourceDao.update(ds);
-        jdbcDataSourceService.put(ds);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
-        jdbcDataSourceService.remove(ds);
+        jdbcDataSourceService.removeFromCache(id);
         widgetDao.updateByDataSourceId(id);
         jdbcDataSourceDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

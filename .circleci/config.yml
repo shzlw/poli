@@ -27,4 +27,4 @@ jobs:
           path: target/surefire-reports
 
       - store_artifacts:
-          path: target
+          path: target/poli-0.1.0.jar

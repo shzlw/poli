@@ -23,6 +23,11 @@ public class JdbcDataSourceDao {
     @Autowired
     JdbcTemplate jt;
 
+    public List<JdbcDataSource> findAllWithNoCredentials() {
+        String sql = "SELECT id, name, connection_url, driver_class_name, username, ping FROM p_datasource";
+        return jt.query(sql, new Object[] {}, new JdbcDataSourceInfoMapper());
+    }
+
     public List<JdbcDataSource> findAll() {
         String sql = "SELECT id, name, connection_url, driver_class_name, username, password, ping FROM p_datasource";
         return jt.query(sql, new Object[] {}, new JdbcDataSourceRowMapper());
@@ -88,25 +93,17 @@ public class JdbcDataSourceDao {
         return jt.update(sql, new Object[]{ id });
     }
 
-    public JdbcDataSource findByWidgetId(long widgetId) {
-        String sql = "SELECT d.id, d.name, d.connection_url, driver_class_name, d.username, d.password, d.ping "
-                    + "FROM p_datasource d, p_widget w "
-                    + "WHERE w.id = ? AND d.id = w.datasource_id";
-        try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ widgetId }, new JdbcDataSourceRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    public JdbcDataSource findByFilterId(long filterId) {
-        String sql = "SELECT d.id, d.name, d.connection_url, driver_class_name, d.username, d.password, d.ping "
-                + "FROM p_datasource d, p_filter f "
-                + "WHERE f.id = ? AND d.id = f.datasource_id";
-        try {
-            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ filterId }, new JdbcDataSourceRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
+    private static class JdbcDataSourceInfoMapper implements RowMapper<JdbcDataSource> {
+        @Override
+        public JdbcDataSource mapRow(ResultSet rs, int i) throws SQLException {
+            JdbcDataSource ds = new JdbcDataSource();
+            ds.setId(rs.getLong(JdbcDataSource.ID));
+            ds.setName(rs.getString(JdbcDataSource.NAME));
+            ds.setConnectionUrl(rs.getString(JdbcDataSource.CONNECTION_URL));
+            ds.setDriverClassName(rs.getString(JdbcDataSource.DRIVER_CLASS_NAME));
+            ds.setUsername(rs.getString(JdbcDataSource.USERNAME));
+            ds.setPing(rs.getString(JdbcDataSource.PING));
+            return ds;
         }
     }
 

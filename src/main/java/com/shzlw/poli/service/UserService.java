@@ -1,28 +1,29 @@
 package com.shzlw.poli.service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
 
     /**
-     * Key: session key
-     * Value: sys role
+     * Key: Session key
+     * Value: User
      */
-    // FIXME use a cache library to invalidate cache.
-    private static final Map<String, User> SESSION_USER_CACHE = new ConcurrentHashMap<>();
+    private static Cache<String, User> SESSION_USER_CACHE = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build();
 
     @Autowired
     UserDao userDao;
 
-    public User getOrCacheUser(String sessionKey) {
-        User user = SESSION_USER_CACHE.get(sessionKey);
+    public User getSessionCache(String sessionKey) {
+        User user = SESSION_USER_CACHE.getIfPresent(sessionKey);
         if (user == null) {
             user = userDao.findBySessionKey(sessionKey);
             if (user != null) {
@@ -32,22 +33,14 @@ public class UserService {
         return user;
     }
 
-    public void newOrUpdateSessionUserCache(User user, String newSessionKey) {
-        String oldSessionKey = null;
-        for (Map.Entry<String, User> entry : SESSION_USER_CACHE.entrySet()) {
-            User oldUser = entry.getValue();
-            if (user.getId() == oldUser.getId()) {
-                oldSessionKey = entry.getKey();
-                break;
-            }
-        }
-        if (oldSessionKey != null) {
-            SESSION_USER_CACHE.remove(oldSessionKey);
-        }
+    public void newOrUpdateSessionCache(User user, String oldSessionKey, String newSessionKey) {
+        removeFromSessionCache(oldSessionKey);
         SESSION_USER_CACHE.put(newSessionKey, user);
     }
 
     public void removeFromSessionCache(String sessionKey) {
-        SESSION_USER_CACHE.remove(sessionKey);
+        if (sessionKey != null) {
+            SESSION_USER_CACHE.invalidate(sessionKey);
+        }
     }
 }

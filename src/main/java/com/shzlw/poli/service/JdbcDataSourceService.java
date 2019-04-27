@@ -1,5 +1,9 @@
 package com.shzlw.poli.service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.shzlw.poli.SystemProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
@@ -14,15 +18,26 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class JdbcDataSourceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSourceService.class);
 
-    private static final Map<Long, HikariDataSource> DATA_SOURCE_CACHE = new ConcurrentHashMap<>();
+    /**
+     * Key: JdbcDataSource id
+     * Value: HikariDataSource
+     */
+    private static Cache<Long, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .removalListener((RemovalListener<Long, HikariDataSource>) removal -> {
+                HikariDataSource ds = removal.getValue();
+                ds.close();
+            })
+            .build();
 
     @Autowired
     JdbcDataSourceDao jdbcDataSourceDao;
@@ -36,16 +51,28 @@ public class JdbcDataSourceService {
 
     @PreDestroy
     public void shutdown() {
-        for (HikariDataSource hiDs : DATA_SOURCE_CACHE.values()) {
+        for (HikariDataSource hiDs : DATA_SOURCE_CACHE.asMap().values()) {
             hiDs.close();
         }
     }
 
-    public DataSource put(JdbcDataSource dataSource) {
-        HikariDataSource hiDs = DATA_SOURCE_CACHE.get(dataSource.getId());
-        if (hiDs != null) {
-            hiDs.close();
+    public void removeFromCache(long dataSourceId) {
+        DATA_SOURCE_CACHE.invalidate(dataSourceId);
+    }
+
+    public DataSource getDataSource(long dataSourceId) {
+        DataSource hiDs = DATA_SOURCE_CACHE.getIfPresent(dataSourceId);
+        if (hiDs == null) {
+            JdbcDataSource jdbcDs = jdbcDataSourceDao.findById(dataSourceId);
+            if (jdbcDs != null) {
+                putInCache(jdbcDs);
+                hiDs = DATA_SOURCE_CACHE.getIfPresent(dataSourceId);
+            }
         }
+        return hiDs;
+    }
+
+    public void putInCache(JdbcDataSource dataSource) {
         HikariDataSource newHiDs = new HikariDataSource();
         newHiDs.setJdbcUrl(dataSource.getConnectionUrl());
         newHiDs.setUsername(dataSource.getUsername());
@@ -54,27 +81,7 @@ public class JdbcDataSourceService {
             newHiDs.setDriverClassName(dataSource.getDriverClassName());
         }
         newHiDs.setMaximumPoolSize(systemProperties.getDataSourceMaximumPoolSize());
+        newHiDs.setLeakDetectionThreshold(2000);
         DATA_SOURCE_CACHE.put(dataSource.getId(), newHiDs);
-        return newHiDs;
-    }
-
-    public void remove(JdbcDataSource dataSource) {
-        DATA_SOURCE_CACHE.remove(dataSource.getId());
-    }
-
-    public DataSource getDataSource(@Nullable JdbcDataSource dataSource) {
-        if (dataSource == null) {
-            return null;
-        }
-
-        long id = dataSource.getId();
-        DataSource hiDs = DATA_SOURCE_CACHE.get(id);
-        if (hiDs == null) {
-            JdbcDataSource ds = jdbcDataSourceDao.findById(id);
-            if (ds != null) {
-                hiDs = put(dataSource);
-            }
-        }
-        return hiDs;
     }
 }
