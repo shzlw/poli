@@ -33,6 +33,7 @@ class DashboardEditView extends React.Component {
       refreshInterval: 15,
       lastRefreshLabelTimerId: '',
       jdbcDataSourceOptions: [],
+      fromDashboard: '',
       dashboardId: 0,
       name: '',
       style: {},
@@ -46,17 +47,18 @@ class DashboardEditView extends React.Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
-    console.log('DashboardEditView - componentDidMount', dashboardId);
 
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
+    const fromDashboard = params.get('fromDashboard');
     for(let pair of params.entries()) {
       console.log(pair[0]+ ', '+ pair[1]); 
     } 
 
     const widgetViewWidth = this.getPageWidth();
     this.setState({
-      widgetViewWidth: widgetViewWidth
+      widgetViewWidth: widgetViewWidth,
+      dashboardName: dashboardName
     }, () => {
       if (dashboardId === null) {
         this.setState({
@@ -103,13 +105,15 @@ class DashboardEditView extends React.Component {
     const params = new URLSearchParams(url);
     const dashboardName = params.get('name');
     const showControl = params.get('showControl');
+    const fromDashboard = params.get('fromDashboard');
 
     const widgetViewWidth = this.getPageWidth();
 
     this.setState({
       isFullScreenView: true,
       name: dashboardName,
-      widgetViewWidth: widgetViewWidth
+      widgetViewWidth: widgetViewWidth,
+      fromDashboard: fromDashboard
     }, () => {
       axios.get(`/ws/dashboard/name/${dashboardName}`)
         .then(res => {
@@ -297,7 +301,8 @@ class DashboardEditView extends React.Component {
       autoRefreshTimerId,
       lastRefreshed,
       isEditMode,
-      isFullScreenView
+      isFullScreenView,
+      fromDashboard
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
@@ -379,6 +384,7 @@ class DashboardEditView extends React.Component {
       <React.Fragment>
         <div className="dashboard-menu-panel row">
           <div className="float-left">
+            {fromDashboard} > 
             {
               isFullScreenView || !isEditMode ?
               (
@@ -406,6 +412,7 @@ class DashboardEditView extends React.Component {
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           isEditMode={this.state.isEditMode}
+          dashboardName={this.state.name}
           isFullScreenView={this.state.isFullScreenView}
           widgetViewWidth={this.state.widgetViewWidth}
           onWidgetEdit={this.openWidgetEditPanel}

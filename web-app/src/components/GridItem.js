@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { withRouter } from 'react-router-dom';
 import ReactEcharts from 'echarts-for-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -98,7 +97,7 @@ class GridItem extends React.Component {
         const index = drills.findIndex(d => d.columnName === header);
         if (index !== -1) {
           const dashboardId = drills[index].dashboardId;
-          this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
+          // this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
         }
       }
     };
@@ -112,8 +111,16 @@ class GridItem extends React.Component {
     console.log('onChartLegendselectchanged', param, echart);
   };
 
-  onTableTdClick = (link) => {
-    this.props.history.push(link);
+  onTableTdClick = (dashboardId, columnName, columnValue) => {
+    const widgetClickEvent = {
+      type: 'tableTdClick',
+      data: {
+        dashboardId: dashboardId,
+        columnName: columnName,
+        columnValue: columnValue
+      }
+    }
+    this.props.onWidgetContentClick(widgetClickEvent);
   }
 
   onSlicerChange = (widgetId, checkBoxes) => {
@@ -299,4 +306,4 @@ class GridItem extends React.Component {
   }
 }
 
-export default withRouter(GridItem);
+export default GridItem;

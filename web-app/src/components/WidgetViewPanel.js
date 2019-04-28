@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import ColorPicker from './ColorPicker';
@@ -259,6 +260,42 @@ class WidgetViewPanel extends React.Component {
     });   
   }
 
+  onWidgetContentClick = (widgetClickEvent) => {
+    const {
+      dashboardName,
+      isFullScreenView
+    } = this.props;
+
+    const {
+      type,
+      data
+    } = widgetClickEvent;
+
+    if (type === 'tableTdClick') {
+      const {
+        dashboardId,
+        columnName,
+        columnValue
+      } = data;
+
+      if (isFullScreenView) {
+        axios.get('/ws/dashboard')
+          .then(res => {
+            const dashboards = res.data;
+            const dashboard = dashboards.findIndex(d => d.id === dashboardId);
+            if (dashboard !== undefined) {
+              const nextDashboard = dashboard.name;
+              const nextLink = `/workspace/dashboard/view?name=${nextDashboard}&fromDashboard=${dashboardName}&${columnName}=${columnValue}`;
+              this.props.history.push(nextLink);
+            }
+          });
+      } else {
+        const nextLink = `/workspace/dashboard/${dashboardId}?fromDashboard=${dashboardName}&${columnName}=${columnValue}`;
+        this.props.history.push(nextLink);
+      }
+    }
+  }
+
   /**
    * FIXME: optimize it. No need to calculate this every time.
    */
@@ -338,11 +375,11 @@ class WidgetViewPanel extends React.Component {
           showGridlines={this.state.showGridlines}
           widgets={this.state.widgets}
           isEditMode={this.props.isEditMode}
-          isFullScreenView={this.props.isFullScreenView}
           onWidgetMove={this.onWidgetMove}
           onWidgetEdit={this.props.onWidgetEdit} 
           onWidgetRemove={this.openConfirmDeletionPanel} 
           onWidgetFilterInputChange={this.onWidgetFilterInputChange}
+          onWidgetContentClick={this.onWidgetContentClick}
         />
         
         <Modal 
@@ -360,4 +397,4 @@ class WidgetViewPanel extends React.Component {
   };
 }
 
-export default WidgetViewPanel;
+export default withRouter(WidgetViewPanel);

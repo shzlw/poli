@@ -11,8 +11,8 @@ class TableWidget extends React.Component {
     };
   }
 
-  goToLink = (link) => {
-    this.props.onTableTdClick(link);
+  handleTdClick = (dashboardId, columnName, columnValue) => {
+    this.props.onTableTdClick(dashboardId, columnName, columnValue);
   }
 
   render() {   
@@ -36,7 +36,7 @@ class TableWidget extends React.Component {
           const dashboardId = drillThrough[index].dashboardId;
           header.Cell = (props => 
             <span className="link-label" 
-              onClick={() => this.goToLink(`/workspace/dashboard/${dashboardId}?${columnName}=${props.value}`)}>
+              onClick={() => this.handleTdClick(dashboardId, columnName, props.value)}>
               {props.value}
             </span>
           );
