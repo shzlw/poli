@@ -292,6 +292,10 @@ class DashboardEditView extends React.Component {
     }
   }
 
+  goBackToFromDashboard = () => {
+    this.props.history.goBack();
+  }
+
   confirmDelete = () => {
     const { 
       objectToDelete = {},
@@ -418,7 +422,13 @@ class DashboardEditView extends React.Component {
       <React.Fragment>
         <div className="dashboard-menu-panel row">
           <div className="float-left">
-            {fromDashboard} > 
+            {fromDashboard && (
+              <div className="dashboard-drillthrough-name" onClick={this.goBackToFromDashboard}>
+                <span className="link-label">{fromDashboard}</span> >
+              </div>
+            )}
+          </div>
+          <div className="float-left">
             {
               isFullScreenView || !isEditMode ?
               (

@@ -119,7 +119,10 @@ class App extends React.Component {
 
     if (isAuthorizing) {
       return (
-        <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
+        <div className="authenticating-panel">
+          <div className="authenticating-panel-title">Authenticating...</div>
+          <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
+        </div>
       )
     }
     

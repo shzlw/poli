@@ -57,6 +57,11 @@
   width: 100%;
 }
 
+.dashboard-drillthrough-name {
+  padding: 6px 0px 6px 14px;
+  font-size: 20px;
+}
+
 .dashboard-name {
   padding: 6px 14px;
   font-size: 20px;

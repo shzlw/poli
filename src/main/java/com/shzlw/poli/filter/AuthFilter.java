@@ -78,12 +78,16 @@ public class AuthFilter implements Filter {
         boolean isValid = false;
         if ("GET".equals(requestMethod)) {
             if (path.startsWith("/ws/dashboard")
-                    || path.startsWith("/ws/jdbcquery")
+                    || path.startsWith("/ws/widget/dashboard/")
                     || path.startsWith("/ws/user/account")) {
                 isValid = true;
             }
         } else if ("PUT".equals(requestMethod)) {
             if (path.startsWith("/ws/user/account")) {
+                isValid = true;
+            }
+        } else if ("POST".equals(requestMethod)) {
+            if (path.startsWith("/ws/jdbcquery")) {
                 isValid = true;
             }
         }

@@ -382,11 +382,10 @@ class WidgetEditPanel extends React.Component {
     const error = queryResult.error;
 
     const drillItems = drillThrough.map(drill =>
-      <div key={drill.columnName} className="row">
-        <div className="float-left">Column: {drill.columnName}</div>
-        <div className="float-left">Dashboard: {drill.dashboardId}</div>
-        <button className="button icon-button float-right"onClick={() => this.removeDrillThrough(drill)}>
-          <FontAwesomeIcon icon="trash-alt" size="lg" />
+      <div key={drill.columnName} className="row table-row">
+        <div className="float-left ellipsis">Column: {drill.columnName}, Dashboard: {drill.dashboardId}</div>
+        <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
+          <FontAwesomeIcon icon="trash-alt" />
         </button>
       </div>
     );
@@ -558,10 +557,10 @@ class WidgetEditPanel extends React.Component {
                     optionDisplay={'name'}
                     optionValue={'id'}
                   />
-                  <div class="row mt-10">
+                  <button className="button" onClick={this.addDrillThrough}>Add</button>
+                  <div class="mt-3">
                     {drillItems}
                   </div>
-                  <button className="button" onClick={this.addDrillThrough}>Add</button>
                 </div>
               </div>
             )}

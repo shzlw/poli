@@ -236,10 +236,10 @@ class Group extends React.Component {
         if (dashboardId === dashboards[j].id) {
           groupDashboardItems.push(
             (
-              <div key={dashboardId} className="row">
-                <div className="float-left">Name: {dashboards[j].name}</div>
-                <button className="button float-right"onClick={() => this.removeGroupDashboard(dashboardId)}>
-                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+              <div key={dashboardId} className="row table-row">
+                <div className="float-left ellipsis">{dashboards[j].name}</div>
+                <button className="button table-row-button float-right" onClick={() => this.removeGroupDashboard(dashboardId)}>
+                  <FontAwesomeIcon icon="trash-alt" />
                 </button>
               </div>
             )
@@ -294,7 +294,7 @@ class Group extends React.Component {
                 optionValue={'id'}
               />
               <button className="button" onClick={this.addGroupDashboard}>Add</button>
-              <div>
+              <div className="mt-3">
                 {groupDashboardItems}
               </div>
             </div>

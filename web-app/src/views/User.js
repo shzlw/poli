@@ -140,11 +140,6 @@ class User extends React.Component {
       return;
     }
 
-    if (!tempPassword || tempPassword.length < 8) {
-      Toast.showError(`Use 8 or more characters for password.`);
-      return;
-    }
-
     let selectedSysRole = Constants.SYS_ROLE_VIEWER;
     if (Constants.SYS_ROLE_ADMIN === this.props.sysRole) {
       if (sysRole) {
@@ -165,7 +160,11 @@ class User extends React.Component {
 
     if (id !== null) {
       user.id = id;
-      if (showUpdatePassword && tempPassword) {
+      if (showUpdatePassword) {
+        if (!tempPassword || tempPassword.length < 8) {
+          Toast.showError(`Use 8 or more characters for password.`);
+          return;
+        }
         user.tempPassword = tempPassword;
       }
       
@@ -176,6 +175,10 @@ class User extends React.Component {
           this.fetchUsers();
         });
     } else {
+      if (!tempPassword || tempPassword.length < 8) {
+        Toast.showError(`Use 8 or more characters for password.`);
+        return;
+      }
       user.tempPassword = tempPassword;
 
       axios.post('/ws/user', user)
@@ -294,10 +297,10 @@ class User extends React.Component {
         if (groupId === groups[j].id) {
           userGroupItems.push(
             (
-              <div key={groupId} className="row">
-                <div className="float-left">Group: {groups[j].name}</div>
-                <button className="button float-right"onClick={() => this.removeUserGroup(groupId)}>
-                  <FontAwesomeIcon icon="trash-alt" size="lg" />
+              <div key={groupId} className="row table-row">
+                <div className="float-left ellipsis ">{groups[j].name}</div>
+                <button className="button table-row-button float-right" onClick={() => this.removeUserGroup(groupId)}>
+                  <FontAwesomeIcon icon="trash-alt" />
                 </button>
               </div>
             )
@@ -393,7 +396,7 @@ class User extends React.Component {
                 optionValue={'id'}
               />
               <button className="button" onClick={this.addUserGroup}>Add</button>
-              <div>
+              <div className="mt-3">
                 {userGroupItems}
               </div>
             </div>

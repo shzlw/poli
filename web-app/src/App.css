@@ -15,6 +15,24 @@ body,
   transition: all 0.15s ease;
 }
 
+.authenticating-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 90px;
+  margin-top: -45px;
+  margin-left: -80px;
+  text-align: center;
+}
+
+.authenticating-panel-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 10px 0px;
+  color: #0065FF;
+}
+
 .form-panel {
   border: 0;
   outline: 0;
@@ -191,8 +209,25 @@ ml-5 {
   margin-left: 5px;
 }
 
+.link-label {
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
 .table-panel {
   margin-top: 10px;
+}
+
+.table-row {
+  margin-bottom: 5px;
+  background-color: #FFFFFF;
+  padding: 3px;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+}
+
+.table-row-button {
+  height: 22px;
+  line-height: 22px;
 }
 
 /* Charts */
