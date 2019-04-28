@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import ColorPicker from './ColorPicker';
@@ -29,6 +28,7 @@ class WidgetViewPanel extends React.Component {
   }
 
   componentDidMount() {
+    console.log('WidgetViewPanel componentDidMount');
   }
 
   resizeGrid = (viewWidth) => {
@@ -260,42 +260,6 @@ class WidgetViewPanel extends React.Component {
     });   
   }
 
-  onWidgetContentClick = (widgetClickEvent) => {
-    const {
-      dashboardName,
-      isFullScreenView
-    } = this.props;
-
-    const {
-      type,
-      data
-    } = widgetClickEvent;
-
-    if (type === 'tableTdClick') {
-      const {
-        dashboardId,
-        columnName,
-        columnValue
-      } = data;
-
-      if (isFullScreenView) {
-        axios.get('/ws/dashboard')
-          .then(res => {
-            const dashboards = res.data;
-            const dashboard = dashboards.findIndex(d => d.id === dashboardId);
-            if (dashboard !== undefined) {
-              const nextDashboard = dashboard.name;
-              const nextLink = `/workspace/dashboard/view?name=${nextDashboard}&fromDashboard=${dashboardName}&${columnName}=${columnValue}`;
-              this.props.history.push(nextLink);
-            }
-          });
-      } else {
-        const nextLink = `/workspace/dashboard/${dashboardId}?fromDashboard=${dashboardName}&${columnName}=${columnValue}`;
-        this.props.history.push(nextLink);
-      }
-    }
-  }
-
   /**
    * FIXME: optimize it. No need to calculate this every time.
    */
@@ -336,7 +300,10 @@ class WidgetViewPanel extends React.Component {
   }
 
   render() {
-    const { widgetViewWidth } = this.props;
+    const { 
+      widgetViewWidth,
+      isEditMode
+    } = this.props;
     const style = {
       width: widgetViewWidth + 'px'
     }
@@ -344,7 +311,7 @@ class WidgetViewPanel extends React.Component {
     return (
       <div className="dashboard-content-widget-panel" style={style}>
 
-        {this.props.isEditMode && (
+        {isEditMode && (
           <div className="dashboard-attribute-edit-panel">
             <div className="inline-block">Height:</div>
             <input 
@@ -379,7 +346,7 @@ class WidgetViewPanel extends React.Component {
           onWidgetEdit={this.props.onWidgetEdit} 
           onWidgetRemove={this.openConfirmDeletionPanel} 
           onWidgetFilterInputChange={this.onWidgetFilterInputChange}
-          onWidgetContentClick={this.onWidgetContentClick}
+          onWidgetContentClick={this.props.onWidgetContentClick}
         />
         
         <Modal 
@@ -397,4 +364,4 @@ class WidgetViewPanel extends React.Component {
   };
 }
 
-export default withRouter(WidgetViewPanel);
+export default WidgetViewPanel;

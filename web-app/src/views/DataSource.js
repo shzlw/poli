@@ -124,7 +124,7 @@ class DataSource extends Component {
     axios.get(`/ws/jdbcdatasource/ping/${id}`)
       .then(res => {
         const result = res.data;
-        if (result == 'success') {
+        if (result === 'success') {
           Toast.showSuccess('Ping Succeeded');
         } else {
           Toast.showError(result);

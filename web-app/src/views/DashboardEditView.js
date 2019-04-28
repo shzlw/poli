@@ -48,6 +48,8 @@ class DashboardEditView extends React.Component {
     let id = this.props.match.params.id;
     const dashboardId = id !== undefined ? id : null;
 
+    console.log('DashboardEditView - componentDidMount', dashboardId);
+
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const fromDashboard = params.get('fromDashboard');
@@ -58,7 +60,7 @@ class DashboardEditView extends React.Component {
     const widgetViewWidth = this.getPageWidth();
     this.setState({
       widgetViewWidth: widgetViewWidth,
-      dashboardName: dashboardName
+      fromDashboard: fromDashboard
     }, () => {
       if (dashboardId === null) {
         this.setState({
@@ -67,11 +69,11 @@ class DashboardEditView extends React.Component {
       } else {
         axios.get(`/ws/dashboard/${dashboardId}`)
           .then(res => {
-            const result = res.data;
+            const dashboard = res.data;
             this.setState({
-              dashboardId: result.id,
-              name: result.name,
-              style: result.style
+              dashboardId: dashboard.id,
+              name: dashboard.name,
+              style: dashboard.style
             }, () => {
               this.refresh();
             });
@@ -246,16 +248,48 @@ class DashboardEditView extends React.Component {
     window.open(url, '_blank');
   }
 
-  onTableCellClick = () => {
-    this.props.history.push(`/workspace/dashboard/drill?name=&`);
-  }
-
   onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
     style[[name]] = value;
     this.setState({
       style: style
     });
+  }
+
+  onWidgetContentClick = (widgetClickEvent) => {
+    const {
+      name,
+      isFullScreenView
+    } = this.state;
+
+    const {
+      type,
+      data
+    } = widgetClickEvent;
+
+    if (type === 'tableTdClick') {
+      const {
+        dashboardId,
+        columnName,
+        columnValue
+      } = data;
+
+      if (isFullScreenView) {
+        axios.get('/ws/dashboard')
+          .then(res => {
+            const dashboards = res.data;
+            const dashboard = dashboards.findIndex(d => d.id === dashboardId);
+            if (dashboard !== undefined) {
+              const nextDashboard = dashboard.name;
+              const nextLink = `/workspace/dashboard/view?name=${nextDashboard}&fromDashboard=${name}&${columnName}=${columnValue}`;
+              this.props.history.push(nextLink);
+            }
+          });
+      } else {
+        const nextLink = `/workspace/dashboard/${dashboardId}?fromDashboard=${name}&${columnName}=${columnValue}`;
+        this.props.history.push(nextLink);
+      }
+    }
   }
 
   confirmDelete = () => {
@@ -412,11 +446,10 @@ class DashboardEditView extends React.Component {
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           isEditMode={this.state.isEditMode}
-          dashboardName={this.state.name}
-          isFullScreenView={this.state.isFullScreenView}
           widgetViewWidth={this.state.widgetViewWidth}
           onWidgetEdit={this.openWidgetEditPanel}
           onStyleValueChange={this.onStyleValueChange}
+          onWidgetContentClick={this.onWidgetContentClick}
           {...this.state.style}
         />
 

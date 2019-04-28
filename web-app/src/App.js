@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter, Component } from "react-router-dom";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import axios from 'axios';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
@@ -119,7 +119,7 @@ class App extends React.Component {
 
     if (isAuthorizing) {
       return (
-        <FontAwesomeIcon icon='cicle-notch' spin={true} size="3x" />
+        <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
       )
     }
     
