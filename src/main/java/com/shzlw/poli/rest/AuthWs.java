@@ -27,7 +27,8 @@ public class AuthWs {
     @Autowired
     UserService userService;
 
-    private static final String INVALID_USERNAME_PASSWORD = "Invalid username or password.";
+    public static final String INVALID_USERNAME_PASSWORD = "Invalid username or password.";
+    public static final String USE_MORE_CHARACTERS = "Use 8 or more characters.";
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
@@ -96,21 +97,21 @@ public class AuthWs {
         @RequestBody User user) {
         String password = user.getPassword();
         if (password.length() < 8) {
-            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Use 8 or more characters."), HttpStatus.OK);
+            return new ResponseEntity<>(LoginResponse.ofError(USE_MORE_CHARACTERS), HttpStatus.OK);
         }
 
         User existUser = userDao.findBySessionKey(sessionKey);
         if (existUser == null) {
-            return new ResponseEntity<LoginResponse>(LoginResponse.ofError("Invalid session."), HttpStatus.OK);
+            return new ResponseEntity<>(LoginResponse.ofError("Invalid session."), HttpStatus.OK);
         }
 
         userDao.updateTempPassword(existUser.getId(), user.getPassword());
-        return new ResponseEntity<LoginResponse>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value="/generate-apikey", method= RequestMethod.GET)
     @Transactional
-    public ResponseEntity<String> changeTempPassword(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
+    public ResponseEntity<String> generateApiKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
         User user = userDao.findBySessionKey(sessionKey);
         String apiKey = Constants.API_KEY_PREFIX + PasswordUtil.getUniqueId();
         userDao.updateApiKey(user.getId(), apiKey);

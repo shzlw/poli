@@ -78,7 +78,7 @@ class App extends React.Component {
   }
 
   onLoginSuccess = (loginResponse = {}, pathname = null) => {
-    if (loginResponse.tempPassword) {
+    if (loginResponse.isTempPassword) {
       this.props.history.push('/changepassword');
     } else {
       this.setState({

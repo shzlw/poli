@@ -2,6 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
@@ -41,77 +42,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserWsTest {
-
-    @Autowired
-    ObjectMapper mapper;
-
-    @Autowired
-    MockMvc mvc;
-
-    MvcResult mvcResult;
-    String responeText;
+public class UserWsTest extends  AbstractWsTest {
 
     @Test
-    public void testLogin() throws Exception {
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword("adminadmin");
+    public void testCreateDeveloperUser() throws Exception {
 
-        mvcResult = this.mvc.perform(post("/auth/login/user")
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(admin)))
-                .andReturn();
-        responeText = mvcResult.getResponse().getContentAsString();
-        Cookie[] cookies = mvcResult.getResponse().getCookies();
-    }
-
-    @Test
-    public void test() throws Exception {
-        // Login as Admin
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword("adminadmin");
-
-        mvcResult = this.mvc.perform(post("/auth/login/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(admin))
-                ).andReturn();
-        responeText = mvcResult.getResponse().getContentAsString();
-        Cookie[] cookies = mvcResult.getResponse().getCookies();
-
-        String name = "name1";
-        String username = "username1";
-        String tempPassword = "tempPassword";
-        String sysRole = Constants.SYS_ROLE_DEVELOPER;
-
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setName(name);
-        newUser.setTempPassword(tempPassword);
-        newUser.setSysRole(sysRole);
-        String body = mapper.writeValueAsString(newUser);
-
-        // Create a new User.
-        mvcResult = this.mvc.perform(
-                post("/ws/user")
-                .cookie(cookies)
-                .contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(status().isCreated()
-                ).andReturn();
-        String id = mvcResult.getResponse().getContentAsString();
-
-        mvcResult = this.mvc.perform(
-                get("/ws/user")
-                .cookie(cookies)
-                ).andReturn();
-        responeText = mvcResult.getResponse().getContentAsString();
-        List<User> users = mapper.readValue(responeText, new TypeReference<List<User>>(){});
-        User savedUser = users.get(0);
-        Assert.assertEquals(Long.parseLong(id), savedUser.getId());
-        Assert.assertEquals(newUser.getUsername(), savedUser.getUsername());
-        Assert.assertEquals(newUser.getName(), savedUser.getName());
-        Assert.assertEquals(newUser.getSysRole(), savedUser.getSysRole());
-        Assert.assertNull(savedUser.getPassword());
-        Assert.assertNull(savedUser.getTempPassword());
     }
 }

@@ -1,7 +1,12 @@
 package com.shzlw.poli.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.util.Constants;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -9,8 +14,13 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 public abstract class AbstractWsTest {
 
     @Autowired
@@ -21,17 +31,90 @@ public abstract class AbstractWsTest {
 
     MvcResult mvcResult;
     String responeText;
+    Cookie[] cookies;
 
-    public Cookie[] loginAsAdmin() throws Exception {
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword("adminadmin");
+    public User createNewUser(String sysRole) throws Exception {
+        // Create a new User.
+        String name = "name1";
+        String username = "username1";
+        String tempPassword = "tempPassword";
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setName(name);
+        newUser.setTempPassword(tempPassword);
+        newUser.setSysRole(sysRole);
+        String body = mapper.writeValueAsString(newUser);
+
+        mvcResult = this.mvc.perform(
+                post("/ws/user")
+                        .cookie(cookies)
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String id = mvcResult.getResponse().getContentAsString();
+        long newId = Long.parseLong(id);
+
+        mvcResult = this.mvc.perform(
+                get("/ws/user/" + id)
+                        .cookie(cookies)
+        ).andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        User savedUser = mapper.readValue(responeText, User.class);
+        Assert.assertEquals(newId, savedUser.getId());
+        Assert.assertEquals(newUser.getUsername(), savedUser.getUsername());
+        Assert.assertEquals(newUser.getName(), savedUser.getName());
+        Assert.assertEquals(newUser.getSysRole(), savedUser.getSysRole());
+        Assert.assertNull(savedUser.getPassword());
+        Assert.assertNull(savedUser.getTempPassword());
+
+        newUser.setId(newId);
+        return newUser;
+    }
+
+    public LoginResponse loginFailure(String username, String password) throws Exception {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
 
         mvcResult = mvc.perform(post("/auth/login/user")
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(admin)))
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        Cookie[] cookies = mvcResult.getResponse().getCookies();
-        return cookies;
+        LoginResponse loginResponse = mapper.readValue(responeText, LoginResponse.class);
+        Assert.assertNotNull(loginResponse.getError());
+
+        cookies = mvcResult.getResponse().getCookies();
+        Assert.assertNull(cookies);
+
+        return loginResponse;
+    }
+
+    public LoginResponse loginSuccess(String username, String password) throws Exception {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        mvcResult = mvc.perform(post("/auth/login/user")
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
+                .andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        LoginResponse loginResponse = mapper.readValue(responeText, LoginResponse.class);
+        Assert.assertEquals(loginResponse.getUsername(), username);
+        Assert.assertNotNull(loginResponse.getSysRole());
+        Assert.assertNull(loginResponse.getError());
+
+        cookies = mvcResult.getResponse().getCookies();
+        Assert.assertEquals(1, cookies.length);
+        Assert.assertEquals(Constants.SESSION_KEY, cookies[0].getName());
+        Assert.assertNotNull(Constants.SESSION_KEY, cookies[0].getValue());
+
+        return loginResponse;
+    }
+
+    public LoginResponse loginAsAdmin() throws Exception {
+        LoginResponse loginResponse = loginSuccess("admin", "adminadmin");
+        Assert.assertFalse(loginResponse.isTempPassword());
+        return loginResponse;
     }
 }

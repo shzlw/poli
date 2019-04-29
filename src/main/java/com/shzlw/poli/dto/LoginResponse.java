@@ -1,10 +1,14 @@
 package com.shzlw.poli.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LoginResponse {
 
     private String username;
     private String sysRole;
     private String error;
+
+    @JsonProperty(value = "isTempPassword")
     private boolean isTempPassword;
 
     public static LoginResponse ofError(String error) {
@@ -41,5 +45,15 @@ public class LoginResponse {
 
     public boolean isTempPassword() {
         return isTempPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResponse{" +
+                "username='" + username + '\'' +
+                ", sysRole='" + sysRole + '\'' +
+                ", error='" + error + '\'' +
+                ", isTempPassword=" + isTempPassword +
+                '}';
     }
 }
