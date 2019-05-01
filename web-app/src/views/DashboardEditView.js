@@ -9,7 +9,7 @@ import WidgetEditPanel from '../components/WidgetEditPanel';
 import Modal from '../components/Modal';
 
 import * as Constants from '../api/Constants';
-
+import * as Util from '../api/Util';
 import './Dashboard.css';
 
 import * as webApi from '../api/WebApi';
@@ -82,8 +82,8 @@ class DashboardEditView extends React.Component {
     });
 
     const lastRefreshLabelTimerId = setInterval(() => {
-      const { lastRefreshed } = this.state;
-    }, 10000);
+      this.updateReadableLastRefreshed();
+    }, 5000);
     this.setState({
       lastRefreshLabelTimerId: lastRefreshLabelTimerId
     })
@@ -181,10 +181,22 @@ class DashboardEditView extends React.Component {
   }
 
   updateLastRefreshed = () => {
-    const now = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    const now = new Date();
     this.setState({
       lastRefreshed: now
+    }, () => {
+      this.updateReadableLastRefreshed();
     });
+  }
+
+  updateReadableLastRefreshed = () => {
+    const { lastRefreshed } = this.state;
+    if (lastRefreshed instanceof Date) {
+      const readableLastRefreshed = Util.getReadableDiffTime(lastRefreshed, new Date());
+      this.setState({
+        readableLastRefreshed: readableLastRefreshed
+      })
+    }
   }
 
   save = () => {
@@ -240,6 +252,7 @@ class DashboardEditView extends React.Component {
 
   applyFilters = (filterParams) => {
     this.widgetViewPanel.current.queryWidgets(filterParams);
+    this.updateLastRefreshed();
   }
 
   fullScreen = () => {
@@ -337,7 +350,7 @@ class DashboardEditView extends React.Component {
   render() {
     const {
       autoRefreshTimerId,
-      lastRefreshed,
+      readableLastRefreshed,
       isEditMode,
       isFullScreenView,
       fromDashboard
@@ -350,7 +363,7 @@ class DashboardEditView extends React.Component {
       <React.Fragment>
         <div className="inline-block">
           <div className="inline-block mr-3">
-            Last refreshed: {lastRefreshed}
+            Last refreshed: {readableLastRefreshed}
           </div>
           { autoRefreshStatus === 'OFF' && (
             <input 

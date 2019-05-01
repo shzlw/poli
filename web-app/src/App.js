@@ -37,6 +37,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    axios.interceptors.response.use((response) => {
+        return response;
+      }, (error) => {
+        if(error.response.status === 401) { 
+          this.onLogout();
+        }
+        return Promise.reject(error);
+    });
+
     const pathname = this.props.location.pathname;
     const search = this.props.location.search;
 
@@ -73,7 +82,6 @@ class App extends React.Component {
               }
           });
       });
-      
     }
   }
 

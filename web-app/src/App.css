@@ -230,6 +230,35 @@ ml-5 {
   line-height: 22px;
 }
 
+.card {
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
+  margin: 0px 10px 10px 0px;
+  background-color: #FFFFFF;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  width: 200px;
+  height: 200px;
+  display:flex;
+  flex-direction: column;
+}
+
+.card-header {
+  flex: 0 1 auto;
+  padding: 5px;
+  font-size: 18px;
+}
+
+.card-content {
+  overflow: auto; 
+  flex: 1 1 auto;
+}
+
+.card-footer {
+  flex: 0 1 auto;
+  padding: 5px;
+}
+
 /* Charts */
 .echarts {
   width: 100% !important;

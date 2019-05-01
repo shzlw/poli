@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -61,5 +63,20 @@ public class WidgetWs {
             widgetDao.updatePosition(widget);
         }
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/download", method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public void downloadCsv(@RequestParam("widgetId") long widgetId,
+                            @RequestParam(value = "name", required = false) String name,
+                            @RequestParam(value = "includeHeader", required = false) boolean includeHeader,
+                            HttpServletResponse response) throws IOException {
+        String csvText = "";
+        String fileName = "";
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName +"\""));
+
+        response.getWriter().write(csvText);
     }
 }
