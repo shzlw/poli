@@ -391,7 +391,7 @@ class WidgetEditPanel extends React.Component {
     );
 
     const columnItems = columns.map(col =>
-      <div className="row" key={col.name}>
+      <div className="table-row row" key={col.name}>
         <div className="float-left">{col.name}</div>
         <div className="float-right">{col.dataType}</div>
       </div>

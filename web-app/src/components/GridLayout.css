@@ -38,7 +38,7 @@
   height: 18px;
   width: 18px;
   font-size: 16px;
-  cursor: grab;
+  cursor: move;
   position:absolute; 
   right: 3px; 
   top: 3px; 
@@ -50,7 +50,7 @@
   position:absolute; 
   right: 0; 
   bottom: 0; 
-  cursor: move; 
+  cursor: se-resize; 
 }
 
 .grid-box-file-button-group {

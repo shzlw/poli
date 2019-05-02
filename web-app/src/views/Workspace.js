@@ -75,8 +75,6 @@ class Workspace extends React.Component {
       currentMenuLink,
     } = this.state;
     
-    console.log('Workspace - render');
-
     const {
       username,
       sysRole
@@ -129,7 +127,7 @@ class Workspace extends React.Component {
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/account" component={Account} />
-            <Route exact path="/workspace/dashboard/view" component={DashboardFullScreenView} />
+            <Route exact path="/workspace/dashboard/full/:name" component={DashboardFullScreenView} />
             <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
             <Route path="/workspace/dashboard" render={() => <Dashboard {...this.props} />} />
           </Switch>

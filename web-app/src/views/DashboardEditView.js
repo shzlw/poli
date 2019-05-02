@@ -45,14 +45,23 @@ class DashboardEditView extends React.Component {
   }
 
   componentDidMount() {
-    let id = this.props.match.params.id;
+    const id = this.props.match.params.id;
+    if (id === undefined) {
+      // If the drill through is triggered from the full-dashboard page already, this component is remounted but not FullScreenView.
+      const dashboardName = this.props.match.params.name;
+      if (dashboardName !== undefined) {
+        this.loadViewByDashboardName();
+        return;
+      }
+    }
     const dashboardId = id !== undefined ? id : null;
 
     console.log('DashboardEditView - componentDidMount', dashboardId);
 
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
-    const fromDashboard = params.get('fromDashboard');
+    const fromDashboard = params.get('$fromDashboard');
+
     for(let pair of params.entries()) {
       console.log(pair[0]+ ', '+ pair[1]); 
     } 
@@ -103,11 +112,12 @@ class DashboardEditView extends React.Component {
   }
 
   loadViewByDashboardName = () => {
+    const dashboardName = this.props.match.params.name;
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
-    const dashboardName = params.get('name');
-    const showControl = params.get('showControl');
-    const fromDashboard = params.get('fromDashboard');
+
+    const showControl = params.get('$showControl');
+    const fromDashboard = params.get('$fromDashboard');
 
     const widgetViewWidth = this.getPageWidth();
 
@@ -257,7 +267,7 @@ class DashboardEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/workspace/dashboard/view?name=${name}`;
+    const url = `/workspace/dashboard/full/${name}`;
     window.open(url, '_blank');
   }
 
@@ -288,18 +298,17 @@ class DashboardEditView extends React.Component {
       } = data;
 
       if (isFullScreenView) {
-        axios.get('/ws/dashboard')
+        axios.get(`/ws/dashboard/${dashboardId}`)
           .then(res => {
-            const dashboards = res.data;
-            const dashboard = dashboards.findIndex(d => d.id === dashboardId);
-            if (dashboard !== undefined) {
-              const nextDashboard = dashboard.name;
-              const nextLink = `/workspace/dashboard/view?name=${nextDashboard}&fromDashboard=${name}&${columnName}=${columnValue}`;
-              this.props.history.push(nextLink);
-            }
+            const dashboard = res.data;
+            const nextDashboard = dashboard.name;
+            const nextLink = `/workspace/dashboard/full/${nextDashboard}?$fromDashboard=${name}&${columnName}=${columnValue}`;
+            this.props.history.push(nextLink);
+            // The router doesn't rerender the component so force to refresh the dashboard.
+            //this.loadViewByDashboardName();
           });
       } else {
-        const nextLink = `/workspace/dashboard/${dashboardId}?fromDashboard=${name}&${columnName}=${columnValue}`;
+        const nextLink = `/workspace/dashboard/${dashboardId}?$fromDashboard=${name}&${columnName}=${columnValue}`;
         this.props.history.push(nextLink);
       }
     }

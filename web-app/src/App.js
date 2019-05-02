@@ -50,7 +50,7 @@ class App extends React.Component {
     const search = this.props.location.search;
 
     const params = new URLSearchParams(search);
-    const apiKey = params.get('apiKey');
+    const apiKey = params.get('$apiKey');
 
     let currentPath = pathname + search;
 
@@ -128,7 +128,7 @@ class App extends React.Component {
     if (isAuthorizing) {
       return (
         <div className="authenticating-panel">
-          <div className="authenticating-panel-title">Authenticating...</div>
+          <div className="authenticating-panel-title">Poli</div>
           <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
         </div>
       )

@@ -12,13 +12,13 @@ class DashboardFullScreenView extends React.Component {
 
   componentDidMount() {
     console.log('DashboardFullScreenView', 'componentDidMount');
-    this.dashboardEditView.loadViewByDashboardName();
   }
 
   render() {
+    const pathname = this.props.location.pathname;
     return (
       <div className="full-screen-view">
-        <DashboardEditView wrappedComponentRef={comp => (this.dashboardEditView = comp)} />
+        <DashboardEditView key={pathname} />
       </div>
     )
   };
