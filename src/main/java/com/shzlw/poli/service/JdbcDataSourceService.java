@@ -1,9 +1,6 @@
 package com.shzlw.poli.service;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+import com.google.common.cache.*;
 import com.shzlw.poli.SystemProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
@@ -63,6 +60,10 @@ public class JdbcDataSourceService {
 
     public DataSource getDataSource(long dataSourceId) {
         LOGGER.info("[poli] getDataSource - dataSourceId: {}, size: {}", dataSourceId, DATA_SOURCE_CACHE.asMap().size());
+        if (dataSourceId == 0) {
+            return null;
+        }
+
         try {
             DataSource hiDs = DATA_SOURCE_CACHE.get(dataSourceId, () -> {
                 JdbcDataSource dataSource = jdbcDataSourceDao.findById(dataSourceId);
@@ -82,7 +83,7 @@ public class JdbcDataSourceService {
                 return newHiDs;
             });
             return hiDs;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;
         }
     }

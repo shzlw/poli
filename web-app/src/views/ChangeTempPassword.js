@@ -77,7 +77,7 @@ class ChangeTempPassword extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <div className="login-view">
         <div className="login-panel">
           <div style={titleStyle}>Change password</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
@@ -100,7 +100,7 @@ class ChangeTempPassword extends React.Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

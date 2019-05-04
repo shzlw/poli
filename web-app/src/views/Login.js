@@ -86,7 +86,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className="login-view">
         <div className="login-panel">
           <div className="login-app-title">Poli</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
@@ -112,7 +112,7 @@ class Login extends React.Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

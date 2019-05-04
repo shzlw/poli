@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.*;
@@ -21,6 +22,11 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
+
+    private static final String HTTP_METHOD_GET = "GET";
+    private static final String HTTP_METHOD_POST = "POST";
+    private static final String HTTP_METHOD_PUT = "PUT";
+    private static final String HTTP_METHOD_DELETE = "DELETE";
 
     @Autowired
     UserService userService;
@@ -44,8 +50,12 @@ public class AuthFilter implements Filter {
                 boolean isValid = false;
                 if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
                     isValid = validateViewer(httpRequest.getMethod(), path);
-                } else {
+                } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole)) {
+                    isValid = validateDeveloper(httpRequest.getMethod(), path);
+                } else if (Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
                     isValid = true;
+                } else {
+                    isValid = false;
                 }
 
                 if (isValid) {
@@ -75,22 +85,31 @@ public class AuthFilter implements Filter {
 
     public boolean validateViewer(String requestMethod, String path) {
         boolean isValid = false;
-        if ("GET".equals(requestMethod)) {
+        if (HTTP_METHOD_GET.equals(requestMethod)) {
             if (path.startsWith("/ws/dashboard")
                     || path.startsWith("/ws/widget/dashboard/")
                     || path.startsWith("/ws/user/account")) {
                 isValid = true;
             }
-        } else if ("PUT".equals(requestMethod)) {
+        } else if (HTTP_METHOD_PUT.equals(requestMethod)) {
             if (path.startsWith("/ws/user/account")) {
                 isValid = true;
             }
-        } else if ("POST".equals(requestMethod)) {
+        } else if (HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")) {
                 isValid = true;
             }
         }
         return isValid;
+    }
+
+    public boolean validateDeveloper(String requestMethod, String path) {
+        if (path.startsWith("/ws/user")) {
+            if (HTTP_METHOD_PUT.equals(requestMethod) || HTTP_METHOD_POST.equals(requestMethod) || HTTP_METHOD_DELETE.equals(requestMethod)) {
+
+            }
+        }
+        return true;
     }
 
     @Override

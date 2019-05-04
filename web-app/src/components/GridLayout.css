@@ -20,8 +20,6 @@
 }
 
 .grid-box-title-value {
-  padding-left: 5px;
-  max-width: 200px;
   font-size: 18px;
 }
 
@@ -32,16 +30,24 @@
 
 .grid-box-content-panel {
   padding: 0px 5px;
+  z-index: 1;
+}
+
+.grid-edit-panel {
+  position:absolute; 
+  right: 0; 
+  top: 0; 
+  background-color: transparent;
+  padding: 4px;
+  z-index: 2;
+}
+
+.grid-edit-panel:hover {
+  background-color: #FFFFFF;
 }
 
 .grid-draggable {
-  height: 18px;
-  width: 18px;
-  font-size: 16px;
   cursor: move;
-  position:absolute; 
-  right: 3px; 
-  top: 3px; 
 }
 
 .grid-resizable {

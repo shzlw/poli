@@ -43,7 +43,9 @@ class WidgetEditPanel extends React.Component {
         showBorder: false,
         borderColor: 'rgba(9, 30, 66, 1)',
         showTitle: true,
-        backgroundColor: 'rgba(255, 255, 255, 1)',
+        titleFontColor: 'rgba(9, 30, 66, 1)',
+        titleBackgroundColor: 'rgba(255, 255, 255, 1)',
+        contentBackgroundColor: 'rgba(255, 255, 255, 1)',
         zIndex: 50
       },
       queryParameter: '',
@@ -238,19 +240,22 @@ class WidgetEditPanel extends React.Component {
         showBorder: false,
         borderColor: 'rgba(9, 30, 66, 1)',
         showTitle: true,
-        backgroundColor: 'rgba(255, 255, 255, 1)',
+        titleFontColor: 'rgba(9, 30, 66, 1)',
+        titleBackgroundColor: 'rgba(255, 255, 255, 1)',
+        contentBackgroundColor: 'rgba(255, 255, 255, 1)',
         zIndex: 50
       }
 
       axios.post('/ws/widget', widget)
         .then(res => {
-          this.props.onSave();
+          const widgetId = res.data;
+          this.props.onSave(widgetId);
         });
     } else {
       widget.id = widgetId;
       axios.put('/ws/widget', widget)
         .then(res => {
-          this.props.onSave();
+          this.props.onSave(widgetId);
         });
     }
   }
@@ -426,9 +431,7 @@ class WidgetEditPanel extends React.Component {
                   value={this.state.title}
                   onChange={this.handleInputChange} 
                 />
-
-                <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
-                <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
+                <hr/>
 
                 <label>Z Index</label>
                 <input 
@@ -437,15 +440,36 @@ class WidgetEditPanel extends React.Component {
                   value={this.state.style.zIndex}
                   onChange={(event) => this.onStyleValueChange('zIndex', event.target.value)} 
                 />
+                <hr/>
+
+                <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
+                { this.state.style.showBorder && (
+                  <div>
+                    Border Color
+                    <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
+                  </div>
+                )}
+                <hr/>
+
+                <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
+                { this.state.style.showTitle && (
+                  <React.Fragment>
+                    <div>
+                      Title Font Color
+                      <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
+                    </div>
+
+                    <div>
+                      Title Background Color
+                      <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
+                    </div>
+                  </React.Fragment>
+                )}
+                <hr/>
 
                 <div>
-                  Border Color
-                  <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
-                </div>
-
-                <div>
-                  Background Color
-                  <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.onStyleValueChange} />
+                  Content Background Color
+                  <ColorPicker name={'contentBackgroundColor'} value={this.state.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
                 </div>
 
                 

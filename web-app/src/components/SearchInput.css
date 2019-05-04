@@ -23,5 +23,13 @@
 .search-input-reset-button {
   border-radius: 0px 4px 4px 0px;
   width: 36px;
+  box-shadow: none;
+  background-color: #FFFFFF;
+  color: #4b4f56;
+}
+
+.search-input-reset-button:hover {
+  background-color: #FFFFFF;
+  color: #4b4f56;
 }
 

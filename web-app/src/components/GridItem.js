@@ -226,7 +226,9 @@ class GridItem extends React.Component {
       showBorder = false,
       showTitle = true,
       borderColor,
-      backgroundColor,
+      titleFontColor,
+      titleBackgroundColor,
+      contentBackgroundColor,
       zIndex
     } = style;
 
@@ -242,6 +244,15 @@ class GridItem extends React.Component {
     };
 
     const hasDrillThrough = !Util.isArrayEmpty(drillThrough);
+
+    const titleStyle = {
+      color: titleFontColor,
+      backgroundColor: titleBackgroundColor
+    };
+
+    const contentStyle = {
+      backgroundColor: contentBackgroundColor
+    }
 
     /*
     <div className="grid-box-file-button-group">
@@ -262,26 +273,6 @@ class GridItem extends React.Component {
 
     return (
       <div className="grid-box" style={gridBoxStyle}>
-        <div className="grid-box-title">
-          <div className="grid-box-title-value float-left ellipsis">{title}</div>
-
-          { isEditMode && (
-            <div className="float-right" style={{marginRight: '20px'}}>
-              <div className="grid-box-icon inline-block" onClick={() => this.editWidget(id)}>
-                <FontAwesomeIcon icon="edit" fixedWidth />
-              </div>
-              <div className="grid-box-icon inline-block" onClick={() => this.removeWidget(id)}>
-                <FontAwesomeIcon icon="trash-alt" fixedWidth />
-              </div>
-            </div>
-          )}
-          
-        </div>
-
-        <div className="grid-box-content">
-          {this.renderWidgetContent()}
-        </div>
-
         { isEditMode && (
           <GridDraggable 
             onMouseUp={this.onMouseUp}
@@ -289,8 +280,35 @@ class GridItem extends React.Component {
             onMouseMove={this.onMouseMove}
             mode={this.state.mode}
             snapToGrid={this.props.snapToGrid} 
-          />
+          >
+            { showTitle && (
+              <div className="grid-box-title" style={titleStyle}>
+                <div className="grid-box-title-value ellipsis" style={{marginRight: '50px'}}>{title}</div>
+              </div>
+            )}
+          </GridDraggable>
         )}
+
+        { (!isEditMode && showTitle) && (
+          <div className="grid-box-title" style={titleStyle}>
+            <div className="grid-box-title-value ellipsis">{title}</div>
+          </div>
+        )}
+
+        { isEditMode && (
+          <div className="grid-edit-panel">
+            <div className="grid-box-icon inline-block" onClick={() => this.editWidget(id)}>
+              <FontAwesomeIcon icon="edit" fixedWidth />
+            </div>
+            <div className="grid-box-icon inline-block" onClick={() => this.removeWidget(id)}>
+              <FontAwesomeIcon icon="trash-alt" fixedWidth />
+            </div>
+          </div>
+        )}
+
+        <div className="grid-box-content" style={contentStyle}>
+          {this.renderWidgetContent()}
+        </div>
 
         { isEditMode && (
           <GridResizable 

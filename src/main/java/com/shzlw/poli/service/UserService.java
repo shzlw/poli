@@ -2,10 +2,12 @@ package com.shzlw.poli.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +27,14 @@ public class UserService {
     UserDao userDao;
 
     public User getSessionCache(String sessionKey) {
+        if (StringUtils.isEmpty(sessionKey)) {
+            return null;
+        }
+
         try {
             User user = SESSION_USER_CACHE.get(sessionKey, () -> userDao.findBySessionKey(sessionKey));
             return user;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;
         }
     }

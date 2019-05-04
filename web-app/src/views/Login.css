@@ -1,3 +1,6 @@
+.login-view {
+}
+
 .login-panel {
   padding: 15px;
   position: fixed;
@@ -19,6 +22,7 @@
   text-align: center;
   font-weight: 700;
   margin-bottom: 25px;
+  color: #0065FF;
 }
 
 .login-button {

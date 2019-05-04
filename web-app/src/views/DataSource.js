@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import './Datasource.css';
 import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
@@ -219,13 +218,13 @@ class DataSource extends Component {
               <div className="card-content"></div>
               <div className="card-footer row">
                 <div className="float-right">
-                  <button className="icon-button datasource-icon-button" onClick={() => this.openEditPanel(ds)}>
+                  <button className="icon-button card-icon-button" onClick={() => this.openEditPanel(ds)}>
                     <FontAwesomeIcon icon="edit" size="lg" />
                   </button>
-                  <button className="icon-button datasource-icon-button" onClick={() => this.openConfirmDeletionPanel(ds)}>
+                  <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(ds)}>
                     <FontAwesomeIcon icon="trash-alt" size="lg" />
                   </button>
-                  <button className="icon-button datasource-icon-button" onClick={() => this.ping(ds.id)}>
+                  <button className="icon-button card-icon-button" onClick={() => this.ping(ds.id)}>
                     <FontAwesomeIcon icon="plug" size="lg" />
                   </button>
                 </div>

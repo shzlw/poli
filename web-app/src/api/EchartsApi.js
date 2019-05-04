@@ -23,7 +23,7 @@ export const getPieOptionTemplate = (legend, series) => {
     series: [
       {
         type:'pie',
-        center: ['40%', '50%'],
+        center: ['50%', '50%'],
         radius: '50%',
         data: series
       }

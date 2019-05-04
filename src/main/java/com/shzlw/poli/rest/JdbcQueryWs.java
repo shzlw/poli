@@ -10,6 +10,7 @@ import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
+import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,9 @@ public class JdbcQueryWs {
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
-    public WidgetQueryResult queryWidget(@PathVariable("id") long widgetId,
-                                   @RequestBody List<FilterParameter> filterParams) {
+    public WidgetQueryResult queryWidget(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                         @PathVariable("id") long widgetId,
+                                         @RequestBody List<FilterParameter> filterParams) {
         Widget widget = widgetDao.findById(widgetId);
         if (widget.getJdbcDataSourceId() == 0) {
             return new WidgetQueryResult(widgetId, "No data source found");

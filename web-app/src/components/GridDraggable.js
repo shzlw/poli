@@ -105,12 +105,15 @@ class GridDraggable extends React.Component {
     gridItemNode.style.top = currentY + 'px';
   }
 
+/**
+ * <FontAwesomeIcon icon="expand-arrows-alt" fixedWidth />
+ */
   render() {
     return (
       <div className="grid-draggable"
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}>
-        <FontAwesomeIcon icon="expand-arrows-alt" fixedWidth />
+        {this.props.children}
       </div>
     )
   }

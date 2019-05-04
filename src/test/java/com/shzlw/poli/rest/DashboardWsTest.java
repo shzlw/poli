@@ -25,29 +25,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class DashboardWsTest {
-
-    @Autowired
-    ObjectMapper mapper;
-
-    @Autowired
-    MockMvc mvc;
+public class DashboardWsTest extends AbstractWsTest {
 
     @Test
     public void testCreate() throws Exception {
         Dashboard newDashboard = new Dashboard();
         newDashboard.setName("d1");
         String body = mapper.writeValueAsString(newDashboard);
-        MvcResult result = null;
 
-        result = this.mvc.perform(post("/ws/dashboard")
+        mvcResult = this.mvc.perform(post("/ws/dashboard")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isCreated()).andReturn();
-        String id =result.getResponse().getContentAsString();
+        String id = mvcResult.getResponse().getContentAsString();
 
-        result = this.mvc.perform(get("/ws/dashboard/" + id)).andReturn();
-        String json = result.getResponse().getContentAsString();
-        Dashboard savedDashboard = mapper.readValue(json, Dashboard.class);
+        mvcResult = this.mvc.perform(get("/ws/dashboard/" + id)).andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        Dashboard savedDashboard = mapper.readValue(responeText, Dashboard.class);
 
         Assert.assertEquals(newDashboard.getName(), savedDashboard.getName());
     }

@@ -25,6 +25,7 @@ class DashboardEditView extends React.Component {
     this.state = {
       showWidgetEditPanel: false,
       showConfirmDeletionPanel: false,
+      showControl: true,
       objectToDelete: {},
       isEditMode: false,
       isFullScreenView: false,
@@ -116,7 +117,7 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
 
-    const showControl = params.get('$showControl');
+    const showControl = params.get('$showControl') ? true : false;
     const fromDashboard = params.get('$fromDashboard');
 
     const widgetViewWidth = this.getPageWidth();
@@ -125,7 +126,8 @@ class DashboardEditView extends React.Component {
       isFullScreenView: true,
       name: dashboardName,
       widgetViewWidth: widgetViewWidth,
-      fromDashboard: fromDashboard
+      fromDashboard: fromDashboard,
+      showControl: showControl
     }, () => {
       axios.get(`/ws/dashboard/name/${dashboardName}`)
         .then(res => {
@@ -164,8 +166,7 @@ class DashboardEditView extends React.Component {
       let interval = parseInt(refreshInterval, 10) || 15;
       interval = interval < 1 ? 1 : interval;
       const timerId = setInterval(() => {
-        this.queryWidgets();
-        this.updateLastRefreshed();
+        this.applyFilters();
       }, interval * 1000);
       this.setState({
         autoRefreshTimerId: timerId
@@ -184,10 +185,6 @@ class DashboardEditView extends React.Component {
       widgetViewWidth
     } = this.state;
     this.widgetViewPanel.current.fetchWidgets(dashboardId, widgetViewWidth, null);
-  } 
-
-  queryWidgets = () => {
-    this.widgetViewPanel.current.queryCharts();
   }
 
   updateLastRefreshed = () => {
@@ -245,12 +242,11 @@ class DashboardEditView extends React.Component {
     });
   }
 
-  onSaveWidget = () => {
+  onWidgetSave = (widgetId) => {
     this.setState({ 
       showWidgetEditPanel: false 
     });
-    // FIXME: not need to refresh. Just add to state.widgets
-    this.refreshWidgetView();
+    this.widgetViewPanel.current.handleSavedWidget(widgetId);
   }
 
   openWidgetEditPanel = (widgetId) => {
@@ -260,8 +256,8 @@ class DashboardEditView extends React.Component {
     });
   }
 
-  applyFilters = (filterParams) => {
-    this.widgetViewPanel.current.queryWidgets(filterParams);
+  applyFilters = () => {
+    this.widgetViewPanel.current.queryCharts();
     this.updateLastRefreshed();
   }
 
@@ -304,8 +300,6 @@ class DashboardEditView extends React.Component {
             const nextDashboard = dashboard.name;
             const nextLink = `/workspace/dashboard/full/${nextDashboard}?$fromDashboard=${name}&${columnName}=${columnValue}`;
             this.props.history.push(nextLink);
-            // The router doesn't rerender the component so force to refresh the dashboard.
-            //this.loadViewByDashboardName();
           });
       } else {
         const nextLink = `/workspace/dashboard/${dashboardId}?$fromDashboard=${name}&${columnName}=${columnValue}`;
@@ -362,7 +356,8 @@ class DashboardEditView extends React.Component {
       readableLastRefreshed,
       isEditMode,
       isFullScreenView,
-      fromDashboard
+      fromDashboard,
+      showControl
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
@@ -399,7 +394,7 @@ class DashboardEditView extends React.Component {
         <button className="button square-button mr-3" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button mr-3" onClick={this.queryWidgets}>
+        <button className="button mr-3" onClick={this.applyFilters}>
           <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
         </button>
       </React.Fragment>
@@ -442,42 +437,45 @@ class DashboardEditView extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="dashboard-menu-panel row">
-          <div className="float-left">
-            {fromDashboard && (
-              <div className="dashboard-drillthrough-name" onClick={this.goBackToFromDashboard}>
-                <span className="link-label">{fromDashboard}</span> >
-              </div>
-            )}
-          </div>
-          <div className="float-left">
-            {
-              isFullScreenView || !isEditMode ?
-              (
-                <div className="dashboard-name">
-                  {this.state.name}
+        { showControl && (
+          <div className="dashboard-menu-panel row">
+            <div className="float-left">
+              {fromDashboard && (
+                <div className="dashboard-drillthrough-name" onClick={this.goBackToFromDashboard}>
+                  <span className="link-label">{fromDashboard}</span> >
                 </div>
-              ) :(
-                <input 
-                  type="text" 
-                  name="name" 
-                  value={this.state.name}
-                  onChange={this.handleInputChange} 
-                  className="dashboard-name-input"
-                />
-              )
-            }
-            
+              )}
+            </div>
+            <div className="float-left">
+              {
+                isFullScreenView || !isEditMode ?
+                (
+                  <div className="dashboard-name">
+                    {this.state.name}
+                  </div>
+                ) :(
+                  <input 
+                    type="text" 
+                    name="name" 
+                    value={this.state.name}
+                    onChange={this.handleInputChange} 
+                    className="dashboard-name-input"
+                  />
+                )
+              }
+              
+            </div>
+            <div className="float-right">
+              {fullScreenButtonPanel}
+              {editButtonPanel}
+            </div>
           </div>
-          <div className="float-right">
-            {fullScreenButtonPanel}
-            {editButtonPanel}
-          </div>
-        </div>
+        )}
 
         <WidgetViewPanel 
           ref={this.widgetViewPanel} 
           isEditMode={this.state.isEditMode}
+          showControl={this.state.showControl}
           widgetViewWidth={this.state.widgetViewWidth}
           onWidgetEdit={this.openWidgetEditPanel}
           onStyleValueChange={this.onStyleValueChange}
@@ -494,7 +492,7 @@ class DashboardEditView extends React.Component {
             ref={this.widgetEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             dashboardId={this.state.dashboardId}
-            onSave={this.onSaveWidget}
+            onSave={this.onWidgetSave}
           />
         </Modal>
 

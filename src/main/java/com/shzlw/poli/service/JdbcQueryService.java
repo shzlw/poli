@@ -54,7 +54,6 @@ public class JdbcQueryService {
     }
 
     public String fetchCsvByQuery(JdbcDataSource ds, String sql) {
-
         try (Connection con = getConnectionByType(ds);
              PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -126,6 +125,14 @@ public class JdbcQueryService {
     }
 
     public QueryResult queryBySql(DataSource dataSource, String sql) {
+        if (dataSource == null) {
+            QueryResult queryResult = new QueryResult("No data source found");
+            return queryResult;
+        } else if (StringUtils.isEmpty(sql)) {
+            QueryResult queryResult = new QueryResult("SQL query cannot be empty");
+            return queryResult;
+        }
+
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = new HashMap();
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
@@ -171,6 +178,14 @@ public class JdbcQueryService {
     }
 
     public WidgetQueryResult queryWidgetByParams(long widgetId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
+        if (dataSource == null) {
+            WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, "No data source found");
+            return queryResult;
+        } else if (StringUtils.isEmpty(sql)) {
+            WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, "SQL query cannot be empty");
+            return queryResult;
+        }
+
         LOGGER.info("[queryByParams] filterParams: {}", filterParams);
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
 

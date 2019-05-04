@@ -270,19 +270,24 @@ class User extends React.Component {
       if (!searchValue || (searchValue && (username.includes(searchValue) || name.includes(searchValue)))) {
         userItems.push(
           (
-            <div key={i} className="datasource-card row">
-              <div className="float-left ellipsis datasource-row-name">
-                {user.username},
-                {user.name},
+            <div key={i} className="card float-left">
+              <div className="card-header ellipsis">
+                {user.username}
+              </div>
+              <div className="card-content">
+                {user.name}
+                <br/>
                 {user.sysRole}
               </div>
-              <div className="float-right">
-                <button className="icon-button datasource-icon-button" onClick={() => this.openEditPanel(user)}>
-                  <FontAwesomeIcon icon="edit" size="lg" />
-                </button>
-                <button className="icon-button datasource-icon-button" onClick={() => this.openConfirmDeletionPanel(user)}>
-                  <FontAwesomeIcon icon="trash-alt" size="lg" />
-                </button>
+              <div className="card-footer row">
+                <div className="float-right">
+                  <button className="icon-button card-icon-button" onClick={() => this.openEditPanel(user)}>
+                    <FontAwesomeIcon icon="edit" size="lg" />
+                  </button>
+                  <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(user)}>
+                    <FontAwesomeIcon icon="trash-alt" size="lg" />
+                  </button>
+                </div>
               </div>
             </div>
           )

@@ -57,7 +57,7 @@ class SearchInput extends React.Component {
               style={inputStyle}
             />
           </div>
-          <button className="button search-input-reset-button float-left" onClick={this.reset}>
+          <button className="button search-input-reset-button float-right" onClick={this.reset}>
             <FontAwesomeIcon icon="times" size="lg" />
           </button>
         </div>

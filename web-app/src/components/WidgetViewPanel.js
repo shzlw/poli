@@ -10,6 +10,7 @@ import * as Util from '../api/Util';
 import Modal from '../components/Modal';
 import * as Constants from '../api/Constants';
 
+import './WidgetViewPanel.css';
 
 const BASE_WIDTH = 1200;
 
@@ -155,15 +156,6 @@ class WidgetViewPanel extends React.Component {
           });
         });
     } else if (filterType === Constants.SINGLE_VALUE) {
-      /*
-        const values = Object.values(queryResultData);
-        let value = '';
-        for (const val of values) {
-          value = val;
-          break;
-        }
-        newFilters[index].value = value;
-      */
       const index = widgets.findIndex(w => w.id === widgetId);
       const newWidgets = [...widgets];
       newWidgets[index].value = '';
@@ -299,12 +291,52 @@ class WidgetViewPanel extends React.Component {
     return filterParams;
   }
 
+  handleSavedWidget = (widgetId) => {
+    axios.get(`/ws/widget/${widgetId}`)
+      .then(res => {
+        const widget = res.data;
+        const { 
+          widgets, 
+          gridWidth 
+        } = this.state;
+        const index = widgets.findIndex(w => w.id === widget.id);
+        const newWidgets = [...widgets];
+        // Resize the widget.
+        widget.x = this.scaleToActual(widget.x, gridWidth);
+        widget.width = this.scaleToActual(widget.width, gridWidth);
+        if (index === -1) {
+          // New widget.
+          newWidgets.push(widget);
+        } else {
+          // Existing widget.
+          newWidgets[index] = widget;
+        }
+        this.setState({
+          widgets: newWidgets
+        }, () => {
+          // Query the widget.
+          const filterParams = this.getFilterParams();
+          const {
+            id,
+            type,
+          } = widget;
+          if (type === Constants.CHART) {
+            this.queryChart(id, filterParams);
+          }
+        });
+      });
+  }
+
   render() {
     const { 
       widgetViewWidth,
-      isEditMode
+      isEditMode,
+      showControl
     } = this.props;
+
+    const top = showControl ? '50px' : '10px';
     const style = {
+      top: top,
       width: widgetViewWidth + 'px'
     }
 
@@ -313,16 +345,17 @@ class WidgetViewPanel extends React.Component {
 
         {isEditMode && (
           <div className="dashboard-attribute-edit-panel">
-            <div className="inline-block">Height:</div>
-            <input 
-              type="text" 
-              name="height" 
-              value={this.props.height}
-              onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
-              className="inline-block" 
-              style={{width: '200px'}}
-              />
-
+            <div>
+              Height:
+              <input 
+                type="text" 
+                name="height" 
+                value={this.props.height}
+                onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
+                style={{width: '200px'}}
+                />
+            </div>
+            
             <div>
               Background Color
               <ColorPicker name={'backgroundColor'} value={this.props.backgroundColor} onChange={this.props.onStyleValueChange} />

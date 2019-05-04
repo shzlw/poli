@@ -136,15 +136,6 @@ body,
   cursor: pointer;
 }
 
-
-.button:focus {
-  background: #0052CC;
-}
-
-.button:active {
-  background: #0052CC;
-}
-
 .button:hover {
   color: #FFFFFF;
   cursor: pointer;
@@ -154,7 +145,8 @@ body,
 
 input,
 select,
-textarea {
+textarea,
+.table-row {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
@@ -219,10 +211,8 @@ ml-5 {
 }
 
 .table-row {
+  padding: 3px 5px;
   margin-bottom: 5px;
-  background-color: #FFFFFF;
-  padding: 3px;
-  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
 }
 
 .table-row-button {
@@ -237,26 +227,32 @@ ml-5 {
   margin: 0px 10px 10px 0px;
   background-color: #FFFFFF;
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
-  width: 200px;
-  height: 200px;
+  width: 160px;
+  height: 160px;
   display:flex;
   flex-direction: column;
 }
 
 .card-header {
   flex: 0 1 auto;
-  padding: 5px;
-  font-size: 18px;
+  padding: 5px 10px;
+  font-size: 20px;
 }
 
 .card-content {
   overflow: auto; 
   flex: 1 1 auto;
+  padding: 5px 10px;
 }
 
 .card-footer {
   flex: 0 1 auto;
   padding: 5px;
+}
+
+.card-icon-button {
+  margin: 0px 2px 0px 2px;
+  background-color: transparent;
 }
 
 /* Charts */
