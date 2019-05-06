@@ -246,6 +246,11 @@ class WidgetEditPanel extends React.Component {
         zIndex: 50
       }
 
+      widget.x = 0;
+      widget.y = 0;
+      widget.width = 200 * 100;
+      widget.height = 200;
+
       axios.post('/ws/widget', widget)
         .then(res => {
           const widgetId = res.data;

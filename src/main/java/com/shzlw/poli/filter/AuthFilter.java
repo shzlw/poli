@@ -40,7 +40,7 @@ public class AuthFilter implements Filter {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;
             if (sessionKey != null) {
-                User user = userService.getSessionCache(sessionKey);
+                User user = userService.getUser(sessionKey);
                 if (user != null) {
                     sysRole = user.getSysRole();
                 }
@@ -50,9 +50,7 @@ public class AuthFilter implements Filter {
                 boolean isValid = false;
                 if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
                     isValid = validateViewer(httpRequest.getMethod(), path);
-                } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole)) {
-                    isValid = validateDeveloper(httpRequest.getMethod(), path);
-                } else if (Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
+                } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole) || Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
                     isValid = true;
                 } else {
                     isValid = false;
@@ -101,15 +99,6 @@ public class AuthFilter implements Filter {
             }
         }
         return isValid;
-    }
-
-    public boolean validateDeveloper(String requestMethod, String path) {
-        if (path.startsWith("/ws/user")) {
-            if (HTTP_METHOD_PUT.equals(requestMethod) || HTTP_METHOD_POST.equals(requestMethod) || HTTP_METHOD_DELETE.equals(requestMethod)) {
-
-            }
-        }
-        return true;
     }
 
     @Override

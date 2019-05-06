@@ -1,7 +1,12 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.WidgetDao;
+import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.service.DashboardService;
+import com.shzlw.poli.service.UserService;
+import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,12 @@ public class WidgetWs {
     @Autowired
     WidgetDao widgetDao;
 
+    @Autowired
+    DashboardService dashboardService;
+
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public Widget one(@PathVariable("id") long id) {
@@ -27,17 +38,23 @@ public class WidgetWs {
 
     @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public List<Widget> allByDashboardId(@PathVariable("id") long id) {
-        return widgetDao.findByDashboardId(id);
+    public ResponseEntity<?> findByDashboardId(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                               @PathVariable("id") long dashboardId) {
+        User user = userService.getUser(sessionKey);
+        user.setSessionKey(sessionKey);
+        List<Dashboard> dashboards = dashboardService.getDashboardsByUser(user);
+        boolean isFound = dashboards.stream().anyMatch(d -> d.getId() == dashboardId);
+        if (isFound) {
+            List<Widget> widgets = widgetDao.findByDashboardId(dashboardId);
+            return new ResponseEntity<>(widgets, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Widget widget) {
-        widget.setX(0);
-        widget.setY(0);
-        widget.setWidth(200);
-        widget.setHeight(200);
         long id = widgetDao.insert(widget);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
@@ -58,7 +75,7 @@ public class WidgetWs {
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<?> updatePos(@RequestBody List<Widget> widgets) {
+    public ResponseEntity<?> updatePositions(@RequestBody List<Widget> widgets) {
         for (Widget widget : widgets) {
             widgetDao.updatePosition(widget);
         }

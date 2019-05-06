@@ -63,11 +63,11 @@ class WidgetViewPanel extends React.Component {
   }
 
   scaleToActual = (num, gridWidth) => {
-    return Math.round(num * gridWidth / BASE_WIDTH);
+    return num * gridWidth / BASE_WIDTH / 100;
   }
 
   scaleToBase = (num, gridWidth) => {
-    return Math.round(num * BASE_WIDTH / gridWidth);
+    return Number.parseFloat(num * BASE_WIDTH / gridWidth).toFixed(2) * 100;
   }
 
   fetchWidgets = (dashboardId, viewWidth) => {
@@ -345,15 +345,15 @@ class WidgetViewPanel extends React.Component {
 
         {isEditMode && (
           <div className="dashboard-attribute-edit-panel">
-            <div>
-              Height:
+            <div className="form-panel">
+              <label>Height:</label>
               <input 
                 type="text" 
                 name="height" 
                 value={this.props.height}
                 onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
                 style={{width: '200px'}}
-                />
+              />
             </div>
             
             <div>

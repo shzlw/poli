@@ -26,7 +26,7 @@ public class UserService {
     @Autowired
     UserDao userDao;
 
-    public User getSessionCache(String sessionKey) {
+    public User getUser(String sessionKey) {
         if (StringUtils.isEmpty(sessionKey)) {
             return null;
         }
@@ -39,12 +39,12 @@ public class UserService {
         }
     }
 
-    public void newOrUpdateSessionCache(User user, String oldSessionKey, String newSessionKey) {
-        removeFromSessionCache(oldSessionKey);
+    public void newOrUpdateUser(User user, String oldSessionKey, String newSessionKey) {
+        invalidateCache(oldSessionKey);
         SESSION_USER_CACHE.put(newSessionKey, user);
     }
 
-    public void removeFromSessionCache(String sessionKey) {
+    public void invalidateCache(String sessionKey) {
         if (sessionKey != null) {
             SESSION_USER_CACHE.invalidate(sessionKey);
         }

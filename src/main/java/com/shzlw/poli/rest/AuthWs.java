@@ -50,7 +50,7 @@ public class AuthWs {
         String oldSessionKey = user.getSessionKey();
         String newSessionKey = Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
         userDao.updateSessionKey(user.getId(), newSessionKey);
-        userService.newOrUpdateSessionCache(user, oldSessionKey, newSessionKey);
+        userService.newOrUpdateUser(user, oldSessionKey, newSessionKey);
 
         Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, newSessionKey);
         sessionKeyCookie.setMaxAge(Constants.COOKIE_TIMEOUT);
@@ -72,7 +72,7 @@ public class AuthWs {
             return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
         }
 
-        userService.newOrUpdateSessionCache(user, user.getSessionKey(), sessionKey);
+        userService.newOrUpdateUser(user, user.getSessionKey(), sessionKey);
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
 
@@ -81,7 +81,7 @@ public class AuthWs {
     public void logout(@CookieValue(Constants.SESSION_KEY) String sessionKey, HttpServletResponse response) throws IOException {
         User user = userDao.findBySessionKey(sessionKey);
         if (user != null) {
-            userService.removeFromSessionCache(sessionKey);
+            userService.invalidateCache(sessionKey);
             userDao.updateSessionKey(user.getId(), null);
 
             Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, "");

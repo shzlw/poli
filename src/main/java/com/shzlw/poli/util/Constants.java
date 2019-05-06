@@ -31,4 +31,6 @@ public final class Constants {
 
     public static final String WIDGET_TYPE_FILTER = "filter";
     public static final String WIDGET_TYPE_CHART = "chart";
+
+    public static final String EMPTY_JSON_ARRAY = "[]";
 }

@@ -31,7 +31,8 @@ public class DashboardDao {
                     + "FROM p_group_dashboard gd, p_dashboard d, p_group_user gu "
                     + "WHERE gd.dashboard_id = d.id "
                     + "AND gd.group_id = gu.group_id "
-                    + "AND gu.user_id = ?";
+                    + "AND gu.user_id = ? "
+                    + "GROUP BY d.id, d.name, d.style";
         return jt.query(sql, new Object[] { userId }, new DashboardRowMapper());
     }
 

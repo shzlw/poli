@@ -21,6 +21,8 @@ import java.util.List;
 @RequestMapping("/ws/user")
 public class UserWs {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserWs.class);
+
     @Autowired
     UserDao userDao;
 
@@ -30,7 +32,7 @@ public class UserWs {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public List<User> all(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User myUser = userDao.findBySessionKey(sessionKey);
+        User myUser = userService.getUser(sessionKey);
         List<User> users = new ArrayList<>();
         if (Constants.SYS_ROLE_ADMIN.equals(myUser.getSysRole())) {
             users = userDao.findNonAdminUsers(myUser.getId());
@@ -57,7 +59,12 @@ public class UserWs {
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<Long> add(@RequestBody User user) {
+    public ResponseEntity<Long> add(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                    @RequestBody User user) {
+        if (!isDeveloperOperationValid(sessionKey, user)) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
         long userId = userDao.insertUser(user.getUsername(), user.getName(), user.getTempPassword(), user.getSysRole());
         userDao.insertUserGroups(userId, user.getUserGroups());
         return new ResponseEntity<Long>(userId, HttpStatus.CREATED);
@@ -65,10 +72,15 @@ public class UserWs {
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> update(@RequestBody User user) {
+    public ResponseEntity<?> update(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                    @RequestBody User user) {
+        if (!isDeveloperOperationValid(sessionKey, user)) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
         long userId = user.getId();
         User savedUser = userDao.findById(userId);
-        userService.removeFromSessionCache(savedUser.getSessionKey());
+        userService.invalidateCache(savedUser.getSessionKey());
 
         userDao.updateUser(user);
         userDao.deleteUserGroups(userId);
@@ -78,17 +90,19 @@ public class UserWs {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
-    public ResponseEntity<?> delete(@PathVariable("id") long userId) {
+    public ResponseEntity<?> delete(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                    @PathVariable("id") long userId) {
         User savedUser = userDao.findById(userId);
-        userService.removeFromSessionCache(savedUser.getSessionKey());
+        if (!isDeveloperOperationValid(sessionKey, savedUser)) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
+        userService.invalidateCache(savedUser.getSessionKey());
 
         userDao.deleteUserGroups(userId);
         userDao.deleteUser(userId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserWs.class);
-
 
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     @Transactional(readOnly = true)
@@ -100,8 +114,19 @@ public class UserWs {
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @Transactional
-    public void updateUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey, @RequestBody User user) {
+    public void updateUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                       @RequestBody User user) {
+        userService.invalidateCache(sessionKey);
         User myUser = userDao.findBySessionKey(sessionKey);
         userDao.updateUserAccount(myUser.getId(), user.getName(), user.getPassword());
+    }
+
+    private boolean isDeveloperOperationValid(String mySessionKey, User targetUser) {
+        User myUser = userDao.findBySessionKey(mySessionKey);
+        if (Constants.SYS_ROLE_DEVELOPER.equals(myUser.getSysRole())
+                && !Constants.SYS_ROLE_VIEWER.equals(targetUser.getSysRole())) {
+            return false;
+        }
+        return true;
     }
 }

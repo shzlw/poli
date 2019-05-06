@@ -1,5 +1,8 @@
 package com.shzlw.poli.dto;
 
+import com.shzlw.poli.util.Constants;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +33,8 @@ public class QueryResult {
     }
 
     public String getData() {
-        if (data == null || data == "") {
-            return "[]";
+        if (StringUtils.isEmpty(data)) {
+            return Constants.EMPTY_JSON_ARRAY;
         }
         return data;
     }
