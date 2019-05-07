@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,58 +30,57 @@ public class DashboardWs {
     WidgetDao widgetDao;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     DashboardService dashboardService;
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public List<Dashboard> findAll(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User user = userService.getUser(sessionKey);
-        user.setSessionKey(sessionKey);
+    public List<Dashboard> findAll(HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         return dashboardService.getDashboardsByUser(user);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public Dashboard findOneById(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                 @PathVariable("id") long id) {
-        List<Dashboard> dashboards = findAll(sessionKey);
+    public Dashboard findOneById(@PathVariable("id") long id,
+                                 HttpServletRequest request) {
+        List<Dashboard> dashboards = findAll(request);
         return dashboards.stream().filter(d -> d.getId() == id).findFirst().get();
     }
 
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public Dashboard findOneByName(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                   @PathVariable("name") String name) {
-        List<Dashboard> dashboards = findAll(sessionKey);
+    public Dashboard findOneByName(@PathVariable("name") String name,
+                                   HttpServletRequest request) {
+        List<Dashboard> dashboards = findAll(request);
         return dashboards.stream().filter(d -> d.getName().equals(name)).findFirst().get();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<Long> add(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @RequestBody Dashboard dashboard) {
-        dashboardService.invalidateCache(sessionKey);
+    public ResponseEntity<Long> add(@RequestBody Dashboard dashboard,
+                                    HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        dashboardService.invalidateCache(user.getId());
         long id = dashboardDao.insert(dashboard.getName(), dashboard.getStyle());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> update(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @RequestBody Dashboard dashboard) {
-        dashboardService.invalidateCache(sessionKey);
+    public ResponseEntity<?> update(@RequestBody Dashboard dashboard,
+                                    HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        dashboardService.invalidateCache(user.getId());
         dashboardDao.update(dashboard);
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
-    public ResponseEntity<?> delete(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @PathVariable("id") long id) {
-        dashboardService.invalidateCache(sessionKey);
+    public ResponseEntity<?> delete(@PathVariable("id") long id,
+                                    HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        dashboardService.invalidateCache(user.getId());
         widgetDao.deleteByDashboardId(id);
         dashboardDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

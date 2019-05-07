@@ -20,3 +20,4 @@ export const SYS_ROLE_DEVELOPER = 'developer';
 export const SYS_ROLE_VIEWER = 'viewer';
 
 export const DEFAULT_DASHBOARD_HEIGHT = 600;
+export const DEFAULT_DASHBOARD_FIXED_WIDTH = 800;

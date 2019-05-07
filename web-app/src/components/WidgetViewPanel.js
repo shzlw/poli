@@ -35,8 +35,17 @@ class WidgetViewPanel extends React.Component {
   resizeGrid = (viewWidth) => {
     const { widgets } = this.state;
     const newWidgets = [...widgets];
+    let gridWidth = viewWidth - 10;
 
-    const gridWidth = viewWidth - 10;
+    const { 
+      isFixedWidth,
+      fixedWidth
+    } = this.props;
+    if (isFixedWidth) {
+      gridWidth = fixedWidth;
+    } 
+
+    
     this.resizeWidgetsToActual(newWidgets, gridWidth);
     this.setState({
       widgets: newWidgets,
@@ -355,6 +364,22 @@ class WidgetViewPanel extends React.Component {
                 style={{width: '200px'}}
               />
             </div>
+
+            <div>
+               <Checkbox name="isFixedWidth" value="Fixed width" checked={this.props.isFixedWidth} onChange={this.props.onStyleValueChange} />
+            </div>
+            
+            { this.props.isFixedWidth && (
+              <div>
+                <label>Fixed Width</label>
+                <input 
+                  type="text" 
+                  name="fixedWidth" 
+                  value={this.props.fixedWidth}
+                  onChange={(event) => this.props.onStyleValueChange('fixedWidth', event.target.value)} 
+                />
+              </div>
+            )}
             
             <div>
               Background Color

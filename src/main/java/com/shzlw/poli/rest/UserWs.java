@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +32,8 @@ public class UserWs {
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public List<User> all(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User myUser = userService.getUser(sessionKey);
+    public List<User> findAll(HttpServletRequest request) {
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         List<User> users = new ArrayList<>();
         if (Constants.SYS_ROLE_ADMIN.equals(myUser.getSysRole())) {
             users = userDao.findNonAdminUsers(myUser.getId());
@@ -59,9 +60,10 @@ public class UserWs {
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<Long> add(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @RequestBody User user) {
-        if (!isDeveloperOperationValid(sessionKey, user)) {
+    public ResponseEntity<Long> add(@RequestBody User user,
+                                    HttpServletRequest request) {
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        if (!isDeveloperOperationValid(myUser.getSysRole(), user)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
 
@@ -72,9 +74,10 @@ public class UserWs {
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> update(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @RequestBody User user) {
-        if (!isDeveloperOperationValid(sessionKey, user)) {
+    public ResponseEntity<?> update(@RequestBody User user,
+                                    HttpServletRequest request) {
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        if (!isDeveloperOperationValid(myUser.getSysRole(), user)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
 
@@ -90,10 +93,11 @@ public class UserWs {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
-    public ResponseEntity<?> delete(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                    @PathVariable("id") long userId) {
+    public ResponseEntity<?> delete(@PathVariable("id") long userId,
+                                    HttpServletRequest request) {
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         User savedUser = userDao.findById(userId);
-        if (!isDeveloperOperationValid(sessionKey, savedUser)) {
+        if (!isDeveloperOperationValid(myUser.getSysRole(), savedUser)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
 
@@ -106,24 +110,24 @@ public class UserWs {
 
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public User findAccountBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey) {
-        User myUser = userDao.findAccount(sessionKey);
-        LOGGER.info("findAccountBySessionKey sessionKey: {}, myUser: {}", sessionKey, myUser);
-        return myUser;
+    public User findAccountBySessionKey(HttpServletRequest request) {
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        User myAccount = userDao.findAccount(myUser.getId());
+        return myAccount;
     }
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @Transactional
-    public void updateUserBySessionKey(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                       @RequestBody User user) {
+    public void updateUserBySessionKey(@RequestBody User user,
+                                       @CookieValue(Constants.SESSION_KEY) String sessionKey,
+                                       HttpServletRequest request) {
         userService.invalidateCache(sessionKey);
-        User myUser = userDao.findBySessionKey(sessionKey);
+        User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         userDao.updateUserAccount(myUser.getId(), user.getName(), user.getPassword());
     }
 
-    private boolean isDeveloperOperationValid(String mySessionKey, User targetUser) {
-        User myUser = userDao.findBySessionKey(mySessionKey);
-        if (Constants.SYS_ROLE_DEVELOPER.equals(myUser.getSysRole())
+    private boolean isDeveloperOperationValid(String mySysRole, User targetUser) {
+        if (Constants.SYS_ROLE_DEVELOPER.equals(mySysRole)
                 && !Constants.SYS_ROLE_VIEWER.equals(targetUser.getSysRole())) {
             return false;
         }

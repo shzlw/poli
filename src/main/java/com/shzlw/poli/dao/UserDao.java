@@ -65,11 +65,11 @@ public class UserDao {
         }
     }
 
-    public User findAccount(String sessionKey) {
+    public User findAccount(long id) {
         String sql = "SELECT id, username, name, sys_role, api_key "
-                    + "FROM p_user WHERE session_key=?";
+                    + "FROM p_user WHERE id=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{ sessionKey }, new UserAccountMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{ id }, new UserAccountMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;

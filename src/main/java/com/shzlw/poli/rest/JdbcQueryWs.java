@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -53,16 +54,15 @@ public class JdbcQueryWs {
     }
 
     @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
-    public ResponseEntity<WidgetQueryResult> queryWidget(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                                         @PathVariable("id") long widgetId,
-                                                         @RequestBody List<FilterParameter> filterParams) {
+    public ResponseEntity<WidgetQueryResult> queryWidget(@PathVariable("id") long widgetId,
+                                                         @RequestBody List<FilterParameter> filterParams,
+                                                         HttpServletRequest request) {
         Widget widget = widgetDao.findById(widgetId);
         if (widget.getJdbcDataSourceId() == 0) {
             return new ResponseEntity(new WidgetQueryResult(widgetId, "No data source found"), HttpStatus.OK);
         }
 
-        User user = userService.getUser(sessionKey);
-        user.setSessionKey(sessionKey);
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         List<Dashboard> dashboards = dashboardService.getDashboardsByUser(user);
         boolean isFound = false;
         for (Dashboard dashboard : dashboards) {

@@ -22,10 +22,10 @@ import java.util.concurrent.TimeUnit;
 public class DashboardService {
 
     /**
-     * Key: Session key
+     * Key: User id
      * Value: Dashboard
      */
-    private static Cache<String, List<Dashboard>> SESSION_DASHBOARD_CACHE = CacheBuilder.newBuilder()
+    private static Cache<Long, List<Dashboard>> USER_DASHBOARD_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build();
 
@@ -34,11 +34,11 @@ public class DashboardService {
 
     public List<Dashboard> getDashboardsByUser(User user) {
         if (StringUtils.isEmpty(user)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         try {
-            List<Dashboard> rt = SESSION_DASHBOARD_CACHE.get(user.getSessionKey(), () -> {
+            List<Dashboard> rt = USER_DASHBOARD_CACHE.get(user.getId(), () -> {
                 List<Dashboard> dashboards = new ArrayList<>();
                 if (Constants.SYS_ROLE_VIEWER.equals(user.getSysRole())) {
                     dashboards = dashboardDao.findByViewer(user.getId());
@@ -50,11 +50,11 @@ public class DashboardService {
             });
             return rt;
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
-    public void invalidateCache(String sessionKey) {
-        SESSION_DASHBOARD_CACHE.invalidate(sessionKey);
+    public void invalidateCache(long userId) {
+        USER_DASHBOARD_CACHE.invalidate(userId);
     }
 }

@@ -33,4 +33,5 @@ public final class Constants {
     public static final String WIDGET_TYPE_CHART = "chart";
 
     public static final String EMPTY_JSON_ARRAY = "[]";
+    public static final String HTTP_REQUEST_ATTR_USER = "attr_user";
 }

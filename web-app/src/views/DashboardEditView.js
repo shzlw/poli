@@ -273,6 +273,10 @@ class DashboardEditView extends React.Component {
     style[[name]] = value;
     this.setState({
       style: style
+    }, () => {
+      if (name === 'isFixedWidth' || name === 'fixedWidth') {
+        this.refreshWidgetView();
+      }
     });
   }
 

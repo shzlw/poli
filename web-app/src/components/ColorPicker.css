@@ -9,14 +9,5 @@
 
 .colorpicker-popover {
   position: absolute;
-  z-index: 10;
-}
-
-.colorpicker-cover {
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  z-index: 10;
+  z-index: 20;
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -38,10 +39,9 @@ public class WidgetWs {
 
     @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findByDashboardId(@CookieValue(Constants.SESSION_KEY) String sessionKey,
-                                               @PathVariable("id") long dashboardId) {
-        User user = userService.getUser(sessionKey);
-        user.setSessionKey(sessionKey);
+    public ResponseEntity<?> findByDashboardId(@PathVariable("id") long dashboardId,
+                                               HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         List<Dashboard> dashboards = dashboardService.getDashboardsByUser(user);
         boolean isFound = dashboards.stream().anyMatch(d -> d.getId() == dashboardId);
         if (isFound) {

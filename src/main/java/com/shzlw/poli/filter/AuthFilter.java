@@ -41,6 +41,7 @@ public class AuthFilter implements Filter {
             String sysRole = null;
             if (sessionKey != null) {
                 User user = userService.getUser(sessionKey);
+                httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                 if (user != null) {
                     sysRole = user.getSysRole();
                 }

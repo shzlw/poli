@@ -31,7 +31,7 @@ public class JdbcDataSourceWs {
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public List<JdbcDataSource> all() {
+    public List<JdbcDataSource> findAll() {
         return jdbcDataSourceDao.findAllWithNoCredentials();
     }
 
