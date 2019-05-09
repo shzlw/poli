@@ -1,0 +1,71 @@
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.calendar-dialog {
+  width: 189px;
+  border: 1px solid black;
+  z-index: 20;
+  position: absolute;
+}
+
+.calendar-cell {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  float: left;
+  text-align: center;
+}
+
+.calendar-container .select-date {
+  padding: 5px;
+  background: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .1);
+  display: inline-block;
+  cursor: pointer;
+}
+
+.calendar-container .header-cell {
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+}
+
+.calendar-container .body-cell {
+  border: 1px solid black;
+}
+
+.calendar-container .clickable {
+  cursor: pointer;
+}
+
+.calendar-container .clickable:hover {
+  background-color: blue;
+  color: white;
+}
+
+.calendar-container .non-clickable {
+  background-color: grey;
+}
+
+.calendar-container .cell-active {
+  background-color: black;
+  color: white;
+}
+
+.calendar-container .display-date {
+  float: left;
+  width: 109px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+}
+
+.calendar-container .calendar-button {
+  color: blue;
+  width: 40px;
+  cursor: pointer;
+}

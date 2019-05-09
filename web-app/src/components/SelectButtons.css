@@ -1,0 +1,29 @@
+.selectbuttons-container {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.selectbuttons-container .select-button {
+  float: left;
+  padding: 5px 8px;
+  border: 2px solid black;
+  margin-right: 5px;
+  min-width: 80px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selectbuttons-container .select-button:hover {
+  background-color: black;
+  color: white;
+}
+
+
+.selectbuttons-container .select-button-active {
+  background-color: blue;
+  color: white;
+}
+
+

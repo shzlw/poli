@@ -27,7 +27,7 @@ public class JdbcDataSourceService {
      * Value: HikariDataSource
      */
     private static Cache<Long, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .removalListener((RemovalListener<Long, HikariDataSource>) removal -> {
                 HikariDataSource ds = removal.getValue();
                 ds.close();

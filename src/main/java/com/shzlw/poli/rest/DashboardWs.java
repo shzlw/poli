@@ -9,6 +9,8 @@ import com.shzlw.poli.service.DashboardService;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import org.checkerframework.framework.qual.QualifierArgument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public class DashboardWs {
     public Dashboard findOneById(@PathVariable("id") long id,
                                  HttpServletRequest request) {
         List<Dashboard> dashboards = findAll(request);
-        return dashboards.stream().filter(d -> d.getId() == id).findFirst().get();
+        return dashboards.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
     }
 
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
@@ -52,7 +54,7 @@ public class DashboardWs {
     public Dashboard findOneByName(@PathVariable("name") String name,
                                    HttpServletRequest request) {
         List<Dashboard> dashboards = findAll(request);
-        return dashboards.stream().filter(d -> d.getName().equals(name)).findFirst().get();
+        return dashboards.stream().filter(d -> d.getName().equals(name)).findFirst().orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST)

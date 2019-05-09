@@ -355,40 +355,34 @@ class WidgetViewPanel extends React.Component {
         {isEditMode && (
           <div className="dashboard-attribute-edit-panel">
             <div className="form-panel">
-              <label>Height:</label>
+              <label>Height</label>
               <input 
                 type="text" 
                 name="height" 
                 value={this.props.height}
                 onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
-                style={{width: '200px'}}
               />
-            </div>
 
-            <div>
-               <Checkbox name="isFixedWidth" value="Fixed width" checked={this.props.isFixedWidth} onChange={this.props.onStyleValueChange} />
-            </div>
-            
-            { this.props.isFixedWidth && (
-              <div>
-                <label>Fixed Width</label>
-                <input 
-                  type="text" 
-                  name="fixedWidth" 
-                  value={this.props.fixedWidth}
-                  onChange={(event) => this.props.onStyleValueChange('fixedWidth', event.target.value)} 
-                />
-              </div>
-            )}
-            
-            <div>
-              Background Color
+              <Checkbox name="isFixedWidth" value="Fixed width" checked={this.props.isFixedWidth} onChange={this.props.onStyleValueChange} />
+
+              { this.props.isFixedWidth && (
+                <div>
+                  <label>Fixed Width</label>
+                  <input 
+                    type="text" 
+                    name="fixedWidth" 
+                    value={this.props.fixedWidth}
+                    onChange={(event) => this.props.onStyleValueChange('fixedWidth', event.target.value)} 
+                  />
+                </div>
+              )}
+
+              <label>Background Color</label>
               <ColorPicker name={'backgroundColor'} value={this.props.backgroundColor} onChange={this.props.onStyleValueChange} />
-            </div>
 
-            <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />
-            <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />
-  
+              <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />
+              <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />
+            </div>
           </div>
         )}
         

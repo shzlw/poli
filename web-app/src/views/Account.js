@@ -101,7 +101,7 @@ class Account extends React.Component {
 
     return (
       <div className="full-page-content">
-        <div className="form-panel" style={{width: '500px'}}>   
+        <div className="form-panel" style={{width: '400px'}}>   
           <label>Username</label>
           <div>{username}</div>
 

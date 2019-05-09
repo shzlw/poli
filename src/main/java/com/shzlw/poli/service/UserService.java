@@ -20,7 +20,7 @@ public class UserService {
      * Value: User
      */
     private static Cache<String, User> SESSION_USER_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @Autowired

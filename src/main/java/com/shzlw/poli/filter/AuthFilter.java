@@ -36,6 +36,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getServletPath();
 
+        LOGGER.info("[poli] filter: {}", path);
         if (path.startsWith("/ws/")) {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;

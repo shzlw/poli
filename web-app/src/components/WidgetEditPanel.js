@@ -19,6 +19,8 @@ import Tabs from './Tabs';
 import Select from './Select';
 import TableWidget from './TableWidget';
 import ColorPicker from './ColorPicker';
+import SelectButtons from './SelectButtons';
+import InputRange from './filters/InputRange';
 
 
 class WidgetEditPanel extends React.Component {
@@ -415,12 +417,11 @@ class WidgetEditPanel extends React.Component {
         <div className="row mt-10">
           <div className="float-left">Type:</div>
           <div className="float-left">
-            <Select
+            <SelectButtons
               name={'type'}
               value={type}
               onChange={this.handleOptionChange}
-              options={Constants.WIDGET_TYPES}
-              preloadOneEmpty={false}
+              selections={Constants.WIDGET_TYPES}
             />
           </div>
         </div>
@@ -444,6 +445,14 @@ class WidgetEditPanel extends React.Component {
                   name="zIndex" 
                   value={this.state.style.zIndex}
                   onChange={(event) => this.onStyleValueChange('zIndex', event.target.value)} 
+                />
+                <InputRange
+                  name="zIndex" 
+                  value={this.state.style.zIndex}
+                  onChange={this.onStyleValueChange} 
+                  min={1}
+                  max={50}
+                  step={1}
                 />
                 <hr/>
 

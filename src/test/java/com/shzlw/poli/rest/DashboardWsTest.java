@@ -2,6 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,17 +32,28 @@ public class DashboardWsTest extends AbstractWsTest {
     public void testCreate() throws Exception {
         Dashboard newDashboard = new Dashboard();
         newDashboard.setName("d1");
+        newDashboard.setStyle("{}");
         String body = mapper.writeValueAsString(newDashboard);
 
-        mvcResult = this.mvc.perform(post("/ws/dashboard")
-                .contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(status().isCreated()).andReturn();
+        mvcResult = mvc.perform(
+                        post("/ws/dashboard")
+                            .contentType(MediaType.APPLICATION_JSON)
+                                .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                            .content(body)
+                        )
+                        .andExpect(status().isCreated())
+                        .andReturn();
         String id = mvcResult.getResponse().getContentAsString();
 
-        mvcResult = this.mvc.perform(get("/ws/dashboard/" + id)).andReturn();
+        mvcResult = mvc.perform(
+                    get("/ws/dashboard/" + id)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                    )
+                    .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
         Dashboard savedDashboard = mapper.readValue(responeText, Dashboard.class);
 
         Assert.assertEquals(newDashboard.getName(), savedDashboard.getName());
+        Assert.assertEquals(newDashboard.getStyle(), savedDashboard.getStyle());
     }
 }

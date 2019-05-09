@@ -7,6 +7,7 @@ import com.shzlw.poli.util.RawStringDeserialzier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Dashboard {
 
@@ -52,5 +53,28 @@ public class Dashboard {
     @JsonDeserialize(using = RawStringDeserialzier.class)
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dashboard dashboard = (Dashboard) o;
+        return id == dashboard.id &&
+                name.equals(dashboard.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Dashboard{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", style='" + style + '\'' +
+                '}';
     }
 }

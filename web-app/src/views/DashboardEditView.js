@@ -222,13 +222,11 @@ class DashboardEditView extends React.Component {
 
     axios.put('/ws/dashboard/', dashboard)
       .then(res => {
+        this.props.onDashboardSave(dashboardId);
+        this.setState({
+          isEditMode: false
+        });
       });
-
-    this.props.onDashboardSave(dashboardId);
-
-    this.setState({
-      isEditMode: false
-    });
   }
 
   edit = () => {

@@ -8,6 +8,8 @@ import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,12 +23,14 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DashboardService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardService.class);
+
     /**
      * Key: User id
      * Value: Dashboard
      */
     private static Cache<Long, List<Dashboard>> USER_DASHBOARD_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @Autowired

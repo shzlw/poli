@@ -4,18 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.dto.LoginResponse;
+import com.shzlw.poli.filter.AuthFilter;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.Cookie;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,6 +34,14 @@ public abstract class AbstractWsTest {
     MvcResult mvcResult;
     String responeText;
     Cookie[] cookies;
+    User adminUser;
+
+    public AbstractWsTest() {
+        adminUser = new User();
+        adminUser.setId(0);
+        adminUser.setUsername("admin");
+        adminUser.setSysRole(Constants.SYS_ROLE_ADMIN);
+    }
 
     public User createNewUser(String sysRole) throws Exception {
         // Create a new User.
@@ -50,7 +59,10 @@ public abstract class AbstractWsTest {
         mvcResult = this.mvc.perform(
                 post("/ws/user")
                         .cookie(cookies)
-                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+                )
                 .andExpect(status().isCreated())
                 .andReturn();
         String id = mvcResult.getResponse().getContentAsString();
@@ -78,8 +90,11 @@ public abstract class AbstractWsTest {
         user.setUsername(username);
         user.setPassword(password);
 
-        mvcResult = mvc.perform(post("/auth/login/user")
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
+        mvcResult = mvc.perform(
+                post("/auth/login/user")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(user))
+                )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
         LoginResponse loginResponse = mapper.readValue(responeText, LoginResponse.class);
@@ -97,7 +112,8 @@ public abstract class AbstractWsTest {
         user.setPassword(password);
 
         mvcResult = mvc.perform(post("/auth/login/user")
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(user)))
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
         LoginResponse loginResponse = mapper.readValue(responeText, LoginResponse.class);
