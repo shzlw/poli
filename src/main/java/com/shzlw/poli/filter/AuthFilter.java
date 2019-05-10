@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -23,11 +21,6 @@ public class AuthFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
-    private static final String HTTP_METHOD_GET = "GET";
-    private static final String HTTP_METHOD_POST = "POST";
-    private static final String HTTP_METHOD_PUT = "PUT";
-    private static final String HTTP_METHOD_DELETE = "DELETE";
-
     @Autowired
     UserService userService;
 
@@ -36,7 +29,6 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getServletPath();
 
-        LOGGER.info("[poli] filter: {}", path);
         if (path.startsWith("/ws/")) {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;
@@ -60,9 +52,11 @@ public class AuthFilter implements Filter {
 
                 if (isValid) {
                     chain.doFilter(request, response);
+                } else {
+                    return401(response);
                 }
             } else {
-                ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The session key is not valid.");
+                return401(response);
             }
         } else {
             chain.doFilter(request, response);
@@ -85,22 +79,26 @@ public class AuthFilter implements Filter {
 
     public boolean validateViewer(String requestMethod, String path) {
         boolean isValid = false;
-        if (HTTP_METHOD_GET.equals(requestMethod)) {
+        if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
             if (path.startsWith("/ws/dashboard")
                     || path.startsWith("/ws/widget/dashboard/")
                     || path.startsWith("/ws/user/account")) {
                 isValid = true;
             }
-        } else if (HTTP_METHOD_PUT.equals(requestMethod)) {
+        } else if (Constants.HTTP_METHOD_PUT.equals(requestMethod)) {
             if (path.startsWith("/ws/user/account")) {
                 isValid = true;
             }
-        } else if (HTTP_METHOD_POST.equals(requestMethod)) {
+        } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")) {
                 isValid = true;
             }
         }
         return isValid;
+    }
+
+    protected void return401(ServletResponse response) throws IOException {
+        ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The session key is not valid.");
     }
 
     @Override

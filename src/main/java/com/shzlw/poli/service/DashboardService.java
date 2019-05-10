@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.shzlw.poli.dao.DashboardDao;
-import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;

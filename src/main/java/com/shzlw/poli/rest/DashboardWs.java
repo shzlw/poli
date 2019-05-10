@@ -1,24 +1,19 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.DashboardDao;
-import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.DashboardService;
-import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
-import org.checkerframework.framework.qual.QualifierArgument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,14 +29,14 @@ public class DashboardWs {
     @Autowired
     DashboardService dashboardService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<Dashboard> findAll(HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         return dashboardService.getDashboardsByUser(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Dashboard findOneById(@PathVariable("id") long id,
                                  HttpServletRequest request) {
@@ -49,7 +44,7 @@ public class DashboardWs {
         return dashboards.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
     }
 
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Dashboard findOneByName(@PathVariable("name") String name,
                                    HttpServletRequest request) {

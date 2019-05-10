@@ -1,21 +1,22 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.WidgetQueryResult;
 import com.shzlw.poli.model.Dashboard;
-import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
-import com.shzlw.poli.service.*;
+import com.shzlw.poli.service.DashboardService;
+import com.shzlw.poli.service.JdbcDataSourceService;
+import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,9 +40,6 @@ public class JdbcQueryWs {
     WidgetDao widgetDao;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     DashboardService dashboardService;
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
@@ -53,7 +51,7 @@ public class JdbcQueryWs {
         return queryResult;
     }
 
-    @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/widget/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WidgetQueryResult> queryWidget(@PathVariable("id") long widgetId,
                                                          @RequestBody List<FilterParameter> filterParams,
                                                          HttpServletRequest request) {

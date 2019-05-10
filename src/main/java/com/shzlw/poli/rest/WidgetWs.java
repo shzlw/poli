@@ -5,10 +5,10 @@ import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.service.DashboardService;
-import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +28,16 @@ public class WidgetWs {
     @Autowired
     DashboardService dashboardService;
 
-    @Autowired
-    UserService userService;
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(
+            value = "/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Widget one(@PathVariable("id") long id) {
         return widgetDao.findById(id);
     }
 
-    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByDashboardId(@PathVariable("id") long dashboardId,
                                                HttpServletRequest request) {

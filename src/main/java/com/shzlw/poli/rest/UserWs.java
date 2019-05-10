@@ -1,7 +1,6 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.UserDao;
-import com.shzlw.poli.filter.AuthFilter;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
@@ -9,13 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -30,7 +29,7 @@ public class UserWs {
     @Autowired
     UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<User> findAll(HttpServletRequest request) {
         User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
@@ -49,7 +48,7 @@ public class UserWs {
         return users;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public User one(@PathVariable("id") long userId) {
         User user = userDao.findById(userId);
@@ -58,7 +57,7 @@ public class UserWs {
         return user;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody User user,
                                     HttpServletRequest request) {
@@ -108,7 +107,10 @@ public class UserWs {
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/account", method = RequestMethod.GET)
+    @RequestMapping(
+            value = "/account",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public User findAccountBySessionKey(HttpServletRequest request) {
         User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
@@ -116,7 +118,10 @@ public class UserWs {
         return myAccount;
     }
 
-    @RequestMapping(value = "/account", method = RequestMethod.PUT)
+    @RequestMapping(
+            value = "/account",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public void updateUserBySessionKey(@RequestBody User user,
                                        @CookieValue(Constants.SESSION_KEY) String sessionKey,
