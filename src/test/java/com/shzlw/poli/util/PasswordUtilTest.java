@@ -13,7 +13,7 @@ public class PasswordUtilTest {
     }
 
     @Test
-    public void test_encryptedPassword() {
+    public void testEncryptedPassword() {
         String password = "1234567890";
         Assert.assertEquals(password, PasswordUtil.getDecryptedPassword(PasswordUtil.getEncryptedPassword(password)));
 
@@ -25,12 +25,12 @@ public class PasswordUtilTest {
     }
 
     @Test
-    public void test_getUniqueId() {
+    public void testGetUniqueId() {
         Assert.assertEquals(22, PasswordUtil.getUniqueId().length());
     }
 
     @Test
-    public void test_generateAdminPassword() {
+    public void testGenerateAdminPassword() {
         String password = "adminadmin";
         System.out.println(PasswordUtil.getMd5Hash(password));
     }

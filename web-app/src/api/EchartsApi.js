@@ -117,7 +117,6 @@ const getTimeLineOptionTemplate = (seriesData) => {
       type: 'time',
       axisLabel: {
         formatter: (value, index) => {
-          console.log(value);
           const date = new Date(value);
           return [date.getMonth() + 1, date.getDate()].join('-');
         }

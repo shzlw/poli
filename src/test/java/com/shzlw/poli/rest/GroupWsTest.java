@@ -49,12 +49,12 @@ public class GroupWsTest extends AbstractWsTest {
         )
                 .andExpect(status().isCreated())
                 .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
         responeText = findGroup(id);
         Group saved = mapper.readValue(responeText, Group.class);
         Assert.assertEquals(id, saved.getId());
         Assert.assertEquals(g1.getName(), saved.getName());
-        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
+        Assert.assertEquals(new HashSet<Long>(Arrays.asList(d1)), new HashSet<Long>(saved.getGroupDashboards()));
 
         // Verify the list
         mvcResult = mvc.perform(
@@ -68,7 +68,6 @@ public class GroupWsTest extends AbstractWsTest {
         saved = groups.get(0);
         Assert.assertEquals(id, saved.getId());
         Assert.assertEquals(g1.getName(), saved.getName());
-        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
 
         // ********** Update group information **********
         g1.setId(id);

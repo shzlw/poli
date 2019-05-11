@@ -62,11 +62,7 @@ class DashboardEditView extends React.Component {
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
     const fromDashboard = params.get('$fromDashboard');
-
-    for(let pair of params.entries()) {
-      console.log(pair[0]+ ', '+ pair[1]); 
-    } 
-
+    
     const widgetViewWidth = this.getPageWidth();
     this.setState({
       widgetViewWidth: widgetViewWidth,

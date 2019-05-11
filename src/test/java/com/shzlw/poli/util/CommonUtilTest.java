@@ -9,12 +9,12 @@ import java.time.temporal.ChronoUnit;
 public class CommonUtilTest {
 
     @Test
-    public void test_fromEpoch() {
+    public void testFromEpoch() {
         Assert.assertNotNull(CommonUtil.fromEpoch(0));
     }
 
     @Test
-    public void test_fromEpoch_toEpoch() {
+    public void testFromEpoch_toEpoch() {
         LocalDateTime dateTime = LocalDateTime.now();
         long epoch = CommonUtil.toEpoch(dateTime);
         LocalDateTime newDateTime = CommonUtil.fromEpoch(epoch);

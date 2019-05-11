@@ -78,9 +78,9 @@ public class UserDao {
 
     public User findById(long id) {
         String sql = "SELECT id, username, name, sys_role "
-                + "FROM p_user WHERE id=?";
+                    + "FROM p_user WHERE id=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{id}, new UserInfoRowMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{ id }, new UserInfoRowMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;

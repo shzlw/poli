@@ -39,10 +39,9 @@ public abstract class AbstractWsTest {
         adminUser.setSysRole(Constants.SYS_ROLE_ADMIN);
     }
 
-    public User createNewUser(String sysRole) throws Exception {
+    public User createNewUser(String username, String sysRole) throws Exception {
         // Create a new User.
         String name = "name1";
-        String username = "username1";
         String tempPassword = "tempPassword";
 
         User newUser = new User();
@@ -145,7 +144,7 @@ public abstract class AbstractWsTest {
         )
                 .andExpect(status().isCreated())
                 .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
         return id;
     }
 
@@ -173,7 +172,7 @@ public abstract class AbstractWsTest {
         )
                 .andExpect(status().isCreated())
                 .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
         return id;
     }
 }

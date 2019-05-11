@@ -39,12 +39,6 @@ public class UserWs {
         } else if (Constants.SYS_ROLE_DEVELOPER.equals(myUser.getSysRole())) {
             users = userDao.findViewerUsers(myUser.getId());
         }
-
-        // FIXME: N + 1 query
-        for (User user : users) {
-            List<Long> userGroups = userDao.findUserGroups(user.getId());
-            user.setUserGroups(userGroups);
-        }
         return users;
     }
 
@@ -52,6 +46,9 @@ public class UserWs {
     @Transactional(readOnly = true)
     public User one(@PathVariable("id") long userId) {
         User user = userDao.findById(userId);
+        if (user == null) {
+            return null;
+        }
         List<Long> userGroups = userDao.findUserGroups(userId);
         user.setUserGroups(userGroups);
         return user;
@@ -124,10 +121,9 @@ public class UserWs {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public void updateUserBySessionKey(@RequestBody User user,
-                                       @CookieValue(Constants.SESSION_KEY) String sessionKey,
                                        HttpServletRequest request) {
-        userService.invalidateCache(sessionKey);
         User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        userService.invalidateCache(myUser.getSessionKey());
         userDao.updateUserAccount(myUser.getId(), user.getName(), user.getPassword());
     }
 

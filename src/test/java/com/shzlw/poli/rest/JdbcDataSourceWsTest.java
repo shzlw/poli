@@ -54,7 +54,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
         )
                 .andExpect(status().isCreated())
                 .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
         // Verify one
         responeText = findJdbcDataSource(id);
         JdbcDataSource saved = mapper.readValue(responeText, JdbcDataSource.class);

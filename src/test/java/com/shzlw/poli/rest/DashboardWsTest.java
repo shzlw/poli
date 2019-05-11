@@ -44,7 +44,7 @@ public class DashboardWsTest extends AbstractWsTest {
                         )
                         .andExpect(status().isCreated())
                         .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
 
         // Verify one
         responeText = findDashboard(id);

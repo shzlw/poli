@@ -9,6 +9,9 @@ public class FilterParameter {
     private String type;
     private String param;
     private String value;
+    /**
+     * If the type is: 'slicer' and remark is: 'select all', then no parameters should be applied to the query.
+     */
     private String remark;
 
     public String getType() {

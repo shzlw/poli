@@ -58,7 +58,7 @@ public class WidgetWsTest extends AbstractWsTest {
         )
                 .andExpect(status().isCreated())
                 .andReturn();
-        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
 
         // Verify
         responeText = findWidget(id);

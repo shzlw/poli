@@ -62,7 +62,7 @@ public class AuthWsTest extends AbstractWsTest {
     @Test
     public void testChangeTempPassowrd_success() throws Exception {
         LoginResponse loginResponse = loginAsAdmin();
-        User user = createNewUser(Constants.SYS_ROLE_VIEWER);
+        User user = createNewUser("username1", Constants.SYS_ROLE_VIEWER);
         loginResponse = loginSuccess(user.getUsername(), user.getTempPassword());
         Assert.assertTrue(loginResponse.isTempPassword());
 
@@ -86,7 +86,7 @@ public class AuthWsTest extends AbstractWsTest {
     @Test
     public void testChangeTempPassowrd_moreCharacters() throws Exception {
         LoginResponse loginResponse = loginAsAdmin();
-        User user = createNewUser(Constants.SYS_ROLE_VIEWER);
+        User user = createNewUser("username1", Constants.SYS_ROLE_VIEWER);
         loginResponse = loginSuccess(user.getUsername(), user.getTempPassword());
         Assert.assertTrue(loginResponse.isTempPassword());
 

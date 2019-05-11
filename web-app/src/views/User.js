@@ -90,14 +90,18 @@ class User extends React.Component {
 
   openEditPanel = (user) => {
     if (user !== null) {
-      this.setState({
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        tempPassword: '',
-        sysRole: user.sysRole,
-        userGroups: user.userGroups
-      });
+      axios.get('/ws/user/' + user.id)
+        .then(res => {
+          const result = res.data;
+          this.setState({
+            id: result.id,
+            username: result.username,
+            name: result.name,
+            tempPassword: '',
+            sysRole: result.sysRole,
+            userGroups: result.userGroups
+          });
+        });
     } else {
       this.clearEditPanel();
     }

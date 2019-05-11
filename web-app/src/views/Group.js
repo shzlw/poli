@@ -80,11 +80,15 @@ class Group extends React.Component {
 
   openEditPanel = (group) => {
     if (group !== null) {
-      this.setState({
-        id: group.id,
-        name: group.name,
-        groupDashboards: group.groupDashboards
-      });
+      axios.get('/ws/group/' + group.id)
+        .then(res => {
+          const result = res.data;
+          this.setState({
+            id: result.id,
+            name: result.name,
+            groupDashboards: result.groupDashboards
+          });
+        });
     } else {
       this.clearEditPanel();
     }

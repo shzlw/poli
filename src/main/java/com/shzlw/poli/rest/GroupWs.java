@@ -21,13 +21,8 @@ public class GroupWs {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<Group> findAll() {
-        // FIXME: N + 1
-        List<Group> groups = groupDao.findAll();
-        for (Group group : groups) {
-            List<Long> groupDashboards = groupDao.findGroupDashboards(group.getId());
-            group.setGroupDashboards(groupDashboards);
-        }
-        return groups;
+        // return groupDao.findAllWithDashboards();
+        return groupDao.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
