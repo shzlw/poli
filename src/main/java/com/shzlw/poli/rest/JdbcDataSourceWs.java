@@ -39,7 +39,7 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public JdbcDataSource one(@PathVariable("id") long id) {
-        return jdbcDataSourceDao.findById(id);
+        return jdbcDataSourceDao.findByIdWithNoCredentials(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)

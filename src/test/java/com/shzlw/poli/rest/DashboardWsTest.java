@@ -1,6 +1,8 @@
 package com.shzlw.poli.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +30,7 @@ public class DashboardWsTest extends AbstractWsTest {
 
     @Test
     public void test() throws Exception {
-        // Create
+        // ********** Create **********
         Dashboard newDashboard = new Dashboard();
         newDashboard.setName("d1");
         newDashboard.setStyle("{}");
@@ -40,17 +44,31 @@ public class DashboardWsTest extends AbstractWsTest {
                         )
                         .andExpect(status().isCreated())
                         .andReturn();
-        String id = mvcResult.getResponse().getContentAsString();
+        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
 
-        // Verify
+        // Verify one
         responeText = findDashboard(id);
-        Dashboard savedDashboard = mapper.readValue(responeText, Dashboard.class);
-        Assert.assertEquals(newDashboard.getName(), savedDashboard.getName());
-        Assert.assertEquals(newDashboard.getStyle(), savedDashboard.getStyle());
+        Dashboard saved = mapper.readValue(responeText, Dashboard.class);
+        Assert.assertEquals(newDashboard.getName(), saved.getName());
+        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
 
-        // Update
+        // Verify the list
+        mvcResult = mvc.perform(
+                get("/ws/dashboard")
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+        )
+                .andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        List<Dashboard> dashboards = mapper.readValue(responeText, new TypeReference<List<Dashboard>>() {});
+        Assert.assertEquals(1, dashboards.size());
+        saved = dashboards.get(0);
+        Assert.assertEquals(id, saved.getId());
+        Assert.assertEquals(newDashboard.getName(), saved.getName());
+        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
+
+        // ********** Update **********
         newDashboard = new Dashboard();
-        newDashboard.setId(savedDashboard.getId());
+        newDashboard.setId(id);
         newDashboard.setName("d2");
         newDashboard.setStyle("{}");
         body = mapper.writeValueAsString(newDashboard);
@@ -63,14 +81,25 @@ public class DashboardWsTest extends AbstractWsTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Verify
-        responeText = findDashboard(id);
-        savedDashboard = mapper.readValue(responeText, Dashboard.class);
-        Assert.assertEquals(newDashboard.getId(), savedDashboard.getId());
-        Assert.assertEquals(newDashboard.getName(), savedDashboard.getName());
-        Assert.assertEquals(newDashboard.getStyle(), savedDashboard.getStyle());
+        // Verify find by name
+        mvcResult = mvc.perform(
+                get("/ws/dashboard/name/" + newDashboard.getName())
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+        )
+                .andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        saved = mapper.readValue(responeText, Dashboard.class);
+        Assert.assertEquals(newDashboard.getId(), saved.getId());
+        Assert.assertEquals(newDashboard.getName(), saved.getName());
+        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
 
-        // Delete
+        // ********** Delete **********
+        // Create some widgets
+        int numOfWidgets = 10;
+        for (int i = 0; i < numOfWidgets; i++) {
+            createWidget(id);
+        }
+
         mvcResult = mvc.perform(
                 delete("/ws/dashboard/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
@@ -80,9 +109,19 @@ public class DashboardWsTest extends AbstractWsTest {
         // Verify
         responeText = findDashboard(id);
         Assert.assertTrue(StringUtils.isEmpty(responeText));
+
+        // Verify there is no widget.
+        mvcResult = mvc.perform(
+                get("/ws/widget/dashboard/" + id)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        Assert.assertEquals(Constants.EMPTY_JSON_ARRAY, responeText);
     }
 
-    private String findDashboard(String id) throws Exception {
+    private String findDashboard(long id) throws Exception {
         mvcResult = mvc.perform(
                 get("/ws/dashboard/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)

@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.RemovalListener;
-import com.shzlw.poli.SystemProperties;
+import com.shzlw.poli.AppProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;
@@ -29,7 +29,7 @@ public class JdbcDataSourceService {
      * Key: JdbcDataSource id
      * Value: HikariDataSource
      */
-    private static Cache<Long, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<Long, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .removalListener((RemovalListener<Long, HikariDataSource>) removal -> {
                 HikariDataSource ds = removal.getValue();
@@ -41,7 +41,7 @@ public class JdbcDataSourceService {
     JdbcDataSourceDao jdbcDataSourceDao;
 
     @Autowired
-    SystemProperties systemProperties;
+    AppProperties appProperties;
 
     @PostConstruct
     public void init() {
@@ -77,7 +77,7 @@ public class JdbcDataSourceService {
                 if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
                     newHiDs.setDriverClassName(dataSource.getDriverClassName());
                 }
-                newHiDs.setMaximumPoolSize(systemProperties.getDataSourceMaximumPoolSize());
+                newHiDs.setMaximumPoolSize(appProperties.getDataSourceMaximumPoolSize());
                 newHiDs.setLeakDetectionThreshold(2000);
                 LOGGER.info("[poli] getDataSource - put: {}, size: {}", newHiDs, DATA_SOURCE_CACHE.asMap().size());
                 return newHiDs;

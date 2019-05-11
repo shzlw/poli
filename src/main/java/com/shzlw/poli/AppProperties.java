@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "poli")
-public class SystemProperties {
+public class AppProperties {
 
     Integer dataSourceMaximumPoolSize;
 
-    public SystemProperties() {
+    public AppProperties() {
         dataSourceMaximumPoolSize = 50;
     }
 

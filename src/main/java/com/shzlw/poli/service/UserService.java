@@ -19,7 +19,7 @@ public class UserService {
      * Key: Session key
      * Value: User
      */
-    private static Cache<String, User> SESSION_USER_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<String, User> SESSION_USER_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 

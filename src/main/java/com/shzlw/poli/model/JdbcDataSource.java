@@ -1,5 +1,7 @@
 package com.shzlw.poli.model;
 
+import java.util.Objects;
+
 public class JdbcDataSource {
 
     public static final String ID = "id";
@@ -80,38 +82,15 @@ public class JdbcDataSource {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         JdbcDataSource that = (JdbcDataSource) o;
-
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (connectionUrl != null ? !connectionUrl.equals(that.connectionUrl) : that.connectionUrl != null)
-            return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        return ping != null ? ping.equals(that.ping) : that.ping == null;
+        return id == that.id &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(connectionUrl, that.connectionUrl) &&
+                Objects.equals(driverClassName, that.driverClassName);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (connectionUrl != null ? connectionUrl.hashCode() : 0);
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (ping != null ? ping.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "JdbcDataSource{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", connectionUrl='" + connectionUrl + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", ping='" + ping + '\'' +
-                '}';
+        return Objects.hash(id, name, connectionUrl, driverClassName);
     }
 }

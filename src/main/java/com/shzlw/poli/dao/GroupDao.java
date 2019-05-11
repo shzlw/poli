@@ -1,7 +1,9 @@
 package com.shzlw.poli.dao;
 
+import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -26,7 +29,12 @@ public class GroupDao {
     }
 
     public Group findById(long groupId) {
-        return null;
+        String sql = "SELECT id, name FROM p_group WHERE id=?";
+        try {
+            return (Group) jt.queryForObject(sql, new Object[]{ groupId }, new GroupRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public List<Long> findGroupDashboards(long groupId) {

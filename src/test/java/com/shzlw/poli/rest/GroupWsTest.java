@@ -1,14 +1,12 @@
 package com.shzlw.poli.rest;
 
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.shzlw.poli.dao.JdbcDataSourceDao;
-import com.shzlw.poli.model.JdbcDataSource;
-import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.model.Group;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -18,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -29,25 +29,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class JdbcDataSourceWsTest extends AbstractWsTest {
-
-    @Autowired
-    JdbcDataSourceDao jdbcDataSourceDao;
+public class GroupWsTest extends AbstractWsTest {
 
     @Test
     public void test() throws Exception {
-        // ********** Create **********
-        JdbcDataSource j1 = new JdbcDataSource();
-        j1.setName("j1");
-        j1.setConnectionUrl("c1");
-        j1.setDriverClassName("d1");
-        j1.setUsername("u1");
-        j1.setPassword("p1");
-        j1.setPing("p1");
+        long d1 = createDashboard("d1");
 
-        String body = mapper.writeValueAsString(j1);
+        // ********** Create **********
+        Group g1 = new Group();
+        g1.setName("g1");
+        g1.setGroupDashboards(Arrays.asList(d1));
+        String body = mapper.writeValueAsString(g1);
+
         mvcResult = mvc.perform(
-                post("/ws/jdbcdatasource")
+                post("/ws/group")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -55,85 +50,81 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
                 .andExpect(status().isCreated())
                 .andReturn();
         long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
-        // Verify one
-        responeText = findJdbcDataSource(id);
-        JdbcDataSource saved = mapper.readValue(responeText, JdbcDataSource.class);
-        assertJdbcDataSource(j1, saved);
+        responeText = findGroup(id);
+        Group saved = mapper.readValue(responeText, Group.class);
+        Assert.assertEquals(id, saved.getId());
+        Assert.assertEquals(g1.getName(), saved.getName());
+        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
 
         // Verify the list
         mvcResult = mvc.perform(
-                get("/ws/jdbcdatasource")
+                get("/ws/group")
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        List<JdbcDataSource> jdbcDataSources = mapper.readValue(responeText, new TypeReference<List<JdbcDataSource>>() {});
-        Assert.assertEquals(1, jdbcDataSources.size());
-        saved = jdbcDataSources.get(0);
-        assertJdbcDataSource(j1, saved);
+        List<Group> groups = mapper.readValue(responeText, new TypeReference<List<Group>>() {});
+        Assert.assertEquals(1, groups.size());
+        saved = groups.get(0);
+        Assert.assertEquals(id, saved.getId());
+        Assert.assertEquals(g1.getName(), saved.getName());
+        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
 
-        // ********** Update information only **********
-        j1.setId(id);
-        j1.setName("j2");
-        j1.setConnectionUrl("c2");
-        j1.setDriverClassName("d2");
-        j1.setUsername("u2");
-        j1.setPing("p2");
-        body = mapper.writeValueAsString(j1);
+        // ********** Update group information **********
+        g1.setId(id);
+        g1.setName("g2");
+        body = mapper.writeValueAsString(g1);
         mvcResult = mvc.perform(
-                put("/ws/jdbcdatasource")
+                put("/ws/group")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
                 .andReturn();
-        responeText = findJdbcDataSource(id);
-        saved = mapper.readValue(responeText, JdbcDataSource.class);
-        assertJdbcDataSource(j1, saved);
+        responeText = findGroup(id);
+        saved = mapper.readValue(responeText, Group.class);
+        Assert.assertEquals(id, saved.getId());
+        Assert.assertEquals(g1.getName(), saved.getName());
+        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
 
-        // ********** Update password **********
-        j1.setId(id);
-        j1.setPassword("p3");
-        body = mapper.writeValueAsString(j1);
+        // ********** Update dashboards **********
+        long d2 = createDashboard("d2");
+        List<Long> dashboards = Arrays.asList(d1, d2);
+        g1.setGroupDashboards(dashboards);
+        body = mapper.writeValueAsString(g1);
         mvcResult = mvc.perform(
-                put("/ws/jdbcdatasource")
+                put("/ws/group")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
                 .andReturn();
-        saved = jdbcDataSourceDao.findById(id);
-        Assert.assertEquals(saved.getPassword(), j1.getPassword());
+        responeText = findGroup(id);
+        saved = mapper.readValue(responeText, Group.class);
+        Assert.assertEquals(id, saved.getId());
+        Assert.assertEquals(g1.getName(), saved.getName());
+        Assert.assertEquals(new HashSet<Long>(dashboards), new HashSet<Long>(saved.getGroupDashboards()));
 
         // ********** Delete **********
         mvcResult = mvc.perform(
-                delete("/ws/jdbcdatasource/" + id)
+                delete("/ws/group/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
         // Verify
-        responeText = findJdbcDataSource(id);
+        responeText = findGroup(id);
         Assert.assertTrue(StringUtils.isEmpty(responeText));
     }
 
-    private String findJdbcDataSource(long id) throws Exception {
+    private String findGroup(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/jdbcdatasource/" + id)
+                get("/ws/group/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         return mvcResult.getResponse().getContentAsString();
-    }
-
-    private void assertJdbcDataSource(JdbcDataSource expected, JdbcDataSource target) {
-        Assert.assertEquals(expected.getName(), target.getName());
-        Assert.assertEquals(expected.getConnectionUrl(), target.getConnectionUrl());
-        Assert.assertEquals(expected.getDriverClassName(), target.getDriverClassName());
-        Assert.assertEquals(expected.getUsername(), target.getUsername());
-        Assert.assertEquals(expected.getPing(), target.getPing());
-        Assert.assertNull(target.getPassword());
     }
 }

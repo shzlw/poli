@@ -1,8 +1,11 @@
 package com.shzlw.poli.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.dto.LoginResponse;
+import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +129,51 @@ public abstract class AbstractWsTest {
         LoginResponse loginResponse = loginSuccess("admin", "adminadmin");
         Assert.assertFalse(loginResponse.isTempPassword());
         return loginResponse;
+    }
+
+    public long createDashboard(String name) throws Exception {
+        Dashboard newDashboard = new Dashboard();
+        newDashboard.setName(name);
+        newDashboard.setStyle("{}");
+        String body = mapper.writeValueAsString(newDashboard);
+
+        mvcResult = mvc.perform(
+                post("/ws/dashboard")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .content(body)
+        )
+                .andExpect(status().isCreated())
+                .andReturn();
+        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        return id;
+    }
+
+    public long createWidget(long dashboardId) throws Exception {
+        Widget w1 = new Widget();
+        w1.setTitle("w1");
+        w1.setX(1);
+        w1.setY(2);
+        w1.setWidth(3);
+        w1.setHeight(4);
+        w1.setType(Constants.WIDGET_TYPE_CHART);
+        w1.setChartType("table");
+        w1.setDashboardId(dashboardId);
+        w1.setData("{}");
+        w1.setStyle("{}");
+        w1.setDrillThrough("[]");
+
+        String body = mapper.writeValueAsString(w1);
+
+        mvcResult = mvc.perform(
+                post("/ws/widget")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .content(body)
+        )
+                .andExpect(status().isCreated())
+                .andReturn();
+        long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+        return id;
     }
 }

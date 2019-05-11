@@ -1,9 +1,13 @@
 package com.shzlw.poli.model;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.shzlw.poli.util.RawStringDeserialzier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Dashboard {

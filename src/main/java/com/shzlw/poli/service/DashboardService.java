@@ -28,7 +28,7 @@ public class DashboardService {
      * Key: User id
      * Value: Dashboard
      */
-    private static Cache<Long, List<Dashboard>> USER_DASHBOARD_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<Long, List<Dashboard>> USER_DASHBOARD_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 

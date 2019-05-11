@@ -28,9 +28,13 @@ public class JdbcDataSourceDao {
         return jt.query(sql, new Object[] {}, new JdbcDataSourceInfoMapper());
     }
 
-    public List<JdbcDataSource> findAll() {
-        String sql = "SELECT id, name, connection_url, driver_class_name, username, password, ping FROM p_datasource";
-        return jt.query(sql, new Object[] {}, new JdbcDataSourceRowMapper());
+    public JdbcDataSource findByIdWithNoCredentials(long id) {
+        String sql = "SELECT id, name, connection_url, driver_class_name, username, ping FROM p_datasource WHERE id=?";
+        try {
+            return (JdbcDataSource) jt.queryForObject(sql, new Object[]{ id }, new JdbcDataSourceInfoMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public JdbcDataSource findById(long id) {

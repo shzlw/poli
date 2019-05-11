@@ -40,7 +40,8 @@ class App extends React.Component {
     axios.interceptors.response.use((response) => {
         return response;
       }, (error) => {
-        if(error.response.status === 401) { 
+        const statusCode = error.response.status;
+        if(statusCode === 401 || statusCode === 403) { 
           this.onLogout();
         }
         return Promise.reject(error);

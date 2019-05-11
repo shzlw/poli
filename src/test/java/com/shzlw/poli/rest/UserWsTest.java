@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserWsTest extends  AbstractWsTest {
+public class UserWsTest extends AbstractWsTest {
 
     @Test
-    public void testCreateDeveloperUser() throws Exception {
+    public void test() throws Exception {
 
     }
 }

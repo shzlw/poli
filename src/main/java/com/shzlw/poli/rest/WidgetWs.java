@@ -5,7 +5,10 @@ import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.service.DashboardService;
+import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -37,12 +41,18 @@ public class WidgetWs {
         return widgetDao.findById(id);
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetWs.class);
+
     @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByDashboardId(@PathVariable("id") long dashboardId,
                                                HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         List<Dashboard> dashboards = dashboardService.getDashboardsByUser(user);
+        if (dashboards.isEmpty()) {
+            // No dashboard found.
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
+        }
         boolean isFound = dashboards.stream().anyMatch(d -> d.getId() == dashboardId);
         if (isFound) {
             List<Widget> widgets = widgetDao.findByDashboardId(dashboardId);
