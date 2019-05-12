@@ -405,7 +405,7 @@ class User extends React.Component {
                 optionValue={'id'}
               />
               <button className="button" onClick={this.addUserGroup}>Add</button>
-              <div className="mt-3">
+              <div style={{marginTop: '8px'}}>
                 {userGroupItems}
               </div>
             </div>

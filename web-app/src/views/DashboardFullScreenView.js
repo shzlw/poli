@@ -10,10 +10,6 @@ class DashboardFullScreenView extends React.Component {
     }
   }
 
-  componentDidMount() {
-    console.log('DashboardFullScreenView', 'componentDidMount');
-  }
-
   render() {
     const pathname = this.props.location.pathname;
     return (

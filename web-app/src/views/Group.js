@@ -301,7 +301,7 @@ class Group extends React.Component {
                 optionValue={'id'}
               />
               <button className="button" onClick={this.addGroupDashboard}>Add</button>
-              <div className="mt-3">
+              <div style={{marginTop: '8px'}}>
                 {groupDashboardItems}
               </div>
             </div>

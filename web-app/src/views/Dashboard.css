@@ -77,10 +77,10 @@
 
 .dashboard-edit-widget-dialog {
   left: 50%;
-  width: 1000px;
+  width: 800px;
   top: 20px;
   bottom: 20px;
-  margin-left: -500px;
+  margin-left: -400px;
 }
 
 .dashboard-edit-filter-dialog {

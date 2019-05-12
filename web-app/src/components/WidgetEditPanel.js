@@ -347,9 +347,8 @@ class WidgetEditPanel extends React.Component {
 
       chartPreview = (
         <div>
-          <label><i class="fas fa-chart-pie"></i> Pie Chart</label>
-          <div>Count "value" by "key"</div>
-          <label>Aggr Key (string)</label>
+          <div>For example, count "value" by "key"</div>
+          <label>Key (text)</label>
           <Select
             name={'pieKey'}
             value={pieKey}
@@ -359,8 +358,7 @@ class WidgetEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-
-          <label>By Aggr Value (number)</label>
+          <label>Value (number)</label>
           <Select
             name={'pieValue'}
             value={pieValue}
@@ -369,7 +367,7 @@ class WidgetEditPanel extends React.Component {
             optionDisplay={'name'}
             optionValue={'name'}
           />
-          <button onClick={this.generateChart}>Generete Chart</button>
+          <button className="button" onClick={this.generateChart}>Generete Chart</button>
           <ReactEcharts 
             option={chartOption} 
             style={{height: '350px', width: '100%'}}  
@@ -413,17 +411,14 @@ class WidgetEditPanel extends React.Component {
 
     return (
       <div>
-        <button className="button" onClick={this.save}>Save</button>
-        <div className="row mt-10">
-          <div className="float-left">Type:</div>
-          <div className="float-left">
-            <SelectButtons
-              name={'type'}
-              value={type}
-              onChange={this.handleOptionChange}
-              selections={Constants.WIDGET_TYPES}
-            />
-          </div>
+        <button className="button" style={{width: '80px'}} onClick={this.save}>Save</button>
+        <div className="mt-10">
+          <SelectButtons
+            name={'type'}
+            value={type}
+            onChange={this.handleOptionChange}
+            selections={Constants.WIDGET_TYPES}
+          />
         </div>
         
         <div className="mt-10">
@@ -459,7 +454,7 @@ class WidgetEditPanel extends React.Component {
                 <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
                 { this.state.style.showBorder && (
                   <div>
-                    Border Color
+                    <label>Border Color</label>
                     <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
                   </div>
                 )}
@@ -469,12 +464,12 @@ class WidgetEditPanel extends React.Component {
                 { this.state.style.showTitle && (
                   <React.Fragment>
                     <div>
-                      Title Font Color
+                      <label>Title Font Color</label>
                       <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
                     </div>
 
                     <div>
-                      Title Background Color
+                      <label>Title Background Color</label>
                       <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
                     </div>
                   </React.Fragment>
@@ -482,7 +477,7 @@ class WidgetEditPanel extends React.Component {
                 <hr/>
 
                 <div>
-                  Content Background Color
+                  <label>Content Background Color</label>
                   <ColorPicker name={'contentBackgroundColor'} value={this.state.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
                 </div>
 
@@ -537,7 +532,7 @@ class WidgetEditPanel extends React.Component {
                     }}
                   />
 
-                  <div style={{margin: '5px 0px 5px 0px'}}>
+                  <div style={{margin: '5px 0px 8px 0px'}}>
                     <button className="button" onClick={this.runQuery}>Run Query</button>
                   </div>
 
@@ -548,7 +543,7 @@ class WidgetEditPanel extends React.Component {
                     error={error}
                   />
 
-                  <label style={{marginTop: '5px'}}>Columns Mapping</label>
+                  <label style={{marginTop: '8px'}}>Columns Mapping</label>
                   <div>
                     {columnItems}
                   </div>
@@ -596,7 +591,7 @@ class WidgetEditPanel extends React.Component {
                     optionValue={'id'}
                   />
                   <button className="button" onClick={this.addDrillThrough}>Add</button>
-                  <div class="mt-3">
+                  <div style={{marginTop: '8px'}}>
                     {drillItems}
                   </div>
                 </div>

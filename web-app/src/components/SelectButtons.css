@@ -6,23 +6,28 @@
 
 .selectbuttons-container .select-button {
   float: left;
-  padding: 5px 8px;
-  border: 2px solid black;
   margin-right: 5px;
-  min-width: 80px;
+  min-width: 120px;
   text-align: center;
   border-radius: 4px;
+  font-weight: 700;
+  height: 36px;
+  line-height: 36px;
   cursor: pointer;
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 0;
+  outline: none;
 }
 
 .selectbuttons-container .select-button:hover {
-  background-color: black;
+  background-color: #0065FF;
   color: white;
 }
 
 
 .selectbuttons-container .select-button-active {
-  background-color: blue;
+  background-color: #000000;
   color: white;
 }
 

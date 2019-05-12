@@ -365,7 +365,7 @@ class DashboardEditView extends React.Component {
     const controlButtons = (
       <React.Fragment>
         <div className="inline-block">
-          <div className="inline-block mr-3">
+          <div className="inline-block" style={{marginRight: '8px'}}>
             Last refreshed: {readableLastRefreshed}
           </div>
           { autoRefreshStatus === 'OFF' && (
