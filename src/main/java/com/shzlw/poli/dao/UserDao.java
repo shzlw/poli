@@ -65,6 +65,17 @@ public class UserDao {
         }
     }
 
+    public User findByApiKey(String apiKey) {
+        String sql = "SELECT id, username, name, sys_role, session_key "
+                    + "FROM p_user WHERE api_key=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, new UserInfoWithSessionRowMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public User findAccount(long id) {
         String sql = "SELECT id, username, name, sys_role, api_key "
                     + "FROM p_user WHERE id=?";
@@ -198,6 +209,19 @@ public class UserDao {
             r.setUsername(rs.getString(User.USERNAME));
             r.setName(rs.getString(User.NAME));
             r.setSysRole(rs.getString(User.SYS_ROLE));
+            return r;
+        }
+    }
+
+    private static class UserInfoWithSessionRowMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int i) throws SQLException {
+            User r = new User();
+            r.setId(rs.getLong(User.ID));
+            r.setUsername(rs.getString(User.USERNAME));
+            r.setName(rs.getString(User.NAME));
+            r.setSysRole(rs.getString(User.SYS_ROLE));
+            r.setSessionKey(rs.getString(User.SESSION_KEY));
             return r;
         }
     }

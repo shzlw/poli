@@ -37,23 +37,29 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.interceptors.response.use((response) => {
-        return response;
-      }, (error) => {
-        const statusCode = error.response.status;
-        if(statusCode === 401 || statusCode === 403) { 
-          this.onLogout();
-        }
-        return Promise.reject(error);
-    });
+    this.configAxiosInterceptors();
 
     const pathname = this.props.location.pathname;
     const search = this.props.location.search;
+    const currentPath = pathname + search;
 
     const params = new URLSearchParams(search);
     const apiKey = params.get('$apiKey');
-
-    let currentPath = pathname + search;
+    // Check if the page is using api key to authenticate first.
+    if (apiKey != null) {
+      const loginRequest = {
+        apiKey: apiKey
+      };
+      this.setState({
+        isAuthorizing: true
+      }, () => {
+        axios.post('/auth/login/apikey', loginRequest)
+          .then(res => {
+            this.handleLoginResponse(res.data, currentPath);
+          });
+      });
+      return;
+    }
 
     const {
       sysRole
@@ -70,19 +76,22 @@ class App extends React.Component {
       }, () => {
         axios.post('/auth/login/cookie')
           .then(res => {
-            const loginResponse = res.data;
-            if (loginResponse.error) {
-                this.setState({
-                  sysRole: '',
-                  isAuthorizing: false
-                }, () => {
-                  this.props.history.push('/login');
-                });
-              } else {
-                this.onLoginSuccess(loginResponse, currentPath);
-              }
+            this.handleLoginResponse(res.data, currentPath);
           });
       });
+    }
+  }
+
+  handleLoginResponse = (loginResponse, currentPath) => {
+    if (loginResponse.error) {
+      this.setState({
+        sysRole: '',
+        isAuthorizing: false
+      }, () => {
+        this.props.history.push('/login');
+      });
+    } else {
+      this.onLoginSuccess(loginResponse, currentPath);
     }
   }
 
@@ -111,6 +120,18 @@ class App extends React.Component {
       isAuthorizing: false
     }, () => {
       this.props.history.push('/login');
+    });
+  }
+
+  configAxiosInterceptors = () => {
+    axios.interceptors.response.use((response) => {
+        return response;
+      }, (error) => {
+        const statusCode = error.response.status;
+        if(statusCode === 401 || statusCode === 403) { 
+          this.onLogout();
+        }
+        return Promise.reject(error);
     });
   }
    

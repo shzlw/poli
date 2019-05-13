@@ -28,6 +28,7 @@ public class AuthWs {
 
     public static final String INVALID_USERNAME_PASSWORD = "Invalid username or password.";
     public static final String USE_MORE_CHARACTERS = "Use 8 or more characters.";
+    public static final String INVALID_API_KEY = "Invalid api key.";
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
@@ -47,7 +48,7 @@ public class AuthWs {
         }
 
         String oldSessionKey = user.getSessionKey();
-        String newSessionKey = Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
+        String newSessionKey = getNewSessionKey();
         userDao.updateSessionKey(user.getId(), newSessionKey);
         userService.newOrUpdateUser(user, oldSessionKey, newSessionKey);
 
@@ -72,6 +73,32 @@ public class AuthWs {
         }
 
         userService.newOrUpdateUser(user, user.getSessionKey(), sessionKey);
+        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
+    }
+
+    @RequestMapping(value="/login/apikey", method= RequestMethod.POST)
+    @Transactional
+    public LoginResponse loginByApiKey(@RequestBody User loginInfo,
+                                       HttpServletResponse response) {
+        String apiKey = loginInfo.getApiKey();
+        User user = userDao.findByApiKey(apiKey);
+        if (user == null) {
+            return LoginResponse.ofError(INVALID_API_KEY);
+        }
+
+        // Reuse the old session key if there is one.
+        String sessionKey = user.getSessionKey();
+        if (sessionKey == null) {
+            sessionKey = getNewSessionKey();
+            userDao.updateSessionKey(user.getId(), sessionKey);
+            userService.newOrUpdateUser(user, null, sessionKey);
+        }
+
+        Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, sessionKey);
+        sessionKeyCookie.setMaxAge(Constants.COOKIE_TIMEOUT);
+        sessionKeyCookie.setPath("/");
+        response.addCookie(sessionKeyCookie);
+
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
 
@@ -115,5 +142,9 @@ public class AuthWs {
         String apiKey = Constants.API_KEY_PREFIX + PasswordUtil.getUniqueId();
         userDao.updateApiKey(user.getId(), apiKey);
         return new ResponseEntity<>(apiKey, HttpStatus.OK);
+    }
+
+    private static String getNewSessionKey() {
+        return Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
     }
 }
