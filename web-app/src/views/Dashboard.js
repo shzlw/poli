@@ -197,7 +197,7 @@ class Dashboard extends Component {
               value={this.state.name}
               onChange={this.handleInputChange} 
             />
-            <button className="button" onClick={this.save}>Save</button>
+            <button className="button confirm-button" onClick={this.save}>Save</button>
           </div>
         </Modal>
 

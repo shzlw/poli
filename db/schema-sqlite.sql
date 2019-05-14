@@ -1,6 +1,4 @@
 
-PRAGMA table_info(table_name);
-
 DROP TABLE IF EXISTS p_group_dashboard;
 DROP TABLE IF EXISTS p_widget;
 DROP TABLE IF EXISTS p_dashboard;

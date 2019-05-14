@@ -298,3 +298,19 @@ hr {
 .full-width {
   width: 100%;
 }
+
+.confirm-button {
+  background-color: #36B37E;
+}
+
+.confirm-button:hover {
+  background-color: #57D9A3;
+}
+
+.delete-button {
+  background-color: #FF5630;
+}
+
+.delete-button:hover {
+  background-color: #FF7452;
+}

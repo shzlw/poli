@@ -411,7 +411,7 @@ class User extends React.Component {
             </div>
 
           </div>
-          <button className="button mt-3" onClick={this.save}>Save</button>
+          <button className="button mt-3 confirm-button" onClick={this.save}>Save</button>
         </Modal>
 
         <Modal 
@@ -422,7 +422,7 @@ class User extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {objectToDelete.name}?
           </div>
-          <button className="button" onClick={this.confirmDelete}>Delete</button>
+          <button className="button delete-button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
         
       </div>

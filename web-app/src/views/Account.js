@@ -141,7 +141,7 @@ class Account extends React.Component {
           )}
 
           <br/>
-          <button className="button mt-10" onClick={this.save}>Save</button>
+          <button className="button mt-10 confirm-button" onClick={this.save}>Save</button>
         </div>
       </div>
     )

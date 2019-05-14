@@ -36,3 +36,10 @@
   color: #FF5630;
   font-weight: bold;
 }
+
+.version-number {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 12px;
+}

@@ -57,11 +57,9 @@ class DashboardEditView extends React.Component {
     }
     const dashboardId = id !== undefined ? id : null;
 
-    console.log('DashboardEditView - componentDidMount', dashboardId);
-
     const url = this.props.location.search;
-    const params = new URLSearchParams(url);
-    const fromDashboard = params.get('$fromDashboard');
+    const searchParams = new URLSearchParams(url);
+    const fromDashboard = searchParams.get('$fromDashboard');
     
     const widgetViewWidth = this.getPageWidth();
     this.setState({
@@ -252,7 +250,7 @@ class DashboardEditView extends React.Component {
   }
 
   applyFilters = () => {
-    this.widgetViewPanel.current.queryCharts();
+    this.widgetViewPanel.current.queryCharts(this.getUrlFilterParams());
     this.updateLastRefreshed();
   }
 
@@ -347,6 +345,23 @@ class DashboardEditView extends React.Component {
       objectToDelete: {},
       showConfirmDeletionPanel: false
     });
+  }
+
+  getUrlFilterParams = () => {
+    const urlFilterParams = [];
+    const url = this.props.location.search;
+    const searchParams = new URLSearchParams(url);
+    for(let pair of searchParams.entries()) {
+      const key = pair[0];
+      const value = pair[1];
+      const filterParam = {
+        type: Constants.SINGLE_VALUE,
+        param: key,
+        value: value
+      };
+      urlFilterParams.push(filterParam);
+    }
+    return urlFilterParams;
   }
 
   render() {
@@ -503,7 +518,7 @@ class DashboardEditView extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {this.state.objectToDelete.name}?
           </div>
-          <button className="button" onClick={this.confirmDelete}>Delete</button>
+          <button className="button delete-button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
 
       </React.Fragment>

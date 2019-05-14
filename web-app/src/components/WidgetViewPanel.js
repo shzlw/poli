@@ -29,7 +29,6 @@ class WidgetViewPanel extends React.Component {
   }
 
   componentDidMount() {
-    console.log('WidgetViewPanel componentDidMount');
   }
 
   resizeGrid = (viewWidth) => {
@@ -96,8 +95,9 @@ class WidgetViewPanel extends React.Component {
       });
   }
  
-  queryCharts() {
-    const filterParams = this.getFilterParams();
+  queryCharts(urlFilterParams = []) {
+    // Append the url filter params to the existing filer params if it exists.
+    const filterParams = this.getFilterParams().concat(urlFilterParams);
     const { widgets } = this.state;
     for (let i = 0; i < widgets.length; i++) {
       const {

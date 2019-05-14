@@ -12,11 +12,20 @@ class Login extends React.Component {
     this.state = {
       errorMsg: '',
       username: '',
-      password: ''
+      password: '',
+      version: ''
     };
   }
 
   componentDidMount() {
+    axios.get('/info/version')
+      .then(res => {
+        const version = res.data;
+        this.setState({
+          version: version
+        });
+      });
+
     const { sysRole } = this.props;
     let isAuthenticated = false;
     if (sysRole) {
@@ -108,9 +117,12 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} 
                 onKeyDown={this.handleKeyPress} 
               />
-              <button className="button login-button" onClick={this.login}>Login</button>
+              <button className="button login-button confirm-button" onClick={this.login}>Login</button>
             </div>
           </div>
+        </div>
+        <div className="version-number">
+          Version {this.state.version}
         </div>
       </div>
     )
