@@ -244,7 +244,7 @@ class Group extends React.Component {
           groupDashboardItems.push(
             (
               <div key={dashboardId} className="row table-row">
-                <div className="float-left ellipsis">{dashboards[j].name}</div>
+                <div className="float-left ellipsis" style={{width: '180px'}}>{dashboards[j].name}</div>
                 <button className="button table-row-button float-right" onClick={() => this.removeGroupDashboard(dashboardId)}>
                   <FontAwesomeIcon icon="trash-alt" />
                 </button>
@@ -317,7 +317,7 @@ class Group extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {objectToDelete.name}?
           </div>
-          <button className="button button-red" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
         </Modal>
         
       </div>

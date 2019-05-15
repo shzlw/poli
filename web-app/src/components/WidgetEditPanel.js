@@ -393,7 +393,7 @@ class WidgetEditPanel extends React.Component {
 
     const drillItems = drillThrough.map(drill =>
       <div key={drill.columnName} className="row table-row">
-        <div className="float-left ellipsis">Column: {drill.columnName}, Dashboard: {drill.dashboardId}</div>
+        <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName}, Dashboard: {drill.dashboardId}</div>
         <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
           <FontAwesomeIcon icon="trash-alt" />
         </button>
@@ -435,12 +435,6 @@ class WidgetEditPanel extends React.Component {
                 <hr/>
 
                 <label>Z Index</label>
-                <input 
-                  type="number" 
-                  name="zIndex" 
-                  value={this.state.style.zIndex}
-                  onChange={(event) => this.onStyleValueChange('zIndex', event.target.value)} 
-                />
                 <InputRange
                   name="zIndex" 
                   value={this.state.style.zIndex}

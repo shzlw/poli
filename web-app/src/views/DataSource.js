@@ -331,7 +331,7 @@ class DataSource extends Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {objectToDelete.name}?
           </div>
-          <button className="button button-red" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
         </Modal>
       </div>
     );

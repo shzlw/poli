@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import './Login.css';
+import Checkbox from '../components/Checkbox';
 
 class Login extends React.Component {
 
@@ -13,7 +14,8 @@ class Login extends React.Component {
       errorMsg: '',
       username: '',
       password: '',
-      version: ''
+      version: '',
+      rememberMe: false
     };
   }
 
@@ -26,20 +28,24 @@ class Login extends React.Component {
         });
       });
 
-    const { sysRole } = this.props;
-    let isAuthenticated = false;
-    if (sysRole) {
-      isAuthenticated = true;
+    const rememberMeConfig = localStorage.getItem('rememberMe');
+    let rememberMe = false;
+    if (rememberMeConfig && rememberMeConfig === 'yes') {
+      rememberMe = true;
     }
+    this.setState({
+      rememberMe: rememberMe
+    });
+  }
 
-    if (!isAuthenticated) {
-      axios.post('/auth/login/cookie')
-        .then(res => {
-          const loginResponse = res.data;
-          if (!loginResponse.error) {
-            this.props.onLoginSuccess(loginResponse);
-          }
-        });
+  handleCheckBoxChange = (name, isChecked) => {
+    this.setState({
+      [name]: isChecked
+    });
+
+    if (name === 'rememberMe') {
+      const value = isChecked ? 'yes' : 'no';
+      localStorage.setItem('rememberMe', value);
     }
   }
 
@@ -117,6 +123,9 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} 
                 onKeyDown={this.handleKeyPress} 
               />
+              <div>
+                <Checkbox name="rememberMe" value="Remember me" checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} />
+              </div>
               <button className="button login-button button-green" onClick={this.login}>Login</button>
             </div>
           </div>

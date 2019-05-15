@@ -7,7 +7,7 @@ import {
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -23,7 +23,7 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare
 );
 
 class App extends React.Component {
@@ -64,6 +64,12 @@ class App extends React.Component {
       return;
     }
 
+    const rememberMeConfig = localStorage.getItem('rememberMe');
+    let rememberMe = false;
+    if (rememberMeConfig && rememberMeConfig === 'yes') {
+      rememberMe = true;
+    }
+
     const {
       sysRole
     } = this.state;
@@ -73,7 +79,7 @@ class App extends React.Component {
       isAuthenticated = true;
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && rememberMe) {
       this.setState({
         isAuthorizing: true
       }, () => {
@@ -98,7 +104,7 @@ class App extends React.Component {
     }
   }
 
-  onLoginSuccess = (loginResponse = {}, pathname = null) => {
+  onLoginSuccess = (loginResponse = {}, pathname = '/') => {
     if (loginResponse.isTempPassword) {
       this.props.history.push('/changepassword');
     } else {
@@ -108,7 +114,7 @@ class App extends React.Component {
         isAuthorizing: false
       }, () => {
         let directUrl = '/workspace/dashboard';
-        if (pathname) {
+        if (pathname !== '/' && pathname !== '/login') {
           directUrl = pathname;
         }
         this.props.history.push(directUrl);
@@ -162,8 +168,8 @@ class App extends React.Component {
     return (
       <div className="app">
         <Switch>
-          <Route exact path="/" render={() => <Login sysRole={sysRole} onLoginSuccess={this.onLoginSuccess} />} />
-          <Route path="/login" render={() => <Login sysRole={sysRole} onLoginSuccess={this.onLoginSuccess} />} />
+          <Route exact path="/" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
+          <Route path="/login" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="/changepassword" component={ChangeTempPassword} />
           <PrivateRoute 
             authenticated={isAuthenticated} 

@@ -41,7 +41,8 @@ body,
 .form-panel input,
 .form-panel textarea,
 .form-panel select,
-.form-pane ul {
+.form-panel ul,
+.form-panel .info-value {
   margin-bottom: 8px;
 }
 
@@ -143,7 +144,9 @@ body,
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
 }
 
-input,
+input[type=text],
+input[type=password],
+input[type=number],
 select,
 textarea,
 .table-row {
@@ -164,11 +167,15 @@ textarea {
   resize: vertical;
 }
 
-input::placeholder {
+input[type=text]::placeholder,
+input[type=password]:placeholder,
+input[type=number]:placeholder {
   color: #aab7c4;
 }
 
-input:focus {
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=number]:focus {
   border: 2px solid #0065FF; 
 }
 
@@ -212,7 +219,7 @@ ml-5 {
 
 .table-row {
   padding: 3px 5px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .table-row-button {

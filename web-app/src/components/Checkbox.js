@@ -1,5 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Checkbox.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class Checkbox extends React.Component {
   constructor(props) {
@@ -7,6 +11,13 @@ class Checkbox extends React.Component {
     this.state = { 
     };
   }
+
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    checked: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired
+  };
 
   toggle = () => {
     const {
@@ -23,16 +34,14 @@ class Checkbox extends React.Component {
       checked
     } = this.props;
 
-    const checkmarkBoxBgColor = checked ? '#000000' : '#FFFFFF';
-    const checkmarkBoxStyle = {
-      backgroundColor: checkmarkBoxBgColor
-    };
-
     return (
-      <div className="checkbox-container" onClick={this.toggle}>
-        <div className="checkbox-checkmark">
-          <div className="checkbox-checkmark-box" style={checkmarkBoxStyle}>
-          </div>
+      <div className="checkbox-container">
+        <div className="checkbox-checkmark" onClick={this.toggle}>
+          { checked ? (
+            <FontAwesomeIcon icon="check-square" />
+          ) : (
+            <FontAwesomeIcon icon="square" />
+          )}
         </div>
         <div className="checkbox-label">{value}</div>
       </div>

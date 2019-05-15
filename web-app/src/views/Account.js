@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import Toast from '../components/Toast';
-import Modals from '../components/Modal';
+import Modal from '../components/Modal';
 
 class Account extends React.Component {
 
@@ -53,6 +53,9 @@ class Account extends React.Component {
           apiKey: apiKey
         });
       });
+    this.setState({
+      showGenerateApiKeyPanel: false
+    })
   }
 
   save = () => {
@@ -105,7 +108,7 @@ class Account extends React.Component {
       <div className="full-page-content">
         <div className="form-panel" style={{width: '400px'}}>   
           <label>Username</label>
-          <div>{username}</div>
+          <div className="info-value">{username}</div>
 
           <label>Name</label>
           <input 
@@ -115,18 +118,18 @@ class Account extends React.Component {
             onChange={this.handleInputChange} />
 
           <label>System Role</label>
-          <div>{sysRole}</div>
+          <div className="info-value">{sysRole}</div>
 
           <label>API Key</label>
-          <div>{apiKey}</div>
+          <div className="info-value">{apiKey}</div>
           <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>Generate new API Key</button>
-          <br/>
+          
+          <hr />
 
           <button className="button mt-3" onClick={this.toggleUpdatePassword}>Update password</button>
           {
             showUpdatePassword && (
-              <React.Fragment>
-                <br/>
+              <div style={{marginTop: '8px'}}>
                 <label>Password</label>
                 <input 
                   type="password" 
@@ -139,10 +142,10 @@ class Account extends React.Component {
                   name="confirmedPassword" 
                   value={this.state.confirmedPassword}
                   onChange={this.handleInputChange} />
-              </React.Fragment>
+              </div>
           )}
 
-          <br/>
+          <hr />
           <button className="button mt-10 button-green" onClick={this.save}>Save</button>
         </div>
 
@@ -154,7 +157,7 @@ class Account extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to generate a new Api Key?
           </div>
-          <button className="button button-red" onClick={this.generateApiKey}>Confirm</button>
+          <button className="button button-red full-width" onClick={this.generateApiKey}>Confirm</button>
         </Modal>
       </div>
     )
