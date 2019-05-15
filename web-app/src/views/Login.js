@@ -117,7 +117,7 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} 
                 onKeyDown={this.handleKeyPress} 
               />
-              <button className="button login-button confirm-button" onClick={this.login}>Login</button>
+              <button className="button login-button button-green" onClick={this.login}>Login</button>
             </div>
           </div>
         </div>

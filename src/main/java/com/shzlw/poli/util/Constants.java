@@ -41,4 +41,6 @@ public final class Constants {
     public static final String HTTP_METHOD_POST = "POST";
     public static final String HTTP_METHOD_PUT = "PUT";
     public static final String HTTP_METHOD_DELETE = "DELETE";
+
+    public static final String HTTP_HEADER_API_KEY = "Poli-Api-Key";
 }

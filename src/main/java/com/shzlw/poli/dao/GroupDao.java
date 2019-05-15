@@ -4,6 +4,7 @@ import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -57,10 +58,18 @@ public class GroupDao {
 
     public void insertGroupDashboards(long groupId, List<Long> groupDashboards) {
         String sql = "INSERT INTO p_group_dashboard(group_id, dashboard_id) VALUES(?, ?)";
-        // TODO: batch
-        for (Long dashboardId: groupDashboards) {
-            jt.update(sql, new Object[]{ groupId, dashboardId });
-        }
+        jt.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, groupId);
+                ps.setLong(2, groupDashboards.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return groupDashboards.size();
+            }
+        });
     }
 
     public int updateGroup(Group group) {

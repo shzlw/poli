@@ -299,18 +299,22 @@ hr {
   width: 100%;
 }
 
-.confirm-button {
+.button-green {
   background-color: #36B37E;
+  color: #FFFFFF;
 }
 
-.confirm-button:hover {
+.button-green:hover {
   background-color: #57D9A3;
+  color: #FFFFFF;
 }
 
-.delete-button {
+.button-red {
   background-color: #FF5630;
+  color: #FFFFFF;
 }
 
-.delete-button:hover {
+.button-red:hover {
   background-color: #FF7452;
+  color: #FFFFFF;
 }

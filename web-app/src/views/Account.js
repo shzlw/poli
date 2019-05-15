@@ -2,12 +2,14 @@
 import React from 'react';
 import axios from 'axios';
 import Toast from '../components/Toast';
+import Modals from '../components/Modal';
 
 class Account extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      showGenerateApiKeyPanel: false,
       showUpdatePassword: false,
       id: null,
       username: '',
@@ -117,7 +119,7 @@ class Account extends React.Component {
 
           <label>API Key</label>
           <div>{apiKey}</div>
-          <button className="button mt-10" onClick={this.generateApiKey}>Generate new API Key</button>
+          <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>Generate new API Key</button>
           <br/>
 
           <button className="button mt-3" onClick={this.toggleUpdatePassword}>Update password</button>
@@ -141,8 +143,19 @@ class Account extends React.Component {
           )}
 
           <br/>
-          <button className="button mt-10 confirm-button" onClick={this.save}>Save</button>
+          <button className="button mt-10 button-green" onClick={this.save}>Save</button>
         </div>
+
+        <Modal 
+          show={this.state.showGenerateApiKeyPanel}
+          onClose={() => this.setState({ showGenerateApiKeyPanel: false })}
+          modalClass={'small-modal-panel'}
+          title={'Confirm'} >
+          <div className="confirm-deletion-panel">
+            Are you sure you want to generate a new Api Key?
+          </div>
+          <button className="button button-red" onClick={this.generateApiKey}>Confirm</button>
+        </Modal>
       </div>
     )
   }

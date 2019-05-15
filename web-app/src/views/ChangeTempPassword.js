@@ -96,7 +96,7 @@ class ChangeTempPassword extends React.Component {
                 name="confirmedPassword" 
                 value={this.state.confirmedPassword}
                 onChange={this.handleInputChange} />
-              <button className="button login-button confirm-button" onClick={this.changePassword}>Confirm</button>
+              <button className="button login-button button-green" onClick={this.changePassword}>Confirm</button>
             </div>
           </div>
         </div>

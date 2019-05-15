@@ -78,26 +78,12 @@ public class AuthWs {
 
     @RequestMapping(value="/login/apikey", method= RequestMethod.POST)
     @Transactional
-    public LoginResponse loginByApiKey(@RequestBody User loginInfo,
-                                       HttpServletResponse response) {
+    public LoginResponse loginByApiKey(@RequestBody User loginInfo) {
         String apiKey = loginInfo.getApiKey();
         User user = userDao.findByApiKey(apiKey);
         if (user == null) {
             return LoginResponse.ofError(INVALID_API_KEY);
         }
-
-        // Reuse the old session key if there is one.
-        String sessionKey = user.getSessionKey();
-        if (sessionKey == null) {
-            sessionKey = getNewSessionKey();
-            userDao.updateSessionKey(user.getId(), sessionKey);
-            userService.newOrUpdateUser(user, null, sessionKey);
-        }
-
-        Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, sessionKey);
-        sessionKeyCookie.setMaxAge(Constants.COOKIE_TIMEOUT);
-        sessionKeyCookie.setPath("/");
-        response.addCookie(sessionKeyCookie);
 
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }
@@ -107,7 +93,7 @@ public class AuthWs {
     public void logout(@CookieValue(Constants.SESSION_KEY) String sessionKey, HttpServletResponse response) throws IOException {
         User user = userDao.findBySessionKey(sessionKey);
         if (user != null) {
-            userService.invalidateCache(sessionKey);
+            userService.invalidateSessionUserCache(sessionKey);
             userDao.updateSessionKey(user.getId(), null);
 
             Cookie sessionKeyCookie = new Cookie(Constants.SESSION_KEY, "");
@@ -138,7 +124,8 @@ public class AuthWs {
     @RequestMapping(value="/generate-apikey", method= RequestMethod.GET)
     @Transactional
     public ResponseEntity<String> generateApiKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
-        User user = userDao.findBySessionKey(sessionKey);
+        User user = userDao.findAccountBySessionKey(sessionKey);
+        userService.invalidateApiKeyUserCache(user.getApiKey());
         String apiKey = Constants.API_KEY_PREFIX + PasswordUtil.getUniqueId();
         userDao.updateApiKey(user.getId(), apiKey);
         return new ResponseEntity<>(apiKey, HttpStatus.OK);

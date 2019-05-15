@@ -47,6 +47,9 @@ class App extends React.Component {
     const apiKey = params.get('$apiKey');
     // Check if the page is using api key to authenticate first.
     if (apiKey != null) {
+      axios.defaults.headers.common = {
+        "Poli-Api-Key": apiKey
+      };
       const loginRequest = {
         apiKey: apiKey
       };

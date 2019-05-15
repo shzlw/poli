@@ -2,6 +2,8 @@ package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.model.Group;
+import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
@@ -15,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -119,6 +122,24 @@ public class DashboardWsTest extends AbstractWsTest {
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
         Assert.assertEquals(Constants.EMPTY_JSON_ARRAY, responeText);
+    }
+
+    @Test
+    public void testFindAllByViewer() throws Exception {
+        long d1 = createDashboard("d1");
+        long d2 = createDashboard("d2");
+        Group g1 = createGroup("g1", Arrays.asList(d1));
+        User u1 = createViewer("u1", Arrays.asList(g1.getId()));
+        mvcResult = mvc.perform(
+                get("/ws/dashboard")
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
+        )
+                .andReturn();
+        responeText = mvcResult.getResponse().getContentAsString();
+        List<Dashboard> dashboards = mapper.readValue(responeText, new TypeReference<List<Dashboard>>() {});
+        Assert.assertEquals(1, dashboards.size());
+        Dashboard saved = dashboards.get(0);
+        Assert.assertEquals(d1, saved.getId());
     }
 
     private String findDashboard(long id) throws Exception {

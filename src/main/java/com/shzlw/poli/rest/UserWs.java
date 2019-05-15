@@ -79,7 +79,7 @@ public class UserWs {
 
         long userId = user.getId();
         User savedUser = userDao.findById(userId);
-        userService.invalidateCache(savedUser.getSessionKey());
+        userService.invalidateSessionUserCache(savedUser.getSessionKey());
 
         userDao.updateUser(user);
         userDao.deleteUserGroups(userId);
@@ -97,7 +97,7 @@ public class UserWs {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
 
-        userService.invalidateCache(savedUser.getSessionKey());
+        userService.invalidateSessionUserCache(savedUser.getSessionKey());
 
         userDao.deleteUserGroups(userId);
         userDao.deleteUser(userId);
@@ -123,7 +123,7 @@ public class UserWs {
     public void updateUserBySessionKey(@RequestBody User user,
                                        HttpServletRequest request) {
         User myUser = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        userService.invalidateCache(myUser.getSessionKey());
+        userService.invalidateSessionUserCache(myUser.getSessionKey());
         userDao.updateUserAccount(myUser.getId(), user.getName(), user.getPassword());
     }
 

@@ -1,5 +1,6 @@
 package com.shzlw.poli.filter;
 
+import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
@@ -33,11 +34,20 @@ public class AuthFilter implements Filter {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;
             if (sessionKey != null) {
-                User user = userService.getUser(sessionKey);
+                User user = userService.getUserBySessionKey(sessionKey);
                 user.setSessionKey(sessionKey);
-                httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                 if (user != null) {
+                    httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                     sysRole = user.getSysRole();
+                }
+            } else {
+                String apiKey = httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY);
+                if (apiKey != null) {
+                    User user = userService.getUserByApiKey(apiKey);
+                    if (user != null) {
+                        httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
+                        sysRole = user.getSysRole();
+                    }
                 }
             }
 

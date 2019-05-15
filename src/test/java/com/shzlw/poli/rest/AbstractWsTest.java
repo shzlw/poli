@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.model.Group;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
@@ -14,6 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -174,5 +178,45 @@ public abstract class AbstractWsTest {
                 .andReturn();
         long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
         return id;
+    }
+
+    public Group createGroup(String groupName, List<Long> dashboardIds) throws Exception {
+        Group g1 = new Group();
+        g1.setName(groupName);
+        g1.setGroupDashboards(dashboardIds);
+        String body = mapper.writeValueAsString(g1);
+
+        mvcResult = mvc.perform(
+                post("/ws/group")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .content(body)
+        )
+                .andExpect(status().isCreated())
+                .andReturn();
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
+        g1.setId(id);
+        return g1;
+    }
+
+    public User createViewer(String username, List<Long> userGroups) throws Exception {
+        User u1 = new User();
+        u1.setUsername(username);
+        u1.setName("n1");
+        u1.setTempPassword("t1");
+        u1.setUserGroups(userGroups);
+        u1.setSysRole(Constants.SYS_ROLE_VIEWER);
+        String body = mapper.writeValueAsString(u1);
+        mvcResult = this.mvc.perform(
+                post("/ws/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .content(body)
+        )
+                .andExpect(status().isCreated())
+                .andReturn();
+        long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
+        u1.setId(id);
+        return u1;
     }
 }

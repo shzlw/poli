@@ -5,6 +5,7 @@ import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -58,7 +60,7 @@ public class UserDao {
         String sql = "SELECT id, username, name, sys_role "
                     + "FROM p_user WHERE session_key=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{sessionKey}, new UserInfoRowMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{ sessionKey }, new UserInfoRowMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -69,7 +71,15 @@ public class UserDao {
         String sql = "SELECT id, username, name, sys_role, session_key "
                     + "FROM p_user WHERE api_key=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, new UserInfoWithSessionRowMapper());
+            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, (rs, i) -> {
+                User r = new User();
+                r.setId(rs.getLong(User.ID));
+                r.setUsername(rs.getString(User.USERNAME));
+                r.setName(rs.getString(User.NAME));
+                r.setSysRole(rs.getString(User.SYS_ROLE));
+                r.setSessionKey(rs.getString(User.SESSION_KEY));
+                return r;
+            });
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -81,6 +91,17 @@ public class UserDao {
                     + "FROM p_user WHERE id=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{ id }, new UserAccountMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public User findAccountBySessionKey(String sessionKey) {
+        String sql = "SELECT id, username, name, sys_role, api_key "
+                    + "FROM p_user WHERE session_key=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{ sessionKey }, new UserAccountMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -135,7 +156,7 @@ public class UserDao {
     public long insertUser(String username, String name, String rawTempPassword, String sysRole) {
         String encryptedPassword = PasswordUtil.getMd5Hash(rawTempPassword);
         String sql = "INSERT INTO p_user(username, name, temp_password, sys_role) "
-                + "VALUES(:username, :name, :temp_password, :sys_role)";
+                    + "VALUES(:username, :name, :temp_password, :sys_role)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(User.USERNAME, username);
         params.addValue(User.NAME, name);
@@ -149,10 +170,18 @@ public class UserDao {
 
     public void insertUserGroups(long userId, List<Long> userGroups) {
         String sql = "INSERT INTO p_group_user(group_id, user_id) VALUES(?, ?)";
-        // TODO: batch
-        for (Long groupId: userGroups) {
-            jt.update(sql, new Object[]{ groupId, userId });
-        }
+        jt.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, userGroups.get(i));
+                ps.setLong(2, userId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return userGroups.size();
+            }
+        });
     }
 
     public long updateUser(User user) {
@@ -209,19 +238,6 @@ public class UserDao {
             r.setUsername(rs.getString(User.USERNAME));
             r.setName(rs.getString(User.NAME));
             r.setSysRole(rs.getString(User.SYS_ROLE));
-            return r;
-        }
-    }
-
-    private static class UserInfoWithSessionRowMapper implements RowMapper<User> {
-        @Override
-        public User mapRow(ResultSet rs, int i) throws SQLException {
-            User r = new User();
-            r.setId(rs.getLong(User.ID));
-            r.setUsername(rs.getString(User.USERNAME));
-            r.setName(rs.getString(User.NAME));
-            r.setSysRole(rs.getString(User.SYS_ROLE));
-            r.setSessionKey(rs.getString(User.SESSION_KEY));
             return r;
         }
     }

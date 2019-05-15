@@ -12,8 +12,8 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +45,9 @@ public class AuthFilterTest {
 
     @Mock
     User user;
+
+    @Mock
+    FilterConfig filterConfig;
 
     @Test
     public void testAccessNotProtectedResource() throws IOException, ServletException {
@@ -90,7 +93,7 @@ public class AuthFilterTest {
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
-        Mockito.when(userService.getUser(sessionKey)).thenReturn(user);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn("invalid role");
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -107,7 +110,7 @@ public class AuthFilterTest {
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
-        Mockito.when(userService.getUser(sessionKey)).thenReturn(user);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -124,7 +127,7 @@ public class AuthFilterTest {
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
-        Mockito.when(userService.getUser(sessionKey)).thenReturn(user);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_DEVELOPER);
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -141,7 +144,7 @@ public class AuthFilterTest {
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
-        Mockito.when(userService.getUser(sessionKey)).thenReturn(user);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_VIEWER);
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -166,7 +169,7 @@ public class AuthFilterTest {
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
-        Mockito.when(userService.getUser(sessionKey)).thenReturn(user);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_VIEWER);
 
         for (ViewerAccessRule rule : viewerAccessRules) {
@@ -177,6 +180,35 @@ public class AuthFilterTest {
         }
 
         Mockito.verify(chain, Mockito.times(viewerAccessRules.size())).doFilter(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void testApiKeyAccess() throws IOException, ServletException {
+        Cookie[] cookies = new Cookie[1];
+        cookies[0] = cookie;
+        String sessionKey = null;
+        String apiKey = "123";
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
+        Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
+        Mockito.when(cookie.getValue()).thenReturn(sessionKey);
+        Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY)).thenReturn(apiKey);
+        Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
+        Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
+
+        authFilter.doFilter(httpRequest, httpResponse, chain);
+
+        Mockito.verify(chain).doFilter(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void testInit() throws ServletException {
+        authFilter.init(filterConfig);
+    }
+
+    @Test
+    public void testDestroy() throws ServletException {
+        authFilter.destroy();
     }
 
     private static class ViewerAccessRule {

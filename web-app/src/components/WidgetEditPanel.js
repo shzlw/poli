@@ -411,7 +411,7 @@ class WidgetEditPanel extends React.Component {
 
     return (
       <div>
-        <button className="button confirm-button" style={{width: '80px'}} onClick={this.save}>Save</button>
+        <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
         <div className="mt-10">
           <SelectButtons
             name={'type'}

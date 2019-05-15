@@ -518,7 +518,7 @@ class DashboardEditView extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {this.state.objectToDelete.name}?
           </div>
-          <button className="button delete-button" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red" onClick={this.confirmDelete}>Delete</button>
         </Modal>
 
       </React.Fragment>

@@ -319,7 +319,7 @@ class DataSource extends Component {
               value={this.state.ping}
               onChange={this.handleInputChange} 
             />
-            <button className="button mt-3 confirm-button" onClick={this.save}>Save</button>
+            <button className="button mt-3 button-green" onClick={this.save}>Save</button>
           </div>
         </Modal>
 
@@ -331,7 +331,7 @@ class DataSource extends Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete {objectToDelete.name}?
           </div>
-          <button className="button delete-button" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red" onClick={this.confirmDelete}>Delete</button>
         </Modal>
       </div>
     );

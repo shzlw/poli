@@ -5,12 +5,13 @@
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
+Poli is is an open source, easy-to-use, business intelligence web application.
 
 ## Features
 
 * Connect to any databases supporting JDBC drivers
 * Build widgets and filters in SQL
-* Dynamic query string
+* Dynamic SQL query with parameters
 * Drill through 
 * Embedded
 * Full screen
@@ -19,7 +20,7 @@
 ## Get the server running under 60 seconds
 
 #### Prerequisite
-* Poli requires JRE 1.8+
+* Poli requires Java Runtime 1.8+
 
 Let's start!
 
@@ -32,13 +33,24 @@ Let's start!
         |-- poli.properties
     |-- db
         |-- poli.db
+    |-- jdbc-drivers
     |-- poli.jar
     |-- start.sh
     |-- start.bat
     |...
 ```
+3. There are not any JDBC drivers included except the JDBC driver for SQLite.
+You need to download the JDBC jar files based on the database you want to connect to and put those JDBC jar files under /jdbc-drivers. For example:
 
-3. Run the start script.
+```sh
+    |-- jdbc-drivers
+        |-- postgresql-42.2.5.jar
+        |-- mysql-connector-java-8.0.12.jar
+        |-- mssql-jdbc-7.2.0.jre8.jar
+        |...
+```
+
+4. Run the start script.
 ```sh
 # Windows
 start.bat
@@ -47,8 +59,8 @@ start.bat
 ./start.sh
 ```
 
-4. Open http://localhost:6688/poli/login in chrome
-5. Done. Welcome to Poli!
+5. Open http://localhost:6688/poli/login in chrome
+6. Done. Welcome to Poli!
 
 ** Check the Installation Guide for more details.
 
@@ -69,6 +81,80 @@ build.bat
 ./build.sh
 ```
 
+Main tech stack
+
+* Spring Boot 2
+* React 16
+* SQLite 3
+
+## Basic Concepts
+
+### Datasource
+  JDBC data source
+
+### Dashboard
+
+Dimension
+* Fixed width vs flexible width
+* Fixed height
+* Full screen
+* Embedded mode
+    * This mode allows the dashboard to be embedded into another application. The chart data can be dynamically changed if a dynamic query is used. For example:
+
+```html
+<iframe src="http://localhost:6688/poli/workspace/dashboard/full/SalesReport?$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
+```
+* Url search parameters
+* Auto refresh
+    * Enable/disble the auto refresh. The refresh rate is in seconds. This will query and refresh the chart data every X seconds.
+
+
+### Widget
+
+* Chart
+    * types
+        * Table
+        * Pie
+* Filter
+    * types
+        * Slicer
+        * Single value
+    * properties 
+        * Parameter: serves as a placeholder for a real value in the query string 
+        * Value: is the actual value passed to the query string.
+    
+
+### Dynamic SQL query with parameters
+### Drill through
+* Navigate from one widget to another dashboard and pass a parameter
+
+### User Management
+
+### System Role
+
+Admin
+* Manage dashboards
+* Manage datasources
+* Manage users
+
+Developer
+* Manage dashboards
+* Manage datasources
+* Manage only viewer role users
+
+Viewer
+* Have access to dashboards
+
+### Group
+Group is used to control the access level to dashboards for Viewer user. Dashboards can be assigned to Group so the users who belong to that group will have access.
+
+For example
+* User u1 belongs to Group g1
+* User u2 belongs to Group g2
+* Dashboard d1 is assigned to Group g1
+* Dashboard d1, d2 and d3 are assigned to Group g2
+* User u1 has access to Dashboard d1 only
+* user u2 has access to Dasbhoard d1, d2 and d3
 ## License
 
 MIT License
