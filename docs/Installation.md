@@ -1,3 +1,0 @@
-
-username: admin
-password: adminadmin

@@ -296,13 +296,13 @@ class DataSource extends Component {
             
             { mode === 'Edit' && (
               <div style={{margin: '3px 0px 8px 0px'}}>
-                <button className="button" onClick={this.toggleUpdatePassword}>Update password</button>
+                <button className="button" onClick={this.toggleUpdatePassword}>Change password</button>
               </div>
             )}
 
             { (mode === 'New' || showUpdatePassword) && ( 
               <div>
-                <label>Password</label>
+                <label>New Password</label>
                 <input 
                   type="password" 
                   name="password" 

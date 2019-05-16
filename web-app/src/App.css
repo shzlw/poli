@@ -325,3 +325,13 @@ hr {
   background-color: #FF7452;
   color: #FFFFFF;
 }
+
+.button-black {
+  background-color: #091E42;
+  color: #FFFFFF;
+}
+
+.button-black:hover {
+  background-color: #172B4D;
+  color: #FFFFFF;
+}

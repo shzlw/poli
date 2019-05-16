@@ -92,6 +92,17 @@ Main tech stack
 ### Datasource
   JDBC data source
 
+PostgreSQL
+
+    class name: org.postgresql.Driver 
+    default: postgres
+    url: jdbc:postgresql://localhost/test
+
+Elasticsearch
+
+    org.elasticsearch.xpack.sql.jdbc.EsDriver
+    jdbc:es://http://localhost:9200
+
 ### Dashboard
 
 Dimension
@@ -125,6 +136,23 @@ Dimension
     
 
 ### Dynamic SQL query with parameters
+
+```sql
+-- Slicer
+SELECT * FROM user WHERE 1 =1 {{ AND name IN (:name) }}
+
+-- Single value
+SELECT * FROM user WHERE 1 = 1 {{ AND name = :name }}
+
+-- More
+SELECT * 
+FROM user 
+WHERE 1 = 1 
+{{ AND department IN (:department) }}
+{{ AND role = :role }}
+{{ AND created <= :created }}
+```
+
 ### Drill through
 * Navigate from one widget to another dashboard and pass a parameter
 

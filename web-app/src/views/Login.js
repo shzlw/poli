@@ -15,7 +15,7 @@ class Login extends React.Component {
       username: '',
       password: '',
       version: '',
-      rememberMe: false
+      rememberMe: true
     };
   }
 

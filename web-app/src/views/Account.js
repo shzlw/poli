@@ -126,11 +126,11 @@ class Account extends React.Component {
           
           <hr />
 
-          <button className="button mt-3" onClick={this.toggleUpdatePassword}>Update password</button>
+          <button className="button mt-3" onClick={this.toggleUpdatePassword}>Change password</button>
           {
             showUpdatePassword && (
               <div style={{marginTop: '8px'}}>
-                <label>Password</label>
+                <label>New Password</label>
                 <input 
                   type="password" 
                   name="password" 

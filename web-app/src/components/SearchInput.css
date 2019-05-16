@@ -17,7 +17,7 @@
 }
 
 .search-input-input:focus {
-  border: 2px solid #FFFFFF;
+  border: 2px solid #FFFFFF !important;
 }
 
 .search-input-reset-button {

@@ -8,6 +8,12 @@
   margin-right: 6px;
 }
 
+.workspace-nav {
+  width: 100%;
+  height: 39px;
+  border-bottom: 1px solid #DFE1E6;
+}
+
 .workspace-nav-menu {
   list-style-type: none;
   margin: 0;

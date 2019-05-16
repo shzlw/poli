@@ -418,13 +418,13 @@ class DashboardEditView extends React.Component {
       if (isEditMode) {
         editButtonPanel = (
           <React.Fragment>
-            <button className="button mr-3" onClick={this.cancelEdit}>
+            <button className="button button-black mr-3" onClick={this.cancelEdit}>
                <FontAwesomeIcon icon="times" size="lg" fixedWidth />
             </button>
-            <button className="button mr-3" onClick={this.save}>
+            <button className="button button-green mr-3" onClick={this.save}>
               <FontAwesomeIcon icon="save" size="lg" fixedWidth />
             </button>
-            <button className="button mr-3" onClick={this.deleteDashboard}>
+            <button className="button button-red mr-3" onClick={this.deleteDashboard}>
                <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
             </button>
             <button className="button" onClick={() => this.openWidgetEditPanel(null)}>
