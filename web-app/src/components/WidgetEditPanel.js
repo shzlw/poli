@@ -393,7 +393,7 @@ class WidgetEditPanel extends React.Component {
 
     const drillItems = drillThrough.map(drill =>
       <div key={drill.columnName} className="row table-row">
-        <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName}, Dashboard: {drill.dashboardId}</div>
+        <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} --> Dashboard: {drill.dashboardId}</div>
         <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
           <FontAwesomeIcon icon="trash-alt" />
         </button>
@@ -425,57 +425,68 @@ class WidgetEditPanel extends React.Component {
           <Tabs activeTab="Basic">
             <div title="Basic">
               <div className="form-panel">
-                <label>Title</label>
-                <input 
-                  type="text" 
-                  name="title" 
-                  value={this.state.title}
-                  onChange={this.handleInputChange} 
-                />
-                <hr/>
-
-                <label>Z Index</label>
-                <InputRange
-                  name="zIndex" 
-                  value={this.state.style.zIndex}
-                  onChange={this.onStyleValueChange} 
-                  min={1}
-                  max={50}
-                  step={1}
-                />
-                <hr/>
-
-                <Checkbox name="showBorder" value="Show border" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
-                { this.state.style.showBorder && (
-                  <div>
-                    <label>Border Color</label>
-                    <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
-                  </div>
-                )}
-                <hr/>
-
-                <Checkbox name="showTitle" value="Show title" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
-                { this.state.style.showTitle && (
-                  <React.Fragment>
-                    <div>
-                      <label>Title Font Color</label>
-                      <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
-                    </div>
-
-                    <div>
-                      <label>Title Background Color</label>
-                      <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
-                    </div>
-                  </React.Fragment>
-                )}
-                <hr/>
-
                 <div>
-                  <label>Content Background Color</label>
-                  <ColorPicker name={'contentBackgroundColor'} value={this.state.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
+                  <label>Title</label>
+                  <Checkbox name="showTitle" value="Show" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
+                  { this.state.style.showTitle && (
+                    <div style={{marginTop: '5px'}}>
+                      <input 
+                        type="text" 
+                        name="title" 
+                        value={this.state.title}
+                        onChange={this.handleInputChange} 
+                      />
+
+                      <div>
+                        <label className="small-label">Font Color</label>
+                        <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
+                      </div>
+
+                      <div style={{marginTop: '8px'}}>
+                        <label className="small-label">Background Color</label>
+                        <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                
+                <hr/>
+               
+                <div style={{marginTop: '8px'}}>
+                  <label>Border</label>
+                  <Checkbox name="showBorder" value="Show" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
+                  { this.state.style.showBorder && (
+                    <div style={{marginTop: '5px'}}>
+                      <label className="small-label">Color</label>
+                      <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
+                    </div>
+                  )}
+                </div>
+
+                <hr/>
+
+                <div style={{marginTop: '8px'}}>
+                  <label>Content Background Color</label>
+                  <div style={{marginTop: '5px'}}>
+                    <ColorPicker name={'contentBackgroundColor'} value={this.state.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
+                  </div>
+                </div>
+
+                <hr/>
+                <div style={{marginTop: '8px'}}>
+                  <label>Z Index</label>
+                  <div style={{marginTop: '3px'}}>
+                    <InputRange
+                      name="zIndex" 
+                      value={this.state.style.zIndex}
+                      onChange={this.onStyleValueChange} 
+                      min={1}
+                      max={50}
+                      step={1}
+                    />
+                  </div>
+                </div>
+
               </div>
             </div>
 

@@ -7,7 +7,7 @@ body,
   margin: 0;
   padding: 0;
   font-family: Tahoma, Geneva, sans-serif;
-  color: #4b4f56;
+  color: #172B4D;
   background-color: #f6f9fc;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -53,6 +53,10 @@ body,
   font-weight: 700;
 }
 
+.form-panel .small-label {
+  font-weight: 400 !important;
+}
+
 .panel {
   box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
   border: 0;
@@ -61,12 +65,6 @@ body,
   padding: 10px;
   margin: 10px;
   background-color: #f6f9fc;
-}
-
-.wrapper {
-  position: relative;
-  height: 100%;
-  width: 100%;
 }
 
 .small-modal-panel {
@@ -97,14 +95,6 @@ body,
   padding: 10px;
 }
 
-.display-block {
-  display: block;
-}
-
-.display-none {
-  display: none;
-}
-
 .confirm-deletion-panel {
   margin: 5px 0px 15px 0px;
 }
@@ -116,12 +106,14 @@ body,
   height: 30px;
   width: 30px;
   outline: none;
+  padding: 0px !important;
   cursor: pointer;
 }
 
 .square-button {
   width: 36px;
   height: 36px;
+  padding: 0px !important;
 }
 
 .button {
@@ -133,6 +125,7 @@ body,
   font-weight: 700;
   height: 36px;
   line-height: 36px;
+  padding: 0px 12px;
   outline: none;
   cursor: pointer;
 }
@@ -204,8 +197,8 @@ h1 {
   margin-right: 3px;
 }
 
-ml-5 {
-  margin-left: 5px;
+.ml-4 {
+  margin-left: 4px;
 }
 
 .link-label {
@@ -225,6 +218,7 @@ ml-5 {
 .table-row-button {
   height: 22px;
   line-height: 22px;
+  padding: 0px 5px !important;
 }
 
 .card {
@@ -293,6 +287,14 @@ ml-5 {
   overflow: hidden;
 }
 
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
 hr {
   display: block;
   height: 1px;
@@ -335,3 +337,5 @@ hr {
   background-color: #172B4D;
   color: #FFFFFF;
 }
+
+/* Tooltip */

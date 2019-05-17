@@ -27,16 +27,13 @@ class ColorPicker extends React.Component {
   render() {
 
     const color = {
-      width: '36px',
-      height: '14px',
-      borderRadius: '2px',
       background: this.props.value
     };
 
     return (
       <div>
         <div className="colorpicker-select" onClick={this.handleClick}>
-          <div style={color} />
+          <div className="colorpicker-color" style={color}></div>
         </div>
         { this.state.showPalette && (
           <div className="colorpicker-popover">

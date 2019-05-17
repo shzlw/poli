@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Route, withRouter } from 'react-router-dom';
+import { Route, withRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -130,7 +130,7 @@ class Dashboard extends Component {
     const {
       sysRole
     } = this.props;
-    const showEdit = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
+    const editable = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
 
     const dashboardRows = [];
     for (let i = 0; i < dashboards.length; i++) {
@@ -148,40 +148,47 @@ class Dashboard extends Component {
       }
     }
 
+    const info = editable && dashboards.length === 0 ? 'Create a new dashboard!' : 'Select a dashboard!';
+
     return (
       <React.Fragment>
         <div className="dashboard-sidebar">
-          <div style={{margin: '5px'}}>
-            { showEdit && (
-              <button className="button icon-button dashboard-add-button" onClick={() => this.setState({ showEditPanel: true })}>
+          <div style={{margin: '8px 5px 5px 5px'}}>
+            { editable && (
+              <button className="button full-width" onClick={() => this.setState({ showEditPanel: true })}>
                 <FontAwesomeIcon icon="plus" /> New
               </button>
             )}
-
-            <div style={{marginTop: '5px'}}>
-              <SearchInput 
-                name={'searchValue'} 
-                value={this.state.searchValue} 
-                onChange={this.handleNameInputChange} 
-                inputWidth={117}
-              />
-            </div>
+          </div>
+          <div style={{margin: '8px 5px 5px 5px'}}>
+            <SearchInput 
+              name={'searchValue'} 
+              value={this.state.searchValue} 
+              onChange={this.handleNameInputChange} 
+              inputWidth={117}
+            />
           </div>
           <div>
             {dashboardRows}
           </div>
         </div>
         <div className="dashboard-content">
-          <Route 
-            path="/workspace/dashboard/:id" 
-            render={(props) => 
-              <DashboardEditView 
-                key={props.match.params.id} 
-                onDashboardSave={this.onDashboardSave} 
-                onDashboardDelete={this.onDashboardDelete} 
-              />
-            } 
+          <Switch>
+            <Route 
+              path="/workspace/dashboard/:id" 
+              render={(props) => 
+                <DashboardEditView 
+                  key={props.match.params.id} 
+                  onDashboardSave={this.onDashboardSave} 
+                  onDashboardDelete={this.onDashboardDelete} 
+                  editable={editable}
+                />
+              } 
             />
+            <EmptyDashboard
+              info={info}
+            />
+          </Switch>
         </div>
 
         <Modal 
@@ -204,6 +211,14 @@ class Dashboard extends Component {
       </React.Fragment>
     );
   }
+}
+
+function EmptyDashboard({info}) {
+  return (
+    <div className="empty-dashboard">
+      {info}
+    </div>
+  )
 }
 
 export default withRouter(Dashboard);

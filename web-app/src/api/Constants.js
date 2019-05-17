@@ -21,3 +21,7 @@ export const SYS_ROLE_VIEWER = 'viewer';
 
 export const DEFAULT_DASHBOARD_HEIGHT = 600;
 export const DEFAULT_DASHBOARD_FIXED_WIDTH = 800;
+
+export const REMEMBERME = 'rememberMe';
+export const YES = 'yes';
+export const NO = 'no';

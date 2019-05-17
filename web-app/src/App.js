@@ -7,7 +7,8 @@ import {
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare, 
+  faFlag
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -17,13 +18,15 @@ import Login from './views/Login';
 import ChangeTempPassword from './views/ChangeTempPassword';
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
+import * as Constants from './api/Constants';
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare,
+  faFlag
 );
 
 class App extends React.Component {
@@ -64,11 +67,8 @@ class App extends React.Component {
       return;
     }
 
-    const rememberMeConfig = localStorage.getItem('rememberMe');
-    let rememberMe = false;
-    if (rememberMeConfig && rememberMeConfig === 'yes') {
-      rememberMe = true;
-    }
+    const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
+    const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
 
     const {
       sysRole

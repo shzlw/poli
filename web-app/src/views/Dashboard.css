@@ -28,6 +28,7 @@
   margin: 5px;
   padding: 5px 8px;
   color: #8993A4;
+  line-height: 26px;
 }
 
 .dashboard-menu-item:hover {
@@ -52,11 +53,6 @@
   padding: 0px 10px 10px 20px;
 }
 
-.dashboard-add-button {
-  margin-top: 5px;
-  width: 100%;
-}
-
 .dashboard-drillthrough-name {
   padding: 6px 0px 6px 14px;
   font-size: 20px;
@@ -73,6 +69,13 @@
 
 .dashboard-attribute-edit-panel {
   width: 400px;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #ebecf0;
 }
 
 .dashboard-edit-widget-dialog {
@@ -89,4 +92,12 @@
   top: 20px;
   bottom: 20px;
   margin-left: -500px;
+}
+
+.empty-dashboard {
+  margin-top: 20px;
+  text-align: center;
+  color:#0065FF;
+  font-size: 20px;
+  font-weight: 700;
 }

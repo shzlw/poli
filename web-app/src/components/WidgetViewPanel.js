@@ -351,7 +351,6 @@ class WidgetViewPanel extends React.Component {
 
     return (
       <div className="dashboard-content-widget-panel" style={style}>
-
         {isEditMode && (
           <div className="dashboard-attribute-edit-panel">
             <div className="form-panel">
@@ -363,11 +362,13 @@ class WidgetViewPanel extends React.Component {
                 onChange={(event) => this.props.onStyleValueChange('height', event.target.value)} 
               />
 
+              <hr/>
+
+              <label>Width</label>
               <Checkbox name="isFixedWidth" value="Fixed width" checked={this.props.isFixedWidth} onChange={this.props.onStyleValueChange} />
 
               { this.props.isFixedWidth && (
                 <div>
-                  <label>Fixed Width</label>
                   <input 
                     type="text" 
                     name="fixedWidth" 
@@ -377,8 +378,12 @@ class WidgetViewPanel extends React.Component {
                 </div>
               )}
 
+              <hr/>
+
               <label>Background Color</label>
               <ColorPicker name={'backgroundColor'} value={this.props.backgroundColor} onChange={this.props.onStyleValueChange} />
+
+              <hr/>
 
               <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.snapToGrid} onChange={this.handleCheckBoxChange} />
               <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.showGridlines} onChange={this.handleCheckBoxChange} />

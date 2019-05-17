@@ -80,35 +80,40 @@ class GridItem extends React.Component {
     this.props.onWidgetRemove(widgetId);
   }
 
-  onTableTdPropsChange = (state, rowInfo, column, instance) => {
-    return {
-      onClick: (e, handleOriginal) => {
-        console.log("A Td Element was clicked!");
-        console.log("it produced this event:", e);
-        console.log("It was in this column:", column);
-        console.log("It was in this row:", rowInfo);
-        console.log("It was in this table instance:", instance);
-        
-        const header = column.Header;
-        const row = rowInfo.row;
-        const value = row[header];
-        const drills = instance.props.widgetDrillThrough || []; 
-        console.log('onTableTdPropsChange', header, value, drills);
-        const index = drills.findIndex(d => d.columnName === header);
-        if (index !== -1) {
-          const dashboardId = drills[index].dashboardId;
-          // this.props.history.push(`/workspace/dashboard/${dashboardId}?${header}=${value}`);
-        }
-      }
-    };
-  }
-
   onChartClick = (param, echarts) => {
-    console.log('onChartClick', param, echarts);
+    const {
+      drillThrough = [],
+      data = {}
+    } = this.props;
+
+    if (drillThrough.length === 0) {
+      return;   
+    }
+
+    const { 
+      pieKey,
+    } = data;
+    const columnName = pieKey;
+    const columnValue = param.name;
+
+    const index = drillThrough.findIndex(d => d.columnName === columnName);
+    if (index === -1) {
+      return;
+    }
+    
+    const dashboardId = drillThrough[index].dashboardId;
+    const widgetClickEvent = {
+      type: 'pieClick',
+      data: {
+        dashboardId: dashboardId,
+        columnName: columnName,
+        columnValue: columnValue
+      }
+    }
+    this.props.onWidgetContentClick(widgetClickEvent);
   };
 
   onChartLegendselectchanged = (param, echart) => {
-    console.log('onChartLegendselectchanged', param, echart);
   };
 
   onTableTdClick = (dashboardId, columnName, columnValue) => {
@@ -306,6 +311,11 @@ class GridItem extends React.Component {
           </div>
         )}
 
+        { !isEditMode && hasDrillThrough && (
+          <div className="grid-edit-panel grid-box-icon inline-block">
+            <FontAwesomeIcon icon="flag" fixedWidth />
+          </div>
+        )}
         <div className="grid-box-content" style={contentStyle}>
           {this.renderWidgetContent()}
         </div>

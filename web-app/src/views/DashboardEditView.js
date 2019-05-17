@@ -46,6 +46,12 @@ class DashboardEditView extends React.Component {
   }
 
   componentDidMount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.addEventListener("keydown", this.onKeyDown);
+    }
+
     const id = this.props.match.params.id;
     if (id === undefined) {
       // If the drill through is triggered from the full-dashboard page already, this component is remounted but not FullScreenView.
@@ -103,6 +109,18 @@ class DashboardEditView extends React.Component {
     }
     if (lastRefreshLabelTimerId) {
       clearInterval(lastRefreshLabelTimerId);
+    }
+
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.removeEventListener('keydown', this.onKeyDown);
+    }
+  }
+
+  onKeyDown = (event) => {
+    if(event.keyCode === 13) {
+      this.applyFilters();
     }
   }
 
@@ -283,13 +301,12 @@ class DashboardEditView extends React.Component {
       data
     } = widgetClickEvent;
 
-    if (type === 'tableTdClick') {
-      const {
+    if (type === 'tableTdClick' || type === 'pieClick') {
+       const {
         dashboardId,
         columnName,
         columnValue
       } = data;
-
       if (isFullScreenView) {
         axios.get(`/ws/dashboard/${dashboardId}`)
           .then(res => {
@@ -375,9 +392,7 @@ class DashboardEditView extends React.Component {
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
 
-    let editButtonPanel;
-    let fullScreenButtonPanel = null;
-    const controlButtons = (
+    const commonButtonPanel = (
       <React.Fragment>
         <div className="inline-block">
           <div className="inline-block" style={{marginRight: '8px'}}>
@@ -394,7 +409,7 @@ class DashboardEditView extends React.Component {
             />
           )}
         </div>
-        <button className="button square-button mr-3" onClick={this.toggleAutoRefresh}>
+        <button className="button square-button" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
             (
@@ -405,48 +420,68 @@ class DashboardEditView extends React.Component {
             )
           }
         </button>
-        <button className="button square-button mr-3" onClick={this.refresh}>
+        <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button mr-3" onClick={this.applyFilters}>
+        <button className="button ml-4" onClick={this.applyFilters}>
           <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
         </button>
       </React.Fragment>
     );
 
-    if (!isFullScreenView) {
-      if (isEditMode) {
-        editButtonPanel = (
-          <React.Fragment>
-            <button className="button button-black mr-3" onClick={this.cancelEdit}>
-               <FontAwesomeIcon icon="times" size="lg" fixedWidth />
-            </button>
-            <button className="button button-green mr-3" onClick={this.save}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth />
-            </button>
-            <button className="button button-red mr-3" onClick={this.deleteDashboard}>
-               <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
-            </button>
-            <button className="button" onClick={() => this.openWidgetEditPanel(null)}>
-              <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> New Widget
-            </button>
-          </React.Fragment>
-        );
+    const fullScreenButton = (
+      <button className="button square-button ml-4" onClick={this.fullScreen}>
+        <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+      </button>
+    );
+
+    const inEditModeButtonPanel = (
+      <React.Fragment>
+        <button className="button square-button button-black ml-4" onClick={this.cancelEdit}>
+            <FontAwesomeIcon icon="times" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button button-green ml-4" onClick={this.save}>
+          <FontAwesomeIcon icon="save" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button button-red ml-4" onClick={this.deleteDashboard}>
+            <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
+        </button>
+        <button className="button ml-4" onClick={() => this.openWidgetEditPanel(null)}>
+          <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> New Widget
+        </button>
+      </React.Fragment>
+    )
+
+    const editButton = (
+      <button className="button square-button ml-4" onClick={this.edit}>
+        <FontAwesomeIcon icon="edit" size="lg" fixedWidth />
+      </button>
+    );
+
+    let buttonGroupPanel;
+    if (isFullScreenView) {
+      buttonGroupPanel = commonButtonPanel;
+    } else {
+      if (this.props.editable) {
+        if (isEditMode) {
+          buttonGroupPanel = inEditModeButtonPanel;
+        } else {
+          buttonGroupPanel = (
+            <React.Fragment>
+              {commonButtonPanel}
+              {fullScreenButton}
+              {editButton}
+            </React.Fragment>
+          );
+        }
       } else {
-        editButtonPanel = (
+        buttonGroupPanel = (
           <React.Fragment>
-            {controlButtons}
-            <button className="button square-button mr-3" onClick={this.fullScreen}>
-              <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
-            </button>
-            <button className="button" onClick={this.edit}>
-              <FontAwesomeIcon icon="edit" size="lg" fixedWidth />
-            </button>
+            {commonButtonPanel}
+            {fullScreenButton}
           </React.Fragment>
         );
       }
-    } else {
-      fullScreenButtonPanel = controlButtons;
     }
 
     return (
@@ -480,8 +515,7 @@ class DashboardEditView extends React.Component {
               
             </div>
             <div className="float-right">
-              {fullScreenButtonPanel}
-              {editButtonPanel}
+              {buttonGroupPanel}
             </div>
           </div>
         )}

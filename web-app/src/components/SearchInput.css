@@ -11,7 +11,7 @@
 }
 
 .search-input-input {
-  padding: 7px 0px;
+  padding: 7px 0px !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
@@ -25,11 +25,11 @@
   width: 36px;
   box-shadow: none;
   background-color: #FFFFFF;
-  color: #4b4f56;
+  color: #172B4D;
 }
 
 .search-input-reset-button:hover {
   background-color: #FFFFFF;
-  color: #4b4f56;
+  color: #172B4D;
 }
 
