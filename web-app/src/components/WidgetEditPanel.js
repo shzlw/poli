@@ -5,7 +5,6 @@ import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ReactEcharts from 'echarts-for-react';
 
 import './WidgetEditPanel.css';
 
@@ -22,6 +21,7 @@ import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
 
+const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
 class WidgetEditPanel extends React.Component {
 
@@ -38,9 +38,8 @@ class WidgetEditPanel extends React.Component {
       sqlQuery: '',
       jdbcDataSourceId: '',
       queryResult: {},
-      type: Constants.CHART,
-      filterType: Constants.SINGLE_VALUE,
-      chartType: Constants.TABLE,
+      type: Constants.STATIC,
+      subType: '',
       style: {
         showBorder: false,
         borderColor: 'rgba(9, 30, 66, 1)',
@@ -50,13 +49,12 @@ class WidgetEditPanel extends React.Component {
         contentBackgroundColor: 'rgba(255, 255, 255, 1)',
         zIndex: 50
       },
+      data: {},
       queryParameter: '',
       drillThrough: [],
       drillDashboards: [],
       drillColumnName: '',
       drillDashboardId: '',
-      pieKey: '',
-      pieValue: '',
       chartOption: {}
     };
   }
@@ -93,37 +91,23 @@ class WidgetEditPanel extends React.Component {
           const widget = res.data;
           const {
             type,
-            chartType,
-            filterType,
+            subType,
             drillThrough
           } = widget;
           if (type === Constants.CHART) {
             this.setState({
-              chartType: chartType,
               drillThrough: drillThrough
             });
-
-            if (chartType === Constants.PIE) {
-              const {
-                pieKey,
-                pieValue
-              } = widget.data;
-              this.setState({
-                pieKey: pieKey,
-                pieValue: pieValue
-              });
-            }
           } else if (type === Constants.FILTER) {
             const {
               queryParameter
             } = widget.data;
             this.setState({
-              filterType: filterType,
               queryParameter: queryParameter
             });
-            if (filterType === Constants.SLICER) {
+            if (subType === Constants.SLICER) {
 
-            } else if (filterType === Constants.SINGLE_VALUE) {
+            } else if (subType === Constants.SINGLE_VALUE) {
 
             }
           }
@@ -137,8 +121,10 @@ class WidgetEditPanel extends React.Component {
             height: widget.height,
             sqlQuery: widget.sqlQuery,
             type: type,
+            subType: subType,
             jdbcDataSourceId: widget.jdbcDataSourceId,
-            style: widget.style
+            style: widget.style,
+            data: widget.data
           }, () => {
             this.runQuery();
           });
@@ -175,8 +161,22 @@ class WidgetEditPanel extends React.Component {
   }
 
   handleOptionChange = (name, value) => {
+    if (name === 'type') {
+      this.setState({
+        subType: ''
+      });
+    }
+
     this.setState({
       [name]: value
+    });
+  }
+
+  handleWidgetDataChange = (name, value) => {
+    const data = {...this.state.data};
+    data[[name]] = value;
+    this.setState({
+      data: data
     });
   }
 
@@ -188,51 +188,33 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSourceId,
       sqlQuery,
       type,
-      style
+      subType,
+      style,
+      data
     } = this.state;
 
     const widget = {
       title: title,
       dashboardId: this.props.dashboardId,
       type: type,
+      subType: subType,
       jdbcDataSourceId: jdbcDataSourceId,
       sqlQuery: sqlQuery,
-      style: style
+      style: style,
+      data: data
     }
 
     if (type === Constants.CHART) {
       const {
-        chartType,
         drillThrough
       } = this.state;
       widget.drillThrough = drillThrough;
-      widget.chartType = chartType;
-
-      if (chartType === Constants.TABLE) {
-
-      } else if (chartType === Constants.PIE) {
-        const {
-          pieKey,
-          pieValue
-        } = this.state;
-        widget.data = {
-          pieKey: pieKey,
-          pieValue: pieValue
-        }
-      }
     } else if (type === Constants.FILTER) {
       const  {
-        filterType,
         queryParameter
       } = this.state;
-      widget.filterType = filterType;
       widget.data = {
         queryParameter: queryParameter
-      }
-      if (filterType === Constants.SLICER) {
-
-      } else if (filterType === Constants.SINGLE_VALUE) {
-
       }
     }
     
@@ -313,25 +295,27 @@ class WidgetEditPanel extends React.Component {
     } 
   }
 
+  /*
   generateChart = () => {
-    if (this.state.chartType === Constants.PIE) {
-      const { 
-        pieKey, 
-        pieValue, 
-        queryResult = {}
-      } = this.state;
-      const data = Util.jsonToArray(queryResult.data);
-      const chartOption = EchartsApi.getPieOption(data, pieKey, pieValue);
-      this.setState({
-        chartOption: chartOption
-      });
-    }
+    const { 
+      data = {},
+      queryResult = {},
+      chartType
+    } = this.state;
+    const queryResultData = Util.jsonToArray(queryResult.data);
+    const chartOption = EchartsApi.getChartOption(chartType, queryResultData, data);
+    this.setState({
+      chartOption: chartOption
+    });
   }
 
+  /*
   renderChartPreview = () => {
     const { 
       chartType,
       queryResult = {},
+      chartOption,
+      data = {}
     } = this.state;
     const columns = queryResult.columns || [];
 
@@ -339,34 +323,33 @@ class WidgetEditPanel extends React.Component {
     if (chartType === Constants.TABLE) {
 
     } else if (chartType === Constants.PIE) {
-      const { 
-        chartOption,
-        pieKey,
-        pieValue
-      } = this.state;
-
+      const {
+        key,
+        value
+      } = data;
+            
       chartPreview = (
         <div>
-          <div>For example, count "value" by "key"</div>
-          <label>Key (text)</label>
+          <label>Key (Text)</label>
           <Select
-            name={'pieKey'}
-            value={pieKey}
-            onChange={this.handleOptionChange}
+            name={'key'}
+            value={key}
+            onChange={this.handleWidgetDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
           />
 
-          <label>Value (number)</label>
+          <label>Value (Number)</label>
           <Select
-            name={'pieValue'}
-            value={pieValue}
-            onChange={this.handleOptionChange}
+            name={'value'}
+            value={value}
+            onChange={this.handleWidgetDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
           />
+          <div>For example, number of "Value" by "Key"</div>
           <button className="button" onClick={this.generateChart}>Generete Chart</button>
           <ReactEcharts 
             option={chartOption} 
@@ -377,10 +360,123 @@ class WidgetEditPanel extends React.Component {
     }
     return chartPreview;
   }
+  */
+
+  renderChartConfigPanel = () => {
+    const { 
+      subType,
+      queryResult = {},
+      data = {}
+    } = this.state;
+    const columns = queryResult.columns || [];
+
+    let chartConfigPanel;
+    if (chartConfigPanel === '') {
+      chartConfigPanel = (<div></div>);
+    } else if (subType === Constants.TABLE) {
+      const {
+        defaultPageSize = 10
+      } = data;
+      chartConfigPanel = (
+        <div>
+          <label>Default Page Size</label>
+          <Select
+            name={'defaultPageSize'}
+            value={defaultPageSize}
+            onChange={this.handleWidgetDataChange}
+            options={TABLE_DEFAULT_PAGE_SIZES}
+          />
+        </div>
+      );
+    } else {
+      const {
+        key,
+        value
+      } = data;
+
+      chartConfigPanel = (
+        <div>
+          <label>Key (Text)</label>
+          <Select
+            name={'key'}
+            value={key}
+            onChange={this.handleWidgetDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Value (Number)</label>
+          <Select
+            name={'value'}
+            value={value}
+            onChange={this.handleWidgetDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+        </div>
+      );
+    }
+
+    return chartConfigPanel;
+  }
+
+  renderStaticConfigPanel = () => {
+    const { 
+      subType,
+      data = {}
+    } = this.state;
+
+    let staticConfigPanel = (<div></div>);
+    if (subType === Constants.IMAGE) {
+      const {
+        src
+      } = data;
+      staticConfigPanel = (
+        <div>
+          <label>Source</label>
+          <input 
+            type="text"
+            value={src}
+            onChange={(event) => this.handleWidgetDataChange('source', event.target.value)} 
+          />
+        </div>
+      );
+    } else if (subType === Constants.TEXT) {
+    } else if (subType === Constants.HTML) {
+      const {
+        innerHtml
+      } = data;
+    } else if (subType === Constants.IFRAME) {
+      const {
+        title,
+        src
+      } = data;
+      staticConfigPanel = (
+        <div>
+          <label>Title</label>
+          <input 
+            type="text"
+            value={title}
+            onChange={(event) => this.handleWidgetDataChange('title', event.target.value)} 
+          />
+          <label>Source</label>
+          <input 
+            type="text"
+            value={src}
+            onChange={(event) => this.handleWidgetDataChange('source', event.target.value)} 
+          />
+        </div>
+      );
+    }
+    return staticConfigPanel
+  }
 
   render() {
     const { 
       type,
+      subType,
       queryResult,
       jdbcDataSources = [],
       drillThrough = [],
@@ -391,14 +487,24 @@ class WidgetEditPanel extends React.Component {
     const columns = queryResult.columns || [];
     const error = queryResult.error;
 
-    const drillItems = drillThrough.map(drill =>
-      <div key={drill.columnName} className="row table-row">
-        <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} --> Dashboard: {drill.dashboardId}</div>
-        <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
-          <FontAwesomeIcon icon="trash-alt" />
-        </button>
-      </div>
-    );
+    const drillItems = [];
+    for (let i = 0; i < drillThrough.length; i++) {
+      const drill = drillThrough[i];
+      for (let j = 0; j < drillDashboards.length; j++) {
+        if (drill.dashboardId === drillDashboards[j].id) {
+          const dashboardName = drillDashboards[j].name;
+          drillItems.push(
+            <div key={drill.columnName} className="row table-row">
+              <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} goes to Dashboard: {dashboardName}</div>
+              <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
+                <FontAwesomeIcon icon="trash-alt" />
+              </button>
+            </div>
+          );
+          break;
+        }
+      }
+    }
 
     const columnItems = columns.map(col =>
       <div className="table-row row" key={col.name}>
@@ -407,7 +513,8 @@ class WidgetEditPanel extends React.Component {
       </div>
     );
 
-    const showQueryTab = type === Constants.CHART || (type === Constants.FILTER && this.state.filterType === Constants.SLICER);
+    const showQueryTab = type === Constants.CHART 
+      || (type === Constants.FILTER && subType === Constants.SLICER);
 
     return (
       <div>
@@ -490,20 +597,40 @@ class WidgetEditPanel extends React.Component {
               </div>
             </div>
 
+            {/* ---------- Static Tab ---------- */}
+
+            { type === Constants.STATIC && (
+              <div title="Static">
+                <div className="form-panel">
+                  <label>Type</label>
+                  <Select
+                    name={'subType'}
+                    value={subType}
+                    onChange={this.handleOptionChange}
+                    options={Constants.STATIC_TYPES}
+                  />
+                </div>
+                {this.renderStaticConfigPanel()} 
+              </div>
+            )}
+
+            {/* ---------- Filter Tab ---------- */}
+
             { type === Constants.FILTER && (  
               <div title="Filter">
                 <div className="form-panel">
-                  <label>Filter Options</label>
+                  <label>Type</label>
                   <Select
-                    name={'filterType'}
-                    value={this.state.filterType}
+                    name={'subType'}
+                    value={subType}
                     onChange={this.handleOptionChange}
                     options={Constants.FILTER_TYPES}
-                    preloadOneEmpty={false}
                   />
                 </div>
               </div>
             )}
+
+            {/* ---------- Query Tab ---------- */}
 
             { showQueryTab && (
               <div title="Query">
@@ -556,22 +683,24 @@ class WidgetEditPanel extends React.Component {
               </div>
             )}
 
+            {/* ---------- Chart Config Tab ---------- */}
+
             { type === Constants.CHART && (
               <div title="Chart">
                 <div className="form-panel">
-                  <label>Chart Type</label>
+                  <label>Type</label>
                   <Select
-                    name={'chartType'}
-                    value={this.state.chartType}
+                    name={'subType'}
+                    value={subType}
                     onChange={this.handleOptionChange}
                     options={Constants.CHART_TYPES}
-                    preloadOneEmpty={false}
                   />
-                  <label>Preview</label>
-                  {this.renderChartPreview()} 
+                  {this.renderChartConfigPanel()} 
                 </div>
               </div>
             )}
+
+            {/* ---------- Drill Through Tab ---------- */}
             
             { type === Constants.CHART && (
               <div title="Drill Through">

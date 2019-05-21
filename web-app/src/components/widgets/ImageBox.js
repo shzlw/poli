@@ -7,7 +7,7 @@ class ImageBox extends React.Component {
     return (
       <img 
         className="image-box" 
-        src={this.props.url} 
+        src={this.props.src} 
         />
     );
   }

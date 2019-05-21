@@ -20,6 +20,7 @@ class TableWidget extends React.Component {
       data = [],
       columns = [],
       drillThrough = [],
+      defaultPageSize,
       error
     } = this.props;
 
@@ -64,7 +65,7 @@ class TableWidget extends React.Component {
       <ReactTable
         data={data}
         columns={columnHeaders}
-        defaultPageSize={10}
+        defaultPageSize={defaultPageSize}
         previousText={'Prev'}
         nextText={'Next'}
       />

@@ -11,6 +11,8 @@ import GridDraggable from './GridDraggable';
 import GridResizable from './GridResizable';
 import TableWidget from './TableWidget';
 import Slicer from './filters/Slicer';
+import ImageBox from './widgets/ImageBox';
+import Iframe from './widgets/Iframe';
 
 class GridItem extends React.Component {
 
@@ -91,9 +93,9 @@ class GridItem extends React.Component {
     }
 
     const { 
-      pieKey,
+      key,
     } = data;
-    const columnName = pieKey;
+    const columnName = key;
     const columnValue = param.name;
 
     const index = drillThrough.findIndex(d => d.columnName === columnName);
@@ -152,8 +154,7 @@ class GridItem extends React.Component {
     const { 
       id,
       type,
-      chartType,
-      filterType,
+      subType,
       queryResult = {},
       drillThrough,
       data = {},
@@ -167,22 +168,20 @@ class GridItem extends React.Component {
 
     let widgetItem = (<div></div>);
     if (type === Constants.CHART) {
-      if (chartType === Constants.TABLE) {
+      if (subType === Constants.TABLE) {
+        const { defaultPageSize } = data;
         widgetItem = (
           <TableWidget
             data={queryResultData}
             columns={columns}
+            defaultPageSize={defaultPageSize}
             error={error}
             drillThrough={drillThrough}
             onTableTdClick={this.onTableTdClick}
           />
         );
-      } else if (chartType === Constants.PIE) {
-        const { 
-          pieKey,
-          pieValue
-        } = data;
-        const chartOption = EchartsApi.getPieOption(queryResultData, pieKey, pieValue);
+      } else {
+        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data);
         widgetItem = (
           <ReactEcharts 
             option={chartOption}   
@@ -192,7 +191,7 @@ class GridItem extends React.Component {
         );
       } 
     } else if (type === Constants.FILTER) {
-      if (filterType === Constants.SLICER) {
+      if (subType === Constants.SLICER) {
         widgetItem = (
           <div className="grid-box-content-panel">
             <Slicer 
@@ -202,7 +201,7 @@ class GridItem extends React.Component {
             />
           </div>
         );
-      } else if (filterType === Constants.SINGLE_VALUE) {
+      } else if (subType === Constants.SINGLE_VALUE) {
         widgetItem = (
           <div className="grid-box-content-panel">
             <input 
@@ -211,6 +210,21 @@ class GridItem extends React.Component {
               onChange={(event) => this.onSingleValueChange(id, event)} 
             />
           </div>
+        );
+      }
+    } else if (type === Constants.STATIC) {
+      if (subType === Constants.IMAGE) {
+        const { src } = data;
+        widgetItem = (
+          <ImageBox src={src} />
+        );
+      } else if (subType === Constants.IFRAME) {
+        const {
+          title, 
+          src 
+        } = data;
+        widgetItem = (
+          <Iframe title={title} src={src} />
         );
       }
     }

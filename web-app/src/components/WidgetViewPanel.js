@@ -116,10 +116,10 @@ class WidgetViewPanel extends React.Component {
       const {
         id,
         type,
-        filterType
+        subType
       }  = widgets[i];
       if (type === Constants.FILTER) {
-        this.queryFilter(id, filterType);
+        this.queryFilter(id, subType);
       }
     }
   }
@@ -139,9 +139,9 @@ class WidgetViewPanel extends React.Component {
       });
   }
 
-  queryFilter(widgetId, filterType) {
+  queryFilter(widgetId, subType) {
     const { widgets } = this.state;
-    if (filterType === Constants.SLICER) {
+    if (subType === Constants.SLICER) {
       axios.post(`/ws/jdbcquery/widget/${widgetId}`, [])
         .then(res => {
           const queryResult = res.data;
@@ -164,7 +164,7 @@ class WidgetViewPanel extends React.Component {
             widgets: newWidgets
           });
         });
-    } else if (filterType === Constants.SINGLE_VALUE) {
+    } else if (subType === Constants.SINGLE_VALUE) {
       const index = widgets.findIndex(w => w.id === widgetId);
       const newWidgets = [...widgets];
       newWidgets[index].value = '';
@@ -244,12 +244,12 @@ class WidgetViewPanel extends React.Component {
     const index = widgets.findIndex(w => w.id === widgetId);
     const newWidgets = [...widgets];
     const widget = widgets[index];
-    if (widget.filterType === Constants.SLICER) {
+    if (widget.subType === Constants.SLICER) {
       const {
         checkBoxes
       } = data;
       newWidgets[index].checkBoxes = checkBoxes;
-    } else if (widget.filterType === Constants.SINGLE_VALUE) {
+    } else if (widget.subType === Constants.SINGLE_VALUE) {
       const {
         value
       } = data;
@@ -272,9 +272,9 @@ class WidgetViewPanel extends React.Component {
     for (let i = 0; i < widgets.length; i++) {
       const widget = widgets[i];
       if (widget.type === Constants.FILTER) {
-        const { filterType } = widget;
+        const { subType } = widget;
         const filterParam = {};
-        if (filterType === Constants.SLICER) {
+        if (subType === Constants.SLICER) {
           const { 
             checkBoxes = []
           } = widget;
@@ -289,11 +289,11 @@ class WidgetViewPanel extends React.Component {
           if (paramValues.length === checkBoxes.length) {
             filterParam.remark = 'select all';
           }
-        } else if (filterType === Constants.SINGLE_VALUE) {
+        } else if (subType === Constants.SINGLE_VALUE) {
           filterParam.value = widget.value;
         }
         filterParam.param = widget.data.queryParameter;
-        filterParam.type = widget.filterType;
+        filterParam.type = widget.subType;
         filterParams.push(filterParam);
       }
     }

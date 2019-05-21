@@ -1,4 +1,5 @@
 import * as Util from '../api/Util';
+import * as Constants from '../api/Constants';
 
 const CHART_COLORS = [
   "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", 
@@ -11,7 +12,26 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const getPieOptionTemplate = (legend, series) => {
+export const getChartOption = (type, data, config) => {
+  let chartOption = {};
+  if (type === Constants.PIE) {
+    chartOption = getPieOption(data, config);
+  } else if (type === Constants.BAR) {
+    chartOption = getBarOption(data, config);
+  } else if (type === Constants.LINE) {
+    chartOption = getLineOption(data, config);
+  } else if (type === Constants.AREA) {
+    chartOption = getAreaOption(data, config);
+  } else if (type === Constants.HEATMAP) {
+  } else if (type === Constants.TREEMAP) {
+  }
+  return chartOption;
+}
+
+/**
+ * Pie chart
+ */
+const getPieOptionTemplate = (legend, series) => {
   return {
     color: CHART_COLORS,
     tooltip: {
@@ -35,22 +55,28 @@ export const getPieOptionTemplate = (legend, series) => {
   }
 };
 
-export const getPieOption = (queryResultData, pieKey, pieValue) => {
+const getPieOption = (data, config) => {
+  const {
+    key,
+    value
+  } = config;
   let legend = [];
   let series = [];
-  for (let i = 0; i < queryResultData.length; i++) {
-    const row = queryResultData[i];
-    legend.push(row[pieKey]);
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    legend.push(row[key]);
     series.push({
-      name: row[pieKey],
-      value: row[pieValue]
+      name: row[key],
+      value: row[value]
     });  
   }
   return getPieOptionTemplate(legend, series);
 }
 
+/**
+ * Bar Chart
+ */
 const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
-
   let xAxis = {};
   let yAxis = {};
   if (isHorizontal) {
@@ -86,6 +112,27 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
   }
 };
 
+const getBarOption = (data, config) => {
+  const {
+    key,
+    value,
+    isHorizontal = false
+  } = config;
+  // Text
+  const xAxisData = [];
+  // Number
+  const seriesData = [];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    xAxisData.push(row[key]);
+    seriesData.push(row[value]);  
+  }
+  return getBarOptionTemplate(xAxisData, seriesData, isHorizontal);
+}
+
+/**
+ * Line chart
+ */
 const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
     color: CHART_COLORS,
@@ -108,33 +155,27 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
   }
 };
 
-const getTimeLineOptionTemplate = (seriesData) => {
-  return {
-    color: CHART_COLORS,
-    tooltip: {
-    },
-    xAxis: {
-      type: 'time',
-      axisLabel: {
-        formatter: (value, index) => {
-          const date = new Date(value);
-          return [date.getMonth() + 1, date.getDate()].join('-');
-        }
-      },
-      boundaryGap: false
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        type: 'line',
-        data: seriesData
-      }
-    ]
+const getLineOption = (data, config) => {
+  const {
+    key,
+    value,
+    isSmooth = false
+  } = config;
+  // Text
+  const xAxisData = [];
+  // Number
+  const seriesData = [];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    xAxisData.push(row[key]);
+    seriesData.push(row[value]);  
   }
-};
+  return getLineOptionTemplate(xAxisData, seriesData, isSmooth);
+}
 
+/**
+ * Area chart
+ */
 const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
     color: CHART_COLORS,
@@ -159,6 +200,27 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
   }
 };
 
+const getAreaOption = (data, config) => {
+  const {
+    key,
+    value,
+    isSmooth = true
+  } = config;
+  // Text
+  const xAxisData = [];
+  // Number
+  const seriesData = [];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    xAxisData.push(row[key]);
+    seriesData.push(row[value]);  
+  }
+  return getAreaOptionTemplate(xAxisData, seriesData, isSmooth);
+}
+
+/**
+ * TODO: Heatmap chart
+ */
 const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) => {
   return {
     color: CHART_COLORS,
@@ -211,6 +273,28 @@ const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) =>
     }]
   }
 };
+
+const buildHeatmapOption = () => {
+  const xAxisData = [];
+  const yAxisData = [];
+  const seriesData = [];
+  const row = 5;
+  const column = 10;
+  for (let i = 0; i < row; i++) {
+    xAxisData.push('x' + i);
+  }
+  for (let j = 0; j < column; j++) {
+    yAxisData.push('y' + j);
+  }
+
+  for (let i = 0; i < row; i++) {
+    for (let j = 0; j < column; j++) {
+      const value = getRandomInt(1, 10);
+      seriesData.push([i, j, value]);
+    }
+  }
+  return getHeatmapOptionTemplate(1, 10, xAxisData, yAxisData, seriesData);
+}
 
 const getTreemapOptionTemplate = (seriesData) => {
   return {
@@ -280,76 +364,6 @@ function getVirtulData(year) {
     return data;
 }
 
-const buildBarOption = () => {
-  const xAxisData = [];
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const value = getRandomInt(1, 10);
-    xAxisData.push(name);
-    seriesData.push(value);
-  }
-  return getBarOptionTemplate(xAxisData, seriesData, false);
-}
-
-const buildBarOption2 = () => {
-  const xAxisData = [];
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const value = getRandomInt(1, 10);
-    xAxisData.push(name);
-    seriesData.push(value);
-  }
-  return getBarOptionTemplate(xAxisData, seriesData, true);
-}
-
-const buildLineOption = () => {
-  const xAxisData = [];
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const value = getRandomInt(1, 10);
-    xAxisData.push(name);
-    seriesData.push(value);
-  }
-  return getLineOptionTemplate(xAxisData, seriesData, false);
-}
-
-const buildAreaOption = () => {
-  const xAxisData = [];
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const value = getRandomInt(1, 10);
-    xAxisData.push(name);
-    seriesData.push(value);
-  }
-  return getAreaOptionTemplate(xAxisData, seriesData, true);
-}
-
-const buildHeatmapOption = () => {
-  const xAxisData = [];
-  const yAxisData = [];
-  const seriesData = [];
-  const row = 5;
-  const column = 10;
-  for (let i = 0; i < row; i++) {
-    xAxisData.push('x' + i);
-  }
-  for (let j = 0; j < column; j++) {
-    yAxisData.push('y' + j);
-  }
-
-  for (let i = 0; i < row; i++) {
-    for (let j = 0; j < column; j++) {
-      const value = getRandomInt(1, 10);
-      seriesData.push([i, j, value]);
-    }
-  }
-  return getHeatmapOptionTemplate(1, 10, xAxisData, yAxisData, seriesData);
-}
-
 const buildTreemapOption = () => {
   const seriesData = [];
   for (let i = 1; i <= 10; i++) {
@@ -385,3 +399,35 @@ const buildTimeLineOption = () => {
 const buildCalenarHeatmapOption = () => {
   return getCalendarHeatmapOptionTemplate();
 }
+
+
+
+/**
+ * TODO: Time line chart
+ */
+const getTimeLineOptionTemplate = (seriesData) => {
+  return {
+    color: CHART_COLORS,
+    tooltip: {
+    },
+    xAxis: {
+      type: 'time',
+      axisLabel: {
+        formatter: (value, index) => {
+          const date = new Date(value);
+          return [date.getMonth() + 1, date.getDate()].join('-');
+        }
+      },
+      boundaryGap: false
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        type: 'line',
+        data: seriesData
+      }
+    ]
+  }
+};

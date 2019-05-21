@@ -42,7 +42,7 @@ public class WidgetWsTest extends AbstractWsTest {
         w1.setWidth(3);
         w1.setHeight(4);
         w1.setType(Constants.WIDGET_TYPE_CHART);
-        w1.setChartType("table");
+        w1.setSubType("table");
         w1.setDashboardId(dashboardId);
         w1.setData("{}");
         w1.setStyle("{}");
@@ -82,7 +82,7 @@ public class WidgetWsTest extends AbstractWsTest {
         w1.setId(id);
         w1.setTitle("w2");
         w1.setType(Constants.WIDGET_TYPE_FILTER);
-        w1.setFilterType(Constants.FILTER_TYPE_SINGLE);
+        w1.setSubType(Constants.FILTER_TYPE_SINGLE);
         body = mapper.writeValueAsString(w1);
         mvcResult = mvc.perform(
                 put("/ws/widget")
@@ -154,8 +154,7 @@ public class WidgetWsTest extends AbstractWsTest {
         Assert.assertEquals(expected.getWidth(), target.getWidth());
         Assert.assertEquals(expected.getHeight(), target.getHeight());
         Assert.assertEquals(expected.getType(), target.getType());
-        Assert.assertEquals(expected.getChartType(), target.getChartType());
-        Assert.assertEquals(expected.getFilterType(), target.getFilterType());
+        Assert.assertEquals(expected.getSubType(), target.getSubType());
         Assert.assertEquals(expected.getData(), target.getData());
         Assert.assertEquals(expected.getStyle(), target.getStyle());
         Assert.assertEquals(expected.getDrillThrough(), target.getDrillThrough());

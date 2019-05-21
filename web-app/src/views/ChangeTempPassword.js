@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
 
@@ -17,12 +18,31 @@ class ChangeTempPassword extends React.Component {
   }
 
   componentDidMount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.addEventListener("keydown", this.onKeyDown);
+    }
+  }
+
+  componentWillUnmount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.removeEventListener('keydown', this.onKeyDown);
+    }
   }
 
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     });
+  }
+
+  onKeyDown = (event) => {
+    if(event.keyCode === 13) {
+      this.changePassword();
+    }
   }
 
   changePassword = () => {

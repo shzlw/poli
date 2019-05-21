@@ -18,9 +18,7 @@ public class Widget {
 
     private String type;
 
-    private String filterType;
-
-    private String chartType;
+    private String subType;
 
     /**
      * Json column
@@ -110,14 +108,6 @@ public class Widget {
         this.sqlQuery = sqlQuery;
     }
 
-    public String getChartType() {
-        return chartType;
-    }
-
-    public void setChartType(String chartType) {
-        this.chartType = chartType;
-    }
-
     public String getType() {
         return type;
     }
@@ -126,12 +116,12 @@ public class Widget {
         this.type = type;
     }
 
-    public String getFilterType() {
-        return filterType;
+    public String getSubType() {
+        return subType;
     }
 
-    public void setFilterType(String filterType) {
-        this.filterType = filterType;
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     @JsonRawValue

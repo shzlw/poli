@@ -93,6 +93,9 @@ class Dashboard extends Component {
         this.closeEditPanel();
         this.fetchBoards();
         this.props.history.push(`/workspace/dashboard/${dashboardId}`);
+        this.setState({
+          activeDashboardId: dashboardId
+        });
       })
       .catch(error => {
         Toast.showError('The name exists. Try another.');

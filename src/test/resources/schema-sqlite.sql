@@ -1,6 +1,4 @@
 
-PRAGMA table_info(table_name);
-
 DROP TABLE IF EXISTS p_group_dashboard;
 DROP TABLE IF EXISTS p_widget;
 DROP TABLE IF EXISTS p_dashboard;
@@ -38,8 +36,7 @@ IF NOT EXISTS p_widget (
     width INTEGER NOT NULL,
     height INTEGER NOT NULL,
     type TEXT NOT NULL,
-    chart_type TEXT,
-    filter_type TEXT,
+    sub_type TEXT,
     sql_query TEXT,
     data TEXT,
     drill_through TEXT,

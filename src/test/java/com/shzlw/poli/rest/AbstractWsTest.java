@@ -160,7 +160,7 @@ public abstract class AbstractWsTest {
         w1.setWidth(3);
         w1.setHeight(4);
         w1.setType(Constants.WIDGET_TYPE_CHART);
-        w1.setChartType("table");
+        w1.setSubType("table");
         w1.setDashboardId(dashboardId);
         w1.setData("{}");
         w1.setStyle("{}");
