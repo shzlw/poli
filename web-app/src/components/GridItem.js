@@ -9,7 +9,7 @@ import * as Constants from '../api/Constants';
 
 import GridDraggable from './GridDraggable';
 import GridResizable from './GridResizable';
-import TableWidget from './TableWidget';
+import Table from './Table';
 import Slicer from './filters/Slicer';
 import ImageBox from './widgets/ImageBox';
 import Iframe from './widgets/Iframe';
@@ -49,37 +49,37 @@ class GridItem extends React.Component {
     const y = thisNode.offsetTop;
     const width = parseInt(thisNode.style.width, 10);
     const height = parseInt(thisNode.style.height, 10);
-    const widgetId = this.props.id;
+    const componentId = this.props.id;
 
-    const widget = {
-      id: widgetId,
+    const component = {
+      id: componentId,
       x: x,
       y: y,
       width: width,
       height: height
     }
 
-    this.props.onWidgetMove(widget);
+    this.props.onComponentMove(component);
   }
 
   onMouseMove = (event, mode, state) => {
     event.preventDefault();   
   }
 
-  editWidget = (widgetId) => {
-    this.props.onWidgetEdit(widgetId);
+  editComponent = (componentId) => {
+    this.props.onComponentEdit(componentId);
   }
 
-  exportCsv = (widgetId) => {
-
-  }
-
-  exportJson = (widgetId) => {
+  exportCsv = (componentId) => {
 
   }
 
-  removeWidget = (widgetId) => {
-    this.props.onWidgetRemove(widgetId);
+  exportJson = (componentId) => {
+
+  }
+
+  removeComponent = (componentId) => {
+    this.props.onComponentRemove(componentId);
   }
 
   onChartClick = (param, echarts) => {
@@ -103,49 +103,49 @@ class GridItem extends React.Component {
       return;
     }
     
-    const dashboardId = drillThrough[index].dashboardId;
-    const widgetClickEvent = {
+    const reportId = drillThrough[index].reportId;
+    const componentClickEvent = {
       type: 'pieClick',
       data: {
-        dashboardId: dashboardId,
+        reportId: reportId,
         columnName: columnName,
         columnValue: columnValue
       }
     }
-    this.props.onWidgetContentClick(widgetClickEvent);
+    this.props.onComponentContentClick(componentClickEvent);
   };
 
   onChartLegendselectchanged = (param, echart) => {
   };
 
-  onTableTdClick = (dashboardId, columnName, columnValue) => {
-    const widgetClickEvent = {
+  onTableTdClick = (reportId, columnName, columnValue) => {
+    const componentClickEvent = {
       type: 'tableTdClick',
       data: {
-        dashboardId: dashboardId,
+        reportId: reportId,
         columnName: columnName,
         columnValue: columnValue
       }
     }
-    this.props.onWidgetContentClick(widgetClickEvent);
+    this.props.onComponentContentClick(componentClickEvent);
   }
 
-  onSlicerChange = (widgetId, checkBoxes) => {
+  onSlicerChange = (componentId, checkBoxes) => {
     const data = {
       checkBoxes: checkBoxes
     };
-    this.props.onWidgetFilterInputChange(widgetId, data);
+    this.props.onComponentFilterInputChange(componentId, data);
   }
 
-  onSingleValueChange = (widgetId, event) => {
+  onSingleValueChange = (componentId, event) => {
     const value = event.target.value;
     const data = {
       value: value
     };
-    this.props.onWidgetFilterInputChange(widgetId, data);
+    this.props.onComponentFilterInputChange(componentId, data);
   }
 
-  renderWidgetContent = () => {
+  renderComponentContent = () => {
     const onChartEvents = {
       'click': this.onChartClick,
       'legendselectchanged': this.onChartLegendselectchanged
@@ -166,12 +166,12 @@ class GridItem extends React.Component {
     const columns = queryResult.columns || [];
     const error = queryResult.error;
 
-    let widgetItem = (<div></div>);
+    let componentItem = (<div></div>);
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
         const { defaultPageSize } = data;
-        widgetItem = (
-          <TableWidget
+        componentItem = (
+          <Table
             data={queryResultData}
             columns={columns}
             defaultPageSize={defaultPageSize}
@@ -182,7 +182,7 @@ class GridItem extends React.Component {
         );
       } else {
         const chartOption = EchartsApi.getChartOption(subType, queryResultData, data);
-        widgetItem = (
+        componentItem = (
           <ReactEcharts 
             option={chartOption}   
             className="echarts"
@@ -192,7 +192,7 @@ class GridItem extends React.Component {
       } 
     } else if (type === Constants.FILTER) {
       if (subType === Constants.SLICER) {
-        widgetItem = (
+        componentItem = (
           <div className="grid-box-content-panel">
             <Slicer 
               id={id} 
@@ -202,7 +202,7 @@ class GridItem extends React.Component {
           </div>
         );
       } else if (subType === Constants.SINGLE_VALUE) {
-        widgetItem = (
+        componentItem = (
           <div className="grid-box-content-panel">
             <input 
               type="text"  
@@ -214,22 +214,22 @@ class GridItem extends React.Component {
       }
     } else if (type === Constants.STATIC) {
       if (subType === Constants.IMAGE) {
-        const { src } = data;
-        widgetItem = (
-          <ImageBox src={src} />
+        const { source } = data;
+        componentItem = (
+          <ImageBox src={source} />
         );
       } else if (subType === Constants.IFRAME) {
         const {
           title, 
-          src 
+          source 
         } = data;
-        widgetItem = (
-          <Iframe title={title} src={src} />
+        componentItem = (
+          <Iframe title={title} src={source} />
         );
       }
     }
     
-    return widgetItem;
+    return componentItem;
   }
 
   render() {
@@ -316,10 +316,10 @@ class GridItem extends React.Component {
 
         { isEditMode && (
           <div className="grid-edit-panel">
-            <div className="grid-box-icon inline-block" onClick={() => this.editWidget(id)}>
+            <div className="grid-box-icon inline-block" onClick={() => this.editComponent(id)}>
               <FontAwesomeIcon icon="edit" fixedWidth />
             </div>
-            <div className="grid-box-icon inline-block" onClick={() => this.removeWidget(id)}>
+            <div className="grid-box-icon inline-block" onClick={() => this.removeComponent(id)}>
               <FontAwesomeIcon icon="trash-alt" fixedWidth />
             </div>
           </div>
@@ -331,7 +331,7 @@ class GridItem extends React.Component {
           </div>
         )}
         <div className="grid-box-content" style={contentStyle}>
-          {this.renderWidgetContent()}
+          {this.renderComponentContent()}
         </div>
 
         { isEditMode && (

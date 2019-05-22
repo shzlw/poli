@@ -1,12 +1,17 @@
 import React from 'react';
 
 class ImageBox extends React.Component {
-  state = {}
 
   render() {
+    const style = {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain'
+    }
+
     return (
       <img 
-        className="image-box" 
+        style={style}
         src={this.props.src} 
         />
     );

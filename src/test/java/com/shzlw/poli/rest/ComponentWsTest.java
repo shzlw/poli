@@ -1,7 +1,7 @@
 package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.shzlw.poli.model.Widget;
+import com.shzlw.poli.model.Component;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,23 +27,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class WidgetWsTest extends AbstractWsTest {
+public class ComponentWsTest extends AbstractWsTest {
 
     @Test
     public void test() throws Exception {
-        // Create a dashboard
-        long dashboardId = createDashboard("d1");
+        // Create a report
+        long reportId = createReport("d1");
 
         // ********** Create **********
-        Widget w1 = new Widget();
+        Component w1 = new Component();
         w1.setTitle("w1");
         w1.setX(1);
         w1.setY(2);
         w1.setWidth(3);
         w1.setHeight(4);
-        w1.setType(Constants.WIDGET_TYPE_CHART);
+        w1.setType(Constants.COMPONENT_TYPE_CHART);
         w1.setSubType("table");
-        w1.setDashboardId(dashboardId);
+        w1.setReportId(reportId);
         w1.setData("{}");
         w1.setStyle("{}");
         w1.setDrillThrough("[]");
@@ -51,7 +51,7 @@ public class WidgetWsTest extends AbstractWsTest {
         String body = mapper.writeValueAsString(w1);
 
         mvcResult = mvc.perform(
-                post("/ws/widget")
+                post("/ws/component")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -61,75 +61,75 @@ public class WidgetWsTest extends AbstractWsTest {
         long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
 
         // Verify
-        responeText = findWidget(id);
-        Widget saved = mapper.readValue(responeText, Widget.class);
-        assertWidget(w1, saved);
+        responeText = findComponent(id);
+        Component saved = mapper.readValue(responeText, Component.class);
+        assertComponent(w1, saved);
 
-        // Verify find by dashboard
+        // Verify find by report
         mvcResult = mvc.perform(
-                get("/ws/widget/dashboard/" + dashboardId)
+                get("/ws/component/report/" + reportId)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        List<Widget> widgets = mapper.readValue(responeText, new TypeReference<List<Widget>>() {});
-        Assert.assertEquals(1, widgets.size());
-        saved = widgets.get(0);
-        assertWidget(w1, saved);
+        List<Component> components = mapper.readValue(responeText, new TypeReference<List<Component>>() {});
+        Assert.assertEquals(1, components.size());
+        saved = components.get(0);
+        assertComponent(w1, saved);
 
         // ********** Update **********
         w1.setId(id);
         w1.setTitle("w2");
-        w1.setType(Constants.WIDGET_TYPE_FILTER);
+        w1.setType(Constants.COMPONENT_TYPE_FILTER);
         w1.setSubType(Constants.FILTER_TYPE_SINGLE);
         body = mapper.writeValueAsString(w1);
         mvcResult = mvc.perform(
-                put("/ws/widget")
+                put("/ws/component")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
                 .andReturn();
-        responeText = findWidget(id);
-        saved = mapper.readValue(responeText, Widget.class);
-        assertWidget(w1, saved);
+        responeText = findComponent(id);
+        saved = mapper.readValue(responeText, Component.class);
+        assertComponent(w1, saved);
 
         // ********** Update position **********
         w1.setX(5);
         w1.setY(6);
         w1.setWidth(7);
         w1.setHeight(8);
-        List<Widget> widgetPositions = new ArrayList<>();
-        widgetPositions.add(w1);
-        body = mapper.writeValueAsString(widgetPositions);
+        List<Component> componentPositions = new ArrayList<>();
+        componentPositions.add(w1);
+        body = mapper.writeValueAsString(componentPositions);
         mvcResult = mvc.perform(
-                post("/ws/widget/position")
+                post("/ws/component/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
                 .andReturn();
-        responeText = findWidget(id);
-        saved = mapper.readValue(responeText, Widget.class);
-        assertWidget(w1, saved);
+        responeText = findComponent(id);
+        saved = mapper.readValue(responeText, Component.class);
+        assertComponent(w1, saved);
 
         // ********** Delete **********
         mvcResult = mvc.perform(
-                delete("/ws/widget/" + id)
+                delete("/ws/component/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
         // Verify
-        responeText = findWidget(id);
+        responeText = findComponent(id);
         Assert.assertTrue(StringUtils.isEmpty(responeText));
 
-        // Verify find by dashboard
+        // Verify find by report
         mvcResult = mvc.perform(
-                get("/ws/widget/dashboard/" + dashboardId)
+                get("/ws/component/report/" + reportId)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
@@ -138,16 +138,16 @@ public class WidgetWsTest extends AbstractWsTest {
         Assert.assertEquals(Constants.EMPTY_JSON_ARRAY, responeText);
     }
 
-    private String findWidget(long id) throws Exception {
+    private String findComponent(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/widget/" + id)
+                get("/ws/component/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         return mvcResult.getResponse().getContentAsString();
     }
 
-    private void assertWidget(Widget expected, Widget target) {
+    private void assertComponent(Component expected, Component target) {
         Assert.assertEquals(expected.getTitle(), target.getTitle());
         Assert.assertEquals(expected.getX(), target.getX());
         Assert.assertEquals(expected.getY(), target.getY());
@@ -158,6 +158,6 @@ public class WidgetWsTest extends AbstractWsTest {
         Assert.assertEquals(expected.getData(), target.getData());
         Assert.assertEquals(expected.getStyle(), target.getStyle());
         Assert.assertEquals(expected.getDrillThrough(), target.getDrillThrough());
-        Assert.assertEquals(expected.getDashboardId(), target.getDashboardId());
+        Assert.assertEquals(expected.getReportId(), target.getReportId());
     }
 }

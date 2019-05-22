@@ -1,6 +1,5 @@
 package com.shzlw.poli.filter;
 
-import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
@@ -91,8 +90,8 @@ public class AuthFilter implements Filter {
     public boolean validateViewer(String requestMethod, String path) {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.startsWith("/ws/dashboard")
-                    || path.startsWith("/ws/widget/dashboard/")
+            if (path.startsWith("/ws/report")
+                    || path.startsWith("/ws/component/report/")
                     || path.startsWith("/ws/user/account")) {
                 isValid = true;
             }

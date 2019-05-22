@@ -1,8 +1,8 @@
 
 import React from 'react';
-import DashboardEditView from './DashboardEditView';
+import ReportEditView from './ReportEditView';
 
-class DashboardFullScreenView extends React.Component {
+class ReportFullScreenView extends React.Component {
 
   constructor(props) {
     super(props);
@@ -14,10 +14,10 @@ class DashboardFullScreenView extends React.Component {
     const pathname = this.props.location.pathname;
     return (
       <div className="full-screen-view">
-        <DashboardEditView key={pathname} />
+        <ReportEditView key={pathname} />
       </div>
     )
   };
 }
 
-export default DashboardFullScreenView;
+export default ReportFullScreenView;

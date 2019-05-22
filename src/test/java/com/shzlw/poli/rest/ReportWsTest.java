@@ -1,10 +1,9 @@
 package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Group;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,18 +28,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql(scripts = "classpath:schema-sqlite.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class DashboardWsTest extends AbstractWsTest {
+public class ReportWsTest extends AbstractWsTest {
 
     @Test
     public void test() throws Exception {
         // ********** Create **********
-        Dashboard newDashboard = new Dashboard();
-        newDashboard.setName("d1");
-        newDashboard.setStyle("{}");
-        String body = mapper.writeValueAsString(newDashboard);
+        Report newReport = new Report();
+        newReport.setName("d1");
+        newReport.setStyle("{}");
+        String body = mapper.writeValueAsString(newReport);
 
         mvcResult = mvc.perform(
-                        post("/ws/dashboard")
+                        post("/ws/report")
                             .contentType(MediaType.APPLICATION_JSON)
                                 .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                             .content(body)
@@ -50,33 +49,33 @@ public class DashboardWsTest extends AbstractWsTest {
         long id = Long.parseLong(mvcResult.getResponse().getContentAsString());
 
         // Verify one
-        responeText = findDashboard(id);
-        Dashboard saved = mapper.readValue(responeText, Dashboard.class);
-        Assert.assertEquals(newDashboard.getName(), saved.getName());
-        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
+        responeText = findReport(id);
+        Report saved = mapper.readValue(responeText, Report.class);
+        Assert.assertEquals(newReport.getName(), saved.getName());
+        Assert.assertEquals(newReport.getStyle(), saved.getStyle());
 
         // Verify the list
         mvcResult = mvc.perform(
-                get("/ws/dashboard")
+                get("/ws/report")
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        List<Dashboard> dashboards = mapper.readValue(responeText, new TypeReference<List<Dashboard>>() {});
-        Assert.assertEquals(1, dashboards.size());
-        saved = dashboards.get(0);
+        List<Report> reports = mapper.readValue(responeText, new TypeReference<List<Report>>() {});
+        Assert.assertEquals(1, reports.size());
+        saved = reports.get(0);
         Assert.assertEquals(id, saved.getId());
-        Assert.assertEquals(newDashboard.getName(), saved.getName());
-        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
+        Assert.assertEquals(newReport.getName(), saved.getName());
+        Assert.assertEquals(newReport.getStyle(), saved.getStyle());
 
         // ********** Update **********
-        newDashboard = new Dashboard();
-        newDashboard.setId(id);
-        newDashboard.setName("d2");
-        newDashboard.setStyle("{}");
-        body = mapper.writeValueAsString(newDashboard);
+        newReport = new Report();
+        newReport.setId(id);
+        newReport.setName("d2");
+        newReport.setStyle("{}");
+        body = mapper.writeValueAsString(newReport);
         mvcResult = mvc.perform(
-                put("/ws/dashboard")
+                put("/ws/report")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -86,36 +85,36 @@ public class DashboardWsTest extends AbstractWsTest {
 
         // Verify find by name
         mvcResult = mvc.perform(
-                get("/ws/dashboard/name/" + newDashboard.getName())
+                get("/ws/report/name/" + newReport.getName())
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        saved = mapper.readValue(responeText, Dashboard.class);
-        Assert.assertEquals(newDashboard.getId(), saved.getId());
-        Assert.assertEquals(newDashboard.getName(), saved.getName());
-        Assert.assertEquals(newDashboard.getStyle(), saved.getStyle());
+        saved = mapper.readValue(responeText, Report.class);
+        Assert.assertEquals(newReport.getId(), saved.getId());
+        Assert.assertEquals(newReport.getName(), saved.getName());
+        Assert.assertEquals(newReport.getStyle(), saved.getStyle());
 
         // ********** Delete **********
-        // Create some widgets
-        int numOfWidgets = 10;
-        for (int i = 0; i < numOfWidgets; i++) {
-            createWidget(id);
+        // Create some components
+        int numOfComponents = 10;
+        for (int i = 0; i < numOfComponents; i++) {
+            createComponent(id);
         }
 
         mvcResult = mvc.perform(
-                delete("/ws/dashboard/" + id)
+                delete("/ws/report/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
         // Verify
-        responeText = findDashboard(id);
+        responeText = findReport(id);
         Assert.assertTrue(StringUtils.isEmpty(responeText));
 
-        // Verify there is no widget.
+        // Verify there is no component.
         mvcResult = mvc.perform(
-                get("/ws/widget/dashboard/" + id)
+                get("/ws/component/report/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
@@ -126,25 +125,25 @@ public class DashboardWsTest extends AbstractWsTest {
 
     @Test
     public void testFindAllByViewer() throws Exception {
-        long d1 = createDashboard("d1");
-        long d2 = createDashboard("d2");
+        long d1 = createReport("d1");
+        long d2 = createReport("d2");
         Group g1 = createGroup("g1", Arrays.asList(d1));
         User u1 = createViewer("u1", Arrays.asList(g1.getId()));
         mvcResult = mvc.perform(
-                get("/ws/dashboard")
+                get("/ws/report")
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
-        List<Dashboard> dashboards = mapper.readValue(responeText, new TypeReference<List<Dashboard>>() {});
-        Assert.assertEquals(1, dashboards.size());
-        Dashboard saved = dashboards.get(0);
+        List<Report> reports = mapper.readValue(responeText, new TypeReference<List<Report>>() {});
+        Assert.assertEquals(1, reports.size());
+        Report saved = reports.get(0);
         Assert.assertEquals(d1, saved.getId());
     }
 
-    private String findDashboard(long id) throws Exception {
+    private String findReport(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/dashboard/" + id)
+                get("/ws/report/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                 )
                 .andReturn();

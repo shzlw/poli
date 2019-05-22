@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const WIDGET_BORDER = 2;
+const COMPONENT_BORDER = 2;
 
 class GridDraggable extends React.Component {
 
@@ -82,8 +82,8 @@ class GridDraggable extends React.Component {
     const containerWidth = containerNode.clientWidth;
     const containerHeight = containerNode.clientHeight;
     
-    let boxWidth = parseInt(gridItemNode.style.width, 10) + WIDGET_BORDER * 2;
-    let boxHeight = parseInt(gridItemNode.style.height, 10) + WIDGET_BORDER * 2;
+    let boxWidth = parseInt(gridItemNode.style.width, 10) + COMPONENT_BORDER * 2;
+    let boxHeight = parseInt(gridItemNode.style.height, 10) + COMPONENT_BORDER * 2;
 
     if (currentX < 0) {
       currentX = 0;

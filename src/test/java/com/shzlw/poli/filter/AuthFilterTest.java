@@ -61,7 +61,7 @@ public class AuthFilterTest {
     @Test
     public void testNullCookie() throws IOException, ServletException {
         Cookie[] cookies = null;
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -74,7 +74,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = null;
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -89,7 +89,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -106,7 +106,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -123,7 +123,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -159,8 +159,8 @@ public class AuthFilterTest {
         String sessionKey = "123";
 
         List<ViewerAccessRule> viewerAccessRules = Arrays.asList(
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/dashboard"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/widget/dashboard/"),
+                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
+                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery")
@@ -188,7 +188,7 @@ public class AuthFilterTest {
         cookies[0] = cookie;
         String sessionKey = null;
         String apiKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/dashboard");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);

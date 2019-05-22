@@ -6,7 +6,7 @@ import 'brace/mode/mysql';
 import 'brace/theme/xcode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import './WidgetEditPanel.css';
+import './ComponentEditPanel.css';
 
 import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
@@ -16,14 +16,14 @@ import * as Constants from '../api/Constants';
 import Checkbox from './Checkbox';
 import Tabs from './Tabs';
 import Select from './Select';
-import TableWidget from './TableWidget';
+import Table from './Table';
 import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
-class WidgetEditPanel extends React.Component {
+class ComponentEditPanel extends React.Component {
 
   constructor(props) {
     super(props);
@@ -33,7 +33,7 @@ class WidgetEditPanel extends React.Component {
   get initialState() {
     return {
       jdbcDataSources: [],
-      widgetId: null,
+      componentId: null,
       title: '',
       sqlQuery: '',
       jdbcDataSourceId: '',
@@ -52,9 +52,9 @@ class WidgetEditPanel extends React.Component {
       data: {},
       queryParameter: '',
       drillThrough: [],
-      drillDashboards: [],
+      drillReports: [],
       drillColumnName: '',
-      drillDashboardId: '',
+      drillReportId: '',
       chartOption: {}
     };
   }
@@ -62,7 +62,7 @@ class WidgetEditPanel extends React.Component {
   componentDidMount() {
   }
 
-  fetchWidget = async (widgetId) => {
+  fetchComponent = async (componentId) => {
     this.setState(this.initialState);
 
     const jdbcDataSources = await webApi.fetchDataSources();
@@ -70,30 +70,30 @@ class WidgetEditPanel extends React.Component {
       jdbcDataSources: jdbcDataSources 
     });
 
-    axios.get('/ws/dashboard')
+    axios.get('/ws/report')
       .then(res => {
-        const dashboards = res.data;
+        const reports = res.data;
         this.setState({ 
-          drillDashboards: dashboards 
+          drillReports: reports 
         });
       });
 
-    if (widgetId === null) {
+    if (componentId === null) {
       this.setState({
-        widgetId: null
+        componentId: null
       })
     } else {
       this.setState({
-        widgetId: widgetId
+        componentId: componentId
       })
-      axios.get('/ws/widget/' + widgetId)
+      axios.get('/ws/component/' + componentId)
         .then(res => {
-          const widget = res.data;
+          const component = res.data;
           const {
             type,
             subType,
             drillThrough
-          } = widget;
+          } = component;
           if (type === Constants.CHART) {
             this.setState({
               drillThrough: drillThrough
@@ -101,7 +101,7 @@ class WidgetEditPanel extends React.Component {
           } else if (type === Constants.FILTER) {
             const {
               queryParameter
-            } = widget.data;
+            } = component.data;
             this.setState({
               queryParameter: queryParameter
             });
@@ -113,18 +113,18 @@ class WidgetEditPanel extends React.Component {
           }
           
           this.setState({
-            widgetId: widgetId,
-            title: widget.title,
-            x: widget.x,
-            y: widget.y,
-            width: widget.width,
-            height: widget.height,
-            sqlQuery: widget.sqlQuery,
+            componentId: componentId,
+            title: component.title,
+            x: component.x,
+            y: component.y,
+            width: component.width,
+            height: component.height,
+            sqlQuery: component.sqlQuery,
             type: type,
             subType: subType,
-            jdbcDataSourceId: widget.jdbcDataSourceId,
-            style: widget.style,
-            data: widget.data
+            jdbcDataSourceId: component.jdbcDataSourceId,
+            style: component.style,
+            data: component.data
           }, () => {
             this.runQuery();
           });
@@ -172,7 +172,7 @@ class WidgetEditPanel extends React.Component {
     });
   }
 
-  handleWidgetDataChange = (name, value) => {
+  handleComponentDataChange = (name, value) => {
     const data = {...this.state.data};
     data[[name]] = value;
     this.setState({
@@ -183,7 +183,7 @@ class WidgetEditPanel extends React.Component {
 
   save = () => {
     const {
-      widgetId,
+      componentId,
       title,
       jdbcDataSourceId,
       sqlQuery,
@@ -193,9 +193,9 @@ class WidgetEditPanel extends React.Component {
       data
     } = this.state;
 
-    const widget = {
+    const component = {
       title: title,
-      dashboardId: this.props.dashboardId,
+      reportId: this.props.reportId,
       type: type,
       subType: subType,
       jdbcDataSourceId: jdbcDataSourceId,
@@ -208,19 +208,19 @@ class WidgetEditPanel extends React.Component {
       const {
         drillThrough
       } = this.state;
-      widget.drillThrough = drillThrough;
+      component.drillThrough = drillThrough;
     } else if (type === Constants.FILTER) {
       const  {
         queryParameter
       } = this.state;
-      widget.data = {
+      component.data = {
         queryParameter: queryParameter
       }
     }
     
 
-    if (widgetId === null) {
-      widget.style = {
+    if (componentId === null) {
+      component.style = {
         showBorder: false,
         borderColor: 'rgba(9, 30, 66, 1)',
         showTitle: true,
@@ -230,21 +230,21 @@ class WidgetEditPanel extends React.Component {
         zIndex: 50
       }
 
-      widget.x = 0;
-      widget.y = 0;
-      widget.width = 200 * 100;
-      widget.height = 200;
+      component.x = 0;
+      component.y = 0;
+      component.width = 200 * 100;
+      component.height = 200;
 
-      axios.post('/ws/widget', widget)
+      axios.post('/ws/component', component)
         .then(res => {
-          const widgetId = res.data;
-          this.props.onSave(widgetId);
+          const componentId = res.data;
+          this.props.onSave(componentId);
         });
     } else {
-      widget.id = widgetId;
-      axios.put('/ws/widget', widget)
+      component.id = componentId;
+      axios.put('/ws/component', component)
         .then(res => {
-          this.props.onSave(widgetId);
+          this.props.onSave(componentId);
         });
     }
   }
@@ -268,14 +268,14 @@ class WidgetEditPanel extends React.Component {
     const { 
       drillThrough,
       drillColumnName,
-      drillDashboardId
+      drillReportId
     } = this.state;
     const index = drillThrough.findIndex(d => d.columnName === drillColumnName);
     if (index === -1) {
       const newDrillThrough = [...drillThrough];
       newDrillThrough.push({
         columnName: drillColumnName,
-        dashboardId: drillDashboardId
+        reportId: drillReportId
       });
       this.setState({
         drillThrough: newDrillThrough
@@ -285,7 +285,7 @@ class WidgetEditPanel extends React.Component {
 
   removeDrillThrough = (drill) => {
     const { drillThrough } = this.state;
-    const index = drillThrough.findIndex(d => (d.columnName === drill.columnName) && (d.dashboardId === drill.dashboardId));
+    const index = drillThrough.findIndex(d => (d.columnName === drill.columnName) && (d.reportId === drill.reportId));
     if (index !== -1) {
       const newDrillThrough = [...drillThrough];
       newDrillThrough.splice(index, 1);
@@ -334,7 +334,7 @@ class WidgetEditPanel extends React.Component {
           <Select
             name={'key'}
             value={key}
-            onChange={this.handleWidgetDataChange}
+            onChange={this.handleComponentDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
@@ -344,7 +344,7 @@ class WidgetEditPanel extends React.Component {
           <Select
             name={'value'}
             value={value}
-            onChange={this.handleWidgetDataChange}
+            onChange={this.handleComponentDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
@@ -383,7 +383,7 @@ class WidgetEditPanel extends React.Component {
           <Select
             name={'defaultPageSize'}
             value={defaultPageSize}
-            onChange={this.handleWidgetDataChange}
+            onChange={this.handleComponentDataChange}
             options={TABLE_DEFAULT_PAGE_SIZES}
           />
         </div>
@@ -400,7 +400,7 @@ class WidgetEditPanel extends React.Component {
           <Select
             name={'key'}
             value={key}
-            onChange={this.handleWidgetDataChange}
+            onChange={this.handleComponentDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
@@ -410,7 +410,7 @@ class WidgetEditPanel extends React.Component {
           <Select
             name={'value'}
             value={value}
-            onChange={this.handleWidgetDataChange}
+            onChange={this.handleComponentDataChange}
             options={columns}
             optionDisplay={'name'}
             optionValue={'name'}
@@ -431,15 +431,15 @@ class WidgetEditPanel extends React.Component {
     let staticConfigPanel = (<div></div>);
     if (subType === Constants.IMAGE) {
       const {
-        src
+        source
       } = data;
       staticConfigPanel = (
         <div>
           <label>Source</label>
           <input 
             type="text"
-            value={src}
-            onChange={(event) => this.handleWidgetDataChange('source', event.target.value)} 
+            value={source}
+            onChange={(event) => this.handleComponentDataChange('source', event.target.value)} 
           />
         </div>
       );
@@ -451,7 +451,7 @@ class WidgetEditPanel extends React.Component {
     } else if (subType === Constants.IFRAME) {
       const {
         title,
-        src
+        source
       } = data;
       staticConfigPanel = (
         <div>
@@ -459,13 +459,13 @@ class WidgetEditPanel extends React.Component {
           <input 
             type="text"
             value={title}
-            onChange={(event) => this.handleWidgetDataChange('title', event.target.value)} 
+            onChange={(event) => this.handleComponentDataChange('title', event.target.value)} 
           />
           <label>Source</label>
           <input 
             type="text"
-            value={src}
-            onChange={(event) => this.handleWidgetDataChange('source', event.target.value)} 
+            value={source}
+            onChange={(event) => this.handleComponentDataChange('source', event.target.value)} 
           />
         </div>
       );
@@ -480,7 +480,7 @@ class WidgetEditPanel extends React.Component {
       queryResult,
       jdbcDataSources = [],
       drillThrough = [],
-      drillDashboards = []
+      drillReports = []
     } = this.state;
 
     const data = Util.jsonToArray(queryResult.data);
@@ -490,12 +490,12 @@ class WidgetEditPanel extends React.Component {
     const drillItems = [];
     for (let i = 0; i < drillThrough.length; i++) {
       const drill = drillThrough[i];
-      for (let j = 0; j < drillDashboards.length; j++) {
-        if (drill.dashboardId === drillDashboards[j].id) {
-          const dashboardName = drillDashboards[j].name;
+      for (let j = 0; j < drillReports.length; j++) {
+        if (drill.reportId === drillReports[j].id) {
+          const reportName = drillReports[j].name;
           drillItems.push(
             <div key={drill.columnName} className="row table-row">
-              <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} goes to Dashboard: {dashboardName}</div>
+              <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} goes to Report: {reportName}</div>
               <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
                 <FontAwesomeIcon icon="trash-alt" />
               </button>
@@ -524,7 +524,7 @@ class WidgetEditPanel extends React.Component {
             name={'type'}
             value={type}
             onChange={this.handleOptionChange}
-            selections={Constants.WIDGET_TYPES}
+            selections={Constants.COMPONENT_TYPES}
           />
         </div>
         
@@ -669,7 +669,7 @@ class WidgetEditPanel extends React.Component {
                   </div>
 
                   <label>Result</label>
-                  <TableWidget
+                  <Table
                     data={data}
                     columns={columns}
                     error={error}
@@ -715,11 +715,11 @@ class WidgetEditPanel extends React.Component {
                     optionValue={'name'}
                   />
 
-                  <label>Dashboard</label>
+                  <label>Report</label>
                   <Select
-                    name={'drillDashboardId'}
-                    value={this.state.drillDashboardId}
-                    options={drillDashboards}
+                    name={'drillReportId'}
+                    value={this.state.drillReportId}
+                    options={drillReports}
                     onChange={this.handleIntegerOptionChange}
                     optionDisplay={'name'}
                     optionValue={'id'}
@@ -753,4 +753,4 @@ class WidgetEditPanel extends React.Component {
   };
 }
 
-export default WidgetEditPanel;
+export default ComponentEditPanel;

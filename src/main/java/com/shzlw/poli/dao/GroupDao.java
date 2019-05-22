@@ -1,6 +1,5 @@
 package com.shzlw.poli.dao;
 
-import com.shzlw.poli.model.Dashboard;
 import com.shzlw.poli.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,10 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Repository
 public class GroupDao {
@@ -40,8 +36,8 @@ public class GroupDao {
         }
     }
 
-    public List<Long> findGroupDashboards(long groupId) {
-        String sql = "SELECT dashboard_id FROM p_group_dashboard WHERE group_id = ?";
+    public List<Long> findGroupReports(long groupId) {
+        String sql = "SELECT report_id FROM p_group_report WHERE group_id = ?";
         return jt.queryForList(sql, new Object[]{ groupId }, Long.class);
     }
 
@@ -56,18 +52,18 @@ public class GroupDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void insertGroupDashboards(long groupId, List<Long> groupDashboards) {
-        String sql = "INSERT INTO p_group_dashboard(group_id, dashboard_id) VALUES(?, ?)";
+    public void insertGroupReports(long groupId, List<Long> groupReports) {
+        String sql = "INSERT INTO p_group_report(group_id, report_id) VALUES(?, ?)";
         jt.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setLong(1, groupId);
-                ps.setLong(2, groupDashboards.get(i));
+                ps.setLong(2, groupReports.get(i));
             }
 
             @Override
             public int getBatchSize() {
-                return groupDashboards.size();
+                return groupReports.size();
             }
         });
     }
@@ -82,8 +78,8 @@ public class GroupDao {
         return jt.update(sql, new Object[]{ groupId });
     }
 
-    public int deleteGroupDashboards(long groupId) {
-        String sql = "DELETE FROM p_group_dashboard WHERE group_id=?";
+    public int deleteGroupReports(long groupId) {
+        String sql = "DELETE FROM p_group_report WHERE group_id=?";
         return jt.update(sql, new Object[]{ groupId });
     }
 

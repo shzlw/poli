@@ -2,7 +2,6 @@ package com.shzlw.poli.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Group {
 
@@ -12,7 +11,7 @@ public class Group {
     private long id;
     private String name;
 
-    private List<Long> groupDashboards = new ArrayList<>();
+    private List<Long> groupReports = new ArrayList<>();
 
     public Group() {}
 
@@ -32,11 +31,11 @@ public class Group {
         this.name = name;
     }
 
-    public List<Long> getGroupDashboards() {
-        return groupDashboards;
+    public List<Long> getGroupReports() {
+        return groupReports;
     }
 
-    public void setGroupDashboards(List<Long> groupDashboards) {
-        this.groupDashboards = groupDashboards;
+    public void setGroupReports(List<Long> groupReports) {
+        this.groupReports = groupReports;
     }
 }

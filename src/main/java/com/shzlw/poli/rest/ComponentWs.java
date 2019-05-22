@@ -1,11 +1,10 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.WidgetDao;
-import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.dao.ComponentDao;
+import com.shzlw.poli.model.Component;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.model.Widget;
-import com.shzlw.poli.service.DashboardService;
-import com.shzlw.poli.service.JdbcQueryService;
+import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,40 +22,40 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/widget")
-public class WidgetWs {
+@RequestMapping("/ws/component")
+public class ComponentWs {
 
     @Autowired
-    WidgetDao widgetDao;
+    ComponentDao componentDao;
 
     @Autowired
-    DashboardService dashboardService;
+    ReportService reportService;
 
     @RequestMapping(
             value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public Widget one(@PathVariable("id") long id) {
-        return widgetDao.findById(id);
+    public Component one(@PathVariable("id") long id) {
+        return componentDao.findById(id);
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetWs.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWs.class);
 
-    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/report/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findByDashboardId(@PathVariable("id") long dashboardId,
+    public ResponseEntity<?> findByReportId(@PathVariable("id") long reportId,
                                                HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        List<Dashboard> dashboards = dashboardService.getDashboardsByUser(user);
-        if (dashboards.isEmpty()) {
-            // No dashboard found.
+        List<Report> reports = reportService.getReportsByUser(user);
+        if (reports.isEmpty()) {
+            // No report found.
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         }
-        boolean isFound = dashboards.stream().anyMatch(d -> d.getId() == dashboardId);
+        boolean isFound = reports.stream().anyMatch(d -> d.getId() == reportId);
         if (isFound) {
-            List<Widget> widgets = widgetDao.findByDashboardId(dashboardId);
-            return new ResponseEntity<>(widgets, HttpStatus.OK);
+            List<Component> components = componentDao.findByReportId(reportId);
+            return new ResponseEntity<>(components, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -64,37 +63,37 @@ public class WidgetWs {
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<Long> add(@RequestBody Widget widget) {
-        long id = widgetDao.insert(widget);
+    public ResponseEntity<Long> add(@RequestBody Component component) {
+        long id = componentDao.insert(component);
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> update(@RequestBody Widget widget) {
-        widgetDao.update(widget);
+    public ResponseEntity<?> update(@RequestBody Component component) {
+        componentDao.update(component);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        widgetDao.delete(id);
+        componentDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<?> updatePositions(@RequestBody List<Widget> widgets) {
-        for (Widget widget : widgets) {
-            widgetDao.updatePosition(widget);
+    public ResponseEntity<?> updatePositions(@RequestBody List<Component> components) {
+        for (Component component : components) {
+            componentDao.updatePosition(component);
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value="/download", method= RequestMethod.GET)
     @Transactional(readOnly = true)
-    public void downloadCsv(@RequestParam("widgetId") long widgetId,
+    public void downloadCsv(@RequestParam("componentId") long componentId,
                             @RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "includeHeader", required = false) boolean includeHeader,
                             HttpServletResponse response) throws IOException {

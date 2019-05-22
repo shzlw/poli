@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shzlw.poli.dto.Column;
+import com.shzlw.poli.dto.ComponentQueryResult;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
-import com.shzlw.poli.dto.WidgetQueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
@@ -173,12 +173,12 @@ public class JdbcQueryService {
         return result;
     }
 
-    public WidgetQueryResult queryWidgetByParams(long widgetId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
+    public ComponentQueryResult queryComponentByParams(long componentId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
         if (dataSource == null) {
-            WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, "No data source found");
+            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, "No data source found");
             return queryResult;
         } else if (StringUtils.isEmpty(sql)) {
-            WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, "SQL query cannot be empty");
+            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, "SQL query cannot be empty");
             return queryResult;
         }
 
@@ -223,10 +223,10 @@ public class JdbcQueryService {
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
         LOGGER.info("[queryByParams] parsedSql: {}", parsedSql);
         LOGGER.info("[queryByParams] namedParameters: {}", namedParameters);
-        WidgetQueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<WidgetQueryResult>() {
+        ComponentQueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<ComponentQueryResult>() {
             @Nullable
             @Override
-            public WidgetQueryResult extractData(ResultSet rs) {
+            public ComponentQueryResult extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
@@ -251,11 +251,11 @@ public class JdbcQueryService {
                         array.add(node);
                     }
                     String data = array.toString();
-                    WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, data, columns);
+                    ComponentQueryResult queryResult = new ComponentQueryResult(componentId, data, columns);
                     return queryResult;
                 } catch (Exception e) {
                     String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    WidgetQueryResult queryResult = new WidgetQueryResult(widgetId, error);
+                    ComponentQueryResult queryResult = new ComponentQueryResult(componentId, error);
                     return queryResult;
                 }
             }

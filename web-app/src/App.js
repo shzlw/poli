@@ -113,7 +113,7 @@ class App extends React.Component {
         sysRole: loginResponse.sysRole,
         isAuthorizing: false
       }, () => {
-        let directUrl = '/workspace/dashboard';
+        let directUrl = '/workspace/report';
         if (pathname !== '/' && pathname !== '/login') {
           directUrl = pathname;
         }

@@ -1,10 +1,10 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.DashboardDao;
-import com.shzlw.poli.dao.WidgetDao;
-import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.dao.ComponentDao;
+import com.shzlw.poli.dao.ReportDao;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.service.DashboardService;
+import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,58 +17,58 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/dashboard")
-public class DashboardWs {
+@RequestMapping("/ws/report")
+public class ReportWs {
 
     @Autowired
-    DashboardDao dashboardDao;
+    ReportDao reportDao;
 
     @Autowired
-    WidgetDao widgetDao;
+    ComponentDao componentDao;
 
     @Autowired
-    DashboardService dashboardService;
+    ReportService reportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public List<Dashboard> findAll(HttpServletRequest request) {
+    public List<Report> findAll(HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        return dashboardService.getDashboardsByUser(user);
+        return reportService.getReportsByUser(user);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public Dashboard findOneById(@PathVariable("id") long id,
+    public Report findOneById(@PathVariable("id") long id,
                                  HttpServletRequest request) {
-        List<Dashboard> dashboards = findAll(request);
-        return dashboards.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
+        List<Report> reports = findAll(request);
+        return reports.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
     }
 
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public Dashboard findOneByName(@PathVariable("name") String name,
+    public Report findOneByName(@PathVariable("name") String name,
                                    HttpServletRequest request) {
-        List<Dashboard> dashboards = findAll(request);
-        return dashboards.stream().filter(d -> d.getName().equals(name)).findFirst().orElse(null);
+        List<Report> reports = findAll(request);
+        return reports.stream().filter(d -> d.getName().equals(name)).findFirst().orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<Long> add(@RequestBody Dashboard dashboard,
+    public ResponseEntity<Long> add(@RequestBody Report report,
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        dashboardService.invalidateCache(user.getId());
-        long id = dashboardDao.insert(dashboard.getName(), dashboard.getStyle());
+        reportService.invalidateCache(user.getId());
+        long id = reportDao.insert(report.getName(), report.getStyle());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> update(@RequestBody Dashboard dashboard,
+    public ResponseEntity<?> update(@RequestBody Report report,
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        dashboardService.invalidateCache(user.getId());
-        dashboardDao.update(dashboard);
+        reportService.invalidateCache(user.getId());
+        reportDao.update(report);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -77,9 +77,9 @@ public class DashboardWs {
     public ResponseEntity<?> delete(@PathVariable("id") long id,
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        dashboardService.invalidateCache(user.getId());
-        widgetDao.deleteByDashboardId(id);
-        dashboardDao.delete(id);
+        reportService.invalidateCache(user.getId());
+        componentDao.deleteByReportId(id);
+        reportDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 }

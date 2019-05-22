@@ -4,46 +4,46 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import './Dashboard.css';
+import './Report.css';
 import * as Constants from '../api/Constants';
-import DashboardEditView from './DashboardEditView';
+import ReportEditView from './ReportEditView';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
 import SearchInput from '../components/SearchInput';
 
-const ROUTE_WORKSPACE_DASHBOARD = '/workspace/dashboard/';
+const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 
-class Dashboard extends Component {
+class Report extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       searchValue: '',
-      dashboards: [],
+      reports: [],
       showEditPanel: false,
-      activeDashboardId: 0,
+      activeReportId: 0,
       name: ''
     }
   }
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
-    const index = pathname.indexOf(ROUTE_WORKSPACE_DASHBOARD);
+    const index = pathname.indexOf(ROUTE_WORKSPACE_REPORT);
     if (index !== -1) {
-      const activeDashboardId = Number(pathname.substring(index + ROUTE_WORKSPACE_DASHBOARD.length));
+      const activeReportId = Number(pathname.substring(index + ROUTE_WORKSPACE_REPORT.length));
       this.setState({
-        activeDashboardId: activeDashboardId
+        activeReportId: activeReportId
       })
     }
     this.fetchBoards();
   }
 
   fetchBoards = () => {
-    axios.get('/ws/dashboard')
+    axios.get('/ws/report')
       .then(res => {
-        const dashboards = res.data;
+        const reports = res.data;
         this.setState({ 
-          dashboards: dashboards 
+          reports: reports 
         });
       });
   }
@@ -77,24 +77,24 @@ class Dashboard extends Component {
       return;
     }
 
-    const dashboard = {
+    const report = {
       name: name,
       style: {
-        height: Constants.DEFAULT_DASHBOARD_HEIGHT,
+        height: Constants.DEFAULT_REPORT_HEIGHT,
         backgroundColor: 'rgba(233, 235, 238, 1)',
         isFixedWidth: true,
-        fixedWidth: Constants.DEFAULT_DASHBOARD_FIXED_WIDTH
+        fixedWidth: Constants.DEFAULT_REPORT_FIXED_WIDTH
       }
     };
 
-    axios.post('/ws/dashboard', dashboard)
+    axios.post('/ws/report', report)
       .then(res => {
-        const dashboardId = res.data;
+        const reportId = res.data;
         this.closeEditPanel();
         this.fetchBoards();
-        this.props.history.push(`/workspace/dashboard/${dashboardId}`);
+        this.props.history.push(`/workspace/report/${reportId}`);
         this.setState({
-          activeDashboardId: dashboardId
+          activeReportId: reportId
         });
       })
       .catch(error => {
@@ -102,31 +102,31 @@ class Dashboard extends Component {
       });
   }
 
-  view = (dashboardId) => {
+  view = (reportId) => {
     this.setState({
-      activeDashboardId: dashboardId
+      activeReportId: reportId
     }, () => {
-      this.props.history.push(`/workspace/dashboard/${dashboardId}`);
+      this.props.history.push(`/workspace/report/${reportId}`);
     });
   }
 
-  onDashboardSave = (dashboardId) => {
+  onReportSave = (reportId) => {
     this.fetchBoards();
   }
 
-  onDashboardDelete = (dashboardId) => {
+  onReportDelete = (reportId) => {
     this.fetchBoards();
     this.setState({
-      activeDashboardId: 0
+      activeReportId: 0
     }, () => {
-      this.props.history.push('/workspace/dashboard');
+      this.props.history.push('/workspace/report');
     });
   }
 
   render() {
     const {
-      dashboards = [],
-      activeDashboardId,
+      reports = [],
+      activeReportId,
       searchValue
     } = this.state;
 
@@ -135,15 +135,15 @@ class Dashboard extends Component {
     } = this.props;
     const editable = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
 
-    const dashboardRows = [];
-    for (let i = 0; i < dashboards.length; i++) {
-      const dashboard = dashboards[i];
-      const name = dashboard.name;
-      const menuActive = activeDashboardId === dashboard.id ? 'dashboard-menu-item-active' : '';
+    const reportRows = [];
+    for (let i = 0; i < reports.length; i++) {
+      const report = reports[i];
+      const name = report.name;
+      const menuActive = activeReportId === report.id ? 'report-menu-item-active' : '';
       if (!searchValue || (searchValue && name.includes(searchValue))) {
-        dashboardRows.push(
+        reportRows.push(
           (
-            <div key={i} className={`dashboard-menu-item ellipsis ${menuActive}`} onClick={() => this.view(dashboard.id)}>
+            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.view(report.id)}>
               {name}
             </div>
           )
@@ -151,11 +151,11 @@ class Dashboard extends Component {
       }
     }
 
-    const info = editable && dashboards.length === 0 ? 'Create a new dashboard!' : 'Select a dashboard!';
+    const info = editable && reports.length === 0 ? 'Create a new report!' : 'Select a report!';
 
     return (
       <React.Fragment>
-        <div className="dashboard-sidebar">
+        <div className="report-sidebar">
           <div style={{margin: '8px 5px 5px 5px'}}>
             { editable && (
               <button className="button full-width" onClick={() => this.setState({ showEditPanel: true })}>
@@ -172,23 +172,23 @@ class Dashboard extends Component {
             />
           </div>
           <div>
-            {dashboardRows}
+            {reportRows}
           </div>
         </div>
-        <div className="dashboard-content">
+        <div className="report-content">
           <Switch>
             <Route 
-              path="/workspace/dashboard/:id" 
+              path="/workspace/report/:id" 
               render={(props) => 
-                <DashboardEditView 
+                <ReportEditView 
                   key={props.match.params.id} 
-                  onDashboardSave={this.onDashboardSave} 
-                  onDashboardDelete={this.onDashboardDelete} 
+                  onReportSave={this.onReportSave} 
+                  onReportDelete={this.onReportDelete} 
                   editable={editable}
                 />
               } 
             />
-            <EmptyDashboard
+            <EmptyReport
               info={info}
             />
           </Switch>
@@ -216,12 +216,12 @@ class Dashboard extends Component {
   }
 }
 
-function EmptyDashboard({info}) {
+function EmptyReport({info}) {
   return (
-    <div className="empty-dashboard">
+    <div className="empty-report">
       {info}
     </div>
   )
 }
 
-export default withRouter(Dashboard);
+export default withRouter(Report);

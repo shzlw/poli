@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MIN_WIDTH = 30;
 const MIN_HEIGHT = 30;
-const WIDGET_BORDER = 2;
+const COMPONENT_BORDER = 2;
 
 
 class GridResizable extends React.Component {
@@ -85,8 +85,8 @@ class GridResizable extends React.Component {
       newHeight = MIN_HEIGHT;
     }
 
-    const left = gridItemNode.offsetLeft + WIDGET_BORDER * 2;
-    const top = gridItemNode.offsetTop + WIDGET_BORDER * 2;
+    const left = gridItemNode.offsetLeft + COMPONENT_BORDER * 2;
+    const top = gridItemNode.offsetTop + COMPONENT_BORDER * 2;
 
     if (newWidth +  left > containerWidth) {
       newWidth = containerWidth - left;

@@ -2,10 +2,10 @@ import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 import DataSource from './DataSource';
-import Dashboard from './Dashboard';
+import Report from './Report';
 import UserManagement from './UserManagement';
 import Account from './Account';
-import DashboardFullScreenView from './DashboardFullScreenView';
+import ReportFullScreenView from './ReportFullScreenView';
 
 import Toast from '../components/Toast';
 
@@ -16,8 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MENU_ITEMS = [
   {
-    link: '/workspace/dashboard',
-    value: 'Dashboard',
+    link: '/workspace/report',
+    value: 'Report',
     icon: 'chalkboard',
   }, 
   {
@@ -38,7 +38,7 @@ class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuLink: '/workspace/dashboard'
+      currentMenuLink: '/workspace/report'
     }
   }
 
@@ -83,7 +83,7 @@ class Workspace extends React.Component {
     let menuItems = [];
     let menuList = [];
     if (sysRole === Constants.SYS_ROLE_VIEWER) {
-      menuList = MENU_ITEMS.filter(m => m.link === '/workspace/dashboard');
+      menuList = MENU_ITEMS.filter(m => m.link === '/workspace/report');
     } else {
       menuList = MENU_ITEMS;
     }
@@ -127,9 +127,9 @@ class Workspace extends React.Component {
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/account" component={Account} />
-            <Route exact path="/workspace/dashboard/full/:name" component={DashboardFullScreenView} />
+            <Route exact path="/workspace/report/full/:name" component={ReportFullScreenView} />
             <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
-            <Route path="/workspace/dashboard" render={() => <Dashboard {...this.props} />} />
+            <Route path="/workspace/report" render={() => <Report {...this.props} />} />
           </Switch>
         </div>
         <Toast />

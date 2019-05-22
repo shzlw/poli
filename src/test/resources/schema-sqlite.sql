@@ -1,7 +1,7 @@
 
-DROP TABLE IF EXISTS p_group_dashboard;
-DROP TABLE IF EXISTS p_widget;
-DROP TABLE IF EXISTS p_dashboard;
+DROP TABLE IF EXISTS p_group_report;
+DROP TABLE IF EXISTS p_component;
+DROP TABLE IF EXISTS p_report;
 DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_group_user;
 DROP TABLE IF EXISTS p_user;
@@ -19,16 +19,16 @@ IF NOT EXISTS p_datasource (
 );
 
 CREATE TABLE
-IF NOT EXISTS p_dashboard (
+IF NOT EXISTS p_report (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     style TEXT
 );
 
 CREATE TABLE
-IF NOT EXISTS p_widget (
+IF NOT EXISTS p_component (
     id INTEGER NOT NULL PRIMARY KEY,
-    dashboard_id INTEGER NOT NULL,
+    report_id INTEGER NOT NULL,
     datasource_id INTEGER,
     title TEXT,
     x INTEGER NOT NULL,
@@ -41,7 +41,7 @@ IF NOT EXISTS p_widget (
     data TEXT,
     drill_through TEXT,
     style TEXT,
-    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
+    FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (datasource_id) REFERENCES p_datasource(id)
 );
 
@@ -74,15 +74,15 @@ IF NOT EXISTS p_group_user (
 );
 
 CREATE TABLE
-IF NOT EXISTS p_group_dashboard (
-    dashboard_id INTEGER NOT NULL,
+IF NOT EXISTS p_group_report (
+    report_id INTEGER NOT NULL,
     group_id INTEGER NOT NULL,
-    PRIMARY KEY (dashboard_id, group_id),
-    FOREIGN KEY (dashboard_id) REFERENCES p_dashboard(id),
+    PRIMARY KEY (report_id, group_id),
+    FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (group_id) REFERENCES p_group(id)
 );
 
-CREATE UNIQUE INDEX p_dashboard_unique_name_index ON p_dashboard(name);
+CREATE UNIQUE INDEX p_report_unique_name_index ON p_report(name);
 
 -- In test, set admin password.
 INSERT INTO p_user(username, password, sys_role)

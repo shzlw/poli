@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import './TableWidget.css';
+import './Table.css';
 
-class TableWidget extends React.Component {
+class Table extends React.Component {
 
   constructor(props) {
     super(props);
@@ -11,8 +11,8 @@ class TableWidget extends React.Component {
     };
   }
 
-  handleTdClick = (dashboardId, columnName, columnValue) => {
-    this.props.onTableTdClick(dashboardId, columnName, columnValue);
+  handleTdClick = (reportId, columnName, columnValue) => {
+    this.props.onTableTdClick(reportId, columnName, columnValue);
   }
 
   render() {   
@@ -34,10 +34,10 @@ class TableWidget extends React.Component {
       if (drillThrough.length > 0) {
         const index = drillThrough.findIndex(d => d.columnName === columnName);
         if (index !== -1) {
-          const dashboardId = drillThrough[index].dashboardId;
+          const reportId = drillThrough[index].reportId;
           header.Cell = (props => 
             <span className="link-label" 
-              onClick={() => this.handleTdClick(dashboardId, columnName, props.value)}>
+              onClick={() => this.handleTdClick(reportId, columnName, props.value)}>
               {props.value}
             </span>
           );
@@ -73,4 +73,4 @@ class TableWidget extends React.Component {
   }
 }
 
-export default TableWidget;
+export default Table;

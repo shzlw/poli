@@ -4,7 +4,7 @@
 export const STATIC = 'static';
 export const CHART = 'chart';
 export const FILTER = 'filter';
-export const WIDGET_TYPES = [STATIC, CHART, FILTER];
+export const COMPONENT_TYPES = [STATIC, CHART, FILTER];
 
 export const SLICER = 'slicer';
 export const SINGLE_VALUE= 'single';
@@ -32,8 +32,8 @@ export const SYS_ROLE_ADMIN = 'admin';
 export const SYS_ROLE_DEVELOPER = 'developer';
 export const SYS_ROLE_VIEWER = 'viewer';
 
-export const DEFAULT_DASHBOARD_HEIGHT = 600;
-export const DEFAULT_DASHBOARD_FIXED_WIDTH = 800;
+export const DEFAULT_REPORT_HEIGHT = 600;
+export const DEFAULT_REPORT_FIXED_WIDTH = 800;
 
 export const REMEMBERME = 'rememberMe';
 export const YES = 'yes';

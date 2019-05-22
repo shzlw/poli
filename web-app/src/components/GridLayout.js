@@ -16,8 +16,9 @@ class GridLayout extends React.Component {
       width,
       height,
       backgroundColor,
-      widgets = [],
-      showGridlines
+      components = [],
+      showGridlines,
+      isEditMode
     } = this.props;
 
     let style = {
@@ -26,22 +27,22 @@ class GridLayout extends React.Component {
       backgroundColor: backgroundColor
     };
 
-    if (showGridlines) {
+    if (showGridlines && isEditMode) {
       style.backgroundSize = '15px 15px';
-      style.backgroundImage = 'radial-gradient(rgb(63, 93, 131) 10%, transparent 10%)';
+      style.backgroundImage = 'radial-gradient(rgb(23, 43, 77) 10%, transparent 10%)';
     }
 
-    const boxItems = widgets.map((widget, index) => 
+    const boxItems = components.map((component, index) => 
       <GridItem
         key={index}
         snapToGrid={this.props.snapToGrid}
-        isEditMode={this.props.isEditMode}
-        {...widget}
-        onWidgetMove={this.props.onWidgetMove}
-        onWidgetEdit={this.props.onWidgetEdit}
-        onWidgetRemove={this.props.onWidgetRemove}
-        onWidgetFilterInputChange={this.props.onWidgetFilterInputChange}
-        onWidgetContentClick={this.props.onWidgetContentClick}
+        isEditMode={isEditMode}
+        {...component}
+        onComponentMove={this.props.onComponentMove}
+        onComponentEdit={this.props.onComponentEdit}
+        onComponentRemove={this.props.onComponentRemove}
+        onComponentFilterInputChange={this.props.onComponentFilterInputChange}
+        onComponentContentClick={this.props.onComponentContentClick}
       />
     );
 

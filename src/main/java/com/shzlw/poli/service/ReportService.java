@@ -3,8 +3,8 @@ package com.shzlw.poli.service;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.shzlw.poli.dao.DashboardDao;
-import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.dao.ReportDao;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
@@ -20,36 +20,36 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class DashboardService {
+public class ReportService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
     /**
      * Key: User id
-     * Value: Dashboard
+     * Value: Report
      */
-    private static final Cache<Long, List<Dashboard>> USER_DASHBOARD_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<Long, List<Report>> USER_REPORT_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @Autowired
-    DashboardDao dashboardDao;
+    ReportDao reportDao;
 
-    public List<Dashboard> getDashboardsByUser(User user) {
+    public List<Report> getReportsByUser(User user) {
         if (StringUtils.isEmpty(user)) {
             return Collections.emptyList();
         }
 
         try {
-            List<Dashboard> rt = USER_DASHBOARD_CACHE.get(user.getId(), () -> {
-                List<Dashboard> dashboards = new ArrayList<>();
+            List<Report> rt = USER_REPORT_CACHE.get(user.getId(), () -> {
+                List<Report> reports = new ArrayList<>();
                 if (Constants.SYS_ROLE_VIEWER.equals(user.getSysRole())) {
-                    dashboards = dashboardDao.findByViewer(user.getId());
+                    reports = reportDao.findByViewer(user.getId());
                 } else {
-                    dashboards = dashboardDao.findAll();
+                    reports = reportDao.findAll();
                 }
 
-                return dashboards;
+                return reports;
             });
             return rt;
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
@@ -58,6 +58,6 @@ public class DashboardService {
     }
 
     public void invalidateCache(long userId) {
-        USER_DASHBOARD_CACHE.invalidate(userId);
+        USER_REPORT_CACHE.invalidate(userId);
     }
 }

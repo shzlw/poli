@@ -13,15 +13,15 @@ class Group extends React.Component {
     super(props);
     this.state = {
       groups: [],
-      dashboards: [],
+      reports: [],
       showConfirmDeletionPanel: false,
       objectToDelete: {},
       showEditPanel: false,
       searchValue: '',
       id: null,
       name: '',
-      groupDashboardId: '',
-      groupDashboards: []
+      groupReportId: '',
+      groupReports: []
     };
   }
 
@@ -48,14 +48,14 @@ class Group extends React.Component {
     return {
       id: null,
       name: '',
-      groupDashboardId: '',
-      groupDashboards: []
+      groupReportId: '',
+      groupReports: []
     };
   }
 
   componentDidMount() {
     this.fetchGroups();
-    this.fetchDashboards();
+    this.fetchReports();
   }
 
   fetchGroups = () => {
@@ -68,12 +68,12 @@ class Group extends React.Component {
       });
   }
 
-  fetchDashboards = () => {
-    axios.get('/ws/dashboard')
+  fetchReports = () => {
+    axios.get('/ws/report')
       .then(res => {
-        const dashboards = res.data;
+        const reports = res.data;
         this.setState({ 
-          dashboards: dashboards 
+          reports: reports 
         });
       });
   }
@@ -86,14 +86,14 @@ class Group extends React.Component {
           this.setState({
             id: result.id,
             name: result.name,
-            groupDashboards: result.groupDashboards
+            groupReports: result.groupReports
           });
         });
     } else {
       this.clearEditPanel();
     }
     this.setState({
-      groupDashboardId: '',
+      groupReportId: '',
       showEditPanel: true
     }); 
   }
@@ -112,12 +112,12 @@ class Group extends React.Component {
     const {
       id,
       name,
-      groupDashboards
+      groupReports
     } = this.state;
 
     let group = {
       name: name,
-      groupDashboards: groupDashboards
+      groupReports: groupReports
     };
 
     if (id !== null) {
@@ -138,34 +138,34 @@ class Group extends React.Component {
     } 
   }
 
-  addGroupDashboard= () => {
+  addGroupReport= () => {
     const { 
-      groupDashboardId,
-      groupDashboards = []
+      groupReportId,
+      groupReports = []
     } = this.state;
 
-    if (groupDashboardId) {
-      const index = groupDashboards.findIndex(dashboardId => dashboardId === groupDashboardId);
+    if (groupReportId) {
+      const index = groupReports.findIndex(reportId => reportId === groupReportId);
       if (index === -1) {
-        const newGroupDashboards = [...groupDashboards];
-        newGroupDashboards.push(groupDashboardId);
+        const newGroupReports = [...groupReports];
+        newGroupReports.push(groupReportId);
         this.setState({
-          groupDashboards: newGroupDashboards
+          groupReports: newGroupReports
         });
       }
     }
   }
 
-  removeGroupDashboard = (dashboardId) => {
+  removeGroupReport = (reportId) => {
     const { 
-      groupDashboards = [] 
+      groupReports = [] 
     } = this.state;
-    const index = groupDashboards.findIndex(id => id === dashboardId);
+    const index = groupReports.findIndex(id => id === reportId);
     if (index !== -1) {
-      const newGroupDashboards = [...groupDashboards];
-      newGroupDashboards.splice(index, 1);
+      const newGroupReports = [...groupReports];
+      newGroupReports.splice(index, 1);
       this.setState({
-        groupDashboards: newGroupDashboards
+        groupReports: newGroupReports
       });
     } 
   }
@@ -199,8 +199,8 @@ class Group extends React.Component {
     const { 
       id,
       groups = [],
-      dashboards = [],
-      groupDashboards = [],
+      reports = [],
+      groupReports = [],
       searchValue,
       showConfirmDeletionPanel,
       objectToDelete = {}
@@ -236,16 +236,16 @@ class Group extends React.Component {
       }
     }
 
-    const groupDashboardItems = [];
-    for (let i = 0; i < groupDashboards.length; i++) {
-      const dashboardId = groupDashboards[i];
-      for (let j = 0; j < dashboards.length; j++) {
-        if (dashboardId === dashboards[j].id) {
-          groupDashboardItems.push(
+    const groupReportItems = [];
+    for (let i = 0; i < groupReports.length; i++) {
+      const reportId = groupReports[i];
+      for (let j = 0; j < reports.length; j++) {
+        if (reportId === reports[j].id) {
+          groupReportItems.push(
             (
-              <div key={dashboardId} className="row table-row">
-                <div className="float-left ellipsis" style={{width: '180px'}}>{dashboards[j].name}</div>
-                <button className="button table-row-button float-right" onClick={() => this.removeGroupDashboard(dashboardId)}>
+              <div key={reportId} className="row table-row">
+                <div className="float-left ellipsis" style={{width: '180px'}}>{reports[j].name}</div>
+                <button className="button table-row-button float-right" onClick={() => this.removeGroupReport(reportId)}>
                   <FontAwesomeIcon icon="trash-alt" />
                 </button>
               </div>
@@ -291,18 +291,18 @@ class Group extends React.Component {
             </div>
             
             <div className="form-panel float-right" style={{width: '240px'}}>
-              <label>Dashboards</label>
+              <label>Reports</label>
               <Select
-                name={'groupDashboardId'}
-                value={this.state.groupDashboardId}
+                name={'groupReportId'}
+                value={this.state.groupReportId}
                 onChange={this.handleIntegerOptionChange}
-                options={dashboards}
+                options={reports}
                 optionDisplay={'name'}
                 optionValue={'id'}
               />
-              <button className="button" onClick={this.addGroupDashboard}>Add</button>
+              <button className="button" onClick={this.addGroupReport}>Add</button>
               <div style={{marginTop: '8px'}}>
-                {groupDashboardItems}
+                {groupReportItems}
               </div>
             </div>
           </div>

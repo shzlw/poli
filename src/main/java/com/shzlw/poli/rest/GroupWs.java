@@ -21,7 +21,7 @@ public class GroupWs {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<Group> findAll() {
-        // return groupDao.findAllWithDashboards();
+        // return groupDao.findAllWithReports();
         return groupDao.findAll();
     }
 
@@ -32,8 +32,8 @@ public class GroupWs {
         if (group == null) {
             return null;
         }
-        List<Long> groupDashboards = groupDao.findGroupDashboards(groupId);
-        group.setGroupDashboards(groupDashboards);
+        List<Long> groupReports = groupDao.findGroupReports(groupId);
+        group.setGroupReports(groupReports);
         return group;
     }
 
@@ -41,7 +41,7 @@ public class GroupWs {
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Group group) {
         long groupId = groupDao.insertGroup(group.getName());
-        groupDao.insertGroupDashboards(groupId, group.getGroupDashboards());
+        groupDao.insertGroupReports(groupId, group.getGroupReports());
         return new ResponseEntity<Long>(groupId, HttpStatus.CREATED);
     }
 
@@ -50,8 +50,8 @@ public class GroupWs {
     public ResponseEntity<?> update(@RequestBody Group group) {
         long groupId = group.getId();
         groupDao.updateGroup(group);
-        groupDao.deleteGroupDashboards(groupId);
-        groupDao.insertGroupDashboards(groupId, group.getGroupDashboards());
+        groupDao.deleteGroupReports(groupId);
+        groupDao.insertGroupReports(groupId, group.getGroupReports());
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class GroupWs {
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long groupId) {
         groupDao.deleteGroupUsers(groupId);
-        groupDao.deleteGroupDashboards(groupId);
+        groupDao.deleteGroupReports(groupId);
         groupDao.deleteGroup(groupId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }

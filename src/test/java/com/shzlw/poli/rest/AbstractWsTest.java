@@ -1,12 +1,11 @@
 package com.shzlw.poli.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.dto.LoginResponse;
-import com.shzlw.poli.model.Dashboard;
+import com.shzlw.poli.model.Component;
 import com.shzlw.poli.model.Group;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
-
-import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -134,14 +131,14 @@ public abstract class AbstractWsTest {
         return loginResponse;
     }
 
-    public long createDashboard(String name) throws Exception {
-        Dashboard newDashboard = new Dashboard();
-        newDashboard.setName(name);
-        newDashboard.setStyle("{}");
-        String body = mapper.writeValueAsString(newDashboard);
+    public long createReport(String name) throws Exception {
+        Report newReport = new Report();
+        newReport.setName(name);
+        newReport.setStyle("{}");
+        String body = mapper.writeValueAsString(newReport);
 
         mvcResult = mvc.perform(
-                post("/ws/dashboard")
+                post("/ws/report")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -152,16 +149,16 @@ public abstract class AbstractWsTest {
         return id;
     }
 
-    public long createWidget(long dashboardId) throws Exception {
-        Widget w1 = new Widget();
+    public long createComponent(long reportId) throws Exception {
+        Component w1 = new Component();
         w1.setTitle("w1");
         w1.setX(1);
         w1.setY(2);
         w1.setWidth(3);
         w1.setHeight(4);
-        w1.setType(Constants.WIDGET_TYPE_CHART);
+        w1.setType(Constants.COMPONENT_TYPE_CHART);
         w1.setSubType("table");
-        w1.setDashboardId(dashboardId);
+        w1.setReportId(reportId);
         w1.setData("{}");
         w1.setStyle("{}");
         w1.setDrillThrough("[]");
@@ -169,7 +166,7 @@ public abstract class AbstractWsTest {
         String body = mapper.writeValueAsString(w1);
 
         mvcResult = mvc.perform(
-                post("/ws/widget")
+                post("/ws/component")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -180,10 +177,10 @@ public abstract class AbstractWsTest {
         return id;
     }
 
-    public Group createGroup(String groupName, List<Long> dashboardIds) throws Exception {
+    public Group createGroup(String groupName, List<Long> reportIds) throws Exception {
         Group g1 = new Group();
         g1.setName(groupName);
-        g1.setGroupDashboards(dashboardIds);
+        g1.setGroupReports(reportIds);
         String body = mapper.writeValueAsString(g1);
 
         mvcResult = mvc.perform(

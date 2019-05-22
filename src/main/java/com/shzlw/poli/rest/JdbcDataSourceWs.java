@@ -1,7 +1,7 @@
 package com.shzlw.poli.rest;
 
+import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
-import com.shzlw.poli.dao.WidgetDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
@@ -28,7 +28,7 @@ public class JdbcDataSourceWs {
     JdbcDataSourceService jdbcDataSourceService;
 
     @Autowired
-    WidgetDao widgetDao;
+    ComponentDao componentDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
@@ -61,7 +61,7 @@ public class JdbcDataSourceWs {
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         jdbcDataSourceService.removeFromCache(id);
-        widgetDao.updateByDataSourceId(id);
+        componentDao.updateByDataSourceId(id);
         jdbcDataSourceDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }

@@ -3,7 +3,6 @@ package com.shzlw.poli.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
-import com.shzlw.poli.model.Widget;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.shzlw.poli.util.RawStringDeserialzier;
 
-public class Widget {
+public class Component {
 
     private long id;
     private String title;
@@ -13,7 +13,7 @@ public class Widget {
     private int width;
     private int height;
     private long jdbcDataSourceId;
-    private long dashboardId;
+    private long reportId;
     private String sqlQuery;
 
     private String type;
@@ -92,12 +92,12 @@ public class Widget {
         this.jdbcDataSourceId = jdbcDataSourceId;
     }
 
-    public long getDashboardId() {
-        return dashboardId;
+    public long getReportId() {
+        return reportId;
     }
 
-    public void setDashboardId(long dashboardId) {
-        this.dashboardId = dashboardId;
+    public void setReportId(long reportId) {
+        this.reportId = reportId;
     }
 
     public String getSqlQuery() {

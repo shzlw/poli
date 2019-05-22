@@ -33,12 +33,12 @@ public class GroupWsTest extends AbstractWsTest {
 
     @Test
     public void test() throws Exception {
-        long d1 = createDashboard("d1");
+        long d1 = createReport("d1");
 
         // ********** Create **********
         Group g1 = new Group();
         g1.setName("g1");
-        g1.setGroupDashboards(Arrays.asList(d1));
+        g1.setGroupReports(Arrays.asList(d1));
         String body = mapper.writeValueAsString(g1);
 
         mvcResult = mvc.perform(
@@ -54,7 +54,7 @@ public class GroupWsTest extends AbstractWsTest {
         Group saved = mapper.readValue(responeText, Group.class);
         Assert.assertEquals(id, saved.getId());
         Assert.assertEquals(g1.getName(), saved.getName());
-        Assert.assertEquals(new HashSet<Long>(Arrays.asList(d1)), new HashSet<Long>(saved.getGroupDashboards()));
+        Assert.assertEquals(new HashSet<Long>(Arrays.asList(d1)), new HashSet<Long>(saved.getGroupReports()));
 
         // Verify the list
         mvcResult = mvc.perform(
@@ -85,12 +85,12 @@ public class GroupWsTest extends AbstractWsTest {
         saved = mapper.readValue(responeText, Group.class);
         Assert.assertEquals(id, saved.getId());
         Assert.assertEquals(g1.getName(), saved.getName());
-        Assert.assertTrue(d1 == saved.getGroupDashboards().get(0));
+        Assert.assertTrue(d1 == saved.getGroupReports().get(0));
 
-        // ********** Update dashboards **********
-        long d2 = createDashboard("d2");
-        List<Long> dashboards = Arrays.asList(d1, d2);
-        g1.setGroupDashboards(dashboards);
+        // ********** Update reports **********
+        long d2 = createReport("d2");
+        List<Long> reports = Arrays.asList(d1, d2);
+        g1.setGroupReports(reports);
         body = mapper.writeValueAsString(g1);
         mvcResult = mvc.perform(
                 put("/ws/group")
@@ -104,7 +104,7 @@ public class GroupWsTest extends AbstractWsTest {
         saved = mapper.readValue(responeText, Group.class);
         Assert.assertEquals(id, saved.getId());
         Assert.assertEquals(g1.getName(), saved.getName());
-        Assert.assertEquals(new HashSet<Long>(dashboards), new HashSet<Long>(saved.getGroupDashboards()));
+        Assert.assertEquals(new HashSet<Long>(reports), new HashSet<Long>(saved.getGroupReports()));
 
         // ********** Delete **********
         mvcResult = mvc.perform(

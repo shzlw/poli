@@ -3,11 +3,6 @@ import PropTypes from 'prop-types';
 
 class Iframe extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   static propTypes = {
     src: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired
@@ -22,7 +17,8 @@ class Iframe extends React.Component {
     const style = {
       width: '100%',
       height: '100%',
-      border: '0px'
+      border: '0px',
+      display: 'block'
     }
 
     return (
