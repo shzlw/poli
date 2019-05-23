@@ -10,7 +10,3 @@
 
 [GitHub](https://github.com/shzlw/poli)
 [Get Started](#installation)
-
-<!-- background color -->
-
-![color](linear-gradient(to left top, #0385b8, #57dba2))
