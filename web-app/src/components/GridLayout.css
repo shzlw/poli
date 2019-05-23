@@ -34,7 +34,7 @@
 }
 
 .grid-edit-panel {
-  position:absolute; 
+  position: absolute; 
   right: 0; 
   top: 0; 
   background-color: transparent;
@@ -44,12 +44,18 @@
 
 .grid-draggable {
   cursor: move;
+  height: 25px;
+  position: absolute; 
+  left: 0px; 
+  top: 0px; 
+  right: 0px;
+  background-color: transparent;
 }
 
 .grid-resizable {
   width: 12px;
   height: 12px;
-  position:absolute; 
+  position: absolute; 
   right: 0; 
   bottom: 0; 
   cursor: se-resize; 

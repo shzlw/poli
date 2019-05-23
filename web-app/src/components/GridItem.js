@@ -13,6 +13,7 @@ import Table from './Table';
 import Slicer from './filters/Slicer';
 import ImageBox from './widgets/ImageBox';
 import Iframe from './widgets/Iframe';
+import TextBox from './widgets/TextBox';
 
 class GridItem extends React.Component {
 
@@ -105,7 +106,7 @@ class GridItem extends React.Component {
     
     const reportId = drillThrough[index].reportId;
     const componentClickEvent = {
-      type: 'pieClick',
+      type: 'chartClick',
       data: {
         reportId: reportId,
         columnName: columnName,
@@ -214,17 +215,32 @@ class GridItem extends React.Component {
       }
     } else if (type === Constants.STATIC) {
       if (subType === Constants.IMAGE) {
-        const { source } = data;
+        const { 
+          src = '' 
+        } = data;
         componentItem = (
-          <ImageBox src={source} />
+          <ImageBox src={src} />
         );
       } else if (subType === Constants.IFRAME) {
         const {
-          title, 
-          source 
+          title = '', 
+          src = ''
         } = data;
         componentItem = (
-          <Iframe title={title} src={source} />
+          <Iframe title={title} src={src} />
+        );
+      } else if (subType === Constants.TEXT) {
+        const { 
+          fontSize = 16,
+          fontColor = '#000000',
+          value = ''
+        } = data;
+        componentItem = (
+          <TextBox 
+            fontSize={fontSize} 
+            fontColor={fontColor}
+            value={value}
+          />
         );
       }
     }
@@ -269,26 +285,14 @@ class GridItem extends React.Component {
       backgroundColor: titleBackgroundColor
     };
 
+    let titleValueStyle = {};
+    if (showTitle && isEditMode) {
+      titleValueStyle = {marginRight: '50px'};
+    }
+
     const contentStyle = {
       backgroundColor: contentBackgroundColor
     }
-
-    /*
-    <div className="grid-box-file-button-group">
-      <div className="inline-block" onClick={() => this.exportJson(id)}>
-        <FontAwesomeIcon icon="file-export" fixedWidth />
-      </div>
-      
-      <div className="inline-block" onClick={() => this.exportCsv(id)}>
-        <FontAwesomeIcon icon="file-csv" fixedWidth />
-      </div>
-      <div className="grid-box-file-button-group">
-              <div className="inline-block">
-                <FontAwesomeIcon icon="external-link-alt" fixedWidth />
-              </div>
-            </div>
-    </div>
-    */
 
     return (
       <div className="grid-box" style={gridBoxStyle}>
@@ -299,18 +303,12 @@ class GridItem extends React.Component {
             onMouseMove={this.onMouseMove}
             mode={this.state.mode}
             snapToGrid={this.props.snapToGrid} 
-          >
-            { showTitle && (
-              <div className="grid-box-title" style={titleStyle}>
-                <div className="grid-box-title-value ellipsis" style={{marginRight: '50px'}}>{title}</div>
-              </div>
-            )}
-          </GridDraggable>
+          />
         )}
 
-        { (!isEditMode && showTitle) && (
+        { showTitle && (
           <div className="grid-box-title" style={titleStyle}>
-            <div className="grid-box-title-value ellipsis">{title}</div>
+            <div className="grid-box-title-value ellipsis" style={titleValueStyle}>{title}</div>
           </div>
         )}
 
@@ -327,7 +325,7 @@ class GridItem extends React.Component {
 
         { !isEditMode && hasDrillThrough && (
           <div className="grid-edit-panel grid-box-icon inline-block">
-            <FontAwesomeIcon icon="flag" fixedWidth />
+            <FontAwesomeIcon icon="level-up-alt" fixedWidth />
           </div>
         )}
         <div className="grid-box-content" style={contentStyle}>

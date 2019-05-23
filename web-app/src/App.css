@@ -50,11 +50,6 @@ body,
   display: inline-block;
   width: 100%;
   margin-bottom: 5px;
-  font-weight: 700;
-}
-
-.form-panel .small-label {
-  font-weight: 400 !important;
 }
 
 .panel {
@@ -302,6 +297,10 @@ hr {
   border-top: 1px solid #ccc;
   margin: 10px 0;
   padding: 0; 
+}
+
+.bold {
+  font-weight: 700;
 }
 
 .full-width {

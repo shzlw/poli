@@ -2,4 +2,5 @@
   word-wrap: break-word;
   overflow-y: auto;
   height: 100%;
+  padding: 0px 5px;
 }

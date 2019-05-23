@@ -1,0 +1,57 @@
+:root {
+  --theme-color: #0065FF;
+  --theme-color-light: #2684FF;
+  --theme-color-dark: #0052CC;
+
+  --text-color-base: #091E42;
+  --text-color-secondary: #42526E;
+  --text-color-tertiary: #7A869A;
+}
+
+* {
+  text-decoration: none !important;
+}
+
+a {
+  transition: all 0.2s linear;
+}
+
+section.cover {
+  background-image: linear-gradient(to left top, #2684FF, #57dba2);
+}
+
+.sidebar .app-name {
+  font-weight: 700;
+}
+
+.sidebar li {
+  margin: 5px 0px;
+}
+
+.sidebar li>p {
+  font-size: 16px;
+}
+
+.sidebar ul li a {
+  color: #42526E;
+  font-size: 15px;
+}
+
+.markdown-section pre,
+.markdown-section pre > code {
+  background-color: #253858;
+  color: #EBECF0;
+  font-size: 15px;
+}
+
+.markdown-section code {
+  display: inline-block;
+}
+
+.markdown-section pre {
+  padding: 6px 12px;
+}
+
+.markdown-section pre > code {
+  padding: 0;
+}

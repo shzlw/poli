@@ -1,7 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class TextBox extends React.Component {
-  state = {}
+  
+  static propTypes = {
+    fontSize: PropTypes.string.isRequired,
+    fontColor: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired
+  };
 
   render() {
     const {

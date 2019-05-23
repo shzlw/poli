@@ -30,14 +30,6 @@ class GridDraggable extends React.Component {
     const gridItemNode = thisNode.parentNode;
     const xOffset = event.clientX - gridItemNode.offsetLeft;
     const yOffset = event.clientY - gridItemNode.offsetTop;
-
-    /*
-    let boxes = document.getElementsByClassName("grid-box");
-    for (let i = 0; i < boxes.length; i++) {
-      boxes[i].style.zIndex = 20;
-    }
-    gridItemNode.style.zIndex = 30;
-    */
    
     const { ownerDocument } = gridItemNode;
     ownerDocument.addEventListener('mouseup', this.onMouseUp);
@@ -105,9 +97,6 @@ class GridDraggable extends React.Component {
     gridItemNode.style.top = currentY + 'px';
   }
 
-/**
- * <FontAwesomeIcon icon="expand-arrows-alt" fixedWidth />
- */
   render() {
     return (
       <div className="grid-draggable"

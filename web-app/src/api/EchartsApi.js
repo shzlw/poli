@@ -1,4 +1,3 @@
-import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
 const CHART_COLORS = [
@@ -101,6 +100,12 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
     color: CHART_COLORS,
     tooltip: {
     },
+    grid:{
+      top: 30,
+      right: 40,
+      bottom: 35,
+      left: 40
+    },
     xAxis: xAxis,
     yAxis: yAxis,
     series: [
@@ -137,6 +142,12 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
     color: CHART_COLORS,
     tooltip: {
+    },
+    grid:{
+      top: 30,
+      right: 40,
+      bottom: 35,
+      left: 40
     },
     xAxis: {
       type: 'category',
@@ -180,6 +191,12 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
     color: CHART_COLORS,
     tooltip: {
+    },
+    grid:{
+      top: 30,
+      right: 40,
+      bottom: 35,
+      left: 40
     },
     xAxis: {
       type: 'category',

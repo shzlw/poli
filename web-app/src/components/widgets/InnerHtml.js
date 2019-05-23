@@ -3,11 +3,6 @@ import PropTypes from 'prop-types';
 
 class InnerHtml extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   static propTypes = {
     html: PropTypes.string.isRequired,
     style: PropTypes.object

@@ -107,20 +107,20 @@ class Account extends React.Component {
     return (
       <div className="full-page-content">
         <div className="form-panel" style={{width: '400px'}}>   
-          <label>Username</label>
+          <label className="bold">Username</label>
           <div className="info-value">{username}</div>
 
-          <label>Name</label>
+          <label className="bold">Name</label>
           <input 
             type="text"   
             name="name" 
             value={this.state.name}
             onChange={this.handleInputChange} />
 
-          <label>System Role</label>
+          <label className="bold">System Role</label>
           <div className="info-value">{sysRole}</div>
 
-          <label>API Key</label>
+          <label className="bold">API Key</label>
           <div className="info-value">{apiKey}</div>
           <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>Generate new API Key</button>
           

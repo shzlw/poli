@@ -23,7 +23,7 @@ export const IMAGE = 'image';
 export const TEXT = 'text';
 export const HTML = 'html';
 export const IFRAME = 'iframe';
-export const STATIC_TYPES = [IMAGE, IFRAME];
+export const STATIC_TYPES = [TEXT, IMAGE, IFRAME];
 
 
 export const DEFAULT_FILTER_VIEW_WIDTH = 200;

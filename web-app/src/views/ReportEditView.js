@@ -2,6 +2,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ComponentViewPanel from '../components/ComponentViewPanel';
 import ComponentEditPanel from '../components/ComponentEditPanel';
@@ -13,11 +15,6 @@ import Checkbox from '../components/Checkbox';
 import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
 import './Report.css';
-
-import * as webApi from '../api/WebApi';
-import axios from 'axios';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ReportEditView extends React.Component {
 
@@ -303,7 +300,7 @@ class ReportEditView extends React.Component {
       data
     } = componentClickEvent;
 
-    if (type === 'tableTdClick' || type === 'pieClick') {
+    if (type === 'tableTdClick' || type === 'chartClick') {
        const {
         reportId,
         columnName,

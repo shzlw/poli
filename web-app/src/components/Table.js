@@ -20,7 +20,7 @@ class Table extends React.Component {
       data = [],
       columns = [],
       drillThrough = [],
-      defaultPageSize,
+      defaultPageSize = 10,
       error
     } = this.props;
 

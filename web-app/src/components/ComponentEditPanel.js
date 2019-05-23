@@ -8,9 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './ComponentEditPanel.css';
 
-import * as webApi from '../api/WebApi';
 import * as Util from '../api/Util';
-import * as EchartsApi from '../api/EchartsApi';
 import * as Constants from '../api/Constants';
 
 import Checkbox from './Checkbox';
@@ -40,15 +38,7 @@ class ComponentEditPanel extends React.Component {
       queryResult: {},
       type: Constants.STATIC,
       subType: '',
-      style: {
-        showBorder: false,
-        borderColor: 'rgba(9, 30, 66, 1)',
-        showTitle: true,
-        titleFontColor: 'rgba(9, 30, 66, 1)',
-        titleBackgroundColor: 'rgba(255, 255, 255, 1)',
-        contentBackgroundColor: 'rgba(255, 255, 255, 1)',
-        zIndex: 50
-      },
+      style: this.initialStyle,
       data: {},
       queryParameter: '',
       drillThrough: [],
@@ -59,16 +49,30 @@ class ComponentEditPanel extends React.Component {
     };
   }
 
+  get initialStyle() {
+    return {
+      showBorder: false,
+      borderColor: 'rgba(9, 30, 66, 1)',
+      showTitle: true,
+      titleFontColor: 'rgba(9, 30, 66, 1)',
+      titleBackgroundColor: 'rgba(244, 245, 247, 1)',
+      contentBackgroundColor: 'rgba(244, 245, 247, 1)',
+      zIndex: 50
+    }
+  }
+
   componentDidMount() {
   }
 
   fetchComponent = async (componentId) => {
     this.setState(this.initialState);
-
-    const jdbcDataSources = await webApi.fetchDataSources();
-    this.setState({ 
-      jdbcDataSources: jdbcDataSources 
-    });
+    axios.get('/ws/jdbcdatasource')
+      .then(res => {
+        const jdbcDataSources = res.data;
+        this.setState({ 
+          jdbcDataSources: jdbcDataSources 
+        });
+      });
 
     axios.get('/ws/report')
       .then(res => {
@@ -220,16 +224,7 @@ class ComponentEditPanel extends React.Component {
     
 
     if (componentId === null) {
-      component.style = {
-        showBorder: false,
-        borderColor: 'rgba(9, 30, 66, 1)',
-        showTitle: true,
-        titleFontColor: 'rgba(9, 30, 66, 1)',
-        titleBackgroundColor: 'rgba(255, 255, 255, 1)',
-        contentBackgroundColor: 'rgba(255, 255, 255, 1)',
-        zIndex: 50
-      }
-
+      component.style = this.initialStyle;
       component.x = 0;
       component.y = 0;
       component.width = 200 * 100;
@@ -295,73 +290,6 @@ class ComponentEditPanel extends React.Component {
     } 
   }
 
-  /*
-  generateChart = () => {
-    const { 
-      data = {},
-      queryResult = {},
-      chartType
-    } = this.state;
-    const queryResultData = Util.jsonToArray(queryResult.data);
-    const chartOption = EchartsApi.getChartOption(chartType, queryResultData, data);
-    this.setState({
-      chartOption: chartOption
-    });
-  }
-
-  /*
-  renderChartPreview = () => {
-    const { 
-      chartType,
-      queryResult = {},
-      chartOption,
-      data = {}
-    } = this.state;
-    const columns = queryResult.columns || [];
-
-    let chartPreview = (<div>NOT SUPPORTED</div>);
-    if (chartType === Constants.TABLE) {
-
-    } else if (chartType === Constants.PIE) {
-      const {
-        key,
-        value
-      } = data;
-            
-      chartPreview = (
-        <div>
-          <label>Key (Text)</label>
-          <Select
-            name={'key'}
-            value={key}
-            onChange={this.handleComponentDataChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
-
-          <label>Value (Number)</label>
-          <Select
-            name={'value'}
-            value={value}
-            onChange={this.handleComponentDataChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
-          <div>For example, number of "Value" by "Key"</div>
-          <button className="button" onClick={this.generateChart}>Generete Chart</button>
-          <ReactEcharts 
-            option={chartOption} 
-            style={{height: '350px', width: '100%'}}  
-            className='react_for_echarts' />
-        </div>
-      );
-    }
-    return chartPreview;
-  }
-  */
-
   renderChartConfigPanel = () => {
     const { 
       subType,
@@ -371,9 +299,7 @@ class ComponentEditPanel extends React.Component {
     const columns = queryResult.columns || [];
 
     let chartConfigPanel;
-    if (chartConfigPanel === '') {
-      chartConfigPanel = (<div></div>);
-    } else if (subType === Constants.TABLE) {
+    if (subType === Constants.TABLE) {
       const {
         defaultPageSize = 10
       } = data;
@@ -388,7 +314,10 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
-    } else {
+    } else if (subType === Constants.PIE
+      || subType === Constants.LINE
+      || subType === Constants.BAR
+      || subType === Constants.AREA) {
       const {
         key,
         value
@@ -417,6 +346,8 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
+    } else {
+      chartConfigPanel = (<div></div>);
     }
 
     return chartConfigPanel;
@@ -431,19 +362,47 @@ class ComponentEditPanel extends React.Component {
     let staticConfigPanel = (<div></div>);
     if (subType === Constants.IMAGE) {
       const {
-        source
+        src
       } = data;
       staticConfigPanel = (
-        <div>
+        <div className="form-panel">
           <label>Source</label>
           <input 
             type="text"
-            value={source}
-            onChange={(event) => this.handleComponentDataChange('source', event.target.value)} 
+            value={src}
+            onChange={(event) => this.handleComponentDataChange('src', event.target.value)} 
           />
         </div>
       );
     } else if (subType === Constants.TEXT) {
+      const { 
+        fontSize = 16,
+        fontColor = 'rgba(9, 30, 66, 1)',
+        value
+      } = data;
+      staticConfigPanel = (
+        <div className="form-panel">
+          <label>Value</label>
+          <input 
+            type="text"
+            value={value}
+            onChange={(event) => this.handleComponentDataChange('value', event.target.value)} 
+          />
+          <label>Font Size</label>
+          <div style={{marginTop: '3px'}}>
+            <InputRange
+              name="fontSize" 
+              value={fontSize}
+              onChange={this.handleComponentDataChange} 
+              min={1}
+              max={50}
+              step={1}
+            />
+          </div>
+          <label>Font Color</label>
+          <ColorPicker name={'fontColor'} value={fontColor} onChange={this.handleComponentDataChange} />
+        </div>
+      );
     } else if (subType === Constants.HTML) {
       const {
         innerHtml
@@ -451,10 +410,10 @@ class ComponentEditPanel extends React.Component {
     } else if (subType === Constants.IFRAME) {
       const {
         title,
-        source
+        src
       } = data;
       staticConfigPanel = (
-        <div>
+        <div className="form-panel">
           <label>Title</label>
           <input 
             type="text"
@@ -464,8 +423,8 @@ class ComponentEditPanel extends React.Component {
           <label>Source</label>
           <input 
             type="text"
-            value={source}
-            onChange={(event) => this.handleComponentDataChange('source', event.target.value)} 
+            value={src}
+            onChange={(event) => this.handleComponentDataChange('src', event.target.value)} 
           />
         </div>
       );
@@ -545,12 +504,12 @@ class ComponentEditPanel extends React.Component {
                       />
 
                       <div>
-                        <label className="small-label">Font Color</label>
+                        <label>Font Color</label>
                         <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
                       </div>
 
                       <div style={{marginTop: '8px'}}>
-                        <label className="small-label">Background Color</label>
+                        <label>Background Color</label>
                         <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
                       </div>
                     </div>
@@ -564,7 +523,7 @@ class ComponentEditPanel extends React.Component {
                   <Checkbox name="showBorder" value="Show" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
                   { this.state.style.showBorder && (
                     <div style={{marginTop: '5px'}}>
-                      <label className="small-label">Color</label>
+                      <label>Color</label>
                       <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
                     </div>
                   )}
@@ -671,6 +630,7 @@ class ComponentEditPanel extends React.Component {
                   <label>Result</label>
                   <Table
                     data={data}
+                    defaultPageSize={10}
                     columns={columns}
                     error={error}
                   />

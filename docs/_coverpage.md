@@ -1,4 +1,4 @@
-# Poli <small>0.3.0</small>
+# <h3>Poli</h3> 
 
 > An open source, easy-to-use, SQL reporting application
 
@@ -13,4 +13,4 @@
 
 <!-- background color -->
 
-![color](#f0f0f0)
+![color](linear-gradient(to left top, #0385b8, #57dba2))

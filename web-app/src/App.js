@@ -8,7 +8,7 @@ import {
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare, 
-  faFlag
+  faLevelUpAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -26,7 +26,7 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare,
-  faFlag
+  faLevelUpAlt
 );
 
 class App extends React.Component {

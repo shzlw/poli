@@ -319,9 +319,12 @@ class ComponentViewPanel extends React.Component {
           const {
             id,
             type,
+            subType
           } = component;
           if (type === Constants.CHART) {
             this.queryChart(id, filterParams);
+          } else if (type === Constants.FILTER) {
+            this.queryFilter(id, subType);
           }
         });
       });

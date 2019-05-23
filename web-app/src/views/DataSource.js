@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import * as webApi from '../api/WebApi';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
 import SearchInput from '../components/SearchInput';
@@ -46,6 +45,16 @@ class DataSource extends Component {
     this.fetchDataSources();
   }
 
+  fetchDataSources() {
+    axios.get('/ws/jdbcdatasource')
+      .then(res => {
+        const jdbcDataSources = res.data;
+        this.setState({ 
+          jdbcDataSources: jdbcDataSources 
+        });
+      });
+  }
+
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
@@ -58,12 +67,7 @@ class DataSource extends Component {
     });
   }
 
-  async fetchDataSources() {
-    const jdbcDataSources = await webApi.fetchDataSources();
-    this.setState({ 
-      jdbcDataSources: jdbcDataSources 
-    });
-  }
+
 
   save = () => {
     const {
