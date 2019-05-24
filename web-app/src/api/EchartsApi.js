@@ -102,9 +102,7 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
     },
     grid:{
       top: 30,
-      right: 40,
-      bottom: 35,
-      left: 40
+      bottom: 35
     },
     xAxis: xAxis,
     yAxis: yAxis,
@@ -145,9 +143,7 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
     },
     grid:{
       top: 30,
-      right: 40,
-      bottom: 35,
-      left: 40
+      bottom: 35
     },
     xAxis: {
       type: 'category',
@@ -194,9 +190,7 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
     },
     grid:{
       top: 30,
-      right: 40,
-      bottom: 35,
-      left: 40
+      bottom: 35
     },
     xAxis: {
       type: 'category',

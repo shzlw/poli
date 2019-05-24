@@ -21,7 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -51,26 +54,22 @@ public class JdbcQueryWs {
         return queryResult;
     }
 
-    @RequestMapping(value = "/component/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ComponentQueryResult> queryComponent(@PathVariable("id") long componentId,
-                                                         @RequestBody List<FilterParameter> filterParams,
-                                                         HttpServletRequest request) {
+    @RequestMapping(
+            value = "/component/{id}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ComponentQueryResult> queryComponent(
+            @PathVariable("id") long componentId,
+            @RequestBody List<FilterParameter> filterParams,
+            HttpServletRequest request
+    ) {
         Component component = componentDao.findById(componentId);
         if (component.getJdbcDataSourceId() == 0) {
             return new ResponseEntity(new ComponentQueryResult(componentId, "No data source found"), HttpStatus.OK);
         }
 
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        List<Report> reports = reportService.getReportsByUser(user);
-        boolean isFound = false;
-        for (Report report : reports) {
-            if (report.getId() == component.getReportId()) {
-                isFound = true;
-                break;
-            }
-        }
-
-        if (isFound) {
+        boolean isAccessValid = isComponentAccessValid(component, request);
+        if (isAccessValid) {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
             ComponentQueryResult queryResult = jdbcQueryService.queryComponentByParams(componentId, dataSource, sql, filterParams);
@@ -78,5 +77,52 @@ public class JdbcQueryWs {
         }
 
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @RequestMapping(
+            value = "/component/{id}/csv",
+            method = RequestMethod.POST)
+    public void downloadComponent(
+            @PathVariable("id") long componentId,
+            @RequestBody List<FilterParameter> filterParams,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        Component component = componentDao.findById(componentId);
+        boolean isAccessValid = isComponentAccessValid(component, request);
+
+        if (isAccessValid) {
+            String sql = component.getSqlQuery();
+            DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
+            ComponentQueryResult queryResult = jdbcQueryService.queryComponentByParams(componentId, dataSource, sql, filterParams);
+            String csvText = queryResult.getData();
+            String fileName = component.getTitle() + "_" + new Date();
+
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName +"\""));
+
+            response.getWriter().write(csvText);
+        }
+    }
+
+    protected boolean isComponentAccessValid(Component component, HttpServletRequest request) {
+        if (component == null) {
+            return false;
+        }
+
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        if (user == null) {
+            return false;
+        }
+
+        List<Report> reports = reportService.getReportsByUser(user);
+        boolean isValid = false;
+        for (Report report : reports) {
+            if (report.getId() == component.getReportId()) {
+                isValid = true;
+                break;
+            }
+        }
+        return isValid;
     }
 }

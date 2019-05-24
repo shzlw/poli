@@ -210,7 +210,8 @@ class GridItem extends React.Component {
             <input 
               type="text"  
               value={value}
-              onChange={(event) => this.onSingleValueChange(id, event)} 
+              onChange={(event) => this.onSingleValueChange(id, event)}
+              className="filter-input" 
             />
           </div>
         );

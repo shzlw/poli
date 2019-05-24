@@ -408,7 +408,7 @@ class ReportEditView extends React.Component {
             />
           )}
         </div>
-        <button className="button square-button" onClick={this.toggleAutoRefresh}>
+        <button className="button square-button button-black" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
             (
@@ -452,7 +452,7 @@ class ReportEditView extends React.Component {
     )
 
     const editButton = (
-      <button className="button square-button ml-4" onClick={this.edit}>
+      <button className="button square-button button-red ml-4" onClick={this.edit}>
         <FontAwesomeIcon icon="edit" size="lg" fixedWidth />
       </button>
     );

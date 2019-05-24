@@ -177,7 +177,11 @@ class User extends React.Component {
           this.clearEditPanel();
           this.closeEditPanel();
           this.fetchUsers();
+        })
+        .catch(error => {
+          Toast.showError('The name exists. Try another.');
         });
+        
     } else {
       if (!tempPassword || tempPassword.length < 8) {
         Toast.showError(`Use 8 or more characters for password.`);
@@ -190,6 +194,9 @@ class User extends React.Component {
           this.clearEditPanel();
           this.closeEditPanel();
           this.fetchUsers();
+        })
+        .catch(error => {
+          Toast.showError('The name exists. Try another.');
         });
     } 
   }

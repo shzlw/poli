@@ -29,10 +29,7 @@ class ComponentViewPanel extends React.Component {
   }
 
   resizeGrid = (viewWidth) => {
-    const { components } = this.state;
-    const newComponents = [...components];
     let gridWidth = viewWidth - 10;
-
     const { 
       isFixedWidth,
       fixedWidth
@@ -41,7 +38,9 @@ class ComponentViewPanel extends React.Component {
       gridWidth = fixedWidth;
     } 
 
-    
+    const { components } = this.state;
+    const newComponents = [...components];
+
     this.resizeComponentsToActual(newComponents, gridWidth);
     this.setState({
       components: newComponents,

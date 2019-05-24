@@ -5,18 +5,22 @@
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
-Poli is is an open source, easy-to-use, SQL reporting application.
+Poli is an easy-to-use SQL reporting application.
 
 ## Features
 
 * Easy deployment & setup
 * Connect to any database supporting JDBC drivers
-* Build interactive reports in Dynamic SQL query
-* Drill through, auto refresh, embedded, full screen and more
-* User management
+* Build chart and filter in Dynamic SQL query
+* Interactive reports with auto refresh, drill through, fullscreen, embedded and more
 
-## [Documentation](https://shzlw.github.io/poli/)
+## Download
 
+[Download](https://github.com/shzlw/poli/releases) the latest version of Poli via the github release page.
+
+## Documentation
+
+Poli's documentation and other information can be found at [here](https://shzlw.github.io/poli/).
 
 ## License
 

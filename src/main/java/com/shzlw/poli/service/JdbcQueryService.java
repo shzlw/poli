@@ -30,7 +30,13 @@ public class JdbcQueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryService.class);
 
+    private static final String NO_DATA_SOURCE_FOUND = "No data source found";
+    private static final String EMPTY_SQL_QUERY = "SQL query cannot be empty";
+
     private static Map<Integer, String> JDBC_TYPE_MAP = new HashMap<>();
+
+    @Autowired
+    ObjectMapper mapper;
 
     @PostConstruct
     public void init() throws IllegalAccessException {
@@ -38,9 +44,6 @@ public class JdbcQueryService {
             JDBC_TYPE_MAP.put((Integer) field.get(null), field.getName());
         }
     }
-
-    @Autowired
-    ObjectMapper mapper;
 
     public Connection getConnectionByType(JdbcDataSource ds) throws SQLException {
         return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
@@ -55,11 +58,11 @@ public class JdbcQueryService {
             }
             return Constants.SUCCESS;
         } catch (Exception e) {
-            return "ERROR: " + e.getClass().getCanonicalName() + ": "+  e.getMessage();
+            return getSimpleError(e);
         }
     }
 
-    public String fetchCsvByQuery(JdbcDataSource ds, String sql) {
+    public String fetchCsv(JdbcDataSource ds, String sql) {
         try (Connection con = getConnectionByType(ds);
              PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -79,7 +82,7 @@ public class JdbcQueryService {
                     }
                 }
 
-                table.append("\n");
+                table.append("\r\n");
 
                 while (rs.next()) {
                     boolean isFirstCol = true;
@@ -91,147 +94,32 @@ public class JdbcQueryService {
                             table.append(",").append(rs.getString(i));
                         }
                     }
-                    table.append("\n");
+                    table.append("\r\n");
                 }
                 return table.toString();
             }
         } catch (Exception e) {
-            return "ERROR: " + e.getClass().getCanonicalName() + ": "+  e.getMessage();
-        }
-    }
-
-    public String fetchJsonByQuery2(JdbcDataSource ds, String sql) {
-        try (Connection con = getConnectionByType(ds);
-             PreparedStatement ps = con.prepareStatement(sql);) {
-
-            try (ResultSet rs = ps.executeQuery();) {
-                ResultSetMetaData metadata = rs.getMetaData();
-                int columnCount = metadata.getColumnCount();
-                String[] columnNames = new String[columnCount + 1];
-                for (int i = 1; i <= columnCount; i++) {
-                    String colName = metadata.getColumnName(i);
-                    columnNames[i] = colName;
-                }
-
-                ObjectMapper mapper = new ObjectMapper();
-                ArrayNode array = mapper.createArrayNode();
-
-                while (rs.next()) {
-                    ObjectNode node = mapper.createObjectNode();
-                    for (int i = 1; i <= columnCount; i++) {
-                        node.put(columnNames[i], rs.getString(i));
-                    }
-                    array.add(node);
-                }
-                return array.toString();
-            }
-        } catch (Exception e) {
-            return "ERROR: " + e.getClass().getCanonicalName() + ": "+  e.getMessage();
+            return getSimpleError(e);
         }
     }
 
     public QueryResult queryBySql(DataSource dataSource, String sql) {
-        if (dataSource == null) {
-            QueryResult queryResult = new QueryResult("No data source found");
-            return queryResult;
-        } else if (StringUtils.isEmpty(sql)) {
-            QueryResult queryResult = new QueryResult("SQL query cannot be empty");
-            return queryResult;
-        }
-
-        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
-        Map<String, Object> namedParameters = new HashMap();
-        String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
-        QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
-            @Nullable
-            @Override
-            public QueryResult extractData(ResultSet rs) {
-                try {
-                    ResultSetMetaData metadata = rs.getMetaData();
-                    int columnCount = metadata.getColumnCount();
-                    String[] columnNames = new String[columnCount + 1];
-                    List<Column> columns = new ArrayList<>();
-                    for (int i = 1; i <= columnCount; i++) {
-                        String columnName = metadata.getColumnName(i);
-                        int columnType = metadata.getColumnType(i);
-                        columnNames[i] = columnName;
-                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType)));
-                    }
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    ArrayNode array = mapper.createArrayNode();
-
-                    while (rs.next()) {
-                        ObjectNode node = mapper.createObjectNode();
-                        for (int i = 1; i <= columnCount; i++) {
-                            node.put(columnNames[i], rs.getString(i));
-                        }
-                        array.add(node);
-                    }
-                    String data = array.toString();
-                    QueryResult queryResult = new QueryResult(data, columns);
-                    return queryResult;
-                } catch (Exception e) {
-                    String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
-                    QueryResult queryResult = new QueryResult(error);
-                    return queryResult;
-                }
-            }
-        });
-
-        return result;
+        return queryComponentByParams(0, dataSource, sql, null);
     }
 
     public ComponentQueryResult queryComponentByParams(long componentId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
         if (dataSource == null) {
-            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, "No data source found");
+            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, NO_DATA_SOURCE_FOUND);
             return queryResult;
         } else if (StringUtils.isEmpty(sql)) {
-            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, "SQL query cannot be empty");
+            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, EMPTY_SQL_QUERY);
             return queryResult;
         }
 
-        LOGGER.info("[queryByParams] filterParams: {}", filterParams);
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
-
-        Map<String, Object> namedParameters = new HashMap<>();
-        if (filterParams != null) {
-            for (FilterParameter param : filterParams) {
-                if (!isFilterParameterEmpty(param)) {
-                    String type = param.getType();
-                    String name = param.getParam();
-                    String value = param.getValue();
-
-                    if (type.equals(Constants.FILTER_TYPE_SLICER)) {
-                        String remark = param.getRemark();
-                        if (remark == null) {
-                            try {
-                                List<String> array = Arrays.asList(mapper.readValue(value, String[].class));
-                                if (!array.isEmpty()) {
-                                    namedParameters.put(name, array);
-                                }
-                            } catch (IOException e) {
-                                LOGGER.warn("exception: {}", e);
-                            }
-                        }
-                    } else if (type.equals(Constants.FILTER_TYPE_SINGLE)) {
-                        try {
-                            String singleValue = mapper.readValue(value, String.class);
-                            namedParameters.put(name, singleValue);
-                        } catch (IOException e) {
-                            LOGGER.warn("exception: {}", e);
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Unknown filter type");
-                    }
-                }
-            }
-        }
-
-
+        Map<String, Object> namedParameters = getNamedParameters(filterParams);
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
-        LOGGER.info("[queryByParams] parsedSql: {}", parsedSql);
-        LOGGER.info("[queryByParams] namedParameters: {}", namedParameters);
+
         ComponentQueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<ComponentQueryResult>() {
             @Nullable
             @Override
@@ -262,7 +150,7 @@ public class JdbcQueryService {
                     ComponentQueryResult queryResult = new ComponentQueryResult(componentId, data, columns);
                     return queryResult;
                 } catch (Exception e) {
-                    String error = "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+                    String error = getSimpleError(e);
                     ComponentQueryResult queryResult = new ComponentQueryResult(componentId, error);
                     return queryResult;
                 }
@@ -311,6 +199,45 @@ public class JdbcQueryService {
         return sb.toString();
     }
 
+    public Map<String, Object> getNamedParameters(final List<FilterParameter> filterParams) {
+        Map<String, Object> namedParameters = new HashMap<>();
+        if (filterParams == null || filterParams.isEmpty()) {
+            return namedParameters;
+        }
+
+        for (FilterParameter param : filterParams) {
+            if (!isFilterParameterEmpty(param)) {
+                String type = param.getType();
+                String name = param.getParam();
+                String value = param.getValue();
+
+                if (type.equals(Constants.FILTER_TYPE_SLICER)) {
+                    String remark = param.getRemark();
+                    if (remark == null) {
+                        try {
+                            List<String> array = Arrays.asList(mapper.readValue(value, String[].class));
+                            if (!array.isEmpty()) {
+                                namedParameters.put(name, array);
+                            }
+                        } catch (IOException e) {
+                            LOGGER.warn("exception: {}", e);
+                        }
+                    }
+                } else if (type.equals(Constants.FILTER_TYPE_SINGLE)) {
+                    try {
+                        String singleValue = mapper.readValue(value, String.class);
+                        namedParameters.put(name, singleValue);
+                    } catch (IOException e) {
+                        LOGGER.warn("exception: {}", e);
+                    }
+                } else {
+                    throw new IllegalArgumentException("Unknown filter type");
+                }
+            }
+        }
+        return namedParameters;
+    }
+
     private static boolean isFilterParameterEmpty(FilterParameter p) {
         if (p == null
                 || StringUtils.isEmpty(p.getType())
@@ -322,4 +249,7 @@ public class JdbcQueryService {
         return false;
     }
 
+    private static String getSimpleError(Exception e) {
+        return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+    }
 }

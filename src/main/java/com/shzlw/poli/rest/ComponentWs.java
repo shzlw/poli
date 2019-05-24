@@ -90,19 +90,4 @@ public class ComponentWs {
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-
-    @RequestMapping(value="/download", method= RequestMethod.GET)
-    @Transactional(readOnly = true)
-    public void downloadCsv(@RequestParam("componentId") long componentId,
-                            @RequestParam(value = "name", required = false) String name,
-                            @RequestParam(value = "includeHeader", required = false) boolean includeHeader,
-                            HttpServletResponse response) throws IOException {
-        String csvText = "";
-        String fileName = "";
-
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName +"\""));
-
-        response.getWriter().write(csvText);
-    }
 }

@@ -93,7 +93,6 @@ public final class PasswordUtil {
         String p = decrypt(password);
         int saltLength = Constants.PASSWORD_SALT.length();
         if (p.length() < saltLength) {
-            // FIXME: Something is wrong here but the app should not crash.
             return "";
         }
         return p.substring(saltLength);

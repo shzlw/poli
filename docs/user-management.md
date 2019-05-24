@@ -2,23 +2,25 @@
 
 ## System Role
 
-Admin
+#### Admin
 * Manage dashboards
 * Manage datasources
 * Manage users
 
-Developer
+#### Developer
 * Manage dashboards
 * Manage datasources
-* Manage only viewer role users
+* Manage only users in Viewer Role
 
-Viewer
-* Have access to dashboards
+#### Viewer
+* Access dashboards
 
 ## Group
-Group is used to control the access level to dashboards for Viewer user. Dashboards can be assigned to Group so the users who belong to that group will have access.
 
-For example
+> Group is used to control the access level to dashboards for Viewer user. Dashboards can be assigned to Group so the users in Viewer Role who belong to that group can have access.
+
+For example:
+
 * User u1 belongs to Group g1
 * User u2 belongs to Group g2
 * Dashboard d1 is assigned to Group g1

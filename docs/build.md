@@ -1,7 +1,8 @@
 # Build
 
-1. Clone or download the [repository](https://github.com/shzlw/poli).
+## Building
 
+1. Clone or download the [repository](https://github.com/shzlw/poli).
 2. Install the npm packages only the first time.
 
 ```bash
@@ -11,7 +12,7 @@ npm install
 
 3. Run the build script.
 
-```bash
+```
 # Windows
 build.bat
 
@@ -19,7 +20,7 @@ build.bat
 ./build.sh
 ```
 
-## Main tech stack
+## Main Tech Stack
 
 * Spring Boot 2
 * React 16

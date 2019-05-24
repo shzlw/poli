@@ -10,13 +10,23 @@ class UserManagement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      activeTab: 'Group'
     }
+  }
+
+  onTabChange = (activeTab) => {
+    this.setState({
+      activeTab: activeTab
+    });
   }
 
   render() {
     return (
       <div className="full-page-content">
-        <Tabs activeTab="Group">
+        <Tabs
+          activeTab={this.state.activeTab}
+          onTabChange={this.onTabChange}
+          >
           <div title="Group">
             <Group />
           </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Checkbox from '../Checkbox';
 import './Slicer.css';
 
@@ -74,20 +76,25 @@ class Slicer extends React.Component {
         )
       }
     }
-
-    const selectText = isSelectAll ? 'Deselect All' : 'Select All'
-
     return (
       <div>
-        <button className="button" style={{marginBottom: '5px'}} onClick={this.toggleSelectAll}>{selectText}</button>
         <input 
           type="text" 
           name="name" 
           value={this.state.searchValue}
           onChange={this.handleSearchValueChange}
           placeholder="Search..."
+          className="filter-input"
         />
-        
+        <button className="slicer-toggle-button" onClick={this.toggleSelectAll}>
+          {
+            isSelectAll ? (
+              <FontAwesomeIcon icon="square" />
+            ): (
+              <FontAwesomeIcon icon="check-square" />
+            )
+          }
+        </button>
         <div className="slicer-body">
           {checkBoxItems}
         </div>

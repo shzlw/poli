@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../components/Modal';
 import Select from '../components/Select';
 import SearchInput from '../components/SearchInput';
+import Toast from '../components/Toast';
 
 class Group extends React.Component {
 
@@ -120,6 +121,11 @@ class Group extends React.Component {
       groupReports: groupReports
     };
 
+    if (!name) {
+      Toast.showError('Enter a name.');
+      return;
+    }
+
     if (id !== null) {
       group.id = id;
       axios.put('/ws/group', group)
@@ -127,6 +133,9 @@ class Group extends React.Component {
           this.clearEditPanel();
           this.fetchGroups();
           this.closeEditPanel();
+        })
+        .catch(error => {
+          Toast.showError('The name exists. Try another.');
         });
     } else {
       axios.post('/ws/group', group)
@@ -134,6 +143,9 @@ class Group extends React.Component {
           this.clearEditPanel();
           this.fetchGroups();
           this.closeEditPanel();
+        })
+        .catch(error => {
+          Toast.showError('The name exists. Try another.');
         });
     } 
   }
@@ -282,7 +294,7 @@ class Group extends React.Component {
           title={mode} >
           <div className="row">
             <div className="form-panel float-left" style={{width: '240px'}}>
-              <label>Name</label>
+              <label>Name <span className="required">*</span></label>
               <input 
                 type="text" 
                 name="name" 

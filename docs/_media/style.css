@@ -8,6 +8,12 @@
   --text-color-tertiary: #7A869A;
 }
 
+body {
+  font-family: Tahoma, Geneva, sans-serif;
+  color: #172B4D;
+  font-size: 16px;
+}
+
 * {
   text-decoration: none !important;
 }

@@ -43,13 +43,13 @@ body,
 .form-panel select,
 .form-panel ul,
 .form-panel .info-value {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .form-panel label {
   display: inline-block;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .panel {
@@ -249,6 +249,12 @@ h1 {
 .card-icon-button {
   margin: 0px 2px 0px 2px;
   background-color: transparent;
+}
+
+.filter-input {
+  box-shadow: none !important;
+  border: 2px solid #DFE1E6 !important;
+  padding: 5px 8px;
 }
 
 /* Charts */

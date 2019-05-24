@@ -56,8 +56,8 @@ class ComponentEditPanel extends React.Component {
       borderColor: 'rgba(9, 30, 66, 1)',
       showTitle: true,
       titleFontColor: 'rgba(9, 30, 66, 1)',
-      titleBackgroundColor: 'rgba(244, 245, 247, 1)',
-      contentBackgroundColor: 'rgba(244, 245, 247, 1)',
+      titleBackgroundColor: 'rgba(255, 255, 255, 1)',
+      contentBackgroundColor: 'rgba(255, 255, 255, 1)',
       zIndex: 50
     }
   }
@@ -483,6 +483,9 @@ class ComponentEditPanel extends React.Component {
     const showQueryTab = type === Constants.CHART 
       || (type === Constants.FILTER && subType === Constants.SLICER);
 
+
+    const width = Number.parseFloat(this.state.width / 100).toFixed(2);
+
     return (
       <div>
         <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
@@ -499,6 +502,9 @@ class ComponentEditPanel extends React.Component {
           <Tabs 
             activeTab={this.state.activeTab}
             onTabChange={this.onTabChange}>
+            
+            {/* ---------- Static Tab ---------- */}
+
             <div title="Basic">
               <div className="form-panel">
                 <div>

@@ -1,6 +1,6 @@
 - Getting started
 
-  - [Installation Guide](installation.md)
+  - [Installation](installation.md)
   - [Quick Start](quick-start.md)
   
 - Basic Concepts

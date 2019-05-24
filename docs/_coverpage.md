@@ -1,12 +1,13 @@
-# <h3>Poli</h3> 
+# <h2 style="color: #0065FF;">Poli</h2>
 
-> An open source, easy-to-use, SQL reporting application
+> An easy-to-use SQL reporting application
 
 - Easy deployment & setup
 - Connect to any database supporting JDBC drivers
-- Build interactive reports in Dynamic SQL query
-- Drill through, auto refresh, embedded, full screen and more
-- User management
+- Build chart and filter in Dynamic SQL query
+- Interactive reports with auto refresh, drill through fullscreen, embedded and more
 
 [GitHub](https://github.com/shzlw/poli)
 [Get Started](#installation)
+
+![color](#f6f9fc)

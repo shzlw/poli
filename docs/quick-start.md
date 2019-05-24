@@ -24,6 +24,12 @@ For example, PostgreSQL
 
 *screenshot
 
+create table transaction (
+	create_date TIMESTAMP,
+	category varchar(100),
+	amount NUMERIC(10, 2)
+)
+
 ## Create a static widget
 
 Image
