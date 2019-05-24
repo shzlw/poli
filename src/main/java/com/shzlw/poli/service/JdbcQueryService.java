@@ -18,6 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -28,6 +29,15 @@ import java.util.*;
 public class JdbcQueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryService.class);
+
+    private static Map<Integer, String> JDBC_TYPE_MAP = new HashMap<>();
+
+    @PostConstruct
+    public void init() throws IllegalAccessException {
+        for (Field field : java.sql.Types.class.getFields()) {
+            JDBC_TYPE_MAP.put((Integer) field.get(null), field.getName());
+        }
+    }
 
     @Autowired
     ObjectMapper mapper;
@@ -141,12 +151,11 @@ public class JdbcQueryService {
                     int columnCount = metadata.getColumnCount();
                     String[] columnNames = new String[columnCount + 1];
                     List<Column> columns = new ArrayList<>();
-                    Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
                     for (int i = 1; i <= columnCount; i++) {
                         String columnName = metadata.getColumnName(i);
                         int columnType = metadata.getColumnType(i);
                         columnNames[i] = columnName;
-                        columns.add(new Column(columnName, jdbcMappings.get(columnType)));
+                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType)));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();
@@ -232,12 +241,11 @@ public class JdbcQueryService {
                     int columnCount = metadata.getColumnCount();
                     String[] columnNames = new String[columnCount + 1];
                     List<Column> columns = new ArrayList<>();
-                    Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
                     for (int i = 1; i <= columnCount; i++) {
                         String columnName = metadata.getColumnName(i);
                         int columnType = metadata.getColumnType(i);
                         columnNames[i] = columnName;
-                        columns.add(new Column(columnName, jdbcMappings.get(columnType)));
+                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType)));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();
@@ -264,13 +272,6 @@ public class JdbcQueryService {
         return result;
     }
 
-    public static Map<Integer, String> getAllJdbcTypeNames() throws IllegalAccessException {
-        Map<Integer, String> result = new HashMap<Integer, String>();
-        for (Field field : java.sql.Types.class.getFields()) {
-            result.put((Integer) field.get(null), field.getName());
-        }
-        return result;
-    }
 
     public static String parseSqlStatementWithParams(String sql, Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();

@@ -30,6 +30,7 @@ class ComponentEditPanel extends React.Component {
 
   get initialState() {
     return {
+      activeTab: 'Basic',
       jdbcDataSources: [],
       componentId: null,
       title: '',
@@ -62,6 +63,12 @@ class ComponentEditPanel extends React.Component {
   }
 
   componentDidMount() {
+  }
+
+  onTabChange = (activeTab) => {
+    this.setState({
+      activeTab: activeTab
+    });
   }
 
   fetchComponent = async (componentId) => {
@@ -167,6 +174,7 @@ class ComponentEditPanel extends React.Component {
   handleOptionChange = (name, value) => {
     if (name === 'type') {
       this.setState({
+        activeTab: 'Basic',
         subType: ''
       });
     }
@@ -488,7 +496,9 @@ class ComponentEditPanel extends React.Component {
         </div>
         
         <div className="mt-10">
-          <Tabs activeTab="Basic">
+          <Tabs 
+            activeTab={this.state.activeTab}
+            onTabChange={this.onTabChange}>
             <div title="Basic">
               <div className="form-panel">
                 <div>

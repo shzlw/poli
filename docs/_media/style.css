@@ -16,10 +16,6 @@ a {
   transition: all 0.2s linear;
 }
 
-section.cover {
-  background-image: linear-gradient(to left top, #2684FF, #57dba2);
-}
-
 .sidebar .app-name {
   font-weight: 700;
 }

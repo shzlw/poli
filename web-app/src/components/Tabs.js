@@ -4,31 +4,17 @@ import './Tabs.css';
 class Tabs extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-    };
-  }
-
-  componentDidMount() {
-    const activeTab = this.props.activeTab;
-    this.setState({
-      activeTab: activeTab
-    });
   }
 
   handleTabClick = (title) => {
-    this.setState({
-      activeTab: title
-    });
+    this.props.onTabChange(title);
   }
 
   render() {
     const {
+      activeTab,
       children
     } = this.props;
-
-    const {
-      activeTab
-    } = this.state;
 
     const tabHeaders = [];
     let tabContent = null;

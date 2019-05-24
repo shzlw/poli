@@ -186,6 +186,8 @@ class GridItem extends React.Component {
         componentItem = (
           <ReactEcharts 
             option={chartOption}   
+            notMerge={true}
+            lazyUpdate={true}
             className="echarts"
             onEvents={onChartEvents}  
           />

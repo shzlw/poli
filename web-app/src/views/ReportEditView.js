@@ -511,7 +511,6 @@ class ReportEditView extends React.Component {
                   />
                 )
               }
-              
             </div>
             <div className="float-right">
               {buttonGroupPanel}
@@ -566,10 +565,10 @@ class ReportEditView extends React.Component {
               />
 
               <label>Width</label>
-              <Checkbox name="isFixedWidth" value="Fixed width" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
+              <Checkbox name="isFixedWidth" value="Fixed" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
 
               { this.state.style.isFixedWidth && (
-                <div>
+                <div style={{marginTop: '3px'}}>
                   <input 
                     type="text" 
                     name="fixedWidth" 
