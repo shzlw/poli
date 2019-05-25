@@ -81,6 +81,8 @@ public class ComponentWsTest extends AbstractWsTest {
         // ********** Update **********
         w1.setId(id);
         w1.setTitle("w2");
+        w1.setWidth(200);
+        w1.setHeight(200);
         w1.setType(Constants.COMPONENT_TYPE_FILTER);
         w1.setSubType(Constants.FILTER_TYPE_SINGLE);
         body = mapper.writeValueAsString(w1);

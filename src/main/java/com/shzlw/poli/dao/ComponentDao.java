@@ -43,7 +43,8 @@ public class ComponentDao {
     }
 
     public int update(Component c) {
-        String sql = "UPDATE p_component SET datasource_id=?, title=?, sql_query=?, data=?, drill_through=?, style=?, type=?, sub_type=? "
+        String sql = "UPDATE p_component SET datasource_id=?, title=?, sql_query=?, data=?, drill_through=?, "
+                    + "style=?, type=?, sub_type=?, width=?, height=? "
                     + "WHERE id=?";
         return jt.update(sql, new Object[] {
                 c.getJdbcDataSourceId(),
@@ -54,6 +55,8 @@ public class ComponentDao {
                 c.getStyle(),
                 c.getType(),
                 c.getSubType(),
+                c.getWidth(),
+                c.getHeight(),
                 c.getId()
         });
     }

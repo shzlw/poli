@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class JdbcDataSourceService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSourceService.class);
-
     /**
      * Key: JdbcDataSource id
      * Value: HikariDataSource
@@ -59,7 +57,6 @@ public class JdbcDataSourceService {
     }
 
     public DataSource getDataSource(long dataSourceId) {
-        LOGGER.info("[poli] getDataSource - dataSourceId: {}, size: {}", dataSourceId, DATA_SOURCE_CACHE.asMap().size());
         if (dataSourceId == 0) {
             return null;
         }
@@ -79,7 +76,6 @@ public class JdbcDataSourceService {
                 }
                 newHiDs.setMaximumPoolSize(appProperties.getDataSourceMaximumPoolSize());
                 newHiDs.setLeakDetectionThreshold(2000);
-                LOGGER.info("[poli] getDataSource - put: {}, size: {}", newHiDs, DATA_SOURCE_CACHE.asMap().size());
                 return newHiDs;
             });
             return hiDs;

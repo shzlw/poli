@@ -34,6 +34,8 @@ class ComponentEditPanel extends React.Component {
       jdbcDataSources: [],
       componentId: null,
       title: '',
+      width: 30,
+      height: 30,
       sqlQuery: '',
       jdbcDataSourceId: '',
       queryResult: {},
@@ -150,6 +152,19 @@ class ComponentEditPanel extends React.Component {
     });
   }
 
+  handleSizeChange = (event) => {
+    const name = event.target.name;
+    let value = event.target.value;
+    if (name === 'width') {
+      value = Number.parseFloat(value).toFixed(2) * 100;
+    } else {
+      value = parseInt(value, 10) || 0;
+    }
+    this.setState({
+      [name]: value
+    });
+  }
+
   onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
     style[[name]] = value;
@@ -197,6 +212,8 @@ class ComponentEditPanel extends React.Component {
     const {
       componentId,
       title,
+      width,
+      height,
       jdbcDataSourceId,
       sqlQuery,
       type,
@@ -207,6 +224,8 @@ class ComponentEditPanel extends React.Component {
 
     const component = {
       title: title,
+      width: width,
+      height: height,
       reportId: this.props.reportId,
       type: type,
       subType: subType,
@@ -508,6 +527,21 @@ class ComponentEditPanel extends React.Component {
             <div title="Basic">
               <div className="form-panel">
                 <div>
+                  <label>Width</label>
+                  <input 
+                    type="text" 
+                    name="width" 
+                    value={width}
+                    onChange={this.handleSizeChange} 
+                  />
+                  <label>Height</label>
+                  <input 
+                    type="text" 
+                    name="height" 
+                    value={this.state.height}
+                    onChange={this.handleSizeChange} 
+                  />
+
                   <label>Title</label>
                   <Checkbox name="showTitle" value="Show" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
                   { this.state.style.showTitle && (
