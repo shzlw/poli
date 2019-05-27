@@ -12,9 +12,12 @@ class ReportFullScreenView extends React.Component {
 
   render() {
     const pathname = this.props.location.pathname;
+    const search = this.props.location.search;
+    const currentPath = pathname + search;
+    
     return (
       <div className="full-screen-view">
-        <ReportEditView key={pathname} />
+        <ReportEditView key={currentPath} />
       </div>
     )
   };

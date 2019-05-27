@@ -67,11 +67,11 @@ class ComponentViewPanel extends React.Component {
   }
 
   scaleToActual = (num, gridWidth) => {
-    return num * gridWidth / BASE_WIDTH / 100;
+    return Math.ceil(num * gridWidth / BASE_WIDTH);
   }
 
   scaleToBase = (num, gridWidth) => {
-    return Number.parseFloat(num * BASE_WIDTH / gridWidth).toFixed(2) * 100;
+    return Math.ceil(num * BASE_WIDTH / gridWidth);
   }
 
   fetchComponents = (reportId, viewWidth) => {

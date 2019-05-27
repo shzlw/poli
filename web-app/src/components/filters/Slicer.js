@@ -78,6 +78,7 @@ class Slicer extends React.Component {
     }
     return (
       <div>
+        {/*
         <input 
           type="text" 
           name="name" 
@@ -95,6 +96,7 @@ class Slicer extends React.Component {
             )
           }
         </button>
+        */}
         <div className="slicer-body">
           {checkBoxItems}
         </div>

@@ -18,6 +18,7 @@ import Table from './Table';
 import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
+import Toast from './Toast';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -152,19 +153,6 @@ class ComponentEditPanel extends React.Component {
     });
   }
 
-  handleSizeChange = (event) => {
-    const name = event.target.name;
-    let value = event.target.value;
-    if (name === 'width') {
-      value = Number.parseFloat(value).toFixed(2) * 100;
-    } else {
-      value = parseInt(value, 10) || 0;
-    }
-    this.setState({
-      [name]: value
-    });
-  }
-
   onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
     style[[name]] = value;
@@ -179,7 +167,7 @@ class ComponentEditPanel extends React.Component {
     });
   }
 
-  handleIntegerOptionChange = (name, value) => {
+  handleIntegerChange = (name, value) => {
     const intValue = parseInt(value, 10) || 0;
     this.setState({ 
       [name]: intValue
@@ -222,6 +210,11 @@ class ComponentEditPanel extends React.Component {
       data
     } = this.state;
 
+    if (width < 50 || height < 50) {
+      Toast.showError('Minimum width or height is 50');
+      return;
+    }
+
     const component = {
       title: title,
       width: width,
@@ -254,7 +247,7 @@ class ComponentEditPanel extends React.Component {
       component.style = this.initialStyle;
       component.x = 0;
       component.y = 0;
-      component.width = 200 * 100;
+      component.width = 200;
       component.height = 200;
 
       axios.post('/ws/component', component)
@@ -502,9 +495,6 @@ class ComponentEditPanel extends React.Component {
     const showQueryTab = type === Constants.CHART 
       || (type === Constants.FILTER && subType === Constants.SLICER);
 
-
-    const width = Number.parseFloat(this.state.width / 100).toFixed(2);
-
     return (
       <div>
         <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
@@ -531,15 +521,15 @@ class ComponentEditPanel extends React.Component {
                   <input 
                     type="text" 
                     name="width" 
-                    value={width}
-                    onChange={this.handleSizeChange} 
+                    value={this.state.width}
+                    onChange={(event) => this.handleIntegerChange('width', event.target.value)}
                   />
                   <label>Height</label>
                   <input 
                     type="text" 
                     name="height" 
                     value={this.state.height}
-                    onChange={this.handleSizeChange} 
+                    onChange={(event) => this.handleIntegerChange('height', event.target.value)}
                   />
 
                   <label>Title</label>
@@ -648,7 +638,7 @@ class ComponentEditPanel extends React.Component {
                   <Select
                     name={'jdbcDataSourceId'}
                     value={this.state.jdbcDataSourceId}
-                    onChange={this.handleIntegerOptionChange}
+                    onChange={this.handleIntegerChange}
                     options={jdbcDataSources}
                     optionDisplay={'name'}
                     optionValue={'id'}
@@ -730,7 +720,7 @@ class ComponentEditPanel extends React.Component {
                     name={'drillReportId'}
                     value={this.state.drillReportId}
                     options={drillReports}
-                    onChange={this.handleIntegerOptionChange}
+                    onChange={this.handleIntegerChange}
                     optionDisplay={'name'}
                     optionValue={'id'}
                   />

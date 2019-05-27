@@ -7,6 +7,8 @@
 
 Poli is an easy-to-use SQL reporting application.
 
+![poli v0.3.0](https://github.com/shzlw/poli/blob/master/docs/_images/poli_0.3.0.gif)
+
 ## Features
 
 * Easy deployment & setup

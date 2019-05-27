@@ -11,10 +11,12 @@ import ComponentEditPanel from '../components/ComponentEditPanel';
 import Modal from '../components/Modal';
 import ColorPicker from '../components/ColorPicker';
 import Checkbox from '../components/Checkbox';
+import Toast from '../components/Toast';
 
 import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
 import './Report.css';
+
 
 class ReportEditView extends React.Component {
 
@@ -54,8 +56,10 @@ class ReportEditView extends React.Component {
     const id = this.props.match.params.id;
     if (id === undefined) {
       // If the drill through is triggered from the full-report page already, this component is remounted but not FullScreenView.
-      const reportName = this.props.match.params.name;
-      if (reportName !== undefined) {
+      const url = this.props.location.search;
+      const params = new URLSearchParams(url);
+      const reportName = params.get('$toReport');
+      if (reportName !== null) {
         this.loadViewByReportName();
         return;
       }
@@ -124,13 +128,13 @@ class ReportEditView extends React.Component {
   }
 
   loadViewByReportName = () => {
-    const reportName = this.props.match.params.name;
     const url = this.props.location.search;
     const params = new URLSearchParams(url);
 
     let showControl = params.get('$showControl');
     showControl = showControl == null ? true : (showControl ? true: false);
     const fromReport = params.get('$fromReport');
+    const reportName = params.get('$toReport');
 
     const componentViewWidth = this.getPageWidth();
 
@@ -222,8 +226,18 @@ class ReportEditView extends React.Component {
     const {
       reportId,
       name,
-      style
+      style = {}
     } = this.state;
+
+    if (style.height < 100) {
+      Toast.showError('Minimum height is 100');
+      return;
+    }
+
+    if (style.isFixedWidth && style.fixedWidth < 100) {
+      Toast.showError('Minimum width is 100');
+      return;
+    }
 
     const report = {
       id: reportId, 
@@ -273,7 +287,7 @@ class ReportEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/workspace/report/full/${name}`;
+    const url = `/workspace/report/fullscreen?$toReport=${name}`;
     window.open(url, '_blank');
   }
 
@@ -311,7 +325,7 @@ class ReportEditView extends React.Component {
           .then(res => {
             const report = res.data;
             const nextReport = report.name;
-            const nextLink = `/workspace/report/full/${nextReport}?$fromReport=${name}&${columnName}=${columnValue}`;
+            const nextLink = `/workspace/report/fullscreen?$toReport=${nextReport}&$fromReport=${name}&${columnName}=${columnValue}`;
             this.props.history.push(nextLink);
           });
       } else {

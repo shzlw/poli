@@ -6,6 +6,7 @@ import Report from './Report';
 import UserManagement from './UserManagement';
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
+import PageNotFound from './PageNotFound';
 
 import Toast from '../components/Toast';
 
@@ -127,9 +128,10 @@ class Workspace extends React.Component {
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/account" component={Account} />
-            <Route exact path="/workspace/report/full/:name" component={ReportFullScreenView} />
+            <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
+            <Route component={PageNotFound} />
           </Switch>
         </div>
         <Toast />

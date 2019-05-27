@@ -2,9 +2,6 @@ import React from 'react';
 import './Tabs.css';
 
 class Tabs extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   handleTabClick = (title) => {
     this.props.onTabChange(title);

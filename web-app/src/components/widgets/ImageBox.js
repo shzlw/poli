@@ -19,6 +19,7 @@ class ImageBox extends React.Component {
       <img 
         style={style}
         src={this.props.src} 
+        alt="not available"
       />
     );
   }
