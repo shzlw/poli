@@ -67,7 +67,7 @@ class ComponentViewPanel extends React.Component {
   }
 
   scaleToActual = (num, gridWidth) => {
-    return Math.ceil(num * gridWidth / BASE_WIDTH);
+    return Math.floor(num * gridWidth / BASE_WIDTH);
   }
 
   scaleToBase = (num, gridWidth) => {
@@ -126,9 +126,24 @@ class ComponentViewPanel extends React.Component {
     axios.post(`/ws/jdbcquery/component/${componentId}`, params)
       .then(res => {
         const queryResult = res.data;
-        const index = components.findIndex(w => w.id === queryResult.id);
+        const index = components.findIndex(w => w.id === componentId);
         const newComponents = [...components];
         newComponents[index].queryResult = queryResult;
+        this.setState({
+          components: newComponents
+        });
+      })
+      .catch(error => {
+        const resData = error.response.data || {};
+        const serverError = resData.error;
+        const serverMsg = resData.message;
+        const displayError = serverError + ": " + serverMsg;
+        const path = resData.path;
+        const index = components.findIndex(w => w.id === componentId);
+        const newComponents = [...components];
+        newComponents[index].queryResult = {
+          error: displayError
+        };
         this.setState({
           components: newComponents
         });
@@ -152,10 +167,24 @@ class ComponentViewPanel extends React.Component {
               });
             }
           }
-          const index = components.findIndex(w => w.id === queryResult.id);
+          const index = components.findIndex(w => w.id === componentId);
           const newComponents = [...components];
           newComponents[index].queryResult = queryResult;
           newComponents[index].checkBoxes = checkBoxes;
+          this.setState({
+            components: newComponents
+          });
+        })
+        .catch(error => {
+          const resData = error.response.data || {};
+          const serverError = resData.error;
+          const serverMsg = resData.message;
+          const displayError = serverError + ": " + serverMsg;
+          const index = components.findIndex(w => w.id === componentId);
+          const newComponents = [...components];
+          newComponents[index].queryResult = {
+            error: displayError
+          };
           this.setState({
             components: newComponents
           });

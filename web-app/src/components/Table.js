@@ -5,12 +5,6 @@ import './Table.css';
 
 class Table extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { 
-    };
-  }
-
   handleTdClick = (reportId, columnName, columnValue) => {
     this.props.onTableTdClick(reportId, columnName, columnValue);
   }
@@ -20,8 +14,7 @@ class Table extends React.Component {
       data = [],
       columns = [],
       drillThrough = [],
-      defaultPageSize = 10,
-      error
+      defaultPageSize = 10
     } = this.props;
 
     const columnHeaders = [];
@@ -46,14 +39,6 @@ class Table extends React.Component {
 
       columnHeaders.push(header);
     });
-
-    if (error) {
-      return (
-        <div>
-          {error}
-        </div>
-      )
-    }
 
     if (data.length === 0 || columns.length === 0) {
       return (

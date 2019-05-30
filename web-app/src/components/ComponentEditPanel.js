@@ -35,6 +35,8 @@ class ComponentEditPanel extends React.Component {
       jdbcDataSources: [],
       componentId: null,
       title: '',
+      x: 0,
+      y: 0,
       width: 30,
       height: 30,
       sqlQuery: '',
@@ -147,12 +149,6 @@ class ComponentEditPanel extends React.Component {
     }
   }
 
-  handleInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
   onStyleValueChange = (name, value) => {
     const style = {...this.state.style};
     style[[name]] = value;
@@ -168,9 +164,16 @@ class ComponentEditPanel extends React.Component {
   }
 
   handleIntegerChange = (name, value) => {
-    const intValue = parseInt(value, 10) || 0;
+    const intValue = (parseInt(value, 10) || 0);
     this.setState({ 
       [name]: intValue
+    });
+  }
+
+  handleInputChange = (name, value, isNumber = false) => {
+    let v = isNumber ? (parseInt(value, 10) || 0) : value;
+    this.setState({
+      [name]: v
     });
   }
 
@@ -517,19 +520,33 @@ class ComponentEditPanel extends React.Component {
             <div title="Basic">
               <div className="form-panel">
                 <div>
+                  <label>X</label>
+                  <input 
+                    type="text" 
+                    name="x" 
+                    value={this.state.x}
+                    onChange={(event) => this.handleInputChange('x', event.target.value)}
+                  />
+                  <label>Y</label>
+                  <input 
+                    type="text" 
+                    name="y" 
+                    value={this.state.y}
+                    onChange={(event) => this.handleInputChange('y', event.target.value)}
+                  />
                   <label>Width</label>
                   <input 
                     type="text" 
                     name="width" 
                     value={this.state.width}
-                    onChange={(event) => this.handleIntegerChange('width', event.target.value)}
+                    onChange={(event) => this.handleInputChange('width', event.target.value)}
                   />
                   <label>Height</label>
                   <input 
                     type="text" 
                     name="height" 
                     value={this.state.height}
-                    onChange={(event) => this.handleIntegerChange('height', event.target.value)}
+                    onChange={(event) => this.handleInputChange('height', event.target.value)}
                   />
 
                   <label>Title</label>
@@ -540,7 +557,7 @@ class ComponentEditPanel extends React.Component {
                         type="text" 
                         name="title" 
                         value={this.state.title}
-                        onChange={this.handleInputChange} 
+                        onChange={(event) => this.handleInputChange('title', event.target.value)} 
                       />
 
                       <div>
@@ -668,12 +685,17 @@ class ComponentEditPanel extends React.Component {
                   </div>
 
                   <label>Result</label>
-                  <Table
-                    data={data}
-                    defaultPageSize={10}
-                    columns={columns}
-                    error={error}
-                  />
+                  { error ? (
+                      <div>
+                        {error}
+                      </div>
+                    ) : (
+                      <Table
+                        data={data}
+                        defaultPageSize={10}
+                        columns={columns}
+                      />
+                  )}
 
                   <label style={{marginTop: '8px'}}>Columns Mapping</label>
                   <div>
@@ -740,7 +762,7 @@ class ComponentEditPanel extends React.Component {
                     type="text" 
                     name="queryParameter" 
                     value={this.state.queryParameter}
-                    onChange={this.handleInputChange} 
+                    onChange={(event) => this.handleInputChange('queryParameter', event.target.value)} 
                   />
                 </div>
               </div>

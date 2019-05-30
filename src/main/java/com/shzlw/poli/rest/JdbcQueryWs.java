@@ -1,7 +1,6 @@
 package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.ComponentDao;
-import com.shzlw.poli.dto.ComponentQueryResult;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
@@ -50,7 +49,7 @@ public class JdbcQueryWs {
         long dataSourceId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
-        QueryResult queryResult = jdbcQueryService.queryBySql(dataSource, sql);
+        QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, null);
         return queryResult;
     }
 
@@ -58,21 +57,21 @@ public class JdbcQueryWs {
             value = "/component/{id}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ComponentQueryResult> queryComponent(
+    public ResponseEntity<QueryResult> queryComponent(
             @PathVariable("id") long componentId,
             @RequestBody List<FilterParameter> filterParams,
             HttpServletRequest request
     ) {
         Component component = componentDao.findById(componentId);
         if (component.getJdbcDataSourceId() == 0) {
-            return new ResponseEntity(new ComponentQueryResult(componentId, "No data source found"), HttpStatus.OK);
+            return new ResponseEntity(QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND), HttpStatus.OK);
         }
 
         boolean isAccessValid = isComponentAccessValid(component, request);
         if (isAccessValid) {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-            ComponentQueryResult queryResult = jdbcQueryService.queryComponentByParams(componentId, dataSource, sql, filterParams);
+            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, filterParams);
             return new ResponseEntity(queryResult, HttpStatus.OK);
         }
 
@@ -94,7 +93,7 @@ public class JdbcQueryWs {
         if (isAccessValid) {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-            ComponentQueryResult queryResult = jdbcQueryService.queryComponentByParams(componentId, dataSource, sql, filterParams);
+            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, filterParams);
             String csvText = queryResult.getData();
             String fileName = component.getTitle() + "_" + new Date();
 

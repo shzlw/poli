@@ -166,7 +166,10 @@ class GridItem extends React.Component {
     const queryResultData = Util.jsonToArray(queryResult.data);
     const columns = queryResult.columns || [];
     const error = queryResult.error;
-
+    if (error) {
+      return (<div>{error}</div>);
+    }
+    
     let componentItem = (<div></div>);
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
@@ -176,7 +179,6 @@ class GridItem extends React.Component {
             data={queryResultData}
             columns={columns}
             defaultPageSize={defaultPageSize}
-            error={error}
             drillThrough={drillThrough}
             onTableTdClick={this.onTableTdClick}
           />

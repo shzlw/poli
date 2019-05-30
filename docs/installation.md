@@ -23,7 +23,9 @@ Java Runtime 1.8+
     |...
 ```
 
-3. Modify the poli.properties file.
+3. Modify the poli.properties file
+
+Poli.db is the SQLite database used by the application. It is pre-loaded with database schema and ready to use.
 
 > Use absolute path to point to the poli.db file.
 

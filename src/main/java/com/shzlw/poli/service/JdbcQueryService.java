@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shzlw.poli.dto.Column;
-import com.shzlw.poli.dto.ComponentQueryResult;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.JdbcDataSource;
@@ -29,9 +28,6 @@ import java.util.*;
 public class JdbcQueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryService.class);
-
-    private static final String NO_DATA_SOURCE_FOUND = "No data source found";
-    private static final String EMPTY_SQL_QUERY = "SQL query cannot be empty";
 
     private static Map<Integer, String> JDBC_TYPE_MAP = new HashMap<>();
 
@@ -103,27 +99,21 @@ public class JdbcQueryService {
         }
     }
 
-    public QueryResult queryBySql(DataSource dataSource, String sql) {
-        return queryComponentByParams(0, dataSource, sql, null);
-    }
-
-    public ComponentQueryResult queryComponentByParams(long componentId, DataSource dataSource, String sql, List<FilterParameter> filterParams) {
+    public QueryResult queryComponentByParams(DataSource dataSource, String sql, List<FilterParameter> filterParams) {
         if (dataSource == null) {
-            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, NO_DATA_SOURCE_FOUND);
-            return queryResult;
+            return QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND);
         } else if (StringUtils.isEmpty(sql)) {
-            ComponentQueryResult queryResult = new ComponentQueryResult(componentId, EMPTY_SQL_QUERY);
-            return queryResult;
+            return QueryResult.ofError(Constants.ERROR_EMPTY_SQL_QUERY);
         }
 
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = getNamedParameters(filterParams);
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
 
-        ComponentQueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<ComponentQueryResult>() {
+        QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
-            public ComponentQueryResult extractData(ResultSet rs) {
+            public QueryResult extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
                     int columnCount = metadata.getColumnCount();
@@ -147,12 +137,10 @@ public class JdbcQueryService {
                         array.add(node);
                     }
                     String data = array.toString();
-                    ComponentQueryResult queryResult = new ComponentQueryResult(componentId, data, columns);
-                    return queryResult;
+                    return QueryResult.ofData(data, columns);
                 } catch (Exception e) {
                     String error = getSimpleError(e);
-                    ComponentQueryResult queryResult = new ComponentQueryResult(componentId, error);
-                    return queryResult;
+                    return QueryResult.ofError(error);
                 }
             }
         });

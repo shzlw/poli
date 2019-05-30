@@ -20,6 +20,25 @@ build.bat
 ./build.sh
 ```
 
+## Source Code Structure
+
+```
+|-- Repository
+    |-- config
+        |-- poli.properties
+    |-- db
+        |-- poli.db
+        |-- schema-sqlite.sql
+    |-- src
+    |-- web-app
+    |-- pom.xml
+    |-- build.sh
+    |-- build.bat
+    |-- start.sh
+    |-- start.bat
+    |...
+```
+
 ## Main Tech Stack
 
 * Spring Boot 2

@@ -16,14 +16,22 @@ public class QueryResult {
     private String data;
     private String error;
 
+    public static QueryResult ofError(String error) {
+        return new QueryResult(error);
+    }
+
+    public static QueryResult ofData(String data, List<Column> columns) {
+        return new QueryResult(data, columns);
+    }
+
     private QueryResult() {
     }
 
-    public QueryResult(String error) {
+    private QueryResult(String error) {
         this.error = error;
     }
 
-    public QueryResult(String data, List<Column> columns) {
+    private QueryResult(String data, List<Column> columns) {
         this.data = data;
         this.columns = columns;
     }
