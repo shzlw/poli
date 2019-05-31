@@ -20,7 +20,7 @@ class GridItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: ''
+      mode: '',
     };
   }
 
@@ -36,13 +36,13 @@ class GridItem extends React.Component {
 
   onMouseDown = (mode) => {
     this.setState({
-      mode: mode
+      mode: mode,
     });
   }
 
   onMouseUp = () => {
     this.setState({
-      mode: ''
+      mode: '',
     });
 
     const thisNode = ReactDOM.findDOMNode(this);
@@ -164,8 +164,11 @@ class GridItem extends React.Component {
     } = this.props;
 
     const queryResultData = Util.jsonToArray(queryResult.data);
-    const columns = queryResult.columns || [];
-    const error = queryResult.error;
+    const {
+      columns = [],
+      error
+    } = queryResult;
+
     if (error) {
       return (<div>{error}</div>);
     }
@@ -259,7 +262,7 @@ class GridItem extends React.Component {
       title,
       isEditMode,
       style = {},
-      drillThrough
+      drillThrough,
     } = this.props;
 
     const { 
@@ -272,7 +275,12 @@ class GridItem extends React.Component {
       zIndex
     } = style;
 
-    const borderStyle = showBorder ? `2px solid ${borderColor}` : '2px solid transparent';
+    let borderStyle;
+    if (isEditMode && (this.state.mode !== '' || this.props.selectedComponentId === id)) {
+      borderStyle = '2px dashed ' + Constants.COLOR_SLATE;
+    } else {
+      borderStyle = showBorder ? `2px solid ${borderColor}` : '2px solid transparent';
+    }
 
     let gridBoxStyle = {
       left: this.props.x + 'px',
@@ -292,7 +300,7 @@ class GridItem extends React.Component {
 
     let titleValueStyle = {};
     if (showTitle && isEditMode) {
-      titleValueStyle = {marginRight: '50px'};
+      titleValueStyle = {marginRight: '60px'};
     }
 
     const contentStyle = {
@@ -319,10 +327,10 @@ class GridItem extends React.Component {
 
         { isEditMode && (
           <div className="grid-edit-panel">
-            <div className="grid-box-icon inline-block" onClick={() => this.editComponent(id)}>
-              <FontAwesomeIcon icon="edit" fixedWidth />
+            <div className="cursor-pointer inline-block" style={{marginRight: '3px'}} onClick={() => this.editComponent(id)}>
+              <FontAwesomeIcon icon="wrench" fixedWidth />
             </div>
-            <div className="grid-box-icon inline-block" onClick={() => this.removeComponent(id)}>
+            <div className="cursor-pointer inline-block" onClick={() => this.removeComponent(id)}>
               <FontAwesomeIcon icon="trash-alt" fixedWidth />
             </div>
           </div>
@@ -333,6 +341,7 @@ class GridItem extends React.Component {
             <FontAwesomeIcon icon="level-up-alt" fixedWidth />
           </div>
         )}
+        
         <div className="grid-box-content" style={contentStyle}>
           {this.renderComponentContent()}
         </div>

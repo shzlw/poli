@@ -78,6 +78,7 @@
   padding: 10px;
   background-color: #091E42;
   color: #FFFFFF;
+  overflow-y: auto;
 }
 
 .report-edit-component-dialog {

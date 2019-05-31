@@ -8,6 +8,9 @@ import Modal from './Modal';
 import * as Constants from '../api/Constants';
 
 import './ComponentViewPanel.css';
+import Checkbox from './Checkbox';
+import ColorPicker from './ColorPicker';
+import InputRange from './filters/InputRange';
 
 const BASE_WIDTH = 1200;
 
@@ -21,11 +24,43 @@ class ComponentViewPanel extends React.Component {
       snapToGrid: false,
       showGridlines: false,
       showConfirmDeletionPanel: false,
-      objectToDelete: {}
+      objectToDelete: {},
+      selectedComponentId: 0
     };
   }
 
   componentDidMount() {
+  }
+
+  handleInputChange = (name, value, isNumber = false) => {
+    let val = isNumber ? (parseInt(value, 10) || 0) : value;
+    const {
+      selectedComponentId,
+      components = []
+    } = this.state;
+    const index = components.findIndex(w => w.id === selectedComponentId);
+    if (index !== -1) {
+      const newComponents = [...components];
+      newComponents[index][[name]] = val;
+      this.setState({
+        components: newComponents
+      });
+    }
+  }
+
+  onStyleValueChange = (name, value) => {
+    const {
+      selectedComponentId,
+      components = []
+    } = this.state;
+    const index = components.findIndex(w => w.id === selectedComponentId);
+    if (index !== -1) {
+      const newComponents = [...components];
+      newComponents[index].style[[name]] = value;
+      this.setState({
+        components: newComponents
+      });
+    }
   }
 
   resizeGrid = (viewWidth) => {
@@ -48,30 +83,28 @@ class ComponentViewPanel extends React.Component {
     });
   }
 
-  resizeComponentsToBase = (components, gridWidth) => {
-    for (let i = 0; i < components.length; i++) {
-      const baseX = this.scaleToBase(components[i].x, gridWidth);
-      const baseWidth = this.scaleToBase(components[i].width, gridWidth);
-      components[i].x = baseX;
-      components[i].width = baseWidth;
-    }
+  resizeComponentToBase = (component, gridWidth) => {
+    component.x = this.scaleToBase(component.x, gridWidth);
+    component.width = this.scaleToBase(component.width, gridWidth);
   }
 
   resizeComponentsToActual = (components, gridWidth) => {
     for (let i = 0; i < components.length; i++) {
-      const actualX = this.scaleToActual(components[i].x, gridWidth);
-      const actualdWidth = this.scaleToActual(components[i].width, gridWidth);
-      components[i].x = actualX;
-      components[i].width = actualdWidth;
+      this.resizeComponentToActual(components[i], gridWidth);
     }
   }
 
+  resizeComponentToActual = (component, gridWidth) => {
+    component.x = this.scaleToActual(component.x, gridWidth);
+    component.width = this.scaleToActual(component.width, gridWidth);
+  }
+
   scaleToActual = (num, gridWidth) => {
-    return Math.floor(num * gridWidth / BASE_WIDTH);
+    return Math.ceil(num * gridWidth / BASE_WIDTH);
   }
 
   scaleToBase = (num, gridWidth) => {
-    return Math.ceil(num * BASE_WIDTH / gridWidth);
+    return Math.floor(num * BASE_WIDTH / gridWidth);
   }
 
   fetchComponents = (reportId, viewWidth) => {
@@ -138,7 +171,6 @@ class ComponentViewPanel extends React.Component {
         const serverError = resData.error;
         const serverMsg = resData.message;
         const displayError = serverError + ": " + serverMsg;
-        const path = resData.path;
         const index = components.findIndex(w => w.id === componentId);
         const newComponents = [...components];
         newComponents[index].queryResult = {
@@ -199,28 +231,40 @@ class ComponentViewPanel extends React.Component {
     }
   }
 
-  saveComponents = () => {
-    const newComponents = JSON.parse(JSON.stringify(this.state.components));
+  updateComponentPosition = (component) => {
+    const newComponent = {...component};
     const { gridWidth } = this.state;
-    this.resizeComponentsToBase(newComponents, gridWidth);
-    axios.post('/ws/component/position', newComponents)
+    this.resizeComponentToBase(newComponent, gridWidth);
+    axios.put('/ws/component/position/', newComponent)
       .then(res => {
       });
   }
 
   onComponentMove = (component) => {
-    const { components } = this.state;
-    const index = components.findIndex(w => w.id === component.id);
+    const { 
+      components,
+      selectedComponentId
+    } = this.state;
+    const {
+      id,
+      x,
+      y,
+      width,
+      height
+    } = component;
+    const index = components.findIndex(w => w.id === id);
     const newComponents = [...components];
-    newComponents[index].x = component.x;
-    newComponents[index].y = component.y;
-    newComponents[index].width = component.width;
-    newComponents[index].height = component.height;
+    newComponents[index].x = x;
+    newComponents[index].y = y;
+    newComponents[index].width = width;
+    newComponents[index].height = height;
+
+    let newSelectedComponentId = selectedComponentId === id ? 0 : id;
     this.setState({
-      components: newComponents
+      components: newComponents,
+      selectedComponentId: newSelectedComponentId
     }, () => {
-      // FIXME: only save this component. Not all.
-      this.saveComponents();
+      this.updateComponentPosition(component);
     });
   }
 
@@ -330,8 +374,7 @@ class ComponentViewPanel extends React.Component {
         const index = components.findIndex(w => w.id === component.id);
         const newComponents = [...components];
         // Resize the component.
-        component.x = this.scaleToActual(component.x, gridWidth);
-        component.width = this.scaleToActual(component.width, gridWidth);
+        this.resizeComponentToActual(component, gridWidth);
         if (index === -1) {
           // New component.
           newComponents.push(component);
@@ -358,11 +401,35 @@ class ComponentViewPanel extends React.Component {
       });
   }
 
+  saveComponentStyle = () => {
+    const {
+      selectedComponentId,
+      components = [],
+      gridWidth
+    } = this.state;
+    const index = components.findIndex(w => w.id === selectedComponentId);
+    if (index !== -1) {
+      const selectedComponent = {...components[index]};
+      this.resizeComponentToBase(selectedComponent, gridWidth);
+      // Save position information and style
+      axios.put('/ws/component/style/', selectedComponent)
+      .then(res => {
+      });
+    }
+  }
+
   render() {
     const { 
       componentViewWidth,
       showControl
     } = this.props;
+
+    const {
+      selectedComponentId,
+      components = []
+    } = this.state;
+    const index = components.findIndex(w => w.id === selectedComponentId);
+    const selectedComponent = index === -1 ? null : components[index];
 
     const top = showControl ? '50px' : '10px';
     const style = {
@@ -380,6 +447,7 @@ class ComponentViewPanel extends React.Component {
           showGridlines={this.props.showGridlines}
           components={this.state.components}
           isEditMode={this.props.isEditMode}
+          selectedComponentId={this.state.selectedComponentId}
           onComponentMove={this.onComponentMove}
           onComponentEdit={this.props.onComponentEdit} 
           onComponentRemove={this.openConfirmDeletionPanel} 
@@ -397,6 +465,106 @@ class ComponentViewPanel extends React.Component {
           </div>
           <button className="button" onClick={this.confirmDelete}>Delete</button>
         </Modal>
+
+        {selectedComponent && (
+          <div className="report-component-style-panel">
+            <div className="form-panel">
+              <button className="button" onClick={this.saveComponentStyle}>Save</button>
+              <div>
+                <label>Title</label>
+                <Checkbox name="showTitle" value="Show" checked={selectedComponent.style.showTitle} onChange={this.onStyleValueChange} />
+                { selectedComponent.style.showTitle && (
+                  <div style={{marginTop: '5px'}}>
+                    <input 
+                      type="text" 
+                      name="title" 
+                      value={selectedComponent.title}
+                      onChange={(event) => this.handleInputChange('title', event.target.value)} 
+                    />
+
+                    <div>
+                      <label>Font Color</label>
+                      <ColorPicker name={'titleFontColor'} value={selectedComponent.style.titleFontColor} onChange={this.onStyleValueChange} />
+                    </div>
+
+                    <div style={{marginTop: '8px'}}>
+                      <label>Background Color</label>
+                      <ColorPicker name={'titleBackgroundColor'} value={selectedComponent.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <hr/>
+              
+              <div style={{marginTop: '8px'}}>
+                <label>Border</label>
+                <Checkbox name="showBorder" value="Show" checked={selectedComponent.style.showBorder} onChange={this.onStyleValueChange} />
+                { selectedComponent.style.showBorder && (
+                  <div style={{marginTop: '5px'}}>
+                    <label>Color</label>
+                    <ColorPicker name={'borderColor'} value={selectedComponent.style.borderColor} onChange={this.onStyleValueChange} />
+                  </div>
+                )}
+              </div>
+
+              <hr/>
+
+              <div style={{marginTop: '8px'}}>
+                <label>Content Background Color</label>
+                <div style={{marginTop: '5px'}}>
+                  <ColorPicker name={'contentBackgroundColor'} value={selectedComponent.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
+                </div>
+              </div>
+
+              <hr/>
+              <div style={{marginTop: '8px'}}>
+                <label>Z Index</label>
+                <div style={{marginTop: '3px'}}>
+                  <InputRange
+                    name="zIndex" 
+                    value={selectedComponent.style.zIndex}
+                    onChange={this.onStyleValueChange} 
+                    min={1}
+                    max={50}
+                    step={1}
+                  />
+                </div>
+              </div>
+
+              <label>X</label>
+                <input 
+                  type="text" 
+                  name="x" 
+                  value={selectedComponent.x}
+                  onChange={(event) => this.handleInputChange('x', event.target.value, true)}
+                />
+                <label>Y</label>
+                <input 
+                  type="text" 
+                  name="y" 
+                  value={selectedComponent.y}
+                  onChange={(event) => this.handleInputChange('y', event.target.value, true)}
+                />
+                <label>Width</label>
+                <input 
+                  type="text" 
+                  name="width" 
+                  value={selectedComponent.width}
+                  onChange={(event) => this.handleInputChange('width', event.target.value, true)}
+                />
+                <label>Height</label>
+                <input 
+                  type="text" 
+                  name="height" 
+                  value={selectedComponent.height}
+                  onChange={(event) => this.handleInputChange('height', event.target.value, true)}
+                />
+
+            </div>
+          </div>
+        )}
+
       </div>
     )
   };

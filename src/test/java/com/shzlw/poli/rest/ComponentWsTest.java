@@ -78,16 +78,32 @@ public class ComponentWsTest extends AbstractWsTest {
         saved = components.get(0);
         assertComponent(w1, saved);
 
-        // ********** Update **********
+        // ********** Update data **********
         w1.setId(id);
-        w1.setTitle("w2");
-        w1.setWidth(200);
-        w1.setHeight(200);
         w1.setType(Constants.COMPONENT_TYPE_FILTER);
         w1.setSubType(Constants.FILTER_TYPE_SINGLE);
         body = mapper.writeValueAsString(w1);
         mvcResult = mvc.perform(
-                put("/ws/component")
+                put("/ws/component/data")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
+                        .content(body)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        responeText = findComponent(id);
+        saved = mapper.readValue(responeText, Component.class);
+        assertComponent(w1, saved);
+
+        // ********** Update position and style **********
+        w1.setTitle("w3");
+        w1.setWidth(300);
+        w1.setHeight(300);
+        w1.setType(Constants.COMPONENT_TYPE_FILTER);
+        w1.setSubType(Constants.FILTER_TYPE_SINGLE);
+        body = mapper.writeValueAsString(w1);
+        mvcResult = mvc.perform(
+                put("/ws/component/style")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -103,11 +119,9 @@ public class ComponentWsTest extends AbstractWsTest {
         w1.setY(6);
         w1.setWidth(7);
         w1.setHeight(8);
-        List<Component> componentPositions = new ArrayList<>();
-        componentPositions.add(w1);
-        body = mapper.writeValueAsString(componentPositions);
+        body = mapper.writeValueAsString(w1);
         mvcResult = mvc.perform(
-                post("/ws/component/position")
+                put("/ws/component/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)

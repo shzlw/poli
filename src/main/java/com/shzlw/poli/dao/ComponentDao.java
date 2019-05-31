@@ -42,9 +42,14 @@ public class ComponentDao {
         return jt.update(sql, new Object[] { c.getWidth(), c.getHeight(), c.getX(), c.getY(), c.getId() });
     }
 
-    public int update(Component c) {
-        String sql = "UPDATE p_component SET datasource_id=?, title=?, sql_query=?, data=?, drill_through=?, "
-                    + "style=?, type=?, sub_type=?, width=?, height=? "
+    public int updatePositionAndStyle(Component c) {
+        String sql = "UPDATE p_component SET width=?, height=?, x=?, y=?, style=?, title=? WHERE id=?";
+        return jt.update(sql, new Object[] { c.getWidth(), c.getHeight(), c.getX(), c.getY(), c.getStyle(), c.getTitle(), c.getId() });
+    }
+
+    public int updateData(Component c) {
+        String sql = "UPDATE p_component "
+                    + "SET datasource_id=?, title=?, sql_query=?, data=?, drill_through=?, type=?, sub_type=? "
                     + "WHERE id=?";
         return jt.update(sql, new Object[] {
                 c.getJdbcDataSourceId(),
@@ -52,11 +57,8 @@ public class ComponentDao {
                 c.getSqlQuery(),
                 c.getData(),
                 c.getDrillThrough(),
-                c.getStyle(),
                 c.getType(),
                 c.getSubType(),
-                c.getWidth(),
-                c.getHeight(),
                 c.getId()
         });
     }

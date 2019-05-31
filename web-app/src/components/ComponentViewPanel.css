@@ -1,0 +1,14 @@
+.report-component-style-panel {
+  position: fixed;
+  top: 40px;
+  left: 0px;
+  bottom: 0px;
+  width: 180px;
+  border: 0;
+  outline: 0;
+  padding: 10px;
+  background-color: #091E42;
+  color: #FFFFFF;
+  z-index: 30;
+  overflow-y: auto;
+}

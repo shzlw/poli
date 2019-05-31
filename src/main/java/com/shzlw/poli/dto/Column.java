@@ -3,28 +3,30 @@ package com.shzlw.poli.dto;
 public class Column {
 
     private String name;
-    private String dataType;
+    private String javaType;
+    private String dbType;
+    private int length;
 
-    public Column() {}
-
-    public Column(String name, String dataType) {
+    public Column(String name, String javaType, String dbType, int length) {
         this.name = name;
-        this.dataType = dataType;
+        this.javaType = javaType;
+        this.dbType = dbType;
+        this.length = length;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getJavaType() {
+        return javaType;
     }
 
-    public String getDataType() {
-        return dataType;
+    public String getDbType() {
+        return dbType;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public int getLength() {
+        return length;
     }
 }

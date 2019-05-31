@@ -5,7 +5,7 @@
 - Easy deployment & setup
 - Connect to any database supporting JDBC drivers
 - Build chart and filter in Dynamic SQL query
-- Interactive reports with auto refresh, drill through fullscreen, embedded and more
+- Interactive reports with auto refresh, drill through, fullscreen, embedded and more
 
 [GitHub](https://github.com/shzlw/poli)
 [Get Started](#installation)

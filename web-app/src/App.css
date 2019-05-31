@@ -309,6 +309,10 @@ hr {
   font-weight: 700;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .full-width {
   width: 100%;
 }

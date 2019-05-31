@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
+import com.shzlw.poli.dto.Table;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
@@ -56,6 +57,37 @@ public class JdbcQueryService {
         } catch (Exception e) {
             return getSimpleError(e);
         }
+    }
+
+    public List<Table> getSchema(JdbcDataSource ds) {
+        List<Table> tables = new ArrayList<>();
+        try (Connection conn = getConnectionByType(ds)) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet rs = metaData.getTables(null, null, null, null);
+            while (rs.next()) {
+                String name = rs.getString("TABLE_NAME");
+                String type = rs.getString("TABLE_TYPE");
+                tables.add(new Table(name, type));
+            }
+
+            for (Table t : tables) {
+                rs = metaData.getColumns(null, null, t.getName(), null);
+                List<Column> columns = new ArrayList<>();
+
+                while (rs.next()) {
+                    String columnName = rs.getString("COLUMN_NAME");
+                    int javaType = rs.getInt("DATA_TYPE");
+                    String dbType = rs.getString("TYPE_NAME");
+                    int length = rs.getInt("COLUMN_SIZE");
+                    columns.add(new Column(columnName, JDBC_TYPE_MAP.get(javaType), dbType, length));
+                }
+                t.setColumns(columns);
+            }
+            return tables;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tables;
     }
 
     public String fetchCsv(JdbcDataSource ds, String sql) {
@@ -122,8 +154,10 @@ public class JdbcQueryService {
                     for (int i = 1; i <= columnCount; i++) {
                         String columnName = metadata.getColumnName(i);
                         int columnType = metadata.getColumnType(i);
+                        String dbType = metadata.getColumnTypeName(i);
+                        int length = metadata.getColumnDisplaySize(i);
                         columnNames[i] = columnName;
-                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType)));
+                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType), dbType, length));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();

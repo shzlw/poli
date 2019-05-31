@@ -60,18 +60,3 @@
   bottom: 0; 
   cursor: se-resize; 
 }
-
-.grid-box-file-button-group {
-  float: right;
-  display: none;
-}
-
-.grid-box-title:hover .grid-box-file-button-group {
-  float: right;
-  display: block;
-  transition: 0.3s;
-}
-
-.grid-box-icon {
-  cursor: pointer;
-}

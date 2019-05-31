@@ -38,3 +38,6 @@ export const DEFAULT_REPORT_FIXED_WIDTH = 800;
 export const REMEMBERME = 'rememberMe';
 export const YES = 'yes';
 export const NO = 'no';
+
+export const COLOR_SLATE = 'rgba(9, 30, 66, 1)';
+export const COLOR_WHITE = 'rgba(255, 255, 255, 1)';

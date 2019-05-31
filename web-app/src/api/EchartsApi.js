@@ -101,8 +101,11 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 35
+      top: 15,
+      bottom: 5,
+      left: 10,
+      right: 10,
+      containLabel: true
     },
     xAxis: xAxis,
     yAxis: yAxis,
@@ -142,8 +145,11 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 35
+      top: 15,
+      bottom: 5,
+      left: 10,
+      right: 10,
+      containLabel: true
     },
     xAxis: {
       type: 'category',
@@ -189,8 +195,11 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 35
+      top: 15,
+      bottom: 5,
+      left: 10,
+      right: 10,
+      containLabel: true
     },
     xAxis: {
       type: 'category',

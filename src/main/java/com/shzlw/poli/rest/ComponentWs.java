@@ -45,7 +45,7 @@ public class ComponentWs {
     @RequestMapping(value = "/report/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByReportId(@PathVariable("id") long reportId,
-                                               HttpServletRequest request) {
+                                            HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         List<Report> reports = reportService.getReportsByUser(user);
         if (reports.isEmpty()) {
@@ -68,13 +68,6 @@ public class ComponentWs {
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    @Transactional
-    public ResponseEntity<?> update(@RequestBody Component component) {
-        componentDao.update(component);
-        return new ResponseEntity<String>(HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
@@ -82,12 +75,24 @@ public class ComponentWs {
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/position", method = RequestMethod.POST)
+    @RequestMapping(value = "/data", method = RequestMethod.PUT)
     @Transactional
-    public ResponseEntity<?> updatePositions(@RequestBody List<Component> components) {
-        for (Component component : components) {
-            componentDao.updatePosition(component);
-        }
+    public ResponseEntity<?> update(@RequestBody Component component) {
+        componentDao.updateData(component);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/position", method = RequestMethod.PUT)
+    @Transactional
+    public ResponseEntity<?> updatePosition(@RequestBody Component component) {
+        componentDao.updatePosition(component);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/style", method = RequestMethod.PUT)
+    @Transactional
+    public ResponseEntity<?> updatePositionAndStyle(@RequestBody Component component) {
+        componentDao.updatePositionAndStyle(component);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

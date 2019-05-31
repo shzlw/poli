@@ -11,14 +11,13 @@ import './ComponentEditPanel.css';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
-import Checkbox from './Checkbox';
 import Tabs from './Tabs';
 import Select from './Select';
 import Table from './Table';
 import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
-import Toast from './Toast';
+import SearchInput from './SearchInput';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -31,19 +30,15 @@ class ComponentEditPanel extends React.Component {
 
   get initialState() {
     return {
-      activeTab: 'Basic',
+      activeTab: '',
       jdbcDataSources: [],
       componentId: null,
       title: '',
-      x: 0,
-      y: 0,
-      width: 30,
-      height: 30,
       sqlQuery: '',
       jdbcDataSourceId: '',
       queryResult: {},
       type: Constants.STATIC,
-      subType: '',
+      subType: Constants.TEXT,
       style: this.initialStyle,
       data: {},
       queryParameter: '',
@@ -51,18 +46,20 @@ class ComponentEditPanel extends React.Component {
       drillReports: [],
       drillColumnName: '',
       drillReportId: '',
-      chartOption: {}
+      chartOption: {},
+      schemas: [],
+      searchSchemaName: ''
     };
   }
 
   get initialStyle() {
     return {
       showBorder: false,
-      borderColor: 'rgba(9, 30, 66, 1)',
+      borderColor: Constants.COLOR_SLATE,
       showTitle: true,
-      titleFontColor: 'rgba(9, 30, 66, 1)',
-      titleBackgroundColor: 'rgba(255, 255, 255, 1)',
-      contentBackgroundColor: 'rgba(255, 255, 255, 1)',
+      titleFontColor: Constants.COLOR_SLATE,
+      titleBackgroundColor: Constants.COLOR_WHITE,
+      contentBackgroundColor: Constants.COLOR_WHITE,
       zIndex: 50
     }
   }
@@ -180,7 +177,7 @@ class ComponentEditPanel extends React.Component {
   handleOptionChange = (name, value) => {
     if (name === 'type') {
       this.setState({
-        activeTab: 'Basic',
+        activeTab: '',
         subType: ''
       });
     }
@@ -203,8 +200,6 @@ class ComponentEditPanel extends React.Component {
     const {
       componentId,
       title,
-      width,
-      height,
       jdbcDataSourceId,
       sqlQuery,
       type,
@@ -213,15 +208,8 @@ class ComponentEditPanel extends React.Component {
       data
     } = this.state;
 
-    if (width < 50 || height < 50) {
-      Toast.showError('Minimum width or height is 50');
-      return;
-    }
-
     const component = {
       title: title,
-      width: width,
-      height: height,
       reportId: this.props.reportId,
       type: type,
       subType: subType,
@@ -260,7 +248,7 @@ class ComponentEditPanel extends React.Component {
         });
     } else {
       component.id = componentId;
-      axios.put('/ws/component', component)
+      axios.put('/ws/component/data', component)
         .then(res => {
           this.props.onSave(componentId);
         });
@@ -280,6 +268,30 @@ class ComponentEditPanel extends React.Component {
           queryResult: result
         });
       });
+  }
+
+  showSchema = () => {
+    const { jdbcDataSourceId } = this.state;
+    axios.get(`/ws/jdbcdatasource/schema/${jdbcDataSourceId}`)
+      .then(res => {
+        const schemas = res.data;
+        this.setState({
+          schemas: schemas
+        });
+      });
+  }
+
+  toggleSchemaColumns = (name) => {
+    const { schemas = [] } = this.state;
+    const index = schemas.findIndex(s => s.name === name);
+    if (index !== -1) {
+      const newSchemas = [...schemas];
+      const { showColumns = false } = newSchemas[index];
+      newSchemas[index].showColumns = !showColumns;
+      this.setState({
+        schemas: newSchemas
+      });
+    }
   }
 
   addDrillThrough = () => {
@@ -462,13 +474,18 @@ class ComponentEditPanel extends React.Component {
       queryResult,
       jdbcDataSources = [],
       drillThrough = [],
-      drillReports = []
+      drillReports = [],
+      schemas = [],
+      searchSchemaName
     } = this.state;
 
     const data = Util.jsonToArray(queryResult.data);
-    const columns = queryResult.columns || [];
-    const error = queryResult.error;
+    const { 
+      columns = [],
+      error
+    } = queryResult;
 
+    // Render the drill through list.
     const drillItems = [];
     for (let i = 0; i < drillThrough.length; i++) {
       const drill = drillThrough[i];
@@ -488,6 +505,7 @@ class ComponentEditPanel extends React.Component {
       }
     }
 
+    // Render the column list.
     const columnItems = columns.map(col =>
       <div className="table-row row" key={col.name}>
         <div className="float-left">{col.name}</div>
@@ -498,10 +516,59 @@ class ComponentEditPanel extends React.Component {
     const showQueryTab = type === Constants.CHART 
       || (type === Constants.FILTER && subType === Constants.SLICER);
 
+    // Render the sub types.
+    let subTypes = [];
+    if (type === Constants.STATIC) {
+      subTypes = Constants.STATIC_TYPES;
+    } else if (type === Constants.CHART) {
+      subTypes = Constants.CHART_TYPES;
+    } else if (type === Constants.FILTER) {
+      subTypes = Constants.FILTER_TYPES;
+    }
+
+
+    // Render the schema.
+    const schemaItems = [];
+    for (let i = 0; i < schemas.length; i++) {
+      const table = schemas[i];
+      const { 
+        name,
+        type,
+        columns = [],
+        showColumns = false
+      } = table;
+      if (!searchSchemaName || (searchSchemaName && name.includes(searchSchemaName))) {
+        const columnItems = [];
+        for (let j = 0; j < columns.length; j++) {
+          const column = columns[j];
+          columnItems.push(
+            <div>
+              <div>{column.name}</div>
+              <div>{column.dbType}</div> 
+              <div>{column.length}</div> 
+            </div>
+          );
+        }
+        schemaItems.push(
+          <div>
+            <div onClick={() => this.toggleSchemaColumns(name)}>{type} - {name}</div>
+            { showColumns && (
+              <div>
+                {columnItems}
+              </div>
+            )}
+          </div>
+        );
+      }
+    }
+
     return (
       <div>
         <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
         <div className="mt-10">
+          <div>
+            Type
+          </div>
           <SelectButtons
             name={'type'}
             value={type}
@@ -509,157 +576,59 @@ class ComponentEditPanel extends React.Component {
             selections={Constants.COMPONENT_TYPES}
           />
         </div>
+
+        <div className="mt-10">
+          <div>
+            Sub Type
+          </div>
+          <SelectButtons
+            name={'subType'}
+            value={subType}
+            onChange={this.handleOptionChange}
+            selections={subTypes}
+          />
+        </div>
         
         <div className="mt-10">
           <Tabs 
             activeTab={this.state.activeTab}
             onTabChange={this.onTabChange}>
-            
-            {/* ---------- Static Tab ---------- */}
-
-            <div title="Basic">
-              <div className="form-panel">
-                <div>
-                  <label>X</label>
-                  <input 
-                    type="text" 
-                    name="x" 
-                    value={this.state.x}
-                    onChange={(event) => this.handleInputChange('x', event.target.value)}
-                  />
-                  <label>Y</label>
-                  <input 
-                    type="text" 
-                    name="y" 
-                    value={this.state.y}
-                    onChange={(event) => this.handleInputChange('y', event.target.value)}
-                  />
-                  <label>Width</label>
-                  <input 
-                    type="text" 
-                    name="width" 
-                    value={this.state.width}
-                    onChange={(event) => this.handleInputChange('width', event.target.value)}
-                  />
-                  <label>Height</label>
-                  <input 
-                    type="text" 
-                    name="height" 
-                    value={this.state.height}
-                    onChange={(event) => this.handleInputChange('height', event.target.value)}
-                  />
-
-                  <label>Title</label>
-                  <Checkbox name="showTitle" value="Show" checked={this.state.style.showTitle} onChange={this.onStyleValueChange} />
-                  { this.state.style.showTitle && (
-                    <div style={{marginTop: '5px'}}>
-                      <input 
-                        type="text" 
-                        name="title" 
-                        value={this.state.title}
-                        onChange={(event) => this.handleInputChange('title', event.target.value)} 
-                      />
-
-                      <div>
-                        <label>Font Color</label>
-                        <ColorPicker name={'titleFontColor'} value={this.state.style.titleFontColor} onChange={this.onStyleValueChange} />
-                      </div>
-
-                      <div style={{marginTop: '8px'}}>
-                        <label>Background Color</label>
-                        <ColorPicker name={'titleBackgroundColor'} value={this.state.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <hr/>
-               
-                <div style={{marginTop: '8px'}}>
-                  <label>Border</label>
-                  <Checkbox name="showBorder" value="Show" checked={this.state.style.showBorder} onChange={this.onStyleValueChange} />
-                  { this.state.style.showBorder && (
-                    <div style={{marginTop: '5px'}}>
-                      <label>Color</label>
-                      <ColorPicker name={'borderColor'} value={this.state.style.borderColor} onChange={this.onStyleValueChange} />
-                    </div>
-                  )}
-                </div>
-
-                <hr/>
-
-                <div style={{marginTop: '8px'}}>
-                  <label>Content Background Color</label>
-                  <div style={{marginTop: '5px'}}>
-                    <ColorPicker name={'contentBackgroundColor'} value={this.state.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
-                  </div>
-                </div>
-
-                <hr/>
-                <div style={{marginTop: '8px'}}>
-                  <label>Z Index</label>
-                  <div style={{marginTop: '3px'}}>
-                    <InputRange
-                      name="zIndex" 
-                      value={this.state.style.zIndex}
-                      onChange={this.onStyleValueChange} 
-                      min={1}
-                      max={50}
-                      step={1}
-                    />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* ---------- Static Tab ---------- */}
-
-            { type === Constants.STATIC && (
-              <div title="Static">
-                <div className="form-panel">
-                  <label>Type</label>
-                  <Select
-                    name={'subType'}
-                    value={subType}
-                    onChange={this.handleOptionChange}
-                    options={Constants.STATIC_TYPES}
-                  />
-                </div>
-                {this.renderStaticConfigPanel()} 
-              </div>
-            )}
-
-            {/* ---------- Filter Tab ---------- */}
-
-            { type === Constants.FILTER && (  
-              <div title="Filter">
-                <div className="form-panel">
-                  <label>Type</label>
-                  <Select
-                    name={'subType'}
-                    value={subType}
-                    onChange={this.handleOptionChange}
-                    options={Constants.FILTER_TYPES}
-                  />
-                </div>
-              </div>
-            )}
 
             {/* ---------- Query Tab ---------- */}
 
             { showQueryTab && (
               <div title="Query">
-                <div className="form-panel">
-                  <label>DataSource</label>
-                  <Select
-                    name={'jdbcDataSourceId'}
-                    value={this.state.jdbcDataSourceId}
-                    onChange={this.handleIntegerChange}
-                    options={jdbcDataSources}
-                    optionDisplay={'name'}
-                    optionValue={'id'}
+                <div>
+                  <div>
+                    <button className="button" onClick={this.showSchema}>Show Schemas</button>
+                  </div>
+                  <div>
+                    <SearchInput 
+                      name={'searchSchemaName'} 
+                      value={searchSchemaName} 
+                      onChange={this.handleInputChange} 
+                      inputWidth={200}
                     />
+                  </div>
+                  <div>
+                    {schemaItems}
+                  </div>
+                </div>
+                <div className="form-panel">
+                  <div>
+                    <label>DataSource</label>
+                    <Select
+                      name={'jdbcDataSourceId'}
+                      value={this.state.jdbcDataSourceId}
+                      onChange={this.handleIntegerChange}
+                      options={jdbcDataSources}
+                      optionDisplay={'name'}
+                      optionValue={'id'}
+                      />
+                    <div>
+                      <button className="button" onClick={this.runQuery}>Run Query</button>
+                    </div>
+                  </div>
                 
                   <label>SQL Query</label>
                   <AceEditor
@@ -680,10 +649,6 @@ class ComponentEditPanel extends React.Component {
                     }}
                   />
 
-                  <div style={{margin: '5px 0px 8px 0px'}}>
-                    <button className="button" onClick={this.runQuery}>Run Query</button>
-                  </div>
-
                   <label>Result</label>
                   { error ? (
                       <div>
@@ -696,74 +661,82 @@ class ComponentEditPanel extends React.Component {
                         columns={columns}
                       />
                   )}
+                </div>
+              </div>
+            )}
 
-                  <label style={{marginTop: '8px'}}>Columns Mapping</label>
+            {/* ---------- Config Tab ---------- */}
+
+            <div title="Config">
+              <div className="form-panel">
+                <div>
+                  {type}
+                </div>
+                { type === Constants.STATIC && (
                   <div>
-                    {columnItems}
+                    {this.renderStaticConfigPanel()} 
                   </div>
-                </div>
-              </div>
-            )}
+                )}
 
-            {/* ---------- Chart Config Tab ---------- */}
+                { type === Constants.FILTER && (
+                  <div>
+                    <label>Parameter</label>
+                    <input 
+                      type="text" 
+                      name="queryParameter" 
+                      value={this.state.queryParameter}
+                      onChange={(event) => this.handleInputChange('queryParameter', event.target.value)} 
+                    />
+                  </div>
+                )}
 
-            { type === Constants.CHART && (
-              <div title="Chart">
-                <div className="form-panel">
-                  <label>Type</label>
-                  <Select
-                    name={'subType'}
-                    value={subType}
-                    onChange={this.handleOptionChange}
-                    options={Constants.CHART_TYPES}
-                  />
-                  {this.renderChartConfigPanel()} 
-                </div>
+                { type === Constants.CHART && (
+                  <div>
+                    <div>
+                      <label style={{marginTop: '8px'}}>Columns Mapping</label>
+                      <div>
+                        {columnItems}
+                      </div>
+                    </div>
+                    <div>
+                      {this.renderChartConfigPanel()} 
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
 
             {/* ---------- Drill Through Tab ---------- */}
             
             { type === Constants.CHART && (
               <div title="Drill Through">
                 <div className="form-panel">
-                  <label>Column</label>
-                  <Select
-                    name={'drillColumnName'}
-                    value={this.state.drillColumnName}
-                    options={columns}
-                    onChange={this.handleOptionChange}
-                    optionDisplay={'name'}
-                    optionValue={'name'}
-                  />
+                  <div>
+                    <label>Column</label>
+                    <Select
+                      name={'drillColumnName'}
+                      value={this.state.drillColumnName}
+                      options={columns}
+                      onChange={this.handleOptionChange}
+                      optionDisplay={'name'}
+                      optionValue={'name'}
+                    />
 
-                  <label>Report</label>
-                  <Select
-                    name={'drillReportId'}
-                    value={this.state.drillReportId}
-                    options={drillReports}
-                    onChange={this.handleIntegerChange}
-                    optionDisplay={'name'}
-                    optionValue={'id'}
-                  />
-                  <button className="button" onClick={this.addDrillThrough}>Add</button>
-                  <div style={{marginTop: '8px'}}>
+                    <label>Report</label>
+                    <Select
+                      name={'drillReportId'}
+                      value={this.state.drillReportId}
+                      options={drillReports}
+                      onChange={this.handleIntegerChange}
+                      optionDisplay={'name'}
+                      optionValue={'id'}
+                    />
+                    <button className="button" onClick={this.addDrillThrough}>Add</button>
+                  </div>
+                  <div>
                     {drillItems}
                   </div>
-                </div>
-              </div>
-            )}
-
-            { type === Constants.FILTER && (
-              <div title="Query parameter">
-                <div className="form-panel">
-                  <label>Parameter</label>
-                  <input 
-                    type="text" 
-                    name="queryParameter" 
-                    value={this.state.queryParameter}
-                    onChange={(event) => this.handleInputChange('queryParameter', event.target.value)} 
-                  />
                 </div>
               </div>
             )}

@@ -2,6 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
+import com.shzlw.poli.dto.Table;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
@@ -71,5 +73,15 @@ public class JdbcDataSourceWs {
     public String ping(@PathVariable("id") long id) {
         JdbcDataSource ds = jdbcDataSourceDao.findById(id);
         return jdbcQueryService.ping(ds);
+    }
+
+    @RequestMapping(
+            value = "/schema/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
+    public List<Table> getSchema(@PathVariable("id") long id) {
+        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
+        return jdbcQueryService.getSchema(ds);
     }
 }
