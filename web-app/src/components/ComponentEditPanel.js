@@ -367,7 +367,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          <label>Key (Text)</label>
+          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
           <Select
             name={'key'}
             value={key}
@@ -377,7 +377,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Value (Number)</label>
+          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
           <Select
             name={'value'}
             value={value}
@@ -502,7 +502,11 @@ class ComponentEditPanel extends React.Component {
           const reportName = drillReports[j].name;
           drillItems.push(
             <div key={drill.columnName} className="row table-row">
-              <div className="float-left ellipsis" style={{width: '380px'}}>Column: {drill.columnName} goes to Report: {reportName}</div>
+              <div className="float-left ellipsis" style={{width: '680px'}}>
+                <span className="tag-label">Column</span> {drill.columnName} 
+                <FontAwesomeIcon icon="long-arrow-alt-right" fixedWidth />
+                <span className="tag-label">Report</span> {reportName}
+              </div>
               <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
                 <FontAwesomeIcon icon="trash-alt" />
               </button>
@@ -514,10 +518,10 @@ class ComponentEditPanel extends React.Component {
     }
 
     // Render the column list.
-    const columnItems = columns.map(col =>
-      <div className="table-row row" key={col.name}>
-        <div className="float-left">{col.name}</div>
-        <div className="float-right">{col.dataType}</div>
+    const columnItems = columns.map(column =>
+      <div className="row schema-column-row" key={column.name}>
+        <div className="float-left schema-column-name">{column.name}</div>
+        <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
       </div>
     );
 
@@ -577,9 +581,11 @@ class ComponentEditPanel extends React.Component {
 
     return (
       <div>
-        <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
+        <button className="button button-green" style={{width: '120px'}} onClick={this.save}>
+          <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+        </button>
         <div className="row mt-10">
-          <label className="float-left inline-text-label" style={{width: '80px'}}>Type: </label>
+          <label className="float-left inline-text-label bold" style={{width: '100px'}}>Type: </label>
           <div className="float-left">
             <SelectButtons
               name={'type'}
@@ -591,7 +597,7 @@ class ComponentEditPanel extends React.Component {
         </div>
 
         <div className="row mt-10">
-          <label className="float-left inline-text-label" style={{width: '80px'}}>Sub Type: </label>
+          <label className="float-left inline-text-label bold" style={{width: '100px'}}>Sub Type: </label>
           <div className="float-left">
             <SelectButtons
               name={'subType'}
@@ -693,9 +699,6 @@ class ComponentEditPanel extends React.Component {
 
             <div title="Config">
               <div className="form-panel">
-                <div>
-                  {type}
-                </div>
                 { type === Constants.STATIC && (
                   <div>
                     {this.renderStaticConfigPanel()} 
@@ -715,14 +718,14 @@ class ComponentEditPanel extends React.Component {
                 )}
 
                 { type === Constants.CHART && (
-                  <div>
-                    <div>
-                      <label style={{marginTop: '8px'}}>Columns Mapping</label>
-                      <div>
+                  <div className="row">
+                    <div className="float-left" style={{width: '300px'}}>
+                      <label>Columns</label>
+                      <div style={{backgroundColor: '#FFFFFF'}}>
                         {columnItems}
                       </div>
                     </div>
-                    <div>
+                    <div className="float-right" style={{width: '480px'}}>
                       {this.renderChartConfigPanel()} 
                     </div>
                   </div>
@@ -758,7 +761,7 @@ class ComponentEditPanel extends React.Component {
                     />
                     <button className="button" onClick={this.addDrillThrough}>Add</button>
                   </div>
-                  <div>
+                  <div style={{marginTop: '8px'}}>
                     {drillItems}
                   </div>
                 </div>

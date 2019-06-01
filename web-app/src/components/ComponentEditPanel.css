@@ -2,14 +2,19 @@
 }
 
 .schema-table-title {
-  background-color: #FFFFFF;
-  padding: 3px 6px;
+  padding: 4px 8px;
   cursor: pointer;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  font-weight: 700;
 }
 
 .schema-column-row {
-  padding: 3px 6px 3px 12px;
+  padding: 4px 8px 4px 20px;
 }
 
 .schema-column-name {
@@ -17,5 +22,11 @@
 }
 
 .schema-column-type {
+  color: #8993A4;
+}
 
+.tag-label {
+  padding: 2px 4px;
+  background-color: #8993A4;
+  color: #FFFFFF;
 }

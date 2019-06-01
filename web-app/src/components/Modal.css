@@ -14,6 +14,7 @@
 }
 
 .model-close-button {
+  color: #091E42;
   float: right;
   cursor: pointer;
 }

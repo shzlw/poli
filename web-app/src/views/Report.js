@@ -207,7 +207,9 @@ class Report extends Component {
               value={this.state.name}
               onChange={this.handleInputChange} 
             />
-            <button className="button button-green" onClick={this.save}>Save</button>
+            <button className="button button-green" onClick={this.save}>
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            </button>
           </div>
         </Modal>
 

@@ -1,6 +1,8 @@
 
 import React from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Toast from '../components/Toast';
 import Modal from '../components/Modal';
 
@@ -146,7 +148,9 @@ class Account extends React.Component {
           )}
 
           <hr />
-          <button className="button mt-10 button-green" onClick={this.save}>Save</button>
+          <button className="button mt-10 button-green" onClick={this.save}>
+            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+          </button>
         </div>
 
         <Modal 

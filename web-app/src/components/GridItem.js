@@ -338,7 +338,7 @@ class GridItem extends React.Component {
 
         { !isEditMode && hasDrillThrough && (
           <div className="grid-edit-panel grid-box-icon inline-block">
-            <FontAwesomeIcon icon="level-up-alt" fixedWidth />
+            <FontAwesomeIcon icon="long-arrow-alt-right" fixedWidth />
           </div>
         )}
         

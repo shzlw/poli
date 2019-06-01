@@ -318,7 +318,9 @@ class Group extends React.Component {
               </div>
             </div>
           </div>
-          <button className="button mt-3 button-green" onClick={this.save}>Save</button>
+          <button className="button mt-3 button-green" onClick={this.save}>
+            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+          </button>
         </Modal>
 
         <Modal 

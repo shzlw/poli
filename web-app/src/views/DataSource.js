@@ -323,7 +323,9 @@ class DataSource extends Component {
               value={this.state.ping}
               onChange={this.handleInputChange} 
             />
-            <button className="button mt-3 button-green" onClick={this.save}>Save</button>
+            <button className="button mt-3 button-green" onClick={this.save}>
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            </button>
           </div>
         </Modal>
 
