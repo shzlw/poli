@@ -42,7 +42,8 @@ body,
 .form-panel textarea,
 .form-panel select,
 .form-panel ul,
-.form-panel .info-value {
+.form-panel .info-value 
+.form-input {
   margin-bottom: 10px;
 }
 
@@ -137,6 +138,7 @@ input[type=password],
 input[type=number],
 select,
 textarea,
+.base-input
 .table-row {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
@@ -149,6 +151,11 @@ textarea,
   border-radius: 4px;
   background: #FFFFFF;
   font-size: 16px;
+}
+
+.inline-text-label {
+  height: 36px;
+  line-height: 36px;
 }
 
 textarea {

@@ -47,6 +47,7 @@ class ComponentEditPanel extends React.Component {
       drillColumnName: '',
       drillReportId: '',
       chartOption: {},
+      showSchema: false,
       schemas: [],
       searchSchemaName: ''
     };
@@ -270,15 +271,21 @@ class ComponentEditPanel extends React.Component {
       });
   }
 
-  showSchema = () => {
-    const { jdbcDataSourceId } = this.state;
-    axios.get(`/ws/jdbcdatasource/schema/${jdbcDataSourceId}`)
-      .then(res => {
-        const schemas = res.data;
-        this.setState({
-          schemas: schemas
-        });
-      });
+  toggleSchemaPanel = () => {
+    this.setState(prevState => ({
+      showSchema: !prevState.showSchema
+    }), () => {
+      if (this.state.showSchema) {
+        const { jdbcDataSourceId } = this.state;
+        axios.get(`/ws/jdbcdatasource/schema/${jdbcDataSourceId}`)
+          .then(res => {
+            const schemas = res.data;
+            this.setState({
+              schemas: schemas
+            });
+          });
+      }
+    });
   }
 
   toggleSchemaColumns = (name) => {
@@ -475,6 +482,7 @@ class ComponentEditPanel extends React.Component {
       jdbcDataSources = [],
       drillThrough = [],
       drillReports = [],
+      showSchema,
       schemas = [],
       searchSchemaName
     } = this.state;
@@ -542,16 +550,18 @@ class ComponentEditPanel extends React.Component {
         for (let j = 0; j < columns.length; j++) {
           const column = columns[j];
           columnItems.push(
-            <div>
-              <div>{column.name}</div>
-              <div>{column.dbType}</div> 
-              <div>{column.length}</div> 
+            <div className="row schema-column-row">
+              <div className="float-left schema-column-name">{column.name}</div>
+              <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
             </div>
           );
         }
         schemaItems.push(
           <div>
-            <div onClick={() => this.toggleSchemaColumns(name)}>{type} - {name}</div>
+            <div className="row schema-table-title" onClick={() => this.toggleSchemaColumns(name)}>
+              <div className="float-left">{name}</div>
+              <div className="float-right">{type}</div>
+            </div>
             { showColumns && (
               <div>
                 {columnItems}
@@ -562,31 +572,34 @@ class ComponentEditPanel extends React.Component {
       }
     }
 
+    const queryTitle = showSchema ? 'Schema' : 'SQL Query'; 
+    const schemaButtonValue = showSchema ? 'Edit Query' : 'Show Schema';
+
     return (
       <div>
         <button className="button button-green" style={{width: '80px'}} onClick={this.save}>Save</button>
-        <div className="mt-10">
-          <div>
-            Type
+        <div className="row mt-10">
+          <label className="float-left inline-text-label" style={{width: '80px'}}>Type: </label>
+          <div className="float-left">
+            <SelectButtons
+              name={'type'}
+              value={type}
+              onChange={this.handleOptionChange}
+              selections={Constants.COMPONENT_TYPES}
+            />
           </div>
-          <SelectButtons
-            name={'type'}
-            value={type}
-            onChange={this.handleOptionChange}
-            selections={Constants.COMPONENT_TYPES}
-          />
         </div>
 
-        <div className="mt-10">
-          <div>
-            Sub Type
+        <div className="row mt-10">
+          <label className="float-left inline-text-label" style={{width: '80px'}}>Sub Type: </label>
+          <div className="float-left">
+            <SelectButtons
+              name={'subType'}
+              value={subType}
+              onChange={this.handleOptionChange}
+              selections={subTypes}
+            />
           </div>
-          <SelectButtons
-            name={'subType'}
-            value={subType}
-            onChange={this.handleOptionChange}
-            selections={subTypes}
-          />
         </div>
         
         <div className="mt-10">
@@ -598,70 +611,81 @@ class ComponentEditPanel extends React.Component {
 
             { showQueryTab && (
               <div title="Query">
-                <div>
-                  <div>
-                    <button className="button" onClick={this.showSchema}>Show Schemas</button>
-                  </div>
-                  <div>
-                    <SearchInput 
-                      name={'searchSchemaName'} 
-                      value={searchSchemaName} 
-                      onChange={this.handleInputChange} 
-                      inputWidth={200}
-                    />
-                  </div>
-                  <div>
-                    {schemaItems}
-                  </div>
-                </div>
                 <div className="form-panel">
-                  <div>
-                    <label>DataSource</label>
-                    <Select
-                      name={'jdbcDataSourceId'}
-                      value={this.state.jdbcDataSourceId}
-                      onChange={this.handleIntegerChange}
-                      options={jdbcDataSources}
-                      optionDisplay={'name'}
-                      optionValue={'id'}
-                      />
-                    <div>
-                      <button className="button" onClick={this.runQuery}>Run Query</button>
+                  <label>DataSource:</label>
+                  <Select
+                    name={'jdbcDataSourceId'}
+                    value={this.state.jdbcDataSourceId}
+                    onChange={this.handleIntegerChange}
+                    options={jdbcDataSources}
+                    optionDisplay={'name'}
+                    optionValue={'id'}
+                    />
+                  <div className="row">
+                    <label className="float-left inline-text-label" style={{width: '200px'}}>
+                      {queryTitle}
+                    </label>
+                    <div className="float-right">
+                      {!showSchema && (
+                        <button className="button" style={{marginRight: '5px'}} onClick={this.runQuery}>Run Query</button>
+                      )}
+                      <button className="button" onClick={this.toggleSchemaPanel}>
+                        {schemaButtonValue}
+                      </button>
                     </div>
                   </div>
-                
-                  <label>SQL Query</label>
-                  <AceEditor
-                    value={this.state.sqlQuery}
-                    mode="mysql"
-                    theme="xcode"
-                    name="blah2"
-                    onChange={this.handleAceEditorChange}
-                    height={'300px'}
-                    width={'100%'}
-                    fontSize={15}
-                    showPrintMargin={false}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    setOptions={{
-                      showLineNumbers: true,
-                      tabSize: 2
-                    }}
-                  />
 
-                  <label>Result</label>
-                  { error ? (
+                  {showSchema ? (
+                    <div className="schema-panel">
                       <div>
-                        {error}
+                        <SearchInput 
+                          name={'searchSchemaName'} 
+                          value={searchSchemaName} 
+                          onChange={this.handleInputChange} 
+                          inputWidth={200}
+                        />
                       </div>
-                    ) : (
-                      <Table
-                        data={data}
-                        defaultPageSize={10}
-                        columns={columns}
+                      <div style={{marginTop: '5px'}}>
+                        {schemaItems}
+                      </div>
+                    </div>
+                  ): (
+                    <div>
+                      <AceEditor
+                        value={this.state.sqlQuery}
+                        mode="mysql"
+                        theme="xcode"
+                        name="blah2"
+                        onChange={this.handleAceEditorChange}
+                        height={'300px'}
+                        width={'100%'}
+                        fontSize={15}
+                        showPrintMargin={false}
+                        showGutter={true}
+                        highlightActiveLine={true}
+                        setOptions={{
+                          showLineNumbers: true,
+                          tabSize: 2
+                        }}
                       />
+
+                      <label style={{marginTop: '10px'}}>Result</label>
+                      { error ? (
+                          <div>
+                            {error}
+                          </div>
+                        ) : (
+                          <Table
+                            data={data}
+                            defaultPageSize={10}
+                            columns={columns}
+                          />
+                      )}
+                    </div>
                   )}
+                  
                 </div>
+
               </div>
             )}
 

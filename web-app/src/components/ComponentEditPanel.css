@@ -1,0 +1,21 @@
+.schema-panel {
+}
+
+.schema-table-title {
+  background-color: #FFFFFF;
+  padding: 3px 6px;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.schema-column-row {
+  padding: 3px 6px 3px 12px;
+}
+
+.schema-column-name {
+
+}
+
+.schema-column-type {
+
+}

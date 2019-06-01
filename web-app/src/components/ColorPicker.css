@@ -16,6 +16,6 @@
 }
 
 .colorpicker-popover {
-  position: absolute;
+  position: fixed;
   z-index: 300;
 }

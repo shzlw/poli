@@ -85,9 +85,8 @@ public class JdbcQueryService {
             }
             return tables;
         } catch (Exception e) {
-            e.printStackTrace();
+            return Collections.emptyList();
         }
-        return tables;
     }
 
     public String fetchCsv(JdbcDataSource ds, String sql) {

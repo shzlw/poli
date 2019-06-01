@@ -14,6 +14,7 @@
   padding: 7px 0px !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  margin: 0px !important;
 }
 
 .search-input-input:focus {
