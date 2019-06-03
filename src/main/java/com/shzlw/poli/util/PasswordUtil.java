@@ -92,9 +92,27 @@ public final class PasswordUtil {
     public static String getDecryptedPassword(String password) {
         String p = decrypt(password);
         int saltLength = Constants.PASSWORD_SALT.length();
-        if (p.length() < saltLength) {
-            return "";
-        }
         return p.substring(saltLength);
+    }
+
+    public static String padOrTrimTo16(String str) {
+        String s = str;
+        if (str == null) {
+            s = "";
+        }
+
+        if (s.length() == 16) {
+            return s;
+        } else if (s.length() > 16) {
+            return s.substring(0, 16);
+        }
+
+        int l = 16 - s.length();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < l; i++) {
+            sb.append("0");
+        }
+        sb.append(s);
+        return sb.toString();
     }
 }

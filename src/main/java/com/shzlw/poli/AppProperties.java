@@ -7,17 +7,17 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "poli")
 public class AppProperties {
 
-    Integer dataSourceMaximumPoolSize;
+    Integer datasourceMaximumPoolSize;
 
     public AppProperties() {
-        dataSourceMaximumPoolSize = 50;
+        datasourceMaximumPoolSize = 50;
     }
 
-    public Integer getDataSourceMaximumPoolSize() {
-        return dataSourceMaximumPoolSize;
+    public Integer getDatasourceMaximumPoolSize() {
+        return datasourceMaximumPoolSize;
     }
 
-    public void setDataSourceMaximumPoolSize(Integer dataSourceMaximumPoolSize) {
-        this.dataSourceMaximumPoolSize = dataSourceMaximumPoolSize;
+    public void setDatasourceMaximumPoolSize(Integer datasourceMaximumPoolSize) {
+        this.datasourceMaximumPoolSize = datasourceMaximumPoolSize;
     }
 }

@@ -450,17 +450,11 @@ class ReportEditView extends React.Component {
 
     const inEditModeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button button-black ml-4" onClick={this.cancelEdit}>
-            <FontAwesomeIcon icon="times" size="lg" fixedWidth />
-        </button>
-        <button className="button square-button button-green ml-4" onClick={this.save}>
-          <FontAwesomeIcon icon="save" size="lg" fixedWidth />
-        </button>
-        <button className="button square-button button-red ml-4" onClick={this.deleteReport}>
-            <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
-        </button>
         <button className="button ml-4" onClick={() => this.openComponentEditPanel(null)}>
           <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> New Component
+        </button>
+        <button className="button square-button button-red ml-4" onClick={this.deleteReport}>
+          <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
         </button>
       </React.Fragment>
     )
@@ -570,6 +564,12 @@ class ReportEditView extends React.Component {
         {isEditMode && (
           <div className="report-attribute-edit-panel">
             <div className="form-panel">
+              <button className="button square-button button-green ml-4" onClick={this.save}>
+                <FontAwesomeIcon icon="save" size="lg" fixedWidth />
+              </button>
+              <button className="button square-button button-black ml-4" onClick={this.cancelEdit}>
+                <FontAwesomeIcon icon="times" size="lg" fixedWidth />
+              </button>
               <label>Height</label>
               <input 
                 type="text" 

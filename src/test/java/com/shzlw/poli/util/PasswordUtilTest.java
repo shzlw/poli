@@ -32,6 +32,15 @@ public class PasswordUtilTest {
     @Test
     public void testGenerateAdminPassword() {
         String password = "adminadmin";
-        System.out.println(PasswordUtil.getMd5Hash(password));
+        Assert.assertNotNull(PasswordUtil.getMd5Hash(password));
+    }
+
+    @Test
+    public void testPadOrTrimTo16() {
+        Assert.assertEquals("0000000000000000", PasswordUtil.padOrTrimTo16(null));
+        Assert.assertEquals("0000000000000000", PasswordUtil.padOrTrimTo16(""));
+        Assert.assertEquals("0000000000000001", PasswordUtil.padOrTrimTo16("1"));
+        Assert.assertEquals("1234567812345678", PasswordUtil.padOrTrimTo16("1234567812345678"));
+        Assert.assertEquals("1234567812345678", PasswordUtil.padOrTrimTo16("12345678123456789"));
     }
 }

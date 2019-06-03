@@ -503,9 +503,9 @@ class ComponentEditPanel extends React.Component {
           drillItems.push(
             <div key={drill.columnName} className="row table-row">
               <div className="float-left ellipsis" style={{width: '680px'}}>
-                <span className="tag-label">Column</span> {drill.columnName} 
-                <FontAwesomeIcon icon="long-arrow-alt-right" fixedWidth />
-                <span className="tag-label">Report</span> {reportName}
+                <div className="tag-label">Column</div> <span style={{marginRight: '10px'}}>{drill.columnName}</span>
+                <FontAwesomeIcon icon="long-arrow-alt-right" size="lg" fixedWidth />
+                <div className="tag-label" style={{marginLeft: '10px', backgroundColor: '#36B37E'}}>Report</div> {reportName}
               </div>
               <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
                 <FontAwesomeIcon icon="trash-alt" />

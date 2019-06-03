@@ -26,7 +26,8 @@
 }
 
 .tag-label {
-  padding: 2px 4px;
+  padding: 2px 12px;
   background-color: #8993A4;
   color: #FFFFFF;
+  display: inline-block;
 }

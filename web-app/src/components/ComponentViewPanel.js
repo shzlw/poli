@@ -1,6 +1,7 @@
 
 import React from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
@@ -469,7 +470,9 @@ class ComponentViewPanel extends React.Component {
         {selectedComponent && (
           <div className="report-component-style-panel">
             <div className="form-panel">
-              <button className="button" onClick={this.saveComponentStyle}>Save</button>
+              <button className="button square-button button-green ml-4" onClick={this.saveComponentStyle}>
+                <FontAwesomeIcon icon="save" size="lg" fixedWidth />
+              </button>
               <div>
                 <label>Title</label>
                 <Checkbox name="showTitle" value="Show" checked={selectedComponent.style.showTitle} onChange={this.onStyleValueChange} />

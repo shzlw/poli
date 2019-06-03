@@ -74,7 +74,7 @@ public class JdbcDataSourceService {
                 if (!StringUtils.isEmpty(dataSource.getDriverClassName())) {
                     newHiDs.setDriverClassName(dataSource.getDriverClassName());
                 }
-                newHiDs.setMaximumPoolSize(appProperties.getDataSourceMaximumPoolSize());
+                newHiDs.setMaximumPoolSize(appProperties.getDatasourceMaximumPoolSize());
                 newHiDs.setLeakDetectionThreshold(2000);
                 return newHiDs;
             });

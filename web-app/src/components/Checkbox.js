@@ -40,7 +40,7 @@ class Checkbox extends React.Component {
           { checked ? (
             <FontAwesomeIcon icon="check-square" />
           ) : (
-            <FontAwesomeIcon icon="square" />
+            <FontAwesomeIcon icon={['far', 'square']} />
           )}
         </div>
         <div className="checkbox-label">{value}</div>

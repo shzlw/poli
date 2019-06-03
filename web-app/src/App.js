@@ -7,10 +7,14 @@ import {
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare, 
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, 
   faLongArrowAltRight, faWrench
 } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSquare as farSquare
+} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 import './App.css';
 
@@ -25,8 +29,8 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
-  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, faSquare,
-  faLongArrowAltRight, faWrench
+  faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare,
+  faLongArrowAltRight, faWrench, farSquare
 );
 
 class App extends React.Component {

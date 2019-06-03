@@ -213,19 +213,20 @@ h1 {
 }
 
 .table-row {
-  padding: 3px 6px;
+  padding: 4px 6px;
   margin-bottom: 6px;
   background-color: #FFFFFF;
   box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   outline: 0;
   border-radius: 4px;
   background: #FFFFFF;
+  line-height: 28px;
 }
 
 .table-row-button {
-  height: 22px;
-  line-height: 22px;
-  padding: 0px 5px !important;
+  height: 28px;
+  line-height: 28px;
+  padding: 0px 8px !important;
 }
 
 .card {
