@@ -213,6 +213,7 @@ class GridItem extends React.Component {
         componentItem = (
           <div className="grid-box-content-panel">
             <input 
+              className="form-input"
               type="text"  
               value={value}
               onChange={(event) => this.onSingleValueChange(id, event)}

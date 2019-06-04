@@ -1,8 +1,10 @@
 # Data Source
 
-## Use any JDBC drivers
+Poli connects to database through the JDBC interface. You can try connect to any databases that provides JDBC drivers. To configure Poli to connect to different databases, two steps are required.
 
-> There are not any JDBC drivers included except the JDBC driver for SQLite. You need to download the JDBC jar files based on the database you'd like to connect to and put those JDBC jar files under /jdbc-drivers. 
+## Download the JDBC jar file 
+
+Download the JDBC jar files based on the database you'd like to connect to and put those JDBC jar files under /jdbc-drivers. 
 
 For example:
 ```sh
@@ -12,3 +14,19 @@ For example:
         |-- mssql-jdbc-7.2.0.jre8.jar
         |...
 ```
+
+> There are no JDBC drivers included in the release except the JDBC driver for SQLite.
+
+## Create a Data Source
+
+For instance, information needed to connect to a PostgreSQL database
+
+```
+Connection Url: jdbc:postgresql://127.0.0.1:5432/testdb
+Driver Class Name: org.postgresql.Driver
+Username: postgres
+Password: test
+Ping: SELECT 1
+```
+
+> Use the ping button to test the connection.

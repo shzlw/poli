@@ -42,7 +42,7 @@ spring.datasource.url= jdbc:sqlite:/home/user/poli-release/db/poli.db
 
 4. Add JDBC drivers.
 
-> There are not any JDBC drivers included except the JDBC driver for SQLite. You need to download the JDBC jar files based on the database you'd like to connect to and put those JDBC jar files under /jdbc-drivers. 
+> There are no JDBC drivers included except the JDBC driver for SQLite. You need to download the JDBC jar files based on the database you'd like to connect to and put those JDBC jar files under /jdbc-drivers. 
 
 For example:
 ```

@@ -413,11 +413,11 @@ class ReportEditView extends React.Component {
           </div>
           { autoRefreshStatus === 'OFF' && (
             <input 
+              className="form-input inline-block"
               type="text" 
               name="refreshInterval" 
               value={this.state.refreshInterval}
               onChange={this.handleInputChange}
-              className="inline-block" 
               style={{width: '50px'}}
             />
           )}
@@ -511,11 +511,11 @@ class ReportEditView extends React.Component {
                   </div>
                 ) :(
                   <input 
+                    className="form-input report-name-input"
                     type="text" 
                     name="name" 
                     value={this.state.name}
-                    onChange={this.handleInputChange} 
-                    className="report-name-input"
+                    onChange={this.handleInputChange}  
                   />
                 )
               }
@@ -562,43 +562,59 @@ class ReportEditView extends React.Component {
         </Modal>
 
         {isEditMode && (
-          <div className="report-attribute-edit-panel">
-            <div className="form-panel">
-              <button className="button square-button button-green ml-4" onClick={this.save}>
-                <FontAwesomeIcon icon="save" size="lg" fixedWidth />
+          <div className="report-side-panel">
+            <div className="side-panel-content">
+              <button className="icon-button button-green" onClick={this.save}>
+                <FontAwesomeIcon icon="save" size="lg"  />
               </button>
-              <button className="button square-button button-black ml-4" onClick={this.cancelEdit}>
-                <FontAwesomeIcon icon="times" size="lg" fixedWidth />
+              <button className="icon-button button-black ml-4" onClick={this.cancelEdit}>
+                <FontAwesomeIcon icon="times" size="lg" />
               </button>
-              <label>Height</label>
-              <input 
-                type="text" 
-                name="height" 
-                value={this.state.style.height}
-                onChange={(event) => this.handleStyleValueChange('height', event.target.value)} 
-              />
+            </div>
+            <div className="side-panel">
+              <div className="side-panel-title">Height</div>
+              <div className="side-panel-content">
+                <input 
+                  type="text" 
+                  name="height" 
+                  value={this.state.style.height}
+                  onChange={(event) => this.handleStyleValueChange('height', event.target.value)} 
+                  className="side-panel-input"
+                />
+              </div>
+              
 
-              <label>Width</label>
-              <Checkbox name="isFixedWidth" value="Fixed" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
+              <div className="side-panel-title row" style={this.state.style.isFixedWidth ? {} : {borderBottom: 'none'}}>
+                <div className="float-left">Width</div>
+                <div className="float-right">
+                  <Checkbox name="isFixedWidth" value="Fixed" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
+                </div>
+              </div>
+              
 
               { this.state.style.isFixedWidth && (
-                <div style={{marginTop: '3px'}}>
+                <div className="side-panel-content">
                   <input 
                     type="text" 
                     name="fixedWidth" 
                     value={this.state.style.fixedWidth}
                     onChange={(event) => this.handleStyleValueChange('fixedWidth', event.target.value)} 
+                    className="side-panel-input"
                   />
                 </div>
               )}
 
-              <label>Background Color</label>
-              <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.handleStyleValueChange} />
-
-              <hr/>
-
-              <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
-              <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
+              <div className="side-panel-title">Background Color</div>
+              <div className="side-panel-content">
+                <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.handleStyleValueChange} />
+              </div>
+              
+              <div className="side-panel-title" style={{borderBottom: 'none'}}>
+                <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
+              </div>
+              <div className="side-panel-title">
+                <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
+              </div>
             </div>
           </div>
         )}

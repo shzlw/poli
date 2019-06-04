@@ -355,6 +355,7 @@ class User extends React.Component {
             <div className="form-panel float-left" style={{width: '240px'}}>
               <label>Username <span className="required">*</span></label>
               <input 
+                className="form-input"
                 type="text" 
                 name="username" 
                 value={this.state.username}
@@ -363,6 +364,7 @@ class User extends React.Component {
 
               <label>Name</label>
               <input 
+                className="form-input"
                 type="text" 
                 name="name" 
                 value={this.state.name}
@@ -378,6 +380,7 @@ class User extends React.Component {
                 <div>
                   <label>New Password</label>
                   <input 
+                    className="form-input"
                     type="password" 
                     name="tempPassword" 
                     value={this.state.tempPassword}

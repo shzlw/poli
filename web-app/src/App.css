@@ -38,9 +38,7 @@ body,
   outline: 0;
 }
 
-.form-panel input,
-.form-panel textarea,
-.form-panel select,
+.form-panel .form-input,
 .form-panel ul,
 .form-panel .info-value 
 .form-input {
@@ -133,12 +131,7 @@ body,
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
 }
 
-input[type=text],
-input[type=password],
-input[type=number],
-select,
-textarea,
-.base-input
+.form-input,
 .table-row {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
@@ -153,6 +146,14 @@ textarea,
   font-size: 16px;
 }
 
+.form-input:placeholder {
+  color: #aab7c4;
+}
+
+.form-input:focus {
+  border: 2px solid #0065FF; 
+}
+
 .inline-text-label {
   height: 36px;
   line-height: 36px;
@@ -160,18 +161,6 @@ textarea,
 
 textarea {
   resize: vertical;
-}
-
-input[type=text]::placeholder,
-input[type=password]:placeholder,
-input[type=number]:placeholder {
-  color: #aab7c4;
-}
-
-input[type=text]:focus,
-input[type=password]:focus,
-input[type=number]:focus {
-  border: 2px solid #0065FF; 
 }
 
 h1 {
@@ -229,6 +218,7 @@ h1 {
   padding: 0px 8px !important;
 }
 
+/* Card */
 .card {
   border: 0;
   outline: 0;
@@ -262,6 +252,57 @@ h1 {
 .card-icon-button {
   margin: 0px 2px 0px 2px;
   background-color: transparent;
+}
+
+.side-panel-title {
+  font-weight: bold;
+  padding: 8px 10px; 
+  background-color: #393939; 
+  border-top: 2px solid #1E1E1E; 
+  border-bottom: 2px solid #1E1E1E; 
+}
+
+.side-panel-button {
+  color: #DFDFDF;
+  background-color: #696969;
+  border: 1px solid #1E1E1E;
+  border-radius: 2px;
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 16px;
+  margin-top: 8px;
+  height: 30px;
+  transition-duration: 0.3s;
+  outline: none;
+  cursor: pointer;
+}
+
+.side-panel-button:hover {
+  color: #696969;
+  background-color: #DFDFDF;
+}
+
+.side-panel-input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;    
+  box-sizing: border-box;
+  background-color: #373737;
+  color: #dfdfdf;
+  width: 100%;
+  height: 30px;
+  font-size: 16px;
+  line-height: 16px;
+  padding: 4px 8px;
+  border: 1px solid #1E1E1E;
+  border-radius: 2px;
+  outline: 0;
+}
+
+.side-panel-content {
+  padding: 8px;
 }
 
 .filter-input {

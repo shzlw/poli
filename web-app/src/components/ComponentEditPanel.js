@@ -410,6 +410,7 @@ class ComponentEditPanel extends React.Component {
         <div className="form-panel">
           <label>Source</label>
           <input 
+            className="form-input"
             type="text"
             value={src}
             onChange={(event) => this.handleComponentDataChange('src', event.target.value)} 
@@ -426,6 +427,7 @@ class ComponentEditPanel extends React.Component {
         <div className="form-panel">
           <label>Value</label>
           <input 
+            className="form-input"
             type="text"
             value={value}
             onChange={(event) => this.handleComponentDataChange('value', event.target.value)} 
@@ -458,12 +460,14 @@ class ComponentEditPanel extends React.Component {
         <div className="form-panel">
           <label>Title</label>
           <input 
+            className="form-input"
             type="text"
             value={title}
             onChange={(event) => this.handleComponentDataChange('title', event.target.value)} 
           />
           <label>Source</label>
           <input 
+            className="form-input"
             type="text"
             value={src}
             onChange={(event) => this.handleComponentDataChange('src', event.target.value)} 
@@ -581,7 +585,7 @@ class ComponentEditPanel extends React.Component {
 
     return (
       <div>
-        <button className="button button-green" style={{width: '120px'}} onClick={this.save}>
+        <button className="button button-green" onClick={this.save}>
           <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
         </button>
         <div className="row mt-10">
@@ -709,6 +713,7 @@ class ComponentEditPanel extends React.Component {
                   <div>
                     <label>Parameter</label>
                     <input 
+                      className="form-input"
                       type="text" 
                       name="queryParameter" 
                       value={this.state.queryParameter}

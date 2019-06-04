@@ -202,6 +202,7 @@ class Report extends Component {
           <div className="form-panel">
             <label>Name</label>
             <input 
+              className="form-input"
               type="text" 
               name="name" 
               value={this.state.name}

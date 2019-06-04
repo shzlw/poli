@@ -296,6 +296,7 @@ class Group extends React.Component {
             <div className="form-panel float-left" style={{width: '240px'}}>
               <label>Name <span className="required">*</span></label>
               <input 
+                className="form-input"
                 type="text" 
                 name="name" 
                 value={this.state.name}

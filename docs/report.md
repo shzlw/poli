@@ -1,112 +1,53 @@
 # Report
 
-## Width
+Reports are built with components in Poli that provide insights from the data through self-defined filtering options and visual representations. 
 
-Fixed width vs Auto width
+## Style customization
 
-## Height
 
-Height needs to be defined.
-
-## Style Customization
-
+* Title
+* Height
+* Width
+  
+  > Fixed width vs full width: full width scales the components based on the screen width.
 * Background color
 
 ## Auto refresh
 
-Enable auto refresh. The refresh rate is in seconds. This will query and refresh the chart data every X seconds. 
-
-## Drill through
-
-* Navigate from one widget to another dashboard and pass a parameter. The destination dashboard can then 
-
-There will be a FLAG icon on the title bar if this component has drill through defined.
+Enable report auto refresh. The refresh rate is in seconds. This will query and refresh the chart data every X seconds. 
 
 ## Full screen
 
-Open the report in full screen mode in a new browser tab.
+The Report will be opened in a new browser tab in the full screen mode.
 
 ## Embedded
 
-This mode allows the dashboard to be embedded into another application. The chart data can be dynamically changed if a dynamic query is used. The query parameter can be passed by url search parameters. For example:
+This mode allows the Report to be embedded into another application. The report data can be dynamically changed if dynamic queries are used to build the chart components. The query parameter can be passed by url search parameters. 
 
+For example:
 ```html
-<iframe src="http://localhost:6688/poli/workspace/report/full/SalesReport?$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
-```
-* Url search parameters
-    report name
-
-    Required
-        $apiKey=123
-    Optional 
-        $showControl=true
-
-        show the title bar with control panel.
-    Query parameters
-
-    For example,
-        year=2019
-
-```sql
-SELECT * FROM sales_report WHERE year = :year
+<iframe src="http://localhost:6688/poli/workspace/report/full?$toReport=SalesReport$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
 ```
 
-## Report Component
+There are four url search parameters in this example.
+    
+* $toReport=SalesReport 
 
-## Position
+  Required. SalesReport is the report name.
 
-Move/resize
+* $apiKey=123
 
-## Type
+  Required. 123 is the api key. The api key can be obtained from the account page.
 
-* Static
-    Text
-    Image
-    Iframe
-* Chart
-    Table
-    Pie
-    Bar
-    Line
-* Filter
-    Slicer
-      a list of values
-    Single value
-      a single value
+* year=2019
 
-    * properties 
-        * Parameter: serves as a placeholder for a real value in the query string 
-        * Value: is the actual value passed to the query string.
+  Optional. Year is the query parameter. 2019 is the value. Any components that use :year parameter in the query will be reactive.
 
-## Dynamic SQL query with parameters
+  For example:
+  ```sql
+  SELECT * FROM sales_transaction WHERE year = :year
+  ```
 
-Filter defines the query parameter. Pass it to the charts which uses it in the dynamic sql.
+* $showControl=true
 
-```sql
--- Slicer
-SELECT * FROM user WHERE 1 =1 {{ AND name IN (:name) }}
-
--- Single value
-SELECT * FROM user WHERE 1 = 1 {{ AND name = :name }}
-
--- More
-SELECT * 
-FROM user 
-WHERE 1 = 1 
-{{ AND department IN (:department) }}
-{{ AND role = :role }}
-{{ AND created <= :created }}
-```
-
-!> Nested parameters are not supported. For example, 
-
-```sql
--- Invalid
-SELECT * 
-FROM user 
-WHERE 1 = 1 
-{{ 
-    AND department IN (:department) 
-    {{ AND role = :role }}
-}}
-```
+  Optional. Whether to display the title bar with control panel.

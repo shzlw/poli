@@ -124,6 +124,7 @@ class Login extends React.Component {
             <div className="form-panel">
               <label>Username</label>
               <input 
+                className="form-input"
                 type="text" 
                 name="username" 
                 value={this.state.username}
@@ -131,6 +132,7 @@ class Login extends React.Component {
               />
               <label>Password</label>
               <input 
+                className="form-input"
                 type="password" 
                 name="password" 
                 value={this.state.password}

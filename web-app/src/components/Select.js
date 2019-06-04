@@ -59,7 +59,10 @@ class Select extends React.Component {
     });
 
     return (
-      <select value={value} onChange={this.handleOptionChange}>
+      <select 
+        className="form-input"
+        value={value} 
+        onChange={this.handleOptionChange}>
         {optionList}
       </select>
     )

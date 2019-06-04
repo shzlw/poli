@@ -267,6 +267,7 @@ class DataSource extends Component {
           <div className="form-panel">
             <label>Name <span className="required">*</span></label>
             <input 
+              className="form-input"
               type="text" 
               name="name" 
               value={this.state.name}
@@ -275,6 +276,7 @@ class DataSource extends Component {
 
             <label>Connection Url</label>
             <textarea
+              className="form-input"
               rows="4"
               type="text" 
               name="connectionUrl" 
@@ -284,6 +286,7 @@ class DataSource extends Component {
 
             <label>Driver Class Name</label>
             <input 
+              className="form-input"
               type="text" 
               name="driverClassName" 
               value={this.state.driverClassName}
@@ -292,6 +295,7 @@ class DataSource extends Component {
 
             <label>Username</label>
             <input 
+              className="form-input"
               type="text" 
               name="username" 
               value={this.state.username}
@@ -308,6 +312,7 @@ class DataSource extends Component {
               <div>
                 <label>New Password</label>
                 <input 
+                  className="form-input"
                   type="password" 
                   name="password" 
                   value={this.state.password}
@@ -318,6 +323,7 @@ class DataSource extends Component {
 
             <label>Ping</label>
             <input 
+              className="form-input"
               type="text" 
               name="ping" 
               value={this.state.ping}

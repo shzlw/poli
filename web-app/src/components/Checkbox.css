@@ -1,7 +1,6 @@
 .checkbox-container {
   display: flex;
   flex-flow: row;
-  margin: 3px;
   height: 20px;
 }
 

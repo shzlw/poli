@@ -7,6 +7,7 @@
 
   - [Data Source](data-source.md)
   - [Report](report.md)
+  - [Report Component](report-component.md)
   - [User Management](user-management.md)
 
 - Development

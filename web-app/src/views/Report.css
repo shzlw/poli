@@ -5,8 +5,8 @@
   bottom: 0;
   width: 199px;
   overflow-y: auto;
-  border-right: 1px solid #DFE1E6;
-  background-color: #EBECF0;
+  border-right: 1px solid #DBDBDB;
+  background-color: #F5F5F5;
 }
   
 .report-content {
@@ -15,7 +15,7 @@
   left: 200px;
   right: 0;
   bottom: 0;
-  background-color: #F4F5F7;
+  background-color: #F5F5F5;
   overflow: auto;
 }
 
@@ -67,18 +67,6 @@
   margin-left: 10px;
 }
 
-.report-attribute-edit-panel {
-  position: fixed;
-  top: 40px;
-  left: 0px;
-  bottom: 0px;
-  width: 180px;
-  border: 0;
-  outline: 0;
-  padding: 10px;
-  overflow-y: auto;
-}
-
 .report-edit-component-dialog {
   left: 50%;
   width: 800px;
@@ -101,4 +89,17 @@
   color:#0065FF;
   font-size: 20px;
   font-weight: 700;
+}
+
+.report-side-panel {
+  position: fixed;
+  top: 40px;
+  left: 0px;
+  bottom: 0px;
+  width: 200px;
+  border: 0;
+  outline: 0;
+  overflow-y: auto;
+  background-color: #4B4B4B; 
+  color: #DFDFDF;
 }

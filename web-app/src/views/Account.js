@@ -114,6 +114,7 @@ class Account extends React.Component {
 
           <label className="bold">Name</label>
           <input 
+            className="form-input"
             type="text"   
             name="name" 
             value={this.state.name}
@@ -134,12 +135,14 @@ class Account extends React.Component {
               <div style={{marginTop: '8px'}}>
                 <label>New Password</label>
                 <input 
+                  className="form-input"
                   type="password" 
                   name="password" 
                   value={this.state.password}
                   onChange={this.handleInputChange} />
                 <label>Confirm Password</label>
                 <input 
+                  className="form-input"
                   type="password" 
                   name="confirmedPassword" 
                   value={this.state.confirmedPassword}

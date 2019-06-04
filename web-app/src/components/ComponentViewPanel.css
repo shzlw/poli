@@ -3,10 +3,11 @@
   top: 40px;
   left: 0px;
   bottom: 0px;
-  width: 180px;
+  width: 200px;
   border: 0;
   outline: 0;
-  padding: 10px;
   z-index: 30;
   overflow-y: auto;
+  background-color: #4B4B4B; 
+  color: #DFDFDF;
 }
