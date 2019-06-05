@@ -39,7 +39,7 @@ const getPieOptionTemplate = (legend, series) => {
       type: 'scroll',
       orient: 'vertical',
       data: legend,
-      right: 10,
+      right: 15,
       top: 10,
       bottom: 10
     },
@@ -104,7 +104,7 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
       top: 15,
       bottom: 5,
       left: 10,
-      right: 10,
+      right: 15,
       containLabel: true
     },
     xAxis: xAxis,
@@ -148,7 +148,7 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
       top: 15,
       bottom: 5,
       left: 10,
-      right: 10,
+      right: 15,
       containLabel: true
     },
     xAxis: {
@@ -198,7 +198,7 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
       top: 15,
       bottom: 5,
       left: 10,
-      right: 10,
+      right: 15,
       containLabel: true
     },
     xAxis: {

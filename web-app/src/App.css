@@ -8,7 +8,7 @@ body,
   padding: 0;
   font-family: Tahoma, Geneva, sans-serif;
   color: #172B4D;
-  background-color: #f6f9fc;
+  background-color: #F5F5F5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -webkit-transition: all 0.15s ease;
@@ -255,8 +255,7 @@ h1 {
 }
 
 .side-panel-title {
-  font-weight: bold;
-  padding: 8px 10px; 
+  padding: 4px 8px; 
   background-color: #393939; 
   border-top: 2px solid #1E1E1E; 
   border-bottom: 2px solid #1E1E1E; 
@@ -290,20 +289,32 @@ h1 {
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
   background-color: #373737;
+  border: 1px solid #1E1E1E;
   color: #dfdfdf;
   width: 100%;
   height: 30px;
   font-size: 16px;
   line-height: 16px;
   padding: 4px 8px;
-  border: 1px solid #1E1E1E;
   border-radius: 2px;
   outline: 0;
 }
 
-.side-panel-content {
-  padding: 8px;
+.side-panel-number-input {
+  width: 60px;
+  text-align: right;
 }
+
+.side-panel-content {
+  padding: 6px 10px;
+}
+
+.side-panel-content-row {
+  font-size: 16px;
+  line-height: 30px;
+  height: 30px;
+}
+
 
 .filter-input {
   box-shadow: none !important;

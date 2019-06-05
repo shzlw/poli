@@ -196,7 +196,6 @@ class ComponentEditPanel extends React.Component {
     });
   }
 
-
   save = () => {
     const {
       componentId,
@@ -511,7 +510,7 @@ class ComponentEditPanel extends React.Component {
                 <FontAwesomeIcon icon="long-arrow-alt-right" size="lg" fixedWidth />
                 <div className="tag-label" style={{marginLeft: '10px', backgroundColor: '#36B37E'}}>Report</div> {reportName}
               </div>
-              <button className="button table-row-button float-right"onClick={() => this.removeDrillThrough(drill)}>
+              <button className="button table-row-button float-right button-red" onClick={() => this.removeDrillThrough(drill)}>
                 <FontAwesomeIcon icon="trash-alt" />
               </button>
             </div>

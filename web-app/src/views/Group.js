@@ -257,7 +257,7 @@ class Group extends React.Component {
             (
               <div key={reportId} className="row table-row">
                 <div className="float-left ellipsis" style={{width: '180px'}}>{reports[j].name}</div>
-                <button className="button table-row-button float-right" onClick={() => this.removeGroupReport(reportId)}>
+                <button className="button table-row-button float-right button-red" onClick={() => this.removeGroupReport(reportId)}>
                   <FontAwesomeIcon icon="trash-alt" />
                 </button>
               </div>

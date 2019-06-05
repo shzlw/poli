@@ -415,6 +415,9 @@ class ComponentViewPanel extends React.Component {
       // Save position information and style
       axios.put('/ws/component/style/', selectedComponent)
       .then(res => {
+        this.setState({
+          selectedComponentId: 0
+        });
       });
     }
   }
@@ -464,62 +467,84 @@ class ComponentViewPanel extends React.Component {
           <div className="confirm-deletion-panel">
             Are you sure you want to delete this component?
           </div>
-          <button className="button" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
         </Modal>
 
         {selectedComponent && (
           <div className="report-component-style-panel">
-            <div className="side-panel-content">
+            <div className="side-panel-content" style={{margin: '3px 0px'}}>
               <button className="icon-button button-green" onClick={this.saveComponentStyle}>
                 <FontAwesomeIcon icon="save" size="lg" />
               </button>
             </div>
 
-            <div className="side-panel-title">
-              Title
-              <Checkbox name="showTitle" value="Show" checked={selectedComponent.style.showTitle} onChange={this.onStyleValueChange} />
-            </div>
-            { selectedComponent.style.showTitle && (
-              <div className="side-panel-content">
-                <input 
-                  className="form-input"
-                  type="text" 
-                  name="title" 
-                  value={selectedComponent.title}
-                  onChange={(event) => this.handleInputChange('title', event.target.value)} 
-                />
-
-                <div className="side-panel-title">Font Color</div>
-                <div className="side-panel-content">
-                  <ColorPicker name={'titleFontColor'} value={selectedComponent.style.titleFontColor} onChange={this.onStyleValueChange} />
-                </div>
-                  
-                <div className="side-panel-title">Background Color</div>
-                <div className="side-panel-content">
-                  <ColorPicker name={'titleBackgroundColor'} value={selectedComponent.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
-                </div>
-              </div>
-            )}
-            
-            <div className="side-panel-title">
-              Border
-              <Checkbox name="showBorder" value="Show" checked={selectedComponent.style.showBorder} onChange={this.onStyleValueChange} />
-            </div>
-
-            { selectedComponent.style.showBorder && (
-              <div style={{marginTop: '5px'}}>
-                <div className="side-panel-title">Color</div>
-                <div className="side-panel-content">
-                  <ColorPicker name={'borderColor'} value={selectedComponent.style.borderColor} onChange={this.onStyleValueChange} />
-                </div>
-              </div>
-            )}
-
-            <div className="side-panel-title">Content Background Color</div>
+            <div className="side-panel-title">Title</div>
             <div className="side-panel-content">
-              <ColorPicker name={'contentBackgroundColor'} value={selectedComponent.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
+              <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                <div className="float-left">Show</div>
+                <div className="float-right">
+                  <Checkbox name="showTitle" value="" checked={selectedComponent.style.showTitle} onChange={this.onStyleValueChange} />
+                </div>
+              </div>
+
+              { selectedComponent.style.showTitle && (
+                <React.Fragment>
+                  <div className="side-panel-content-row" style={{marginBottom: '5px'}}>
+                    <input 
+                      className="side-panel-input"
+                      type="text" 
+                      name="title" 
+                      value={selectedComponent.title}
+                      onChange={(event) => this.handleInputChange('title', event.target.value)} 
+                    />
+                  </div>
+
+                  <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                    <div className="float-left">Font</div>
+                    <div className="float-right" style={{paddingTop: '4px'}}>
+                      <ColorPicker name={'titleFontColor'} value={selectedComponent.style.titleFontColor} onChange={this.onStyleValueChange} />
+                    </div>
+                  </div>
+
+                  <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                    <div className="float-left">Background</div>
+                    <div className="float-right" style={{paddingTop: '4px'}}>
+                      <ColorPicker name={'titleBackgroundColor'} value={selectedComponent.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
+                    </div>
+                  </div>
+                </React.Fragment>
+              )}
+            </div>
+            
+            <div className="side-panel-title">Border</div>
+            <div className="side-panel-content">
+              <div className="row side-panel-content-row">
+                <div className="float-left">Show</div>
+                <div className="float-right">
+                  <Checkbox name="showBorder" value="" checked={selectedComponent.style.showBorder} onChange={this.onStyleValueChange} />
+                </div>
+              </div>
+
+              { selectedComponent.style.showBorder && (
+                <div className="row side-panel-content-row">
+                  <div className="float-left">Color</div>
+                  <div className="float-right" style={{paddingTop: '4px'}}>
+                    <ColorPicker name={'borderColor'} value={selectedComponent.style.borderColor} onChange={this.onStyleValueChange} />
+                  </div>
+                </div>
+              )}
             </div>
 
+            <div className="side-panel-title">Content</div>
+            <div className="side-panel-content">
+              <div className="row side-panel-content-row">
+                <div className="float-left">Background</div>
+                <div className="float-right" style={{paddingTop: '4px'}}>
+                  <ColorPicker name={'contentBackgroundColor'} value={selectedComponent.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
+                </div>
+              </div>
+            </div>
+            
             <div className="side-panel-title">Z Index</div>
             <div className="side-panel-content">
               <InputRange
@@ -532,48 +557,60 @@ class ComponentViewPanel extends React.Component {
               />
             </div>
 
-            <div className="side-panel-title">
-              x
-              <input 
-                className="form-input"
-                type="text" 
-                name="x" 
-                value={selectedComponent.x}
-                onChange={(event) => this.handleInputChange('x', event.target.value, true)}
-              />
-            </div>
+            <div className="side-panel-title">Position</div>
+            <div className="side-panel-content">
+              <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                <div className="float-left">X</div>
+                <div className="float-right">
+                  <input 
+                    className="side-panel-input side-panel-number-input"
+                    type="text" 
+                    name="x" 
+                    value={selectedComponent.x}
+                    onChange={(event) => this.handleInputChange('x', event.target.value, true)}
+                  />
+                </div>
+              </div>
 
-            <div className="side-panel-title">
-              y
-              <input 
-                className="form-input"
-                type="text" 
-                name="y" 
-                value={selectedComponent.y}
-                onChange={(event) => this.handleInputChange('y', event.target.value, true)}
-              />
-            </div>
+              <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                <div className="float-left">Y</div>
+                <div className="float-right">
+                  <input 
+                    className="side-panel-input side-panel-number-input"
+                    type="text" 
+                    name="y" 
+                    value={selectedComponent.y}
+                    onChange={(event) => this.handleInputChange('y', event.target.value, true)}
+                  />
+                </div>
+              </div>
 
-            <div className="side-panel-title">
-              width
-              <input 
-                className="form-input"
-                type="text" 
-                name="width" 
-                value={selectedComponent.width}
-                onChange={(event) => this.handleInputChange('width', event.target.value, true)}
-              />
-            </div>
+              <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                <div className="float-left">Width</div>
+                <div className="float-right">
+                  <input 
+                    className="side-panel-input side-panel-number-input"
+                    type="text" 
+                    name="width" 
+                    value={selectedComponent.width}
+                    onChange={(event) => this.handleInputChange('width', event.target.value, true)}
+                  />
+                </div>
+              </div>
 
-            <div className="side-panel-title">
-              height
-              <input 
-                className="form-input"
-                type="text" 
-                name="height" 
-                value={selectedComponent.height}
-                onChange={(event) => this.handleInputChange('height', event.target.value, true)}
-              />
+              <div className="row side-panel-content-row">
+                <div className="float-left">Height</div>
+                <div className="float-right">
+                  <input 
+                    className="side-panel-input side-panel-number-input"
+                    type="text" 
+                    name="height" 
+                    value={selectedComponent.height}
+                    onChange={(event) => this.handleInputChange('height', event.target.value, true)}
+                  />
+                </div>
+              </div>
+
             </div>
 
           </div>

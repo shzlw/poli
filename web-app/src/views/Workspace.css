@@ -10,8 +10,8 @@
 
 .workspace-nav {
   width: 100%;
-  height: 39px;
-  border-bottom: 1px solid #DBDBDB;
+  height: 40px;
+  background-color: #1E1E1E;
 }
 
 .workspace-nav-menu {
@@ -41,12 +41,10 @@
 
 .workspace-nav-menu li a:hover {
   border-bottom: 3px solid #0065FF;
-  background-color: #C1C7D0;
 }
 
 .menu-item-active a {
   border-bottom: 3px solid #0065FF;
-  background-color: #091E42;
   color: #FFFFFF !important;
 }
 
@@ -74,7 +72,6 @@
 
 .workspace-account-button a:hover {
   border-bottom: 3px solid #0065FF;
-  background-color: #C1C7D0;
 }
 
 .workspace-logout-button {

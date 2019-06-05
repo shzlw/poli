@@ -315,7 +315,7 @@ class User extends React.Component {
             (
               <div key={groupId} className="row table-row">
                 <div className="float-left ellipsis" style={{width: '180px'}}>{groups[j].name}</div>
-                <button className="button table-row-button float-right" onClick={() => this.removeUserGroup(groupId)}>
+                <button className="button table-row-button float-right button-red" onClick={() => this.removeUserGroup(groupId)}>
                   <FontAwesomeIcon icon="trash-alt" />
                 </button>
               </div>

@@ -10,4 +10,5 @@
   overflow-y: auto;
   background-color: #4B4B4B; 
   color: #DFDFDF;
+  z-index: 70;
 }

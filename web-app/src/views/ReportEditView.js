@@ -563,58 +563,81 @@ class ReportEditView extends React.Component {
 
         {isEditMode && (
           <div className="report-side-panel">
-            <div className="side-panel-content">
+            <div className="side-panel-content" style={{margin: '3px 0px'}}>
               <button className="icon-button button-green" onClick={this.save}>
                 <FontAwesomeIcon icon="save" size="lg"  />
               </button>
-              <button className="icon-button button-black ml-4" onClick={this.cancelEdit}>
+              <button className="icon-button button-black" style={{marginLeft: '5px'}} onClick={this.cancelEdit}>
                 <FontAwesomeIcon icon="times" size="lg" />
               </button>
             </div>
             <div className="side-panel">
-              <div className="side-panel-title">Height</div>
+              <div className="side-panel-title">General</div>
+
               <div className="side-panel-content">
-                <input 
-                  type="text" 
-                  name="height" 
-                  value={this.state.style.height}
-                  onChange={(event) => this.handleStyleValueChange('height', event.target.value)} 
-                  className="side-panel-input"
-                />
-              </div>
-              
-
-              <div className="side-panel-title row" style={this.state.style.isFixedWidth ? {} : {borderBottom: 'none'}}>
-                <div className="float-left">Width</div>
-                <div className="float-right">
-                  <Checkbox name="isFixedWidth" value="Fixed" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
+                <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                  <div className="float-left">Fixed Width</div>
+                  <div className="float-right">
+                    <Checkbox name="isFixedWidth" value="" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
+                  </div>
                 </div>
-              </div>
-              
 
-              { this.state.style.isFixedWidth && (
-                <div className="side-panel-content">
-                  <input 
-                    type="text" 
-                    name="fixedWidth" 
-                    value={this.state.style.fixedWidth}
-                    onChange={(event) => this.handleStyleValueChange('fixedWidth', event.target.value)} 
-                    className="side-panel-input"
-                  />
+                { this.state.style.isFixedWidth && (
+                  <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                    <div className="float-left">Width</div>
+                    <div className="float-right">
+                      <input 
+                        className="side-panel-input side-panel-number-input"
+                        type="text" 
+                        name="fixedWidth" 
+                        value={this.state.style.fixedWidth}
+                        onChange={(event) => this.handleStyleValueChange('fixedWidth', event.target.value)} 
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="row side-panel-content-row">
+                  <div className="float-left">Height</div>
+                  <div className="float-right">
+                    <input 
+                      className="side-panel-input side-panel-number-input"
+                      type="text" 
+                      name="height" 
+                      value={this.state.style.height}
+                      onChange={(event) => this.handleStyleValueChange('height', event.target.value)} 
+                    />
+                  </div>  
                 </div>
-              )}
 
-              <div className="side-panel-title">Background Color</div>
+              </div>
+
+              
+              <div className="side-panel-title row">Background</div>
               <div className="side-panel-content">
-                <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.handleStyleValueChange} />
+                <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                  <div className="float-left">Color</div>
+                  <div className="float-right" style={{paddingTop: '4px'}}>
+                    <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.handleStyleValueChange} />
+                  </div>  
+                </div>
+
+                <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                  <div className="float-left">Snap to grid</div>
+                  <div className="float-right">
+                    <Checkbox name="snapToGrid" value="" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
+                  </div>
+                </div>
+
+                <div className="row side-panel-content-row">
+                  <div className="float-left">Show gridlines</div>
+                  <div className="float-right">
+                    <Checkbox name="showGridlines" value="" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
+                  </div>
+                </div>
+
               </div>
-              
-              <div className="side-panel-title" style={{borderBottom: 'none'}}>
-                <Checkbox name="snapToGrid" value="Snap to grid" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
-              </div>
-              <div className="side-panel-title">
-                <Checkbox name="showGridlines" value="Show gridlines" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
-              </div>
+
             </div>
           </div>
         )}

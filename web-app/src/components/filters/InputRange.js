@@ -35,7 +35,7 @@ class InputRange extends React.Component {
 
     return (
       <div className="input-range-container">
-        <div style={{marginBottom: '6px'}}>
+        <div style={{marginBottom: '3px'}}>
           <span className="input-range-value">{value}</span>
         </div>
         <input 
