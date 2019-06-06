@@ -12,6 +12,8 @@ import './ComponentViewPanel.css';
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import InputRange from './filters/InputRange';
+import Toast from './Toast';
+
 
 const BASE_WIDTH = 1200;
 
@@ -411,6 +413,16 @@ class ComponentViewPanel extends React.Component {
     const index = components.findIndex(w => w.id === selectedComponentId);
     if (index !== -1) {
       const selectedComponent = {...components[index]};
+      const {
+        x,
+        y,
+        width,
+        height
+      } = selectedComponent;
+      if (x <= 0 || y <= 0 || width < 50 || height < 50 || height > this.props.height) {
+        Toast.showError('Invalid position value');
+        return;
+      }
       this.resizeComponentToBase(selectedComponent, gridWidth);
       // Save position information and style
       axios.put('/ws/component/style/', selectedComponent)

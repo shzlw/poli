@@ -629,70 +629,77 @@ class ComponentEditPanel extends React.Component {
                     options={jdbcDataSources}
                     optionDisplay={'name'}
                     optionValue={'id'}
-                    />
-                  <div className="row">
-                    <label className="float-left inline-text-label" style={{width: '200px'}}>
-                      {queryTitle}
-                    </label>
-                    <div className="float-right">
-                      {!showSchema && (
-                        <button className="button" style={{marginRight: '5px'}} onClick={this.runQuery}>Run Query</button>
-                      )}
-                      <button className="button" onClick={this.toggleSchemaPanel}>
-                        {schemaButtonValue}
-                      </button>
-                    </div>
-                  </div>
+                  />
 
-                  {showSchema ? (
-                    <div className="schema-panel">
-                      <div>
-                        <SearchInput 
-                          name={'searchSchemaName'} 
-                          value={searchSchemaName} 
-                          onChange={this.handleInputChange} 
-                          inputWidth={200}
-                        />
+                  { this.state.jdbcDataSourceId !== '' && (
+                    <React.Fragment>
+                      <div className="row">
+                        <label className="float-left inline-text-label" style={{width: '200px'}}>
+                          {queryTitle}
+                        </label>
+                        <div className="float-right">
+                          {!showSchema && (
+                            <button className="button" style={{marginRight: '5px'}} onClick={this.runQuery}>Run Query</button>
+                          )}
+                          <button className="button" onClick={this.toggleSchemaPanel}>
+                            {schemaButtonValue}
+                          </button>
+                        </div>
                       </div>
-                      <div style={{marginTop: '5px'}}>
-                        {schemaItems}
-                      </div>
-                    </div>
-                  ): (
-                    <div>
-                      <AceEditor
-                        value={this.state.sqlQuery}
-                        mode="mysql"
-                        theme="xcode"
-                        name="blah2"
-                        onChange={this.handleAceEditorChange}
-                        height={'300px'}
-                        width={'100%'}
-                        fontSize={15}
-                        showPrintMargin={false}
-                        showGutter={true}
-                        highlightActiveLine={true}
-                        setOptions={{
-                          showLineNumbers: true,
-                          tabSize: 2
-                        }}
-                      />
 
-                      <label style={{marginTop: '10px'}}>Result</label>
-                      { error ? (
-                          <div>
-                            {error}
+                      <React.Fragment>
+                        {showSchema ? (
+                          <div className="schema-panel">
+                            <div>
+                              <SearchInput 
+                                name={'searchSchemaName'} 
+                                value={searchSchemaName} 
+                                onChange={this.handleInputChange} 
+                                inputWidth={200}
+                              />
+                            </div>
+                            <div style={{marginTop: '5px'}}>
+                              {schemaItems}
+                            </div>
                           </div>
-                        ) : (
-                          <Table
-                            data={data}
-                            defaultPageSize={10}
-                            columns={columns}
-                          />
-                      )}
-                    </div>
+                        ): (
+                          <div>
+                            <AceEditor
+                              value={this.state.sqlQuery}
+                              mode="mysql"
+                              theme="xcode"
+                              name="blah2"
+                              onChange={this.handleAceEditorChange}
+                              height={'300px'}
+                              width={'100%'}
+                              fontSize={15}
+                              showPrintMargin={false}
+                              showGutter={true}
+                              highlightActiveLine={true}
+                              setOptions={{
+                                showLineNumbers: true,
+                                tabSize: 2
+                              }}
+                            />
+
+                            <label style={{marginTop: '10px'}}>Result</label>
+                            { error ? (
+                                <div>
+                                  {error}
+                                </div>
+                              ) : (
+                                <Table
+                                  data={data}
+                                  defaultPageSize={10}
+                                  columns={columns}
+                                />
+                            )}
+                          </div>
+                        )}
+                      </React.Fragment>
+                    </React.Fragment>
                   )}
-                  
+
                 </div>
 
               </div>

@@ -268,7 +268,7 @@ class User extends React.Component {
     } = this.state;
 
     const {
-      sysRole
+      sysRole: currentUserSysRole
     } = this.props;
 
     const mode = id === null ? 'New' : 'Edit';
@@ -389,7 +389,7 @@ class User extends React.Component {
               )}
               
               <label>System Role</label>
-              { Constants.SYS_ROLE_ADMIN === sysRole && (
+              { Constants.SYS_ROLE_ADMIN === currentUserSysRole && (
                 <Select
                   name={'sysRole'}
                   value={this.state.sysRole}
@@ -398,28 +398,30 @@ class User extends React.Component {
                 />
               )}
 
-              { Constants.SYS_ROLE_DEVELOPER === sysRole && (
+              { Constants.SYS_ROLE_DEVELOPER === currentUserSysRole && (
                 <div>{Constants.SYS_ROLE_VIEWER}</div>
               )}
               
             </div>
-            <div className="form-panel float-right" style={{width: '240px'}}>
-            
-              <label>Groups</label>
-              <Select
-                name={'userGroupId'}
-                value={this.state.userGroupId}
-                onChange={this.handleIntegerOptionChange}
-                options={groups}
-                optionDisplay={'name'}
-                optionValue={'id'}
-              />
-              <button className="button" onClick={this.addUserGroup}>Add</button>
-              <div style={{marginTop: '8px'}}>
-                {userGroupItems}
-              </div>
-            </div>
 
+            { Constants.SYS_ROLE_VIEWER === this.state.sysRole && (
+              <div className="form-panel float-right" style={{width: '240px'}}>
+            
+                <label>Groups</label>
+                <Select
+                  name={'userGroupId'}
+                  value={this.state.userGroupId}
+                  onChange={this.handleIntegerOptionChange}
+                  options={groups}
+                  optionDisplay={'name'}
+                  optionValue={'id'}
+                />
+                <button className="button" onClick={this.addUserGroup}>Add</button>
+                <div style={{marginTop: '8px'}}>
+                  {userGroupItems}
+                </div>
+              </div>
+            )}
           </div>
           <button className="button mt-3 button-green" onClick={this.save}>
             <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
