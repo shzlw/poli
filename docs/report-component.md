@@ -93,6 +93,15 @@ WHERE 1 = 1
 
 Navigate from one widget to another Report with a query parameter being passed along.
 
+![drillthrough1](_images/screenshots/drillthrough1.jpg)
+
+![drillthrough2](_images/screenshots/drillthrough2.jpg)
+
+![drillthrough3](_images/screenshots/drillthrough3.jpg)
+
+![drillthrough4](_images/screenshots/drillthrough4.jpg)
+
+
 > If this component has drill through defined, there will be a --> icon on the title bar.
 
 

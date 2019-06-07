@@ -1,4 +1,5 @@
 
+-- v0.5.0
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
