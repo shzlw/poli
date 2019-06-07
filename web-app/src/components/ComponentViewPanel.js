@@ -419,7 +419,7 @@ class ComponentViewPanel extends React.Component {
         width,
         height
       } = selectedComponent;
-      if (x <= 0 || y <= 0 || width < 50 || height < 50 || height > this.props.height) {
+      if (x < 0 || y < 0 || width < 50 || height < 50 || height > this.props.height) {
         Toast.showError('Invalid position value');
         return;
       }

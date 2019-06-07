@@ -1,19 +1,20 @@
 # Poli
 
-[![Version](https://img.shields.io/badge/Version-0.4.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.5.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
 Poli is an easy-to-use SQL reporting application.
 
-![poli v0.3.0](https://github.com/shzlw/poli/blob/master/docs/_images/poli_0.3.0.gif)
+![poli v0.5.0](https://github.com/shzlw/poli/blob/master/docs/_images/poli_0.5.0.gif)
 
 ## Features
 
-* Easy deployment & setup
+* Self-hosted, easy deployment & setup
 * Connect to any database supporting JDBC drivers
 * Build chart and filter in Dynamic SQL query
+* flexible report and chart styling
 * Interactive reports with auto refresh, drill through, fullscreen, embedded and more
 
 ## Download

@@ -327,7 +327,7 @@ class GridItem extends React.Component {
         )}
 
         { isEditMode && (
-          <div className="grid-edit-panel">
+          <div className="grid-edit-panel" style={{zIndex: 20}}>
             <div className="cursor-pointer inline-block" style={{marginRight: '3px'}} onClick={() => this.editComponent(id)}>
               <FontAwesomeIcon icon="wrench" fixedWidth />
             </div>

@@ -41,7 +41,7 @@ There are four url search parameters in this example.
 
 * year=2019
 
-  Optional. Year is the query parameter. 2019 is the value. Any components that use :year parameter in the query will be reactive.
+  Optional. Year is the query parameter. 2019 is the value. Any components that use :year parameter in the query will become reactive.
 
   For example:
   ```sql

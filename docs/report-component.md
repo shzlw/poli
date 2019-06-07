@@ -30,13 +30,16 @@ Poli supports three types of components.
 
 * Filter
   * Slicer
+
+  > Slicer should always return a list of values in the query.
+  
   * Single value
 
 ## Dynamic SQL query with parameters
 
 To use this feature, you would need to create at least one filter and one chart component. Here is how it works.
 
-1. Create a filter and define a query parameter. This serves as a placeholder for a real value in the query string. 
+1. Create a filter and define a query parameter. The query parameter serves as a placeholder for a real value in the query string. 
 2. Create a chart and use the query parameter from the fitler in the SQL query.
 3. Enter/Select the value in the filter and click apply filter button to see the chart data change accordingly.
 

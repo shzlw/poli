@@ -8,7 +8,6 @@
   position: absolute;
   overflow-x: hidden;
   overflow-y: hidden;
-  background-color: #EBECF0;
   display: flex;
   flex-flow: column;
   height: 100%;
@@ -50,6 +49,7 @@
   top: 0px; 
   right: 0px;
   background-color: transparent;
+  z-index: 10;
 }
 
 .grid-resizable {
@@ -59,4 +59,5 @@
   right: 0; 
   bottom: 0; 
   cursor: se-resize; 
+  z-index: 10;
 }
