@@ -12,6 +12,8 @@
 
 > After modifying the style, don't forget to click the save button to save the changes.
 
+![style2](_images/screenshots/style2.jpg)
+
 ## Types
 
 Poli supports three types of components.
@@ -24,14 +26,25 @@ Poli supports three types of components.
 * Chart
   * Table
   * Pie
+    
+    > Pie chart requires the query to return at least two columns.
+
   * Bar
+
+    > Line chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
+
   * Line
+
+    > Line chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
+
   * Area
+
+    > Area chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
 
 * Filter
   * Slicer
 
-  > Slicer should always return a list of values in the query.
+    > Slicer provides a list of values to select. It requires the query to return one column only.
   
   * Single value
 
@@ -91,20 +104,24 @@ WHERE 1 = 1
 
 ## Drill through
 
-Navigate from one widget to another Report with a query parameter being passed along.
+1. Drill through is used to navigate from one component in a Report to another Report. To use it in Poli, you need to have at least two reports.
 
 ![drillthrough1](_images/screenshots/drillthrough1.jpg)
 
+2. Create a pie chart in Report 1. Go to Drill Through tab. Choose the source column and destination report.
+
 ![drillthrough2](_images/screenshots/drillthrough2.jpg)
 
-![drillthrough3](_images/screenshots/drillthrough3.jpg)
-
-![drillthrough4](_images/screenshots/drillthrough4.jpg)
-
+3. Click the Cup piece on the pie chart.
 
 > If this component has drill through defined, there will be a --> icon on the title bar.
 
+![drillthrough3](_images/screenshots/drillthrough3.jpg)
 
-## Permissions
+4. Report 2 is being displayed and product=Cup is passed along to Report 2. If there are any chart components on Report 2 that use :product query parameter in the query will become reactive.
+
+![drillthrough4](_images/screenshots/drillthrough4.jpg)
+
+## Access permissions
 
 Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](/user-management) for more details.

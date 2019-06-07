@@ -14,7 +14,7 @@ Poli is an easy-to-use SQL reporting application.
 * Self-hosted, easy deployment & setup
 * Connect to any database supporting JDBC drivers
 * Build chart and filter in Dynamic SQL query
-* flexible report and chart styling
+* Flexible report and chart styling
 * Interactive reports with auto refresh, drill through, fullscreen, embedded and more
 
 ## Download
