@@ -7,8 +7,6 @@
 
 Poli is an easy-to-use SQL reporting application.
 
-![poli v0.5.0](https://github.com/shzlw/poli/blob/master/docs/_images/poli_0.5.0.gif)
-
 ## Features
 
 * Self-hosted, easy deployment & setup
@@ -16,6 +14,18 @@ Poli is an easy-to-use SQL reporting application.
 * Build chart and filter in Dynamic SQL query
 * Flexible report and chart styling
 * Interactive reports with auto refresh, drill through, fullscreen, embedded and more
+
+#### Slicer & Charts
+
+![poli v0.5.0](http://66.228.42.235:8080/poli_0.5.0.gif)
+
+#### Move & Resize
+
+![poli component reposition](http://66.228.42.235:8080/report9.jpg)
+
+#### Dynamic SQL query
+
+![poli sql](http://66.228.42.235:8080/report13.jpg)
 
 ## Download
 
