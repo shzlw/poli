@@ -1,6 +1,6 @@
 # Poli
 
-[![Version](https://img.shields.io/badge/Version-0.5.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.6.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)

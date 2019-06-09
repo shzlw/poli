@@ -32,13 +32,15 @@
   z-index: 1;
 }
 
-.grid-edit-panel {
+.grid-title-button-panel {
   position: absolute; 
   right: 0; 
   top: 0; 
   background-color: transparent;
   padding: 4px;
   z-index: 2;
+  min-width: 20px;
+  height: 20px;
 }
 
 .grid-draggable {
@@ -60,4 +62,13 @@
   bottom: 0; 
   cursor: se-resize; 
   z-index: 10;
+}
+
+.download-csv-button {
+  display: none;
+}
+
+.grid-title-button-panel:hover .download-csv-button {
+  display: inline-block;
+  transition: 0.3s;
 }

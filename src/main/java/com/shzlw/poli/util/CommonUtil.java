@@ -5,6 +5,7 @@ import org.springframework.lang.Nullable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public final class CommonUtil {
 
@@ -16,5 +17,11 @@ public final class CommonUtil {
 
     public static long toEpoch(@Nullable LocalDateTime dateTime) {
         return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+    
+    public static String getCurrentReadableDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
     }
 }
