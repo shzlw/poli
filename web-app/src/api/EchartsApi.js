@@ -1,22 +1,32 @@
 import * as Constants from '../api/Constants';
 
-const CHART_COLORS = [
+const DEFAULT_COLOR_PALETTE = [
   "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", 
   "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", 
   "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", 
   "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
 ];
 
+const VINTAGE_COLOR_PALETTE = ['#d87c7c','#919e8b', '#d7ab82', '#6e7074', 
+  '#61a0a8','#efa18d', '#787464', '#cc7e63', '#724e58', '#4b565b'
+];
+
+const ROMA_COLOR_PALETTE = ['#E01F54','#001852','#f5e8c8','#b8d2c7','#c6b38e',
+  '#a4d8c2','#f3d999','#d3758f','#dcc392','#2e4783',
+  '#82b6e9','#ff6347','#a092f1','#0a915d','#eaf889',
+  '#6699FF','#ff6666','#3cb371','#d5b158','#38b6b6'
+];
+
 const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const getChartOption = (type, data, config) => {
+export const getChartOption = (type, data, config, title) => {
   let chartOption = {};
   if (type === Constants.PIE) {
     chartOption = getPieOption(data, config);
   } else if (type === Constants.BAR) {
-    chartOption = getBarOption(data, config);
+    chartOption = getBarOption(data, config, title);
   } else if (type === Constants.LINE) {
     chartOption = getLineOption(data, config);
   } else if (type === Constants.AREA) {
@@ -32,7 +42,7 @@ export const getChartOption = (type, data, config) => {
  */
 const getPieOptionTemplate = (legend, series) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     legend: {
@@ -75,7 +85,7 @@ const getPieOption = (data, config) => {
 /**
  * Bar Chart
  */
-const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
+const getBarOptionTemplate = (legendData, axisData, series, isHorizontal) => {
   let xAxis = {};
   let yAxis = {};
   if (isHorizontal) {
@@ -97,43 +107,67 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
   }
 
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     grid:{
-      top: 15,
+      top: 30,
       bottom: 5,
       left: 10,
       right: 15,
       containLabel: true
     },
+    legend: {
+      data: legendData
+    },
     xAxis: xAxis,
     yAxis: yAxis,
-    series: [
-      {
-        type: 'bar',
-        data: seriesData
-      }
-    ]
+    series: series
   }
 };
 
-const getBarOption = (data, config) => {
+const getBarOption = (data, config, title) => {
   const {
-    key,
-    value,
+    xAxis,
+    series = [],
+    isStacked = true,
     isHorizontal = false
   } = config;
-  // Text
-  const xAxisData = [];
-  // Number
+
+  const legendData = new Set();
+  const xAxisData = new Set();
   const seriesData = [];
+  const type = 'bar';
+
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    xAxisData.push(row[key]);
-    seriesData.push(row[value]);  
+    const name = row[xAxis];
+    xAxisData.add(name);
+    for (let j = 0; j < series.length; j++) {
+      const ser = series[j];
+      const legend = ser;
+      const value = row[ser];
+
+      legendData.add(legend);
+
+      const index = seriesData.findIndex(s => s.name === legend);
+      if (index === -1) {
+        const series = {
+          name: legend,
+          type: type,
+          data: [value]
+        };
+        
+        if (isStacked) {
+          series.stack = title || 'Empty';
+        } 
+        seriesData.push(series);
+      } else {
+        seriesData[index].data.push(value);
+      }
+    }
   }
-  return getBarOptionTemplate(xAxisData, seriesData, isHorizontal);
+  return getBarOptionTemplate(Array.from(legendData), Array.from(xAxisData), seriesData, isHorizontal);
 }
 
 /**
@@ -141,7 +175,7 @@ const getBarOption = (data, config) => {
  */
 const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     grid:{
@@ -191,7 +225,7 @@ const getLineOption = (data, config) => {
  */
 const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     grid:{
@@ -243,7 +277,7 @@ const getAreaOption = (data, config) => {
  */
 const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     animation: false,
     grid: {
       y: 10
@@ -427,7 +461,7 @@ const buildCalenarHeatmapOption = () => {
  */
 const getTimeLineOptionTemplate = (seriesData) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     xAxis: {

@@ -79,34 +79,6 @@ public class JdbcQueryWs {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping(
-            value = "/component/{id}/csv",
-            method = RequestMethod.POST)
-    @Deprecated
-    public void downloadCsv(
-            @PathVariable("id") long componentId,
-            @RequestBody List<FilterParameter> filterParams,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        Component component = componentDao.findById(componentId);
-        boolean isAccessValid = isComponentAccessValid(component, request);
-        if (!isAccessValid) {
-            return;
-        }
-
-        String sql = component.getSqlQuery();
-        DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-        QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, filterParams);
-        String csvText = queryResult.getData();
-        String fileName = component.getTitle() + "_" + CommonUtil.getCurrentReadableDateTime();
-
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName +"\""));
-
-        response.getWriter().write(csvText);
-    }
-
     protected boolean isComponentAccessValid(Component component, HttpServletRequest request) {
         if (component == null) {
             return false;

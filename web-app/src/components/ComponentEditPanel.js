@@ -18,6 +18,7 @@ import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
 import SearchInput from './SearchInput';
+import Checkbox from './Checkbox';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -49,7 +50,8 @@ class ComponentEditPanel extends React.Component {
       chartOption: {},
       showSchema: false,
       schemas: [],
-      searchSchemaName: ''
+      searchSchemaName: '',
+      selectedSeries: ''
     };
   }
 
@@ -355,10 +357,7 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
-    } else if (subType === Constants.PIE
-      || subType === Constants.LINE
-      || subType === Constants.BAR
-      || subType === Constants.AREA) {
+    } else if (subType === Constants.PIE) {
       const {
         key,
         value
@@ -387,11 +386,138 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
+    } else if (subType === Constants.LINE || subType === Constants.AREA) {
+      const {
+        key,
+        value
+      } = data;
+
+      chartConfigPanel = (
+        <div>
+          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
+          <Select
+            name={'key'}
+            value={key}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
+          <Select
+            name={'value'}
+            value={value}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+        </div>
+      );
+    } else if (subType === Constants.BAR) {
+      const {
+        xAxis,
+        series = [],
+        isStacked = true,
+        isHorizontal = false,
+      } = data;
+
+      const seriesItems = [];
+      for (let i = 0; i < series.length; i++) {
+        const value = series[i];
+        seriesItems.push(
+          <div key={i} className="row table-row">
+            <div className="float-left ellipsis" style={{width: '280px'}}>
+              {value}
+            </div>
+            <button className="button table-row-button float-right button-red" onClick={() => this.removeChartSeries(value)}>
+              <FontAwesomeIcon icon="trash-alt" />
+            </button>
+          </div>
+        );
+      }
+
+      chartConfigPanel = (
+        <div>
+          <label>X-Axis</label>
+          <Select
+            name={'xAxis'}
+            value={xAxis}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Series</label>
+          <Select
+            name={'selectedSeries'}
+            value={this.state.selectedSeries}
+            onChange={this.handleInputChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+          <button className="button" onClick={this.addChartSeries}>Add</button>
+          <div style={{marginTop: '8px'}}>
+            {seriesItems}
+          </div>
+          
+          <label>Is Stacked</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="isStacked" value="" checked={isStacked} onChange={this.handleComponentDataChange} />
+          </div>
+
+          <label>Is Horizontal</label>
+          <div>
+            <Checkbox name="isHorizontal" value="" checked={isHorizontal} onChange={this.handleComponentDataChange} />
+          </div>
+        </div>
+      );
     } else {
       chartConfigPanel = (<div></div>);
     }
 
     return chartConfigPanel;
+  }
+
+  addChartSeries = () => {
+    const {
+      selectedSeries,
+      data
+    } = this.state;
+    if (!selectedSeries) {
+      return;
+    }
+
+    const { series = [] } = data;
+    const index = series.findIndex(s => s === selectedSeries);
+    if (index === -1) {
+      const newData = {...data};
+      if (Util.isArrayEmpty(newData.series)) {
+        newData.series = [];
+      }
+      newData.series.push(selectedSeries);
+      this.setState({
+        data: newData
+      });
+    } 
+  }
+
+  removeChartSeries = (name) => {
+    const { data } = this.state;
+    const { series = [] } = data;
+    const index = series.findIndex(s => s === name);
+    if (index !== -1) {
+      const newSeries = [...series];
+      newSeries.splice(index, 1);
+      const newData = {...data};
+      newData.series = newSeries;
+      this.setState({
+        data: newData
+      });
+    }
   }
 
   renderStaticConfigPanel = () => {
@@ -474,7 +600,7 @@ class ComponentEditPanel extends React.Component {
         </div>
       );
     }
-    return staticConfigPanel
+    return staticConfigPanel;
   }
 
   render() {

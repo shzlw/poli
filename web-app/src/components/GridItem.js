@@ -118,6 +118,9 @@ class GridItem extends React.Component {
     this.props.onComponentRemove(componentId);
   }
 
+  /**
+   * Multiple series chart doesn't support Drill Through.
+   */
   onChartClick = (param, echarts) => {
     const {
       drillThrough = [],
@@ -195,7 +198,8 @@ class GridItem extends React.Component {
       drillThrough,
       data = {},
       checkBoxes,
-      value
+      value,
+      title
     } = this.props;
 
     const queryResultData = Util.jsonToArray(queryResult.data);
@@ -222,7 +226,7 @@ class GridItem extends React.Component {
           />
         );
       } else {
-        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data);
+        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data, title);
         componentItem = (
           <ReactEcharts 
             option={chartOption}   
