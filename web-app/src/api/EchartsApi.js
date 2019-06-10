@@ -21,6 +21,15 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const getColorPlatte = (name = 'default') => {
+  if (name === Constants.VINTAGE) {
+    return VINTAGE_COLOR_PALETTE;
+  } else if (name === Constants.ROMA) {
+    return ROMA_COLOR_PALETTE;
+  }
+  return DEFAULT_COLOR_PALETTE;
+}
+
 export const getChartOption = (type, data, config, title) => {
   let chartOption = {};
   if (type === Constants.PIE) {
@@ -40,9 +49,9 @@ export const getChartOption = (type, data, config, title) => {
 /**
  * Pie chart
  */
-const getPieOptionTemplate = (legend, series) => {
+const getPieOptionTemplate = (colorPlatte = 'default', legend, series) => {
   return {
-    color: DEFAULT_COLOR_PALETTE,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     legend: {
@@ -67,7 +76,8 @@ const getPieOptionTemplate = (legend, series) => {
 const getPieOption = (data, config) => {
   const {
     key,
-    value
+    value,
+    colorPlatte
   } = config;
   let legend = [];
   let series = [];
@@ -79,13 +89,13 @@ const getPieOption = (data, config) => {
       value: row[value]
     });  
   }
-  return getPieOptionTemplate(legend, series);
+  return getPieOptionTemplate(colorPlatte, legend, series);
 }
 
 /**
  * Bar Chart
  */
-const getBarOptionTemplate = (legendData, axisData, series, isHorizontal) => {
+const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, series, isHorizontal) => {
   let xAxis = {};
   let yAxis = {};
   if (isHorizontal) {
@@ -107,7 +117,7 @@ const getBarOptionTemplate = (legendData, axisData, series, isHorizontal) => {
   }
 
   return {
-    color: DEFAULT_COLOR_PALETTE,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
@@ -131,7 +141,8 @@ const getBarOption = (data, config, title) => {
     xAxis,
     series = [],
     isStacked = true,
-    isHorizontal = false
+    isHorizontal = false,
+    colorPlatte
   } = config;
 
   const legendData = new Set();
@@ -167,15 +178,15 @@ const getBarOption = (data, config, title) => {
       }
     }
   }
-  return getBarOptionTemplate(Array.from(legendData), Array.from(xAxisData), seriesData, isHorizontal);
+  return getBarOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, isHorizontal);
 }
 
 /**
  * Line chart
  */
-const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
+const getLineOptionTemplate = (colorPlatte = 'default', xAxisData, seriesData, smooth) => {
   return {
-    color: DEFAULT_COLOR_PALETTE,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
@@ -206,7 +217,8 @@ const getLineOption = (data, config) => {
   const {
     key,
     value,
-    isSmooth = false
+    isSmooth = false,
+    colorPlatte
   } = config;
   // Text
   const xAxisData = [];
@@ -217,15 +229,15 @@ const getLineOption = (data, config) => {
     xAxisData.push(row[key]);
     seriesData.push(row[value]);  
   }
-  return getLineOptionTemplate(xAxisData, seriesData, isSmooth);
+  return getLineOptionTemplate(colorPlatte, xAxisData, seriesData, isSmooth);
 }
 
 /**
  * Area chart
  */
-const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
+const getAreaOptionTemplate = (colorPlatte = 'default', xAxisData, seriesData, smooth) => {
   return {
-    color: DEFAULT_COLOR_PALETTE,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
@@ -258,7 +270,8 @@ const getAreaOption = (data, config) => {
   const {
     key,
     value,
-    isSmooth = true
+    isSmooth = true,
+    colorPlatte
   } = config;
   // Text
   const xAxisData = [];
@@ -269,7 +282,7 @@ const getAreaOption = (data, config) => {
     xAxisData.push(row[key]);
     seriesData.push(row[value]);  
   }
-  return getAreaOptionTemplate(xAxisData, seriesData, isSmooth);
+  return getAreaOptionTemplate(colorPlatte, xAxisData, seriesData, isSmooth);
 }
 
 /**

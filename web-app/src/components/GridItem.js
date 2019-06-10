@@ -87,7 +87,7 @@ class GridItem extends React.Component {
   convertCsv = (title = 'poli', columns = [], data = []) => {
     let csvHeader = '';
     for (let i = 0; i < columns.length; i++) {
-      if (i != 0) {
+      if (i !== 0) {
           csvHeader += ',';
       }
       csvHeader += columns[i].name;

@@ -341,6 +341,21 @@ class ComponentEditPanel extends React.Component {
     } = this.state;
     const columns = queryResult.columns || [];
 
+    const { 
+      colorPlatte = 'default' 
+    } = data;
+    const colorPlattePanel = (
+      <div>
+        <label>Color Platte</label>
+        <Select
+          name={'colorPlatte'}
+          value={colorPlatte}
+          onChange={this.handleComponentDataChange}
+          options={Constants.CHART_COLOR_PLATETTES}
+        />
+      </div>
+    );
+
     let chartConfigPanel;
     if (subType === Constants.TABLE) {
       const {
@@ -384,6 +399,8 @@ class ComponentEditPanel extends React.Component {
             optionDisplay={'name'}
             optionValue={'name'}
           />
+
+          {colorPlattePanel}
         </div>
       );
     } else if (subType === Constants.LINE || subType === Constants.AREA) {
@@ -413,6 +430,8 @@ class ComponentEditPanel extends React.Component {
             optionDisplay={'name'}
             optionValue={'name'}
           />
+
+          {colorPlattePanel}
         </div>
       );
     } else if (subType === Constants.BAR) {
@@ -420,7 +439,7 @@ class ComponentEditPanel extends React.Component {
         xAxis,
         series = [],
         isStacked = true,
-        isHorizontal = false,
+        isHorizontal = false
       } = data;
 
       const seriesItems = [];
@@ -470,9 +489,11 @@ class ComponentEditPanel extends React.Component {
           </div>
 
           <label>Is Horizontal</label>
-          <div>
+          <div style={{marginBottom: '8px'}}>
             <Checkbox name="isHorizontal" value="" checked={isHorizontal} onChange={this.handleComponentDataChange} />
           </div>
+
+          {colorPlattePanel}
         </div>
       );
     } else {
