@@ -18,6 +18,7 @@ import ColorPicker from './ColorPicker';
 import SelectButtons from './SelectButtons';
 import InputRange from './filters/InputRange';
 import SearchInput from './SearchInput';
+import Checkbox from './Checkbox';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -339,6 +340,70 @@ class ComponentEditPanel extends React.Component {
     } = this.state;
     const columns = queryResult.columns || [];
 
+    const { 
+      colorPlatte = 'default' 
+    } = data;
+    const colorPlattePanel = (
+      <div>
+        <label>Color Platte</label>
+        <Select
+          name={'colorPlatte'}
+          value={colorPlatte}
+          onChange={this.handleComponentDataChange}
+          options={Constants.CHART_COLOR_PLATETTES}
+        />
+      </div>
+    );
+
+    const {
+      xAxis,
+      legend,
+      yAxis,
+      hasMultiSeries = false,
+    } = data;
+    const seriesChartPanel = (
+      <div>
+        <label>X-Axis</label>
+        <Select
+          name={'xAxis'}
+          value={xAxis}
+          onChange={this.handleComponentDataChange}
+          options={columns}
+          optionDisplay={'name'}
+          optionValue={'name'}
+        />
+
+        <label>Y-Axis</label>
+        <Select
+          name={'yAxis'}
+          value={yAxis}
+          onChange={this.handleComponentDataChange}
+          options={columns}
+          optionDisplay={'name'}
+          optionValue={'name'}
+        />
+
+        <label>Has multi-series</label>
+        <div style={{marginBottom: '8px'}}>
+          <Checkbox name="hasMultiSeries" value="" checked={hasMultiSeries} onChange={this.handleComponentDataChange} />
+        </div>
+
+        {hasMultiSeries && (
+          <div>
+            <label>Legend</label>
+            <Select
+              name={'legend'}
+              value={legend}
+              onChange={this.handleComponentDataChange}
+              options={columns}
+              optionDisplay={'name'}
+              optionValue={'name'}
+            />
+          </div>
+        )}
+      </div>
+    );
+
     let chartConfigPanel;
     if (subType === Constants.TABLE) {
       const {
@@ -355,10 +420,7 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
-    } else if (subType === Constants.PIE
-      || subType === Constants.LINE
-      || subType === Constants.BAR
-      || subType === Constants.AREA) {
+    } else if (subType === Constants.PIE) {
       const {
         key,
         value
@@ -385,6 +447,53 @@ class ComponentEditPanel extends React.Component {
             optionDisplay={'name'}
             optionValue={'name'}
           />
+
+          {colorPlattePanel}
+        </div>
+      );
+    } else if (subType === Constants.LINE || subType === Constants.AREA) {
+      const {
+        isSmooth = false
+      } = data;
+
+      chartConfigPanel = (
+        <div>
+          {seriesChartPanel}
+
+          <label>Is smooth</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="isSmooth" value="" checked={isSmooth} onChange={this.handleComponentDataChange} />
+          </div>
+
+          {colorPlattePanel}
+        </div>
+      );
+    } else if (subType === Constants.BAR) {
+      const {
+        hasMultiSeries = false,
+        isStacked = true,
+        isHorizontal = false
+      } = data;
+
+      chartConfigPanel = (
+        <div>
+          {seriesChartPanel}
+
+          {hasMultiSeries && (
+            <div>
+              <label>Is Stacked</label>
+              <div style={{marginBottom: '8px'}}>
+                <Checkbox name="isStacked" value="" checked={isStacked} onChange={this.handleComponentDataChange} />
+              </div>
+            </div>
+          )}
+
+          <label>Is Horizontal</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="isHorizontal" value="" checked={isHorizontal} onChange={this.handleComponentDataChange} />
+          </div>
+
+          {colorPlattePanel}
         </div>
       );
     } else {
@@ -474,7 +583,7 @@ class ComponentEditPanel extends React.Component {
         </div>
       );
     }
-    return staticConfigPanel
+    return staticConfigPanel;
   }
 
   render() {

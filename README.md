@@ -1,19 +1,28 @@
 # Poli
 
-[![Version](https://img.shields.io/badge/Version-0.5.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.6.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
-Poli is an easy-to-use SQL reporting application.
+Poli is an easy-to-use SQL reporting application built for SQL lovers.
 
 ## Features
 
-* Self-hosted, easy deployment & setup
-* Connect to any database supporting JDBC drivers
-* Build chart and filter in Dynamic SQL query
-* Flexible report and chart styling
-* Interactive reports with auto refresh, drill through, fullscreen, embedded and more
+* Self-hosted, easy deployment & setup 
+* Connect to any database supporting JDBC drivers: PostgreSQL, Oracle, SQL Server, MySQL, Elasticsearch...
+* No ETLs, no data pipelines, utilize the full power of SQL to build custom data visualization
+* Dynamic SQL with query variables support for charts and filters
+* Rich and flexible styling and customization
+* Interactive reports with auto refresh, drill through, fullscreen, embeds, color themes and more
+
+## What's New (latest v0.6.0)
+
+* Support chart color palette switch
+* Export Chart data as CSV
+* Bar/Line/Area charts support multi-series data
+
+![poli v0.6.0](http://66.228.42.235:8080/poli_0.6.0.jpg)
 
 #### Slicer & Charts
 

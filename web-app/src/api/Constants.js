@@ -41,3 +41,10 @@ export const NO = 'no';
 
 export const COLOR_SLATE = 'rgba(9, 30, 66, 1)';
 export const COLOR_WHITE = 'rgba(255, 255, 255, 1)';
+
+export const DEFAULT = 'default';
+export const VINTAGE = 'vintage';
+export const ROMA = 'roma';
+export const MACARONS = 'macarons';
+export const SHINE = 'shine';
+export const CHART_COLOR_PLATETTES = [DEFAULT, VINTAGE, ROMA, MACARONS, SHINE];

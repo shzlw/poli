@@ -1,26 +1,62 @@
 import * as Constants from '../api/Constants';
 
-const CHART_COLORS = [
+const DEFAULT_COLOR_PALETTE = [
   "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", 
   "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", 
   "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", 
   "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
 ];
 
+const VINTAGE_COLOR_PALETTE = ['#d87c7c','#919e8b', '#d7ab82', '#6e7074', 
+  '#61a0a8','#efa18d', '#787464', '#cc7e63', '#724e58', '#4b565b'
+];
+
+const ROMA_COLOR_PALETTE = ['#E01F54','#001852','#f5e8c8','#b8d2c7','#c6b38e',
+  '#a4d8c2','#f3d999','#d3758f','#dcc392','#2e4783',
+  '#82b6e9','#ff6347','#a092f1','#0a915d','#eaf889',
+  '#6699FF','#ff6666','#3cb371','#d5b158','#38b6b6'
+];
+
+
+const MACARONS_COLOR_PALETTE = [
+  '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
+  '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
+  '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
+  '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089'
+];
+
+const SHINE_COLOR_PALETTE = [
+  '#c12e34','#e6b600','#0098d9','#2b821d',
+  '#005eaa','#339ca8','#cda819','#32a487'
+];
+
 const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const getChartOption = (type, data, config) => {
+const getColorPlatte = (name) => {
+  if (name === Constants.VINTAGE) {
+    return VINTAGE_COLOR_PALETTE;
+  } else if (name === Constants.ROMA) {
+    return ROMA_COLOR_PALETTE;
+  } else if (name === Constants.MACARONS) {
+    return MACARONS_COLOR_PALETTE;
+  } else if (name === Constants.SHINE) {
+    return SHINE_COLOR_PALETTE
+  }
+  return DEFAULT_COLOR_PALETTE;
+}
+
+export const getChartOption = (type, data, config, title) => {
   let chartOption = {};
   if (type === Constants.PIE) {
     chartOption = getPieOption(data, config);
   } else if (type === Constants.BAR) {
-    chartOption = getBarOption(data, config);
+    chartOption = getBarOption(data, config, title);
   } else if (type === Constants.LINE) {
-    chartOption = getLineOption(data, config);
+    chartOption = getLineOption(data, config, title);
   } else if (type === Constants.AREA) {
-    chartOption = getAreaOption(data, config);
+    chartOption = getAreaOption(data, config, title);
   } else if (type === Constants.HEATMAP) {
   } else if (type === Constants.TREEMAP) {
   }
@@ -30,9 +66,9 @@ export const getChartOption = (type, data, config) => {
 /**
  * Pie chart
  */
-const getPieOptionTemplate = (legend, series) => {
+const getPieOptionTemplate = (colorPlatte = 'default', legend, series) => {
   return {
-    color: CHART_COLORS,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     legend: {
@@ -57,7 +93,8 @@ const getPieOptionTemplate = (legend, series) => {
 const getPieOption = (data, config) => {
   const {
     key,
-    value
+    value,
+    colorPlatte
   } = config;
   let legend = [];
   let series = [];
@@ -69,13 +106,13 @@ const getPieOption = (data, config) => {
       value: row[value]
     });  
   }
-  return getPieOptionTemplate(legend, series);
+  return getPieOptionTemplate(colorPlatte, legend, series);
 }
 
 /**
  * Bar Chart
  */
-const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
+const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, series, isHorizontal) => {
   let xAxis = {};
   let yAxis = {};
   if (isHorizontal) {
@@ -96,56 +133,98 @@ const getBarOptionTemplate = (axisData, seriesData, isHorizontal) => {
     }
   }
 
+  const legend = legendData !== null ? {
+    data: legendData
+  }: {};
+
   return {
-    color: CHART_COLORS,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
-      top: 15,
+      top: 30,
       bottom: 5,
       left: 10,
       right: 15,
       containLabel: true
     },
+    legend: legend,
     xAxis: xAxis,
     yAxis: yAxis,
-    series: [
-      {
-        type: 'bar',
-        data: seriesData
-      }
-    ]
+    series: series
   }
 };
 
-const getBarOption = (data, config) => {
+const getBarOption = (data, config, title) => {
   const {
-    key,
-    value,
-    isHorizontal = false
+    xAxis,
+    legend,
+    yAxis,
+    hasMultiSeries = false,
+    isStacked = true,
+    isHorizontal = false,
+    colorPlatte = 'default'
   } = config;
-  // Text
-  const xAxisData = [];
-  // Number
+
+  const legendData = new Set();
+  const xAxisData = hasMultiSeries ? new Set() : [];
   const seriesData = [];
+  const type = 'bar';
+  
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    xAxisData.push(row[key]);
-    seriesData.push(row[value]);  
+    if (hasMultiSeries) {
+      const xAxisVal = row[xAxis];
+      const legendVal = row[legend];
+      const yAxisVal = row[yAxis];
+      xAxisData.add(xAxisVal);
+      legendData.add(legendVal);
+      const index = seriesData.findIndex(s => s.name === legendVal);
+      if (index === -1) {
+        const series = {
+          name: legendVal,
+          type: type,
+          data: [yAxisVal]
+        };
+        
+        if (isStacked) {
+          series.stack = title || 'Empty';
+        } 
+        seriesData.push(series);
+      } else {
+        seriesData[index].data.push(yAxisVal);
+      }
+    } else {
+      xAxisData.push(row[xAxis]);
+      seriesData.push(row[yAxis]);
+    }
   }
-  return getBarOptionTemplate(xAxisData, seriesData, isHorizontal);
+
+  if (hasMultiSeries) {
+    return getBarOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, isHorizontal);
+  } else {
+    const series = {
+      data: seriesData,
+      type: type
+    }
+    return getBarOptionTemplate(colorPlatte, null, xAxisData, series, isHorizontal);
+  }
 }
 
 /**
  * Line chart
  */
-const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
+const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series) => {
+  const legend = legendData !== null ? {
+    data: legendData
+  }: {};
+
   return {
-    color: CHART_COLORS,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
-      top: 15,
+      top: 30,
       bottom: 5,
       left: 10,
       right: 15,
@@ -158,44 +237,77 @@ const getLineOptionTemplate = (xAxisData, seriesData, smooth) => {
     yAxis: {
       type: 'value'
     },
-    series: [
-      {
-        type: 'line',
-        data: seriesData,
-        smooth: smooth
-      }
-    ]
+    legend: legend,
+    series: series
   }
 };
 
 const getLineOption = (data, config) => {
   const {
-    key,
-    value,
-    isSmooth = false
+    xAxis,
+    legend,
+    yAxis,
+    hasMultiSeries = false,
+    isSmooth = false,
+    colorPlatte = 'default'
   } = config;
-  // Text
-  const xAxisData = [];
-  // Number
+
+  const legendData = new Set();
+  const xAxisData = hasMultiSeries ? new Set() : [];
   const seriesData = [];
+  const type = 'line';
+  
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    xAxisData.push(row[key]);
-    seriesData.push(row[value]);  
+    if (hasMultiSeries) {
+      const xAxisVal = row[xAxis];
+      const legendVal = row[legend];
+      const yAxisVal = row[yAxis];
+      xAxisData.add(xAxisVal);
+      legendData.add(legendVal);
+      const index = seriesData.findIndex(s => s.name === legendVal);
+      if (index === -1) {
+        const series = {
+          name: legendVal,
+          type: type,
+          data: [yAxisVal],
+          smooth: isSmooth
+        };
+        seriesData.push(series);
+      } else {
+        seriesData[index].data.push(yAxisVal);
+      }
+    } else {
+      xAxisData.push(row[xAxis]);
+      seriesData.push(row[yAxis]);
+    }
   }
-  return getLineOptionTemplate(xAxisData, seriesData, isSmooth);
+
+  if (hasMultiSeries) {
+    return getLineOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData);
+  } else {
+    const series = {
+      data: seriesData,
+      type: type,
+      smooth: isSmooth
+    }
+    return getLineOptionTemplate(colorPlatte, null, xAxisData, series);
+  }
 }
 
 /**
  * Area chart
  */
-const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
+const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series) => {
+  const legend = legendData !== null ? {
+    data: legendData
+  }: {};
   return {
-    color: CHART_COLORS,
+    color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     grid:{
-      top: 15,
+      top: 30,
       bottom: 5,
       left: 10,
       right: 15,
@@ -209,33 +321,64 @@ const getAreaOptionTemplate = (xAxisData, seriesData, smooth) => {
     yAxis: {
       type: 'value'
     },
-    series: [
-      {
-        type: 'line',
-        data: seriesData,
-        areaStyle: {},
-        smooth: smooth
-      }
-    ]
+    legend: legend,
+    series: series
   }
 };
 
 const getAreaOption = (data, config) => {
-  const {
-    key,
-    value,
-    isSmooth = true
+   const {
+    xAxis,
+    legend,
+    yAxis,
+    hasMultiSeries = false,
+    isSmooth = false,
+    colorPlatte = 'default'
   } = config;
-  // Text
-  const xAxisData = [];
-  // Number
+
+  const legendData = new Set();
+  const xAxisData = hasMultiSeries ? new Set() : [];
   const seriesData = [];
+  const type = 'line';
+  
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    xAxisData.push(row[key]);
-    seriesData.push(row[value]);  
+    if (hasMultiSeries) {
+      const xAxisVal = row[xAxis];
+      const legendVal = row[legend];
+      const yAxisVal = row[yAxis];
+      xAxisData.add(xAxisVal);
+      legendData.add(legendVal);
+      const index = seriesData.findIndex(s => s.name === legendVal);
+      if (index === -1) {
+        const series = {
+          name: legendVal,
+          type: type,
+          data: [yAxisVal],
+          areaStyle: {},
+          smooth: isSmooth
+        };
+        seriesData.push(series);
+      } else {
+        seriesData[index].data.push(yAxisVal);
+      }
+    } else {
+      xAxisData.push(row[xAxis]);
+      seriesData.push(row[yAxis]);
+    }
   }
-  return getAreaOptionTemplate(xAxisData, seriesData, isSmooth);
+
+  if (hasMultiSeries) {
+    return getAreaOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData);
+  } else {
+    const series = {
+      data: seriesData,
+      type: type,
+      areaStyle: {},
+      smooth: isSmooth
+    }
+    return getAreaOptionTemplate(colorPlatte, null, xAxisData, series);
+  }
 }
 
 /**
@@ -243,7 +386,7 @@ const getAreaOption = (data, config) => {
  */
 const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     animation: false,
     grid: {
       y: 10
@@ -427,7 +570,7 @@ const buildCalenarHeatmapOption = () => {
  */
 const getTimeLineOptionTemplate = (seriesData) => {
   return {
-    color: CHART_COLORS,
+    color: DEFAULT_COLOR_PALETTE,
     tooltip: {
     },
     xAxis: {

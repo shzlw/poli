@@ -71,18 +71,56 @@ class GridItem extends React.Component {
     this.props.onComponentEdit(componentId);
   }
 
-  exportCsv = (componentId) => {
+  exportCsv = (title, queryResult = {}) => {
+    const queryResultData = Util.jsonToArray(queryResult.data);
+    const {
+      columns = [],
+      error
+    } = queryResult;
+    if (error) {
+      return;
+    }
 
+    this.convertCsv(title, columns, queryResultData);
   }
 
-  exportJson = (componentId) => {
+  convertCsv = (title = 'poli', columns = [], data = []) => {
+    let csvHeader = '';
+    for (let i = 0; i < columns.length; i++) {
+      if (i !== 0) {
+          csvHeader += ',';
+      }
+      csvHeader += columns[i].name;
+    }
 
+    let csvBody = '';
+    for (let i = 0; i < data.length; i++) {
+        const row = Object.values(data[i]);
+        csvBody += row.join(',') + '\r\n';
+    } 
+
+    const csvData = csvHeader + '\r\n' + csvBody;
+    const filename = title + '.csv';
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) { 
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
   removeComponent = (componentId) => {
     this.props.onComponentRemove(componentId);
   }
 
+  /**
+   * Multiple series chart doesn't support Drill Through.
+   */
   onChartClick = (param, echarts) => {
     const {
       drillThrough = [],
@@ -160,7 +198,8 @@ class GridItem extends React.Component {
       drillThrough,
       data = {},
       checkBoxes,
-      value
+      value,
+      title
     } = this.props;
 
     const queryResultData = Util.jsonToArray(queryResult.data);
@@ -187,7 +226,7 @@ class GridItem extends React.Component {
           />
         );
       } else {
-        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data);
+        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data, title);
         componentItem = (
           <ReactEcharts 
             option={chartOption}   
@@ -264,6 +303,8 @@ class GridItem extends React.Component {
       isEditMode,
       style = {},
       drillThrough,
+      queryResult = {},
+      type
     } = this.props;
 
     const { 
@@ -308,6 +349,30 @@ class GridItem extends React.Component {
       backgroundColor: contentBackgroundColor
     }
 
+    let readModeButtonGroup;
+    if (!isEditMode && type === Constants.CHART) {
+      if (hasDrillThrough) {
+        readModeButtonGroup = (
+          <div className="grid-title-button-panel">
+            <div className="cursor-pointer download-csv-button" style={{marginRight: '3px'}} onClick={() => this.exportCsv(title, queryResult)}>
+              <FontAwesomeIcon icon="file-csv" fixedWidth />
+            </div>
+            <div className="inline-block">
+              <FontAwesomeIcon icon="long-arrow-alt-right" fixedWidth />
+            </div>
+          </div>
+        )
+      } else {
+        readModeButtonGroup = (
+          <div className="grid-title-button-panel">
+            <div className="cursor-pointer download-csv-button" onClick={() => this.exportCsv(title, queryResult)}>
+              <FontAwesomeIcon icon="file-csv" fixedWidth />
+            </div>
+          </div>
+        )
+      }
+    }
+
     return (
       <div className="grid-box" style={gridBoxStyle}>
         { isEditMode && (
@@ -327,7 +392,7 @@ class GridItem extends React.Component {
         )}
 
         { isEditMode && (
-          <div className="grid-edit-panel" style={{zIndex: 20}}>
+          <div className="grid-title-button-panel" style={{zIndex: 20}}>
             <div className="cursor-pointer inline-block" style={{marginRight: '3px'}} onClick={() => this.editComponent(id)}>
               <FontAwesomeIcon icon="wrench" fixedWidth />
             </div>
@@ -337,11 +402,7 @@ class GridItem extends React.Component {
           </div>
         )}
 
-        { !isEditMode && hasDrillThrough && (
-          <div className="grid-edit-panel grid-box-icon inline-block">
-            <FontAwesomeIcon icon="long-arrow-alt-right" fixedWidth />
-          </div>
-        )}
+        {readModeButtonGroup}
         
         <div className="grid-box-content" style={contentStyle}>
           {this.renderComponentContent()}

@@ -67,4 +67,3 @@ There are four url search parameters in this example.
 * $showControl=true
 
   Optional. Whether to display the title bar with control panel.
-

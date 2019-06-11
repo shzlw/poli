@@ -10,6 +10,7 @@ import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.service.ReportService;
+import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,32 +77,6 @@ public class JdbcQueryWs {
         }
 
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-
-    @RequestMapping(
-            value = "/component/{id}/csv",
-            method = RequestMethod.POST)
-    public void downloadComponent(
-            @PathVariable("id") long componentId,
-            @RequestBody List<FilterParameter> filterParams,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        Component component = componentDao.findById(componentId);
-        boolean isAccessValid = isComponentAccessValid(component, request);
-
-        if (isAccessValid) {
-            String sql = component.getSqlQuery();
-            DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, filterParams);
-            String csvText = queryResult.getData();
-            String fileName = component.getTitle() + "_" + new Date();
-
-            response.setContentType("text/csv");
-            response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName +"\""));
-
-            response.getWriter().write(csvText);
-        }
     }
 
     protected boolean isComponentAccessValid(Component component, HttpServletRequest request) {
