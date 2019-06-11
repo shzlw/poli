@@ -30,16 +30,10 @@ Poli supports three types of components.
     > Pie chart requires the query to return at least two columns.
 
   * Bar
-
-    > Line chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
-
   * Line
-
-    > Line chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
-
   * Area
 
-    > Area chart requires the query to return at least two columns. One for X-axis (Key). The other for Y-axis (Value).
+    > Bar/Line/Area charts support multi-series data.
 
 * Filter
   * Slicer
@@ -125,3 +119,10 @@ WHERE 1 = 1
 ## Access permissions
 
 Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](/user-management) for more details.
+
+## Export CSV
+
+Click export button at the top right corner of the chart to export chart data as CSV file.
+
+![export csv](_images/screenshots/export_csv.jpg)
+

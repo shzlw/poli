@@ -50,8 +50,7 @@ class ComponentEditPanel extends React.Component {
       chartOption: {},
       showSchema: false,
       schemas: [],
-      searchSchemaName: '',
-      selectedSeries: ''
+      searchSchemaName: ''
     };
   }
 
@@ -356,6 +355,55 @@ class ComponentEditPanel extends React.Component {
       </div>
     );
 
+    const {
+      xAxis,
+      legend,
+      yAxis,
+      hasMultiSeries = false,
+    } = data;
+    const seriesChartPanel = (
+      <div>
+        <label>X-Axis</label>
+        <Select
+          name={'xAxis'}
+          value={xAxis}
+          onChange={this.handleComponentDataChange}
+          options={columns}
+          optionDisplay={'name'}
+          optionValue={'name'}
+        />
+
+        <label>Y-Axis</label>
+        <Select
+          name={'yAxis'}
+          value={yAxis}
+          onChange={this.handleComponentDataChange}
+          options={columns}
+          optionDisplay={'name'}
+          optionValue={'name'}
+        />
+
+        <label>Has multi-series</label>
+        <div style={{marginBottom: '8px'}}>
+          <Checkbox name="hasMultiSeries" value="" checked={hasMultiSeries} onChange={this.handleComponentDataChange} />
+        </div>
+
+        {hasMultiSeries && (
+          <div>
+            <label>Legend</label>
+            <Select
+              name={'legend'}
+              value={legend}
+              onChange={this.handleComponentDataChange}
+              options={columns}
+              optionDisplay={'name'}
+              optionValue={'name'}
+            />
+          </div>
+        )}
+      </div>
+    );
+
     let chartConfigPanel;
     if (subType === Constants.TABLE) {
       const {
@@ -405,88 +453,40 @@ class ComponentEditPanel extends React.Component {
       );
     } else if (subType === Constants.LINE || subType === Constants.AREA) {
       const {
-        key,
-        value
+        isSmooth = false
       } = data;
 
       chartConfigPanel = (
         <div>
-          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
-          <Select
-            name={'key'}
-            value={key}
-            onChange={this.handleComponentDataChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
+          {seriesChartPanel}
 
-          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
-          <Select
-            name={'value'}
-            value={value}
-            onChange={this.handleComponentDataChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
+          <label>Is smooth</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="isSmooth" value="" checked={isSmooth} onChange={this.handleComponentDataChange} />
+          </div>
 
           {colorPlattePanel}
         </div>
       );
     } else if (subType === Constants.BAR) {
       const {
-        xAxis,
-        series = [],
+        hasMultiSeries = false,
         isStacked = true,
         isHorizontal = false
       } = data;
 
-      const seriesItems = [];
-      for (let i = 0; i < series.length; i++) {
-        const value = series[i];
-        seriesItems.push(
-          <div key={i} className="row table-row">
-            <div className="float-left ellipsis" style={{width: '280px'}}>
-              {value}
-            </div>
-            <button className="button table-row-button float-right button-red" onClick={() => this.removeChartSeries(value)}>
-              <FontAwesomeIcon icon="trash-alt" />
-            </button>
-          </div>
-        );
-      }
-
       chartConfigPanel = (
         <div>
-          <label>X-Axis</label>
-          <Select
-            name={'xAxis'}
-            value={xAxis}
-            onChange={this.handleComponentDataChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
+          {seriesChartPanel}
 
-          <label>Series</label>
-          <Select
-            name={'selectedSeries'}
-            value={this.state.selectedSeries}
-            onChange={this.handleInputChange}
-            options={columns}
-            optionDisplay={'name'}
-            optionValue={'name'}
-          />
-          <button className="button" onClick={this.addChartSeries}>Add</button>
-          <div style={{marginTop: '8px'}}>
-            {seriesItems}
-          </div>
-          
-          <label>Is Stacked</label>
-          <div style={{marginBottom: '8px'}}>
-            <Checkbox name="isStacked" value="" checked={isStacked} onChange={this.handleComponentDataChange} />
-          </div>
+          {hasMultiSeries && (
+            <div>
+              <label>Is Stacked</label>
+              <div style={{marginBottom: '8px'}}>
+                <Checkbox name="isStacked" value="" checked={isStacked} onChange={this.handleComponentDataChange} />
+              </div>
+            </div>
+          )}
 
           <label>Is Horizontal</label>
           <div style={{marginBottom: '8px'}}>
@@ -501,44 +501,6 @@ class ComponentEditPanel extends React.Component {
     }
 
     return chartConfigPanel;
-  }
-
-  addChartSeries = () => {
-    const {
-      selectedSeries,
-      data
-    } = this.state;
-    if (!selectedSeries) {
-      return;
-    }
-
-    const { series = [] } = data;
-    const index = series.findIndex(s => s === selectedSeries);
-    if (index === -1) {
-      const newData = {...data};
-      if (Util.isArrayEmpty(newData.series)) {
-        newData.series = [];
-      }
-      newData.series.push(selectedSeries);
-      this.setState({
-        data: newData
-      });
-    } 
-  }
-
-  removeChartSeries = (name) => {
-    const { data } = this.state;
-    const { series = [] } = data;
-    const index = series.findIndex(s => s === name);
-    if (index !== -1) {
-      const newSeries = [...series];
-      newSeries.splice(index, 1);
-      const newData = {...data};
-      newData.series = newSeries;
-      this.setState({
-        data: newData
-      });
-    }
   }
 
   renderStaticConfigPanel = () => {
