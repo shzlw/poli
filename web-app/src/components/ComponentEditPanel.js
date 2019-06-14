@@ -62,7 +62,7 @@ class ComponentEditPanel extends React.Component {
       titleFontColor: Constants.COLOR_SLATE,
       titleBackgroundColor: Constants.COLOR_WHITE,
       contentBackgroundColor: Constants.COLOR_WHITE,
-      zIndex: 50
+      zIndex: 1
     }
   }
 

@@ -315,7 +315,8 @@ class ComponentViewPanel extends React.Component {
         checkBoxes
       } = data;
       newComponents[index].checkBoxes = checkBoxes;
-    } else if (component.subType === Constants.SINGLE_VALUE) {
+    } else if (component.subType === Constants.SINGLE_VALUE
+      || component.subType === Constants.DATE_PICKER) {
       const {
         value
       } = data;
@@ -356,7 +357,19 @@ class ComponentViewPanel extends React.Component {
             filterParam.remark = 'select all';
           }
         } else if (subType === Constants.SINGLE_VALUE) {
-          filterParam.value = component.value;
+          const { value } = component;
+          filterParam.value = value;
+        } else if (subType === Constants.DATE_PICKER) {
+          const { value } = component;
+          let dateStr = '';
+          if (value) {
+            const date = new Date(parseInt(value, 10) * 1000);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            dateStr = year + '-' + Util.leftPadZero(month) + '-' + Util.leftPadZero(day);
+          }
+          filterParam.value = dateStr;
         }
         filterParam.param = component.data.queryParameter;
         filterParam.type = component.subType;
@@ -419,7 +432,7 @@ class ComponentViewPanel extends React.Component {
         width,
         height
       } = selectedComponent;
-      if (x < 0 || y < 0 || width < 50 || height < 50 || height > this.props.height) {
+      if (x < 0 || y < 0 || width < 30 || height < 30 || height > this.props.height) {
         Toast.showError('Invalid position value');
         return;
       }

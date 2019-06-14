@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './DatePicker.css';
 
+import * as Util from '../../api/Util';
+
 class DatePicker extends React.Component {
 
   constructor(props) {
@@ -75,10 +77,6 @@ class DatePicker extends React.Component {
     this.props.onChange(name, new Date(year, month, day));
   }
 
-  leftPadZero = (n) => {
-    return parseInt(n, 10) < 10 ? '0' + n : n;
-  }
-
   render() {
     const { showDateSelectPanel } = this.state;
     const { value } = this.props;
@@ -126,8 +124,8 @@ class DatePicker extends React.Component {
       }
     }
 
-    const displayMonth = this.leftPadZero(month);
-    const displayDay = this.leftPadZero(day);
+    const displayMonth = Util.leftPadZero(month);
+    const displayDay = Util.leftPadZero(day);
 
     return (
       <div className="calendar-container">

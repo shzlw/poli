@@ -42,13 +42,9 @@ public class JdbcQueryService {
         }
     }
 
-    public Connection getConnectionByType(JdbcDataSource ds) throws SQLException {
-        return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
-    }
-
-    public String ping(JdbcDataSource ds) {
-        try (Connection con = getConnectionByType(ds);
-             PreparedStatement ps = con.prepareStatement(ds.getPing());
+    public String ping(DataSource dataSource, String sql) {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery();) {
             while (rs.next()) {
                 break;
@@ -59,9 +55,9 @@ public class JdbcQueryService {
         }
     }
 
-    public List<Table> getSchema(JdbcDataSource ds) {
+    public List<Table> getSchema(DataSource dataSource) {
         List<Table> tables = new ArrayList<>();
-        try (Connection conn = getConnectionByType(ds)) {
+        try (Connection conn = dataSource.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, null, null);
             while (rs.next()) {
@@ -86,47 +82,6 @@ public class JdbcQueryService {
             return tables;
         } catch (Exception e) {
             return Collections.emptyList();
-        }
-    }
-
-    public String fetchCsv(JdbcDataSource ds, String sql) {
-        try (Connection con = getConnectionByType(ds);
-             PreparedStatement ps = con.prepareStatement(sql);) {
-
-            try (ResultSet rs = ps.executeQuery();) {
-                StringBuilder table = new StringBuilder();
-
-                ResultSetMetaData metadata = rs.getMetaData();
-                int columnCount = metadata.getColumnCount();
-                boolean isFirst = true;
-                for (int i = 1; i <= columnCount; i++) {
-                    String colName = metadata.getColumnName(i);
-                    if (isFirst) {
-                        table.append(colName);
-                        isFirst = false;
-                    } else {
-                        table.append(",").append(colName);
-                    }
-                }
-
-                table.append("\r\n");
-
-                while (rs.next()) {
-                    boolean isFirstCol = true;
-                    for (int i = 1; i <= columnCount; i++) {
-                        if (isFirstCol) {
-                            table.append(rs.getString(i));
-                            isFirstCol = false;
-                        } else {
-                            table.append(",").append(rs.getString(i));
-                        }
-                    }
-                    table.append("\r\n");
-                }
-                return table.toString();
-            }
-        } catch (Exception e) {
-            return getSimpleError(e);
         }
     }
 
@@ -244,7 +199,8 @@ public class JdbcQueryService {
                             LOGGER.warn("exception: {}", e);
                         }
                     }
-                } else if (type.equals(Constants.FILTER_TYPE_SINGLE)) {
+                } else if (type.equals(Constants.FILTER_TYPE_SINGLE)
+                    || type.equals(Constants.FILTER_TYPE_DATE_PICKER)) {
                     try {
                         String singleValue = mapper.readValue(value, String.class);
                         namedParameters.put(name, singleValue);
