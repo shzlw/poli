@@ -117,8 +117,23 @@ class ComponentViewPanel extends React.Component {
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
+        // Reorganize the filter component to push the datepicker filters to the end of the array so
+        // they will be rendered later. Among them, the one with larger Y value should be rendered first.
+        let components = [];
+        const datepickers = [];
+        for (let i = 0; i < result.length; i++) {
+          const component = result[i];
+          if (component.type === Constants.FILTER && component.subType === Constants.DATE_PICKER) {
+            datepickers.push(component);
+          } else {
+            components.push(component);
+          }
+        }
+        datepickers.sort((a, b) => b.y - a.y);
+        components = components.concat(datepickers);
+
         this.setState({
-          components: result
+          components: components
         }, () => {
           this.resizeGrid(viewWidth);
           this.queryFilters();

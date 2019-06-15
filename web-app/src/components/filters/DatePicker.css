@@ -37,7 +37,7 @@
 }
 
 .calendar-container .body-cell {
-  border: 1px solid #000000;
+  border: 1px solid #E5E5E5;
 }
 
 .calendar-container .clickable {
@@ -50,7 +50,7 @@
 }
 
 .calendar-container .non-clickable {
-  background-color: #C8C8C8;
+  background-color: #E5E5E5;
 }
 
 .calendar-container .cell-active {

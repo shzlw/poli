@@ -23,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class JdbcDataSourceService {
 
+    // 10 seconds
+    private static final int LEAK_DETECTION_THRESHOLD = 10000;
+
     /**
      * Key: JdbcDataSource id
      * Value: HikariDataSource
@@ -75,7 +78,7 @@ public class JdbcDataSourceService {
                     newHiDs.setDriverClassName(dataSource.getDriverClassName());
                 }
                 newHiDs.setMaximumPoolSize(appProperties.getDatasourceMaximumPoolSize());
-                newHiDs.setLeakDetectionThreshold(2000);
+                newHiDs.setLeakDetectionThreshold(LEAK_DETECTION_THRESHOLD);
                 return newHiDs;
             });
             return hiDs;

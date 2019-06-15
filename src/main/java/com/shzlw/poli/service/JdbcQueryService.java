@@ -23,7 +23,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 @Service
 public class JdbcQueryService {
@@ -199,15 +202,25 @@ public class JdbcQueryService {
                             LOGGER.warn("exception: {}", e);
                         }
                     }
-                } else if (type.equals(Constants.FILTER_TYPE_SINGLE)
-                    || type.equals(Constants.FILTER_TYPE_DATE_PICKER)) {
+                } else if (type.equals(Constants.FILTER_TYPE_SINGLE)) {
                     try {
                         String singleValue = mapper.readValue(value, String.class);
                         namedParameters.put(name, singleValue);
                     } catch (IOException e) {
                         LOGGER.warn("exception: {}", e);
                     }
-                } else {
+                } else if (type.equals(Constants.FILTER_TYPE_DATE_PICKER)) {
+                    try {
+                        String dateStr = mapper.readValue(value, String.class);
+                        if (!StringUtils.isEmpty(dateStr)) {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+                            namedParameters.put(name, date);
+                        }
+                    } catch (IOException | ParseException e) {
+                        LOGGER.warn("exception: {}", e);
+                    }
+                }
+                else {
                     throw new IllegalArgumentException("Unknown filter type");
                 }
             }
