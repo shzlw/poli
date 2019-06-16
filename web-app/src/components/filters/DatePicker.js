@@ -127,6 +127,19 @@ class DatePicker extends React.Component {
     const displayMonth = Util.leftPadZero(month);
     const displayDay = Util.leftPadZero(day);
 
+    const yearItems = [];
+    for (let i = 1970; i < 2100; i++) {
+      yearItems.push(
+        <option value={i} key={i}>{i}</option>
+      );
+    }
+    const monthItems = [];
+    for (let i = 1; i < 12; i++) {
+      monthItems.push(
+        <option value={i} key={i}>{i}</option>
+      );
+    }
+
     return (
       <div className="calendar-container">
         <div className="select-date" onClick={this.toggleDatePanel}>{year}-{displayMonth}-{displayDay}</div>

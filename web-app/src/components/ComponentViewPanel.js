@@ -117,29 +117,37 @@ class ComponentViewPanel extends React.Component {
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
-        // Reorganize the filter component to push the datepicker filters to the end of the array so
-        // they will be rendered later. Among them, the one with larger Y value should be rendered first.
-        let components = [];
-        const datepickers = [];
-        for (let i = 0; i < result.length; i++) {
-          const component = result[i];
-          if (component.type === Constants.FILTER && component.subType === Constants.DATE_PICKER) {
-            datepickers.push(component);
-          } else {
-            components.push(component);
-          }
-        }
-        datepickers.sort((a, b) => b.y - a.y);
-        components = components.concat(datepickers);
-
-        this.setState({
-          components: components
-        }, () => {
-          this.resizeGrid(viewWidth);
-          this.queryFilters();
-          this.queryCharts();
-        });
+        this.buildViewPanel(result, viewWidth);
       });
+  }
+
+  buildViewPanel = (components, viewWidth) => {
+    // Reorganize the filter component to push the datepicker filters to the end of the array so
+    // they will be rendered later. Among them, the one with larger Y value should be rendered first.
+    let reorderedComponents = [];
+    const datepickers = [];
+    for (let i = 0; i < components.length; i++) {
+      const component = components[i];
+      if (component.type === Constants.FILTER && component.subType === Constants.DATE_PICKER) {
+        datepickers.push(component);
+      } else {
+        reorderedComponents.push(component);
+      }
+    }
+    datepickers.sort((a, b) => b.y - a.y);
+    reorderedComponents = reorderedComponents.concat(datepickers);
+
+    this.setState({
+      components: reorderedComponents
+    }, () => {
+      this.resizeGrid(viewWidth);
+      this.queryFilters();
+      this.queryCharts();
+    });
+  }
+
+  getComponentsSnapshot = () => {
+    return [...this.state.components];
   }
  
   queryCharts(urlFilterParams = []) {
@@ -464,7 +472,7 @@ class ComponentViewPanel extends React.Component {
 
   render() {
     const { 
-      componentViewWidth,
+      reportViewWidth,
       showControl
     } = this.props;
 
@@ -478,7 +486,7 @@ class ComponentViewPanel extends React.Component {
     const top = showControl ? '50px' : '10px';
     const style = {
       top: top,
-      width: componentViewWidth + 'px'
+      width: reportViewWidth + 'px'
     }
 
     return (

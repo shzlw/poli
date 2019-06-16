@@ -26,6 +26,7 @@ class ReportEditView extends React.Component {
     this.state = {
       showComponentEditPanel: false,
       showConfirmDeletionPanel: false,
+      showCannedReportPanel: false,
       showControl: true,
       objectToDelete: {},
       isEditMode: false,
@@ -39,7 +40,10 @@ class ReportEditView extends React.Component {
       reportId: 0,
       name: '',
       style: {},
-      componentViewWidth: 1000
+      reportType: '',
+      reportViewWidth: 1000,
+      cannedReportName: '',
+      cannedReportData: {}
     }
 
     this.componentViewPanel = React.createRef();
@@ -65,14 +69,15 @@ class ReportEditView extends React.Component {
       }
     }
     const reportId = id !== undefined ? id : null;
-
     const url = this.props.location.search;
     const searchParams = new URLSearchParams(url);
     const fromReport = searchParams.get('$fromReport');
+
+    console.log('ReportEditView', reportId);
     
-    const componentViewWidth = this.getPageWidth();
+    const reportViewWidth = this.getPageWidth();
     this.setState({
-      componentViewWidth: componentViewWidth,
+      reportViewWidth: reportViewWidth,
       fromReport: fromReport
     }, () => {
       if (reportId === null) {
@@ -80,17 +85,40 @@ class ReportEditView extends React.Component {
           reportId: null
         });
       } else {
-        axios.get(`/ws/report/${reportId}`)
-          .then(res => {
-            const report = res.data;
-            this.setState({
-              reportId: report.id,
-              name: report.name,
-              style: report.style
-            }, () => {
-              this.refresh();
+        const { reportType } = this.props;
+        console.log('ReportEditView', reportType);
+
+        if (reportType === 'adhoc') {
+          axios.get(`/ws/report/${reportId}`)
+            .then(res => {
+              const report = res.data;
+              this.setState({
+                reportId: report.id,
+                name: report.name,
+                style: report.style,
+                reportType: reportType
+              }, () => {
+                this.refresh();
+              });
             });
-          });
+        } else if (reportType === 'canned') {
+          axios.get(`/ws/cannedreport/${reportId}`)
+            .then(res => {
+              const cannedReport = res.data;
+              console.log('cannedReport', cannedReport);
+              const { data: report } = cannedReport; 
+              this.setState({
+                reportId: cannedReport.id,
+                name: report.name,
+                style: report.style,
+                reportType: reportType,
+                cannedReportData: report
+              }, () => {
+                this.refresh();
+              });
+            });
+        }
+        
       }
     });
 
@@ -136,12 +164,12 @@ class ReportEditView extends React.Component {
     const fromReport = params.get('$fromReport');
     const reportName = params.get('$toReport');
 
-    const componentViewWidth = this.getPageWidth();
+    const reportViewWidth = this.getPageWidth();
 
     this.setState({
       isFullScreenView: true,
       name: reportName,
-      componentViewWidth: componentViewWidth,
+      reportViewWidth: reportViewWidth,
       fromReport: fromReport,
       showControl: showControl
     }, () => {
@@ -198,9 +226,19 @@ class ReportEditView extends React.Component {
   refreshComponentView = () => {
     const { 
       reportId,
-      componentViewWidth
+      reportViewWidth,
+      reportType,
+      cannedReportData
     } = this.state;
-    this.componentViewPanel.current.fetchComponents(reportId, componentViewWidth, null);
+
+    if (reportType === 'adhoc') {
+      this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, null);
+    } else if (reportType === 'canned') {
+      const { 
+        components = []
+      } = cannedReportData;
+      this.componentViewPanel.current.buildViewPanel(components, reportViewWidth);
+    }
   }
 
   updateLastRefreshed = () => {
@@ -394,6 +432,42 @@ class ReportEditView extends React.Component {
     return urlFilterParams;
   }
 
+  saveCannedReport = () => {
+    const {
+      cannedReportName,
+      name,
+      style = {}
+    } = this.state;
+
+    if (!cannedReportName) {
+      Toast.showError('Enter a name.');
+      return;
+    }
+
+    const components = this.componentViewPanel.current.getComponentsSnapshot();
+    if (Util.isArrayEmpty(components)) {
+      Toast.showError('Report is empty.');
+      return;
+    }
+
+    const report = {
+      name: cannedReportName,
+      data: {
+        name: name,
+        style: style,
+        components: components
+      }
+    };
+
+    axios.post('/ws/cannedreport', report)
+      .then(res => {
+        this.setState({
+          showCannedReportPanel: false
+        });
+        Toast.showSuccess('Saved.');
+      });
+  }
+
   render() {
     const {
       autoRefreshTimerId,
@@ -438,6 +512,9 @@ class ReportEditView extends React.Component {
         </button>
         <button className="button ml-4" onClick={this.applyFilters}>
           <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
+        </button>
+        <button className="button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+          <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
         </button>
       </React.Fragment>
     );
@@ -530,7 +607,7 @@ class ReportEditView extends React.Component {
           ref={this.componentViewPanel} 
           isEditMode={isEditMode}
           showControl={this.state.showControl}
-          componentViewWidth={this.state.componentViewWidth}
+          reportViewWidth={this.state.reportViewWidth}
           onComponentEdit={this.openComponentEditPanel}
           onStyleValueChange={this.onStyleValueChange}
           onComponentContentClick={this.onComponentContentClick}
@@ -548,6 +625,26 @@ class ReportEditView extends React.Component {
             reportId={this.state.reportId}
             onSave={this.onComponentSave}
           />
+        </Modal>
+
+        <Modal 
+          show={this.state.showCannedReportPanel}
+          onClose={() => this.setState({ showCannedReportPanel: false })}
+          modalClass={'small-modal-panel'} 
+          title={'Save Canned Report'} >
+          <div className="form-panel">
+            <label>Name</label>
+            <input 
+              className="form-input"
+              type="text" 
+              name="cannedReportName" 
+              value={this.state.cannedReportName}
+              onChange={this.handleInputChange} 
+            />
+            <button className="button button-green" onClick={this.saveCannedReport}>
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            </button>
+          </div>
         </Modal>
 
         <Modal 

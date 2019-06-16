@@ -28,10 +28,14 @@ class UserManagement extends React.Component {
           onTabChange={this.onTabChange}
           >
           <div title="Group">
-            <Group />
+            <div style={{paddingTop: '10px'}}>
+              <Group />
+            </div>
           </div>
           <div title="User">
-            <User {...this.props} />
+            <div style={{paddingTop: '10px'}}>
+              <User {...this.props} />
+            </div>
           </div>
         </Tabs>
       </div>

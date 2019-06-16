@@ -1,5 +1,5 @@
 
--- v0.6.0
+
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_group_user;
 DROP TABLE IF EXISTS p_user;
 DROP TABLE IF EXISTS p_group;
+DROP TABLE IF EXISTS p_canned_report;
 
 CREATE TABLE
 IF NOT EXISTS p_datasource (
@@ -81,6 +82,17 @@ IF NOT EXISTS p_group_report (
     PRIMARY KEY (report_id, group_id),
     FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (group_id) REFERENCES p_group(id)
+);
+
+-- table added in v0.7.0
+CREATE TABLE
+IF NOT EXISTS p_canned_report (
+    id INTEGER NOT NULL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    data TEXT,
+    FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 
 CREATE UNIQUE INDEX p_report_unique_name_index ON p_report(name);

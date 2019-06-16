@@ -10,8 +10,11 @@ import ReportEditView from './ReportEditView';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
 import SearchInput from '../components/SearchInput';
+import Tabs from '../components/Tabs';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
+const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
+const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT, ROUTE_WORKSPACE_CANNED_REPORT];
 
 class Report extends Component {
 
@@ -22,28 +25,52 @@ class Report extends Component {
       reports: [],
       showEditPanel: false,
       activeReportId: 0,
-      name: ''
+      name: '',
+      cannedReports: [],
+      activeTab: 'Adhoc',
+      activeCannedReportId: 0
     }
   }
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
-    const index = pathname.indexOf(ROUTE_WORKSPACE_REPORT);
-    if (index !== -1) {
-      const activeReportId = Number(pathname.substring(index + ROUTE_WORKSPACE_REPORT.length));
-      this.setState({
-        activeReportId: activeReportId
-      })
+    for (let i = 0; i < ROUTE_PATTERNS.length; i++) {
+      const pattern = ROUTE_PATTERNS[i];
+      const index = pathname.indexOf(pattern);
+      if (index !== -1) {
+        const activeReportId = Number(pathname.substring(index + pattern.length));
+        let activeTab = 'Adhoc'
+        if (pattern === ROUTE_WORKSPACE_CANNED_REPORT) {
+          activeTab = 'Canned';
+        }
+        this.setState({
+          activeReportId: activeReportId,
+          activeTab: activeTab
+        });
+        break;
+      }
     }
-    this.fetchBoards();
+
+    this.fetchReports();
+    this.fetchCannedReports();
   }
 
-  fetchBoards = () => {
+  fetchReports = () => {
     axios.get('/ws/report')
       .then(res => {
         const reports = res.data;
         this.setState({ 
           reports: reports 
+        });
+      });
+  }
+
+  fetchCannedReports = () => {
+    axios.get('/ws/cannedreport/myreport')
+      .then(res => {
+        const cannedReports = res.data;
+        this.setState({ 
+          cannedReports: cannedReports 
         });
       });
   }
@@ -57,6 +84,12 @@ class Report extends Component {
   handleNameInputChange = (name, value) => {
     this.setState({
       [name]: value
+    });
+  }
+
+  onTabChange = (activeTab) => {
+    this.setState({
+      activeTab: activeTab
     });
   }
 
@@ -91,7 +124,7 @@ class Report extends Component {
       .then(res => {
         const reportId = res.data;
         this.closeEditPanel();
-        this.fetchBoards();
+        this.fetchReports();
         this.props.history.push(`/workspace/report/${reportId}`);
         this.setState({
           activeReportId: reportId
@@ -102,7 +135,7 @@ class Report extends Component {
       });
   }
 
-  view = (reportId) => {
+  viewReport = (reportId) => {
     this.setState({
       activeReportId: reportId
     }, () => {
@@ -110,12 +143,20 @@ class Report extends Component {
     });
   }
 
+  viewCannedReport = (reportId) => {
+    this.setState({
+      activeCannedReportId: reportId
+    }, () => {
+      this.props.history.push(`/workspace/report/canned/${reportId}`);
+    });
+  }
+
   onReportSave = (reportId) => {
-    this.fetchBoards();
+    this.fetchReports();
   }
 
   onReportDelete = (reportId) => {
-    this.fetchBoards();
+    this.fetchReports();
     this.setState({
       activeReportId: 0
     }, () => {
@@ -127,7 +168,9 @@ class Report extends Component {
     const {
       reports = [],
       activeReportId,
-      searchValue
+      searchValue,
+      cannedReports = [],
+      activeCannedReportId
     } = this.state;
 
     const {
@@ -143,7 +186,23 @@ class Report extends Component {
       if (!searchValue || (searchValue && name.includes(searchValue))) {
         reportRows.push(
           (
-            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.view(report.id)}>
+            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewReport(report.id)}>
+              {name}
+            </div>
+          )
+        )
+      }
+    }
+
+    const cannedReportRows = [];
+    for (let i = 0; i < cannedReports.length; i++) {
+      const report = cannedReports[i];
+      const name = report.name;
+      const menuActive = activeCannedReportId === report.id ? 'report-menu-item-active' : '';
+      if (!searchValue || (searchValue && name.includes(searchValue))) {
+        cannedReportRows.push(
+          (
+            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewCannedReport(report.id)}>
               {name}
             </div>
           )
@@ -171,20 +230,46 @@ class Report extends Component {
               inputWidth={117}
             />
           </div>
-          <div>
-            {reportRows}
+          <div style={{padding: '0px 5px'}}>
+            <Tabs
+              activeTab={this.state.activeTab}
+              onTabChange={this.onTabChange}
+              >
+              
+              <div title="Adhoc">
+                {reportRows}
+              </div>
+
+              <div title="Canned">
+                {cannedReportRows}
+              </div>
+              
+            </Tabs>
+            
           </div>
         </div>
         <div className="report-content">
           <Switch>
             <Route 
-              path="/workspace/report/:id" 
+              exact path="/workspace/report/:id" 
               render={(props) => 
                 <ReportEditView 
                   key={props.match.params.id} 
                   onReportSave={this.onReportSave} 
                   onReportDelete={this.onReportDelete} 
                   editable={editable}
+                  reportType={'adhoc'}
+                />
+              } 
+            />
+            <Route 
+              exact path="/workspace/report/canned/:id" 
+              render={(props) => 
+                <ReportEditView 
+                  key={props.match.params.id} 
+                  onReportDelete={this.onReportDelete} 
+                  editable={false}
+                  reportType={'canned'}
                 />
               } 
             />
