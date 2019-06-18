@@ -22,7 +22,10 @@
   border-top: none !important;
   float: right;
   margin-right: 5px;
+  font-size: 12px !important;
+  padding: 0px !important;
 }
+
 
 .ReactTable .pagination-bottom {
   border-top: 1px solid #B3BAC5;

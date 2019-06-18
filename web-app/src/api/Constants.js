@@ -49,3 +49,6 @@ export const ROMA = 'roma';
 export const MACARONS = 'macarons';
 export const SHINE = 'shine';
 export const CHART_COLOR_PLATETTES = [DEFAULT, VINTAGE, ROMA, MACARONS, SHINE];
+
+export const ADHOC = 'adhoc';
+export const CANNED = 'canned';

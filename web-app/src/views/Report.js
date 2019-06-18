@@ -39,18 +39,25 @@ class Report extends Component {
       const index = pathname.indexOf(pattern);
       if (index !== -1) {
         const activeReportId = Number(pathname.substring(index + pattern.length));
-        let activeTab = 'Adhoc'
-        if (pattern === ROUTE_WORKSPACE_CANNED_REPORT) {
+        let activeTab;
+        if (pattern === ROUTE_WORKSPACE_REPORT) {
+          activeTab = 'Adhoc';
+          this.setState({
+            activeReportId: activeReportId,
+            activeTab: activeTab,
+            activeCannedReportId: 0
+          });
+        } else if (pattern === ROUTE_WORKSPACE_CANNED_REPORT) {
           activeTab = 'Canned';
+          this.setState({
+            activeReportId: 0,
+            activeTab: activeTab,
+            activeCannedReportId: activeReportId
+          });
         }
-        this.setState({
-          activeReportId: activeReportId,
-          activeTab: activeTab
-        });
         break;
       }
     }
-
     this.fetchReports();
     this.fetchCannedReports();
   }
@@ -89,7 +96,11 @@ class Report extends Component {
 
   onTabChange = (activeTab) => {
     this.setState({
-      activeTab: activeTab
+      activeTab: activeTab,
+      activeCannedReportId: 0,
+      activeReportId: 0
+    }, () => {
+      this.props.history.push('/workspace/report');
     });
   }
 
@@ -159,6 +170,19 @@ class Report extends Component {
     this.fetchReports();
     this.setState({
       activeReportId: 0
+    }, () => {
+      this.props.history.push('/workspace/report');
+    });
+  }
+
+  onCannedReportSave = () => {
+    this.fetchCannedReports();
+  }
+
+  onCannedReportDelete = (reportId) => {
+    this.fetchCannedReports();
+    this.setState({
+      activeCannedReportId: 0
     }, () => {
       this.props.history.push('/workspace/report');
     });
@@ -258,18 +282,19 @@ class Report extends Component {
                   onReportSave={this.onReportSave} 
                   onReportDelete={this.onReportDelete} 
                   editable={editable}
-                  reportType={'adhoc'}
+                  reportType={Constants.ADHOC}
+                  onCannedReportSave={this.onCannedReportSave}
                 />
               } 
             />
             <Route 
-              exact path="/workspace/report/canned/:id" 
+              path="/workspace/report/canned/:id" 
               render={(props) => 
                 <ReportEditView 
-                  key={props.match.params.id} 
-                  onReportDelete={this.onReportDelete} 
+                  key={props.match.params.id}  
+                  onCannedReportDelete={this.onCannedReportDelete} 
                   editable={false}
-                  reportType={'canned'}
+                  reportType={Constants.CANNED}
                 />
               } 
             />

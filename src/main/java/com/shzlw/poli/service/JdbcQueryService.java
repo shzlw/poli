@@ -3,6 +3,7 @@ package com.shzlw.poli.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.shzlw.poli.AppProperties;
 import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
@@ -37,6 +38,9 @@ public class JdbcQueryService {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    AppProperties appProperties;
 
     @PostConstruct
     public void init() throws IllegalAccessException {
@@ -99,6 +103,8 @@ public class JdbcQueryService {
         Map<String, Object> namedParameters = getNamedParameters(filterParams);
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
 
+        int maxQueryRecords = appProperties.getMaximumQueryRecords();
+
         QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
@@ -120,12 +126,17 @@ public class JdbcQueryService {
                     ObjectMapper mapper = new ObjectMapper();
                     ArrayNode array = mapper.createArrayNode();
 
+                    int rowCount = 0;
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
                         for (int i = 1; i <= columnCount; i++) {
                             node.put(columnNames[i], rs.getString(i));
                         }
                         array.add(node);
+                        rowCount++;
+                        if (maxQueryRecords != -1 && rowCount >= maxQueryRecords) {
+                            break;
+                        }
                     }
                     String data = array.toString();
                     return QueryResult.ofData(data, columns);

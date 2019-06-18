@@ -117,11 +117,11 @@ class ComponentViewPanel extends React.Component {
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
-        this.buildViewPanel(result, viewWidth);
+        this.buildViewPanel(result, viewWidth, true);
       });
   }
 
-  buildViewPanel = (components, viewWidth) => {
+  buildViewPanel = (components, viewWidth, isAdhoc) => {
     // Reorganize the filter component to push the datepicker filters to the end of the array so
     // they will be rendered later. Among them, the one with larger Y value should be rendered first.
     let reorderedComponents = [];
@@ -141,13 +141,23 @@ class ComponentViewPanel extends React.Component {
       components: reorderedComponents
     }, () => {
       this.resizeGrid(viewWidth);
-      this.queryFilters();
-      this.queryCharts();
+      if (isAdhoc) {
+        this.queryFilters();
+        this.queryCharts();
+      }
     });
   }
 
   getComponentsSnapshot = () => {
-    return [...this.state.components];
+    const {
+      components = [],
+      gridWidth
+    } = this.state;
+    const newComponents = JSON.parse(JSON.stringify(components));
+    for (let i = 0; i < newComponents.length; i++) {
+      this.resizeComponentToBase(newComponents[i], gridWidth);
+    }
+    return newComponents;
   }
  
   queryCharts(urlFilterParams = []) {
@@ -500,6 +510,7 @@ class ComponentViewPanel extends React.Component {
           components={this.state.components}
           isEditMode={this.props.isEditMode}
           selectedComponentId={this.state.selectedComponentId}
+          reportType={this.props.reportType}
           onComponentMove={this.onComponentMove}
           onComponentEdit={this.props.onComponentEdit} 
           onComponentRemove={this.openConfirmDeletionPanel} 

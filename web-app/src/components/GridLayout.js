@@ -38,6 +38,7 @@ class GridLayout extends React.Component {
         snapToGrid={this.props.snapToGrid}
         isEditMode={isEditMode}
         selectedComponentId={this.props.selectedComponentId}
+        reportType={this.props.reportType}
         {...component}
         onComponentMove={this.props.onComponentMove}
         onComponentEdit={this.props.onComponentEdit}
