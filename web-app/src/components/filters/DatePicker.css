@@ -6,9 +6,9 @@
 
 .calendar-dialog {
   width: 189px;
-  border: 1px solid black;
-  z-index: 20;
-  position: absolute;
+  border: 1px solid #000000;
+  position: fixed;
+  background-color: #FFFFFF;
 }
 
 .calendar-cell {
@@ -20,22 +20,24 @@
 }
 
 .calendar-container .select-date {
-  padding: 5px;
-  background: #FFFFFF;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, .1);
-  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;    
+  box-sizing: border-box;
+  box-shadow: none !important;
+  border: 2px solid #DFE1E6 !important;
+  padding: 5px 8px;
   cursor: pointer;
+  width: 100%;
 }
 
 .calendar-container .header-cell {
-  border: 1px solid black;
-  background-color: black;
-  color: white;
+  border: 1px solid #000000;
+  background-color: #000000;
+  color: #FFFFFF;
 }
 
 .calendar-container .body-cell {
-  border: 1px solid black;
+  border: 1px solid #dfe1e6;
 }
 
 .calendar-container .clickable {
@@ -43,17 +45,17 @@
 }
 
 .calendar-container .clickable:hover {
-  background-color: blue;
-  color: white;
+  background-color: #0065FF;
+  color: #FFFFFF;
 }
 
 .calendar-container .non-clickable {
-  background-color: grey;
+  background-color: #dfe1e6;
 }
 
 .calendar-container .cell-active {
-  background-color: black;
-  color: white;
+  background-color: #000000;
+  color: #FFFFFF;
 }
 
 .calendar-container .display-date {
@@ -63,13 +65,12 @@
   text-align: center;
 }
 
-.calendar-container .select-year {
-  height: 20px;
-}
-
-
 .calendar-container .calendar-button {
-  color: blue;
+  color: #0065FF;
   width: 40px;
   cursor: pointer;
+}
+
+.calendar-container .select-year {
+  height: 20px;
 }

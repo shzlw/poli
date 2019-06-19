@@ -15,6 +15,8 @@ import Tabs from '../components/Tabs';
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
 const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT, ROUTE_WORKSPACE_CANNED_REPORT];
+const AD_HOC = 'Ad Hoc';
+
 
 class Report extends Component {
 
@@ -27,7 +29,7 @@ class Report extends Component {
       activeReportId: 0,
       name: '',
       cannedReports: [],
-      activeTab: 'Adhoc',
+      activeTab: AD_HOC,
       activeCannedReportId: 0
     }
   }
@@ -41,7 +43,7 @@ class Report extends Component {
         const activeReportId = Number(pathname.substring(index + pattern.length));
         let activeTab;
         if (pattern === ROUTE_WORKSPACE_REPORT) {
-          activeTab = 'Adhoc';
+          activeTab = AD_HOC;
           this.setState({
             activeReportId: activeReportId,
             activeTab: activeTab,
@@ -260,7 +262,7 @@ class Report extends Component {
               onTabChange={this.onTabChange}
               >
               
-              <div title="Adhoc">
+              <div title="Ad Hoc">
                 {reportRows}
               </div>
 

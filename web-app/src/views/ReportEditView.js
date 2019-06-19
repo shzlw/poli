@@ -159,7 +159,8 @@ class ReportEditView extends React.Component {
     showControl = showControl == null ? true : (showControl ? true: false);
     const fromReport = params.get('$fromReport');
     const reportName = params.get('$toReport');
-
+    let reportType = params.get('$reportType');
+    reportType = reportType === Constants.CANNED ? Constants.CANNED : Constants.ADHOC;
     const reportViewWidth = this.getPageWidth();
 
     this.setState({
@@ -168,8 +169,9 @@ class ReportEditView extends React.Component {
       reportViewWidth: reportViewWidth,
       fromReport: fromReport,
       showControl: showControl,
-      reportType: Constants.ADHOC
+      reportType: reportType
     }, () => {
+      // MAYBE: support canned report?
       axios.get(`/ws/report/name/${reportName}`)
         .then(res => {
           const result = res.data;
@@ -452,7 +454,6 @@ class ReportEditView extends React.Component {
   saveCannedReport = () => {
     const {
       cannedReportName,
-      name,
       style = {}
     } = this.state;
 
@@ -532,11 +533,9 @@ class ReportEditView extends React.Component {
         <button className="button ml-4" onClick={this.applyFilters}>
           <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
         </button>
-        { reportType === Constants.ADHOC && (
-          <button className="button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-            <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
-          </button>
-        )}
+        <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+          <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
+        </button>
       </React.Fragment>
     );
 
@@ -580,17 +579,20 @@ class ReportEditView extends React.Component {
           );
         }
       } else {
-        buttonGroupPanel = (
-          <React.Fragment>
-            {commonButtonPanel}
-            {fullScreenButton}
-            { reportType === Constants.CANNED && (
-              <button className="button square-button button-red ml-4" onClick={this.deleteReport}>
-                <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
-              </button>
-            )}
-          </React.Fragment>
-        );
+        if (reportType === Constants.ADHOC) {
+          buttonGroupPanel = (
+            <React.Fragment>
+              {commonButtonPanel}
+              {fullScreenButton}
+            </React.Fragment>
+          );
+        } else if (reportType === Constants.CANNED) {
+          buttonGroupPanel = (
+            <button className="button square-button button-red ml-4" onClick={this.deleteReport}>
+              <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
+            </button>
+          );
+        }
       }
     }
 
