@@ -533,9 +533,6 @@ class ReportEditView extends React.Component {
         <button className="button ml-4" onClick={this.applyFilters}>
           <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
         </button>
-        <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-          <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
-        </button>
       </React.Fragment>
     );
 
@@ -573,6 +570,9 @@ class ReportEditView extends React.Component {
           buttonGroupPanel = (
             <React.Fragment>
               {commonButtonPanel}
+              <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+                <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
+              </button>
               {fullScreenButton}
               {editButton}
             </React.Fragment>
@@ -583,6 +583,9 @@ class ReportEditView extends React.Component {
           buttonGroupPanel = (
             <React.Fragment>
               {commonButtonPanel}
+              <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+                <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
+              </button>
               {fullScreenButton}
             </React.Fragment>
           );

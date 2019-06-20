@@ -91,6 +91,7 @@ public class AuthFilter implements Filter {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
             if (path.startsWith("/ws/report")
+                    || path.startsWith("/ws/cannedreport")
                     || path.startsWith("/ws/component/report/")
                     || path.startsWith("/ws/user/account")) {
                 isValid = true;
@@ -101,6 +102,10 @@ public class AuthFilter implements Filter {
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")) {
+                isValid = true;
+            }
+        } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {
+            if (path.startsWith("/ws/cannedreport")) {
                 isValid = true;
             }
         }

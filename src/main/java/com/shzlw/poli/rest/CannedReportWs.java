@@ -37,7 +37,7 @@ public class CannedReportWs {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public List<CannedReport> all(@PathVariable("id") long id) {
+    public List<CannedReport> all() {
         return cannedReportDao.findAll();
     }
 

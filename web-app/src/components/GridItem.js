@@ -266,11 +266,10 @@ class GridItem extends React.Component {
           <div className="grid-box-content-panel">
             <div>
               <input 
-                className="form-input"
+                className="filter-input"
                 type="text"  
                 value={value}
                 onChange={(event) => this.onSingleValueChange(id, event)}
-                className="filter-input" 
                 readOnly={isReadOnly}
               />
             </div>
@@ -318,6 +317,8 @@ class GridItem extends React.Component {
             value={value}
           />
         );
+      } else if (subType === Constants.HTML) {
+
       }
     }
     

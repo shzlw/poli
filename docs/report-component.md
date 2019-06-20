@@ -42,6 +42,17 @@ Poli supports three types of components.
   
   * Single value
 
+  * Date picker
+
+    The format is yyyy-MM-dd. For example, 2019-01-01. Two date pickers. start_date = '2019-01-01', end_date = '2019-01-02'
+    ```sql
+    SELECT * FROM TRANSACTIONS
+    WHERE 1 = 1
+    {{ AND created_date > :start_date }}
+    {{ AND created_date <= :end_date }}
+    ORDER BY created_date ASC;
+    ```
+
 ## Dynamic SQL query with parameters
 
 To use this feature, you would need to create at least one filter and one chart component. Here is how it works.
