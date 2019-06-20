@@ -117,14 +117,47 @@ class ComponentViewPanel extends React.Component {
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
-        this.setState({
-          components: result
-        }, () => {
-          this.resizeGrid(viewWidth);
-          this.queryFilters();
-          this.queryCharts();
-        });
+        this.buildViewPanel(result, viewWidth, true);
       });
+  }
+
+  buildViewPanel = (components, viewWidth, isAdhoc) => {
+    // Reorganize the filter component to push the datepicker filters to the end of the array so
+    // they will be rendered later. Among them, the one with larger Y value should be rendered first.
+    let reorderedComponents = [];
+    const datepickers = [];
+    for (let i = 0; i < components.length; i++) {
+      const component = components[i];
+      if (component.type === Constants.FILTER && component.subType === Constants.DATE_PICKER) {
+        datepickers.push(component);
+      } else {
+        reorderedComponents.push(component);
+      }
+    }
+    datepickers.sort((a, b) => b.y - a.y);
+    reorderedComponents = reorderedComponents.concat(datepickers);
+
+    this.setState({
+      components: reorderedComponents
+    }, () => {
+      this.resizeGrid(viewWidth);
+      if (isAdhoc) {
+        this.queryFilters();
+        this.queryCharts();
+      }
+    });
+  }
+
+  getComponentsSnapshot = () => {
+    const {
+      components = [],
+      gridWidth
+    } = this.state;
+    const newComponents = JSON.parse(JSON.stringify(components));
+    for (let i = 0; i < newComponents.length; i++) {
+      this.resizeComponentToBase(newComponents[i], gridWidth);
+    }
+    return newComponents;
   }
  
   queryCharts(urlFilterParams = []) {
@@ -315,7 +348,8 @@ class ComponentViewPanel extends React.Component {
         checkBoxes
       } = data;
       newComponents[index].checkBoxes = checkBoxes;
-    } else if (component.subType === Constants.SINGLE_VALUE) {
+    } else if (component.subType === Constants.SINGLE_VALUE
+      || component.subType === Constants.DATE_PICKER) {
       const {
         value
       } = data;
@@ -356,7 +390,19 @@ class ComponentViewPanel extends React.Component {
             filterParam.remark = 'select all';
           }
         } else if (subType === Constants.SINGLE_VALUE) {
-          filterParam.value = component.value;
+          const { value } = component;
+          filterParam.value = value;
+        } else if (subType === Constants.DATE_PICKER) {
+          const { value } = component;
+          let dateStr = '';
+          if (value) {
+            const date = new Date(parseInt(value, 10) * 1000);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            dateStr = year + '-' + Util.leftPadZero(month) + '-' + Util.leftPadZero(day);
+          }
+          filterParam.value = dateStr;
         }
         filterParam.param = component.data.queryParameter;
         filterParam.type = component.subType;
@@ -419,7 +465,7 @@ class ComponentViewPanel extends React.Component {
         width,
         height
       } = selectedComponent;
-      if (x < 0 || y < 0 || width < 50 || height < 50 || height > this.props.height) {
+      if (x < 0 || y < 0 || width < 30 || height < 30 || height > this.props.height) {
         Toast.showError('Invalid position value');
         return;
       }
@@ -436,7 +482,7 @@ class ComponentViewPanel extends React.Component {
 
   render() {
     const { 
-      componentViewWidth,
+      reportViewWidth,
       showControl
     } = this.props;
 
@@ -450,7 +496,7 @@ class ComponentViewPanel extends React.Component {
     const top = showControl ? '50px' : '10px';
     const style = {
       top: top,
-      width: componentViewWidth + 'px'
+      width: reportViewWidth + 'px'
     }
 
     return (
@@ -464,6 +510,7 @@ class ComponentViewPanel extends React.Component {
           components={this.state.components}
           isEditMode={this.props.isEditMode}
           selectedComponentId={this.state.selectedComponentId}
+          reportType={this.props.reportType}
           onComponentMove={this.onComponentMove}
           onComponentEdit={this.props.onComponentEdit} 
           onComponentRemove={this.openConfirmDeletionPanel} 

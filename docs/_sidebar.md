@@ -14,3 +14,7 @@
 - Development
 
   - [Build](build.md)
+
+- Release
+
+  - [Change logs](change-logs.md)

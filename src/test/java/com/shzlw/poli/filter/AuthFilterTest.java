@@ -160,10 +160,12 @@ public class AuthFilterTest {
 
         List<ViewerAccessRule> viewerAccessRules = Arrays.asList(
                 new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
+                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
                 new ViewerAccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery")
+                new ViewerAccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
+                new ViewerAccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
         );
 
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);

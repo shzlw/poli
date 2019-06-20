@@ -34,3 +34,7 @@ export const getReadableDiffTime = (d1, d2) => {
   }
   return hours + " hours ago";
 }  
+
+export const leftPadZero = (n) => {
+  return parseInt(n, 10) < 10 ? '0' + n : n;
+}

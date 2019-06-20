@@ -71,8 +71,9 @@ public class JdbcDataSourceWs {
     @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String ping(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
-        return jdbcQueryService.ping(ds);
+        JdbcDataSource ds = jdbcDataSourceDao.findByIdWithNoCredentials(id);
+        DataSource dataSource = jdbcDataSourceService.getDataSource(id);
+        return jdbcQueryService.ping(dataSource, ds.getPing());
     }
 
     @RequestMapping(
@@ -81,7 +82,7 @@ public class JdbcDataSourceWs {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<Table> getSchema(@PathVariable("id") long id) {
-        JdbcDataSource ds = jdbcDataSourceDao.findById(id);
-        return jdbcQueryService.getSchema(ds);
+        DataSource dataSource = jdbcDataSourceService.getDataSource(id);
+        return jdbcQueryService.getSchema(dataSource);
     }
 }

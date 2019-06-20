@@ -8,7 +8,8 @@ export const COMPONENT_TYPES = [STATIC, CHART, FILTER];
 
 export const SLICER = 'slicer';
 export const SINGLE_VALUE= 'single';
-export const FILTER_TYPES = [SLICER, SINGLE_VALUE];
+export const DATE_PICKER = 'date picker';
+export const FILTER_TYPES = [SLICER, SINGLE_VALUE, DATE_PICKER];
 
 export const PIE = 'pie';
 export const TABLE = 'table';
@@ -48,3 +49,6 @@ export const ROMA = 'roma';
 export const MACARONS = 'macarons';
 export const SHINE = 'shine';
 export const CHART_COLOR_PLATETTES = [DEFAULT, VINTAGE, ROMA, MACARONS, SHINE];
+
+export const ADHOC = 'adhoc';
+export const CANNED = 'canned';

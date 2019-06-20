@@ -1,5 +1,6 @@
 package com.shzlw.poli.rest;
 
+import com.shzlw.poli.dao.CannedReportDao;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.UserService;
@@ -28,6 +29,9 @@ public class UserWs {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CannedReportDao cannedReportDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
@@ -98,7 +102,7 @@ public class UserWs {
         }
 
         userService.invalidateSessionUserCache(savedUser.getSessionKey());
-
+        cannedReportDao.deleteByUserId(userId);
         userDao.deleteUserGroups(userId);
         userDao.deleteUser(userId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

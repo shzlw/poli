@@ -62,7 +62,7 @@ class ComponentEditPanel extends React.Component {
       titleFontColor: Constants.COLOR_SLATE,
       titleBackgroundColor: Constants.COLOR_WHITE,
       contentBackgroundColor: Constants.COLOR_WHITE,
-      zIndex: 50
+      zIndex: 1
     }
   }
 
@@ -710,12 +710,12 @@ class ComponentEditPanel extends React.Component {
 
         <div className="row mt-10">
           <label className="float-left inline-text-label bold" style={{width: '100px'}}>Sub Type: </label>
-          <div className="float-left">
-            <SelectButtons
+          <div className="float-left" style={{width: '310px'}}>
+            <Select
               name={'subType'}
               value={subType}
+              options={subTypes}
               onChange={this.handleOptionChange}
-              selections={subTypes}
             />
           </div>
         </div>
@@ -729,7 +729,7 @@ class ComponentEditPanel extends React.Component {
 
             { showQueryTab && (
               <div title="Query">
-                <div className="form-panel">
+                <div className="form-panel" style={{paddingTop: '10px'}}>
                   <label>DataSource:</label>
                   <Select
                     name={'jdbcDataSourceId'}
@@ -817,7 +817,7 @@ class ComponentEditPanel extends React.Component {
             {/* ---------- Config Tab ---------- */}
 
             <div title="Config">
-              <div className="form-panel">
+              <div className="form-panel" style={{paddingTop: '10px'}}>
                 { type === Constants.STATIC && (
                   <div>
                     {this.renderStaticConfigPanel()} 
@@ -858,7 +858,7 @@ class ComponentEditPanel extends React.Component {
             
             { type === Constants.CHART && (
               <div title="Drill Through">
-                <div className="form-panel">
+                <div className="form-panel" style={{paddingTop: '10px'}}>
                   <div>
                     <label>Column</label>
                     <Select

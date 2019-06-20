@@ -3,6 +3,7 @@ package com.shzlw.poli.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.shzlw.poli.AppProperties;
 import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
@@ -23,7 +24,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 @Service
 public class JdbcQueryService {
@@ -35,6 +39,9 @@ public class JdbcQueryService {
     @Autowired
     ObjectMapper mapper;
 
+    @Autowired
+    AppProperties appProperties;
+
     @PostConstruct
     public void init() throws IllegalAccessException {
         for (Field field : java.sql.Types.class.getFields()) {
@@ -42,13 +49,9 @@ public class JdbcQueryService {
         }
     }
 
-    public Connection getConnectionByType(JdbcDataSource ds) throws SQLException {
-        return DriverManager.getConnection(ds.getConnectionUrl(), ds.getUsername(), ds.getPassword());
-    }
-
-    public String ping(JdbcDataSource ds) {
-        try (Connection con = getConnectionByType(ds);
-             PreparedStatement ps = con.prepareStatement(ds.getPing());
+    public String ping(DataSource dataSource, String sql) {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery();) {
             while (rs.next()) {
                 break;
@@ -59,9 +62,9 @@ public class JdbcQueryService {
         }
     }
 
-    public List<Table> getSchema(JdbcDataSource ds) {
+    public List<Table> getSchema(DataSource dataSource) {
         List<Table> tables = new ArrayList<>();
-        try (Connection conn = getConnectionByType(ds)) {
+        try (Connection conn = dataSource.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, null, null);
             while (rs.next()) {
@@ -89,47 +92,6 @@ public class JdbcQueryService {
         }
     }
 
-    public String fetchCsv(JdbcDataSource ds, String sql) {
-        try (Connection con = getConnectionByType(ds);
-             PreparedStatement ps = con.prepareStatement(sql);) {
-
-            try (ResultSet rs = ps.executeQuery();) {
-                StringBuilder table = new StringBuilder();
-
-                ResultSetMetaData metadata = rs.getMetaData();
-                int columnCount = metadata.getColumnCount();
-                boolean isFirst = true;
-                for (int i = 1; i <= columnCount; i++) {
-                    String colName = metadata.getColumnName(i);
-                    if (isFirst) {
-                        table.append(colName);
-                        isFirst = false;
-                    } else {
-                        table.append(",").append(colName);
-                    }
-                }
-
-                table.append("\r\n");
-
-                while (rs.next()) {
-                    boolean isFirstCol = true;
-                    for (int i = 1; i <= columnCount; i++) {
-                        if (isFirstCol) {
-                            table.append(rs.getString(i));
-                            isFirstCol = false;
-                        } else {
-                            table.append(",").append(rs.getString(i));
-                        }
-                    }
-                    table.append("\r\n");
-                }
-                return table.toString();
-            }
-        } catch (Exception e) {
-            return getSimpleError(e);
-        }
-    }
-
     public QueryResult queryComponentByParams(DataSource dataSource, String sql, List<FilterParameter> filterParams) {
         if (dataSource == null) {
             return QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND);
@@ -140,6 +102,8 @@ public class JdbcQueryService {
         NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = getNamedParameters(filterParams);
         String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
+
+        int maxQueryRecords = appProperties.getMaximumQueryRecords();
 
         QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
@@ -162,12 +126,17 @@ public class JdbcQueryService {
                     ObjectMapper mapper = new ObjectMapper();
                     ArrayNode array = mapper.createArrayNode();
 
+                    int rowCount = 0;
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
                         for (int i = 1; i <= columnCount; i++) {
                             node.put(columnNames[i], rs.getString(i));
                         }
                         array.add(node);
+                        rowCount++;
+                        if (maxQueryRecords != -1 && rowCount >= maxQueryRecords) {
+                            break;
+                        }
                     }
                     String data = array.toString();
                     return QueryResult.ofData(data, columns);
@@ -251,7 +220,18 @@ public class JdbcQueryService {
                     } catch (IOException e) {
                         LOGGER.warn("exception: {}", e);
                     }
-                } else {
+                } else if (type.equals(Constants.FILTER_TYPE_DATE_PICKER)) {
+                    try {
+                        String dateStr = mapper.readValue(value, String.class);
+                        if (!StringUtils.isEmpty(dateStr)) {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+                            namedParameters.put(name, date);
+                        }
+                    } catch (IOException | ParseException e) {
+                        LOGGER.warn("exception: {}", e);
+                    }
+                }
+                else {
                     throw new IllegalArgumentException("Unknown filter type");
                 }
             }

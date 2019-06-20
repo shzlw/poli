@@ -16,14 +16,20 @@ class Checkbox extends React.Component {
     name: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     checked: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool
   };
 
   toggle = () => {
     const {
       name,
-      checked
+      checked,
+      readOnly = false
     } = this.props;
+
+    if (readOnly) {
+      return;
+    }
 
     this.props.onChange(name, !checked);
   }

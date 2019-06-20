@@ -17,7 +17,8 @@ class Slicer extends React.Component {
 
   static propTypes = {
     checkBoxes: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool
   };
 
   toggleSelectAll = () => {
@@ -51,6 +52,7 @@ class Slicer extends React.Component {
   render() {
     const { 
       checkBoxes = [],
+      readOnly = false
     } = this.props;
 
     const {
@@ -71,6 +73,7 @@ class Slicer extends React.Component {
               value={checkBox.value} 
               checked={checkBox.isChecked} 
               onChange={this.handleCheckBoxChange} 
+              readOnly={readOnly}
             />
           )
         )

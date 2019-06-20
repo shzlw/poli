@@ -40,8 +40,6 @@ public class ComponentWs {
         return componentDao.findById(id);
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWs.class);
-
     @RequestMapping(value = "/report/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByReportId(@PathVariable("id") long reportId,

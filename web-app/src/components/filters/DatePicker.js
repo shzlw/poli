@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './DatePicker.css';
 
+const YEAR = 'year';
+const MONTH = 'month';
+
 class DatePicker extends React.Component {
 
   constructor(props) {
@@ -14,10 +17,17 @@ class DatePicker extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.instanceOf(Date).isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool
   };
 
   toggleDatePanel = () => {
+    const {
+      readOnly = false
+    } = this.props;
+    if (readOnly) {
+      return;
+    }
     this.setState(prevState => ({
       showDateSelectPanel: !prevState.showDateSelectPanel
     })); 
@@ -79,6 +89,18 @@ class DatePicker extends React.Component {
     return parseInt(n, 10) < 10 ? '0' + n : n;
   }
 
+  handleOptionChange = (name, value) => {
+    const selectedValue = parseInt(value, 10);
+    const { 
+      name: paramName,
+      value: date
+    } = this.props;
+    const year = name === YEAR ? selectedValue : date.getFullYear();
+    const month = name === MONTH ? selectedValue - 1 : date.getMonth() + 1;
+    const day = date.getDate();
+    this.props.onChange(paramName, new Date(year, month, day));
+  }
+
   render() {
     const { showDateSelectPanel } = this.state;
     const { value } = this.props;
@@ -129,6 +151,21 @@ class DatePicker extends React.Component {
     const displayMonth = this.leftPadZero(month);
     const displayDay = this.leftPadZero(day);
 
+    const yearOptionList = [];
+    for (let i = 1971; i <= 2100; i++) {
+      yearOptionList.push(
+        <option value={i} key={i}>{i}</option>
+      );
+    }
+
+    const monthOptionList = [];
+    for (let i = 1; i <= 12; i++) {
+      monthOptionList.push(
+        <option value={i} key={i}>{this.leftPadZero(i)}</option>
+      );
+    }
+    
+
     return (
       <div className="calendar-container">
         <div className="select-date" onClick={this.toggleDatePanel}>{year}-{displayMonth}-{displayDay}</div>
@@ -136,7 +173,21 @@ class DatePicker extends React.Component {
           <div className="calendar-dialog">
             <div>
               <div className="calendar-cell calendar-button" onClick={this.previousMonth}>Prev</div>
-              <div className="display-date">{year}-{displayMonth}</div>
+              <div className="display-date">
+                <select 
+                  className="select-year"
+                  value={year} 
+                  onChange={(event) => this.handleOptionChange(YEAR, event.target.value)}>
+                  {yearOptionList}
+                </select>
+                -
+                <select 
+                  className="select-year"
+                  value={month} 
+                  onChange={(event) => this.handleOptionChange(MONTH, event.target.value)}>
+                  {monthOptionList}
+                </select>
+              </div>
               <div className="calendar-cell calendar-button" onClick={this.nextMonth}>Next</div>
             </div>
             <div className="row">

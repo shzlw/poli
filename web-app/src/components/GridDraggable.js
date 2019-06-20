@@ -38,7 +38,10 @@ class GridDraggable extends React.Component {
       yOffset: yOffset
     });
 
-    this.props.onMouseDown('drag');
+    // Select first then allow to drag.
+    if (this.props.isSelected) {
+      this.props.onMouseDown('drag');
+    }
   }
 
   onMouseUp = (event) => {
