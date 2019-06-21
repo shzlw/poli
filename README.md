@@ -47,7 +47,9 @@ Auto refresh, drill through, fullscreen, embeds, color themes + more features in
 
 ## Quick Installation
 
-> java -jar poli-0.7.0.jar
+```
+java -jar poli-0.7.0.jar
+```
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.
 

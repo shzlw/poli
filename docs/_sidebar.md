@@ -1,6 +1,5 @@
 - Getting Started
 
-  - [Introduction](README.md)
   - [Installation](installation.md)
   - [Quick Start](quick-start.md)
   
