@@ -14,6 +14,7 @@ import Slicer from './filters/Slicer';
 import ImageBox from './widgets/ImageBox';
 import Iframe from './widgets/Iframe';
 import TextBox from './widgets/TextBox';
+import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
 
 class GridItem extends React.Component {
@@ -318,7 +319,15 @@ class GridItem extends React.Component {
           />
         );
       } else if (subType === Constants.HTML) {
-
+        const { 
+          innerHtml
+        } = data;
+        componentItem = (
+          <InnerHtml 
+            html={innerHtml}
+          />
+        );
+        
       }
     }
     

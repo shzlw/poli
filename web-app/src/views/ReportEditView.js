@@ -101,7 +101,6 @@ class ReportEditView extends React.Component {
           axios.get(`/ws/cannedreport/${reportId}`)
             .then(res => {
               const cannedReport = res.data;
-              console.log('cannedReport', cannedReport);
               const { data: report } = cannedReport; 
               this.setState({
                 reportId: cannedReport.id,
@@ -229,9 +228,6 @@ class ReportEditView extends React.Component {
       reportType,
       cannedReportData
     } = this.state;
-
-    console.log('refreshComponentView', reportViewWidth);
-
 
     if (reportType === Constants.ADHOC) {
       this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, null);

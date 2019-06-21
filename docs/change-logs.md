@@ -3,11 +3,12 @@
 ## v0.7.0
 
 #### Breaking Changes & Upgrade Steps
-- A new databse table needs to be loaded in order to support canned report.
+- A new databse table needs to be loaded in order to support canned report. 
 
   ```sh
   ./sqlite3 poli.db
 
+  -- File is in upgrade/poli_upgrade_v0.7.0.sql
   sqlite> .read poli_upgrade_v0.7.0.sql
   ```
 
@@ -18,7 +19,7 @@
 
 #### Bug Fixes
 - Fixes an issue that the ping and query logic use different data sources. Now both use HikariDataSource to be consistent.
-- Fixes an issue that the query preview returns too many records. Now the number of records returned is limited to a configurable value.
+- Fixes an issue that the query preview returns too many records. Now the number of records returned is limited to a configurable value(poli.maximum-query-records)
 - Fixes an issue when a component is selected, both select and drag events are triggered, which can cause the position of the component to shift unintentionally.
 Now when the component is first chosen, it will only be selected for editing attributes. If it is selected again, the drag event will be triggered. 
 

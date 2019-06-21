@@ -70,16 +70,15 @@ There are four url search parameters in this example.
 
 ## Canned report
 
-Canned report captures a snapshot of the report, which perserves the current status of the filters and charts.
+Canned report captures a snapshot of the report, which perserves the current status of the filters and charts. 
 
-### Why canned report?
+The main push to use canned report is that the data in the source database might keep changing or be purged at some point. Sometimes if we need to save a copy of the data before it goes away, that's when canned report comes into play.
 
-If a table chart contains a million records, all those records will be saved in the database which occupies a lot of space.
-Keep the canned report small and efficient.
+Save the report as canned report.
 
-Filters are not allowed to change values in canned report.
-Users in Viewer role can only create/view/delete canned report created by themselves.
-Users in Developer and Admin role can create/delete canned reports.
+![canned report](_images/screenshots/canned_report.jpg)
 
-For instance, a report has two filters: start date and end date. Select 2019-01-01 and 2019-01-02 to save the data 
-Even if the original data is purged from the source database, the snapshot is still persisted in Poli's database which can be used for historical data analysis.
+Notes
+* Filters are not allowed to change values in canned report.
+* Users can only create/view/delete canned report created by themselves.
+

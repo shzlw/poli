@@ -30,13 +30,13 @@
 .ReactTable .pagination-bottom {
   border-top: 1px solid #B3BAC5;
   background-color: #FFFFFF;
-  height: 45px;
+  height: 35px;
 }
 
 .ReactTable .-pagination .-previous {
   width: 60px !important;
   flex: none !important;
-  height: 30px;
+  height: 26px;
   margin-top: 4px;
 }
 
@@ -48,7 +48,7 @@
 .ReactTable .-pagination .-next {
   width: 60px !important;
   flex: none !important;
-  height: 30px;
+  height: 26px;
   margin-top: 4px;
 }
 

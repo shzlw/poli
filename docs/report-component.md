@@ -22,6 +22,7 @@ Poli supports three types of components.
   * Text
   * Image
   * Iframe
+  * Html
 
 * Chart
   * Table
@@ -38,13 +39,29 @@ Poli supports three types of components.
 * Filter
   * Slicer
 
-    > Slicer provides a list of values to select. It requires the query to return one column only.
+    Slicer provides a list of values to select. 
+
+    ![slicer](_images/screenshots/slicer.jpg)
+
+    It requires the query to return one column only.
+
+    ```sql
+    SELECT user_id 
+    FROM trans 
+    GROUP BY user_id 
+    ORDER BY user_id;
+    ```
   
   * Single value
 
   * Date picker
 
-    The format is yyyy-MM-dd. For example, 2019-01-01. Two date pickers. start_date = '2019-01-01', end_date = '2019-01-02'
+    The default format is yyyy-MM-dd. For example, 2018-08-10. 
+
+    ![date picker](_images/screenshots/date_picker.jpg)
+    
+    Example to use the query parameters in a query.
+
     ```sql
     SELECT * FROM TRANSACTIONS
     WHERE 1 = 1

@@ -3,6 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import AceEditor from 'react-ace';
 import 'brace/mode/mysql';
+import 'brace/mode/html';
 import 'brace/theme/xcode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -159,6 +160,14 @@ class ComponentEditPanel extends React.Component {
   handleAceEditorChange = (newValue) => {
     this.setState({
       sqlQuery: newValue
+    });
+  }
+
+  handleInnerHtmlChange = (newValue) => {
+    const data = {...this.state.data};
+    data.innerHtml = newValue;
+    this.setState({
+      data: data
     });
   }
 
@@ -559,6 +568,29 @@ class ComponentEditPanel extends React.Component {
       const {
         innerHtml
       } = data;
+      staticConfigPanel = (
+        <div className="form-panel">
+          <label>Inner Html</label>
+          <AceEditor
+            value={innerHtml}
+            mode="html"
+            theme="xcode"
+            name="innerHtml"
+            onChange={this.handleInnerHtmlChange}
+            height={'300px'}
+            width={'100%'}
+            fontSize={15}
+            showPrintMargin={false}
+            showGutter={true}
+            highlightActiveLine={true}
+            setOptions={{
+              showLineNumbers: true,
+              tabSize: 2
+          }}/>
+      </div>
+      );
+      
+      
     } else if (subType === Constants.IFRAME) {
       const {
         title,
@@ -777,7 +809,7 @@ class ComponentEditPanel extends React.Component {
                               value={this.state.sqlQuery}
                               mode="mysql"
                               theme="xcode"
-                              name="blah2"
+                              name="sqlQuery"
                               onChange={this.handleAceEditorChange}
                               height={'300px'}
                               width={'100%'}
