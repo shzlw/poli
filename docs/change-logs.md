@@ -13,6 +13,7 @@
   ```
 
 #### New Features
+- Support [docker installation](https://shzlw.github.io/poli/#/installation?id=Docker).
 - A new static component: Html is now available.
 - A new filter component: Date picker is now available.
 - The report now can be saved as canned report. It captures a snapshot of the report, which perserves the current status of the filters and charts.
@@ -28,5 +29,5 @@ Now when the component is first chosen, it will only be selected for editing att
 - New database schema for PostgreSQL.
 - Spring boot is upgraded to 2.1.5 from 2.0.5.
 - React is upgraded to 16.8.6 from 16.6.3.
-- React-scripts is upgraded to v3.0.1 from 2.1.8.
+- React-scripts is upgraded to 3.0.1 from 2.1.8.
 - Echarts is upgraded to 4.2.1 from 4.1.0.
