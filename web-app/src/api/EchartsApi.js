@@ -34,6 +34,36 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const keyValueToLegendSeries = (key, value, data) => {
+  const legendData = [];
+  const seriesData = [];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    legendData.push(row[key]);
+    seriesData.push({
+      name: row[key],
+      value: row[value]
+    });  
+  }
+  return {
+    legendData,
+    seriesData
+  }
+}
+
+const rgbaToHex = (color) => {
+  if (color.startsWith('#')) {
+    return color;
+  }
+
+  const newRbga = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+  return newRbga ? "#" +
+    ("0" + parseInt(newRbga[1], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(newRbga[2], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(newRbga[3], 10).toString(16)).slice(-2) 
+    : '';
+}
+
 const getColorPlatte = (name) => {
   if (name === Constants.VINTAGE) {
     return VINTAGE_COLOR_PALETTE;
@@ -58,7 +88,11 @@ export const getChartOption = (type, data, config, title) => {
   } else if (type === Constants.AREA) {
     chartOption = getAreaOption(data, config, title);
   } else if (type === Constants.HEATMAP) {
+    chartOption = getHeatmapOption(data, config);
   } else if (type === Constants.TREEMAP) {
+    chartOption = getTreemapOption(data, config);
+  } else if (type === Constants.FUNNEL) {
+    chartOption = getFunnelOption(data, config);
   }
   return chartOption;
 }
@@ -66,7 +100,7 @@ export const getChartOption = (type, data, config, title) => {
 /**
  * Pie chart
  */
-const getPieOptionTemplate = (colorPlatte = 'default', legend, series) => {
+const getPieOptionTemplate = (colorPlatte = 'default', legendData, seriesData) => {
   return {
     color: getColorPlatte(colorPlatte),
     tooltip: {
@@ -74,7 +108,7 @@ const getPieOptionTemplate = (colorPlatte = 'default', legend, series) => {
     legend: {
       type: 'scroll',
       orient: 'vertical',
-      data: legend,
+      data: legendData,
       right: 15,
       top: 10,
       bottom: 10
@@ -84,7 +118,7 @@ const getPieOptionTemplate = (colorPlatte = 'default', legend, series) => {
         type:'pie',
         center: ['50%', '50%'],
         radius: '50%',
-        data: series
+        data: seriesData
       }
     ]
   }
@@ -96,17 +130,8 @@ const getPieOption = (data, config) => {
     value,
     colorPlatte
   } = config;
-  let legend = [];
-  let series = [];
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    legend.push(row[key]);
-    series.push({
-      name: row[key],
-      value: row[value]
-    });  
-  }
-  return getPieOptionTemplate(colorPlatte, legend, series);
+  const result = keyValueToLegendSeries(key, value, data);
+  return getPieOptionTemplate(colorPlatte, result.legendData, result.seriesData);
 }
 
 /**
@@ -382,20 +407,98 @@ const getAreaOption = (data, config) => {
 }
 
 /**
- * TODO: Heatmap chart
+ * Funnel chart
  */
-const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) => {
+const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData, sort) => {
   return {
-    color: DEFAULT_COLOR_PALETTE,
+    color: getColorPlatte(colorPlatte),
+    tooltip: {
+    },
+    grid:{
+      containLabel: true
+    },
+    legend: {
+      data: legendData
+    },
+    calculable: true,
+    series: [{
+      type:'funnel',
+      sort: sort,
+      data: seriesData
+    }]
+  };
+}
+
+const getFunnelOption = (data, config) => {
+  const {
+    key,
+    value,
+    colorPlatte,
+    sort = 'descending'
+  } = config;
+  const result = keyValueToLegendSeries(key, value, data);
+  return getFunnelOptionTemplate(colorPlatte, result.legendData, result.seriesData, sort);
+}
+
+const getTreemapOptionTemplate = (colorPlatte = 'default', seriesData) => {
+  return {
+    color: getColorPlatte(colorPlatte),
+    tooltip: {
+    },
+    grid:{
+      containLabel: true
+    },
+    series: [{
+      name: 'ALL',
+      type: 'treemap',
+      data: seriesData,
+      levels: [
+        {
+          itemStyle: {
+            normal: {
+              borderColor: '#F9F9F9',
+              borderWidth: 2,
+              gapWidth: 2
+            }
+          }
+        }
+      ]
+    }]
+  }
+}
+
+const getTreemapOption = (data, config) => {
+  const {
+    key,
+    value,
+    colorPlatte
+  } = config;
+  const seriesData = [];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    seriesData.push({
+      name: row[key],
+      value: row[value]
+    });  
+  }
+  return getTreemapOptionTemplate(colorPlatte, seriesData);
+}
+
+const getHeatmapOptionTemplate = (xAxisData, yAxisData, seriesData, min, max, minColor = '#FFFFFF', maxColor = '#000000') => {
+  return {
     animation: false,
     grid: {
-      y: 10
+      top: 10,
+      bottom: 40,
+      left: 10,
+      right: 15,
+      containLabel: true
     },
     xAxis: {
       type: 'category',
       data: xAxisData,
       splitArea: {
-          show: true
+        show: true
       }
     },
     yAxis: {
@@ -406,21 +509,22 @@ const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) =>
       }
     },
     visualMap: {
-      min: min,
-      max: max,
+      min: Number(min),
+      max: Number(max),
       calculable: true,
+      realtime: false,
       orient: 'horizontal',
       left: 'center',
       itemWidth: 12,
       bottom: 5,
       inRange: {
-        // color: ['#121122', 'rgba(3,4,5,0.4)', 'red']
-        color: ['#FFFFFF', '#000000']
+        color: [minColor, maxColor]
       }
     },
     series: [{
       type: 'heatmap',
       data: seriesData,
+      animation: false,
       label: {
         normal: {
           show: true,
@@ -437,48 +541,53 @@ const getHeatmapOptionTemplate = (min, max, xAxisData, yAxisData, seriesData) =>
   }
 };
 
-const buildHeatmapOption = () => {
+const getHeatmapOption = (data, config) => {
+  const {
+    xAxis,
+    yAxis,
+    series,
+    minColor,
+    maxColor
+  } = config;
+
   const xAxisData = [];
   const yAxisData = [];
   const seriesData = [];
-  const row = 5;
-  const column = 10;
-  for (let i = 0; i < row; i++) {
-    xAxisData.push('x' + i);
-  }
-  for (let j = 0; j < column; j++) {
-    yAxisData.push('y' + j);
-  }
-
-  for (let i = 0; i < row; i++) {
-    for (let j = 0; j < column; j++) {
-      const value = getRandomInt(1, 10);
-      seriesData.push([i, j, value]);
+  
+  let min = Number.MAX_VALUE;
+  let max = Number.MIN_VALUE;
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    const xAxisVal = row[xAxis];
+    const yAxisVal = row[yAxis];
+    const seriesVal = row[series];
+    
+    let xIndex = xAxisData.findIndex(a => a == xAxisVal);
+    if (xIndex === -1) {
+      xAxisData.push(xAxisVal);
+      xIndex = xAxisData.length - 1;
     }
+
+    let yIndex = yAxisData.findIndex(a => a == yAxisVal);
+    if (yIndex === -1) {
+      yAxisData.push(yAxisVal);
+      yIndex = yAxisData.length - 1;
+    }
+
+    if (seriesVal < min) {
+      min = seriesVal;
+    }
+
+    if (seriesVal > max) {
+      max = seriesVal;
+    }
+
+    seriesData.push([xIndex, yIndex, seriesVal]);
   }
-  return getHeatmapOptionTemplate(1, 10, xAxisData, yAxisData, seriesData);
+
+  return getHeatmapOptionTemplate(xAxisData, yAxisData, seriesData, min, max, minColor, maxColor);
 }
 
-const getTreemapOptionTemplate = (seriesData) => {
-  return {
-    series: [{
-      name: 'ALL',
-      type: 'treemap',
-      data: seriesData,
-      levels: [
-        {
-          itemStyle: {
-            normal: {
-              borderColor: '#f9f9f9',
-              borderWidth: 2,
-              gapWidth: 2
-            }
-          }
-        }
-      ]
-    }]
-  }
-}
 
 const getCalendarHeatmapOptionTemplate = (min, max, seriesData) => {
   return {
@@ -525,19 +634,6 @@ function getVirtulData(year) {
     }
     
     return data;
-}
-
-const buildTreemapOption = () => {
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const value = getRandomInt(1, 10);
-    seriesData.push({
-      name: name,
-      value: value
-    });
-  }
-  return getTreemapOptionTemplate(seriesData);
 }
 
 const buildTimeLineOption = () => {

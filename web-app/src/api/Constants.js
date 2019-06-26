@@ -18,7 +18,9 @@ export const AREA = 'area';
 export const BAR = 'bar';
 export const HEATMAP = 'heatmap';
 export const TREEMAP = 'treemap';
-export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA];
+export const FUNNEL = 'funnel';
+export const CARD = 'card';
+export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP];
 
 export const IMAGE = 'image';
 export const TEXT = 'text';

@@ -429,7 +429,7 @@ class ComponentEditPanel extends React.Component {
           />
         </div>
       );
-    } else if (subType === Constants.PIE) {
+    } else if (subType === Constants.PIE || subType === Constants.TREEMAP) {
       const {
         key,
         value
@@ -505,6 +505,97 @@ class ComponentEditPanel extends React.Component {
           {colorPlattePanel}
         </div>
       );
+    } else if (subType === Constants.FUNNEL) {
+      const {
+        key,
+        value,
+        sort = 'descending'
+      } = data;
+
+      const SORT_OPTIONS = ['ascending', 'descending'];
+
+      chartConfigPanel = (
+        <div>
+          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
+          <Select
+            name={'key'}
+            value={key}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
+          <Select
+            name={'value'}
+            value={value}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Sort</label>
+          <Select
+            name={'sort'}
+            value={sort}
+            onChange={this.handleComponentDataChange}
+            options={SORT_OPTIONS}
+          />
+
+          {colorPlattePanel}
+        </div>
+      );
+    } else if (subType === Constants.HEATMAP) {
+      const {
+        xAxis,
+        yAxis,
+        series,
+        minColor,
+        maxColor
+      } = data;
+
+      chartConfigPanel = (
+        <div>
+          <label>X-Axis</label>
+          <Select
+            name={'xAxis'}
+            value={xAxis}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Y-Axis</label>
+          <Select
+            name={'yAxis'}
+            value={yAxis}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Value</label>
+          <Select
+            name={'series'}
+            value={series}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>Min Value Color</label>
+          <ColorPicker name={'minColor'} value={minColor} onChange={this.handleComponentDataChange} />
+
+          <label>Max Value Color</label>
+          <ColorPicker name={'maxColor'} value={maxColor} onChange={this.handleComponentDataChange} />
+        </div>
+      );
+      
     } else {
       chartConfigPanel = (<div></div>);
     }
