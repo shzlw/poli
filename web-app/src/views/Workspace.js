@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
+import { withTranslation } from 'react-i18next';
+
 import DataSource from './DataSource';
 import Report from './Report';
 import UserManagement from './UserManagement';
@@ -105,10 +107,12 @@ class Workspace extends React.Component {
 
     const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'menu-item-active' : '';
 
+    const { t } = this.props;
+
     return (
       <React.Fragment>
         <div className="workspace-nav">  
-          <div className="workspace-name">Poleo</div>
+          <div className="workspace-name">{t('Poleo')}</div>
           <ul className="workspace-nav-menu">
             {menuItems}
           </ul>
@@ -139,4 +143,6 @@ class Workspace extends React.Component {
     );
   }
 }
-export default withRouter(Workspace);
+
+export default (withTranslation()(withRouter(Workspace)));
+

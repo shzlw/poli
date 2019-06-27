@@ -11,9 +11,12 @@ public class AppProperties {
 
     Integer maximumQueryRecords;
 
+    String localeLanguage;
+
     public AppProperties() {
         datasourceMaximumPoolSize = 50;
         maximumQueryRecords = 1000;
+        localeLanguage = "en";
     }
 
     public Integer getDatasourceMaximumPoolSize() {
@@ -30,5 +33,13 @@ public class AppProperties {
 
     public void setMaximumQueryRecords(Integer maximumQueryRecords) {
         this.maximumQueryRecords = maximumQueryRecords;
+    }
+
+    public String getLocaleLanguage() {
+        return localeLanguage;
+    }
+
+    public void setLocaleLanguage(String localeLanguage) {
+        this.localeLanguage = localeLanguage;
     }
 }
