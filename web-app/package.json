@@ -1,6 +1,6 @@
 {
-  "name": "poli-web-app",
-  "version": "0.7.0",
+  "name": "poleo-web-app",
+  "version": "0.8.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.17",

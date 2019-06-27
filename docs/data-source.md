@@ -1,6 +1,6 @@
 # Data Source
 
-Poli connects to database through the JDBC interface. You can try connect to any databases that supports JDBC drivers. To configure Poli to connect to different databases, two steps are required.
+Poleo connects to database through the JDBC interface. You can try connect to any databases that supports JDBC drivers. To configure Poleo to connect to different databases, two steps are required.
 
 ## Download the JDBC jar file 
 

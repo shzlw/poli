@@ -108,7 +108,7 @@ class Workspace extends React.Component {
     return (
       <React.Fragment>
         <div className="workspace-nav">  
-          <div className="workspace-name">Poli</div>
+          <div className="workspace-name">Poleo</div>
           <ul className="workspace-nav-menu">
             {menuItems}
           </ul>

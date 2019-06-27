@@ -2,7 +2,7 @@
 
 ## System role
 
-There are three types of system roles in Poli. Each user account requires to be assigned a system role when the account is created.
+There are three types of system roles in Poleo. Each user account requires to be assigned a system role when the account is created.
 
 #### Admin 
 

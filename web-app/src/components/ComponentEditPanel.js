@@ -596,6 +596,28 @@ class ComponentEditPanel extends React.Component {
         </div>
       );
       
+    } else if (subType === Constants.CARD) {
+      const { 
+        fontSize = 16,
+        fontColor = 'rgba(9, 30, 66, 1)',
+      } = data;
+      chartConfigPanel = (
+        <div className="form-panel">
+          <label>Font Size</label>
+          <div style={{marginTop: '3px'}}>
+            <InputRange
+              name="fontSize" 
+              value={fontSize}
+              onChange={this.handleComponentDataChange} 
+              min={1}
+              max={50}
+              step={1}
+            />
+          </div>
+          <label>Font Color</label>
+          <ColorPicker name={'fontColor'} value={fontColor} onChange={this.handleComponentDataChange} />
+        </div>
+      );
     } else {
       chartConfigPanel = (<div></div>);
     }

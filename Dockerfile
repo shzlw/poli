@@ -2,10 +2,10 @@ FROM openjdk:8-jre-alpine
 
 WORKDIR /app
 
-COPY target/poli-0.7.0.jar /app/poli-0.7.0.jar
-COPY db/poli.db /app/db/poli.db
+COPY target/poleo-0.8.0.jar /app/poleo-0.8.0.jar
+COPY db/poleo.db /app/db/poleo.db
 COPY start.sh /app/start.sh
-COPY config/poli.docker.properties /app/config/poli.properties
+COPY config/poleo.docker.properties /app/config/poleo.properties
 
 EXPOSE 6688
 

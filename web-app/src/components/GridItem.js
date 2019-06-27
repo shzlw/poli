@@ -16,6 +16,7 @@ import Iframe from './widgets/Iframe';
 import TextBox from './widgets/TextBox';
 import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
+import Card from './widgets/Card';
 
 class GridItem extends React.Component {
 
@@ -86,7 +87,7 @@ class GridItem extends React.Component {
     this.convertCsv(title, columns, queryResultData);
   }
 
-  convertCsv = (title = 'poli', columns = [], data = []) => {
+  convertCsv = (title = 'poleo', columns = [], data = []) => {
     let csvHeader = '';
     for (let i = 0; i < columns.length; i++) {
       if (i !== 0) {
@@ -236,6 +237,20 @@ class GridItem extends React.Component {
             defaultPageSize={defaultPageSize}
             drillThrough={drillThrough}
             onTableTdClick={this.onTableTdClick}
+          />
+        );
+      } else if (subType === Constants.CARD) {
+        const { 
+          fontSize = 16,
+          fontColor = '#000000',
+        } = data;
+        const obj = Util.isArrayEmpty(queryResultData) ? '' : queryResultData[0];
+        const value = Object.values(obj)[0];
+        componentItem = (
+          <Card 
+            fontSize={fontSize} 
+            fontColor={fontColor}
+            value={value}
           />
         );
       } else {

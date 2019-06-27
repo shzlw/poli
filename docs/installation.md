@@ -3,37 +3,37 @@
 
 ## Windows/Linux
 
-1. Download the release zip file via the github [release page](https://github.com/shzlw/poli/releases).
+1. Download the release zip file via the github [release page](https://github.com/shzlw/poleo/releases).
 2. Unzip it. The folder structure should look like this:
 
     ```
     |-- Release
         |-- config
-            |-- poli.properties
+            |-- poleo.properties
         |-- db
-            |-- poli.db
+            |-- poleo.db
         |-- jdbc-drivers
-        |-- poli-x.y.z.jar
+        |-- poleo-x.y.z.jar
         |-- start.sh
         |-- start.bat
         |...
     ```
 
-3. Modify the poli.properties file.
+3. Modify the poleo.properties file.
 
-    Poli.db is the SQLite database used by the application. It is pre-loaded with database schema and ready to use.
+    Poleo.db is the SQLite database used by the application. It is pre-loaded with database schema and ready to use.
 
-    > Use absolute path to point to the poli.db file.
+    > Use absolute path to point to the poleo.db file.
 
     For example:
     ```
     # Windows
-    spring.datasource.url= jdbc:sqlite:c:/poli-release/db/poli.db
+    spring.datasource.url= jdbc:sqlite:c:/poleo-release/db/poleo.db
 
     or
 
     # Linux
-    spring.datasource.url= jdbc:sqlite:/home/user/poli-release/db/poli.db
+    spring.datasource.url= jdbc:sqlite:/home/user/poleo-release/db/poleo.db
     ```
 
 4. Add JDBC drivers.
@@ -59,15 +59,15 @@
     ./start.sh
     ```
 
-6. Open http://localhost:6688/poli/login in chrome.
-7. Done. Welcome to Poli!
+6. Open http://localhost:6688/poleo/login in chrome.
+7. Done. Welcome to Poleo!
 
 ## Docker
 
-1. Pull and run the Poli image.
+1. Pull and run the Poleo image.
 
     ```bash
-    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.7.0
+    docker run -d -p 6688:6688 --name poleo zhonglu/poleo:0.8.0
     ```
 2. Add JDBC drivers.
 
@@ -79,6 +79,6 @@
     docker cp postgresql-42.2.5.jar 3afea8d644df:/app/jdbc-drivers
     ```
 
-3. Restart the container and open http://localhost:6688/poli/login in chrome.
-4. Done. Welcome to Poli!
+3. Restart the container and open http://localhost:6688/poleo/login in chrome.
+4. Done. Welcome to Poleo!
 
