@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
 import * as Constants from '../api/Constants';
 
@@ -256,6 +257,8 @@ class User extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+    
     const { 
       id,
       showUpdatePassword,
@@ -338,7 +341,7 @@ class User extends React.Component {
             />
           </div>
           <button className="button float-left" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> New
+            <FontAwesomeIcon icon="plus" /> {t('New')}
           </button>
         </div>
         <div className="row mt-10">
@@ -349,11 +352,11 @@ class User extends React.Component {
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
           modalClass={'mid-modal-panel'} 
-          title={mode} >
+          title={t(mode)} >
 
           <div className="row">
             <div className="form-panel float-left" style={{width: '240px'}}>
-              <label>Username <span className="required">*</span></label>
+              <label>{t('Username')} <span className="required">*</span></label>
               <input 
                 className="form-input"
                 type="text" 
@@ -362,7 +365,7 @@ class User extends React.Component {
                 onChange={this.handleInputChange} 
               />
 
-              <label>Name</label>
+              <label>{t('Name')}</label>
               <input 
                 className="form-input"
                 type="text" 
@@ -373,12 +376,12 @@ class User extends React.Component {
 
               { mode === 'Edit' && (
                   <div style={{margin: '3px 0px 8px 0px'}}>
-                    <button className="button" onClick={this.toggleUpdatePassword}>Change password</button>
+                    <button className="button" onClick={this.toggleUpdatePassword}>{t('Change Password')}</button>
                   </div>
               )}
               { (mode === 'New' || showUpdatePassword) && ( 
                 <div>
-                  <label>New Password</label>
+                  <label>{t('New Password')} <span className="required">*</span></label>
                   <input 
                     className="form-input"
                     type="password" 
@@ -388,7 +391,7 @@ class User extends React.Component {
                 </div>
               )}
               
-              <label>System Role</label>
+              <label>{t('System Role')}</label>
               { Constants.SYS_ROLE_ADMIN === currentUserSysRole && (
                 <Select
                   name={'sysRole'}
@@ -407,7 +410,7 @@ class User extends React.Component {
             { Constants.SYS_ROLE_VIEWER === this.state.sysRole && (
               <div className="form-panel float-right" style={{width: '240px'}}>
             
-                <label>Groups</label>
+                <label>{t('Groups')}</label>
                 <Select
                   name={'userGroupId'}
                   value={this.state.userGroupId}
@@ -416,7 +419,7 @@ class User extends React.Component {
                   optionDisplay={'name'}
                   optionValue={'id'}
                 />
-                <button className="button" onClick={this.addUserGroup}>Add</button>
+                <button className="button" onClick={this.addUserGroup}>{t('Add')}</button>
                 <div style={{marginTop: '8px'}}>
                   {userGroupItems}
                 </div>
@@ -424,7 +427,7 @@ class User extends React.Component {
             )}
           </div>
           <button className="button mt-3 button-green" onClick={this.save}>
-            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
           </button>
         </Modal>
 
@@ -432,11 +435,11 @@ class User extends React.Component {
           show={showConfirmDeletionPanel}
           onClose={this.closeConfirmDeletionPanel}
           modalClass={'small-modal-panel'}
-          title={'Confirm Deletion'} >
+          title={t('Confirm Deletion')} >
           <div className="confirm-deletion-panel">
-            Are you sure you want to delete {objectToDelete.name}?
+            {t('Are you sure you want to delete')} {objectToDelete.name}?
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
         
       </div>
@@ -444,4 +447,4 @@ class User extends React.Component {
   }
 }
 
-export default User;
+export default (withTranslation()(User));

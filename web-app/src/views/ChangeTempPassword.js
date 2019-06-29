@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
+import { withTranslation } from 'react-i18next';
 
 import './Login.css';
 
@@ -83,6 +84,8 @@ class ChangeTempPassword extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const titleStyle = {
       fontSize: '22px',
       textAlign: 'center',
@@ -99,26 +102,26 @@ class ChangeTempPassword extends React.Component {
     return (
       <div className="login-view">
         <div className="login-panel">
-          <div style={titleStyle}>Change password</div>
+          <div style={titleStyle}>{t('Change Password')}</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="login-panel-body">
             <div className="form-panel">
-              <div style={tipStyle}>* Use 8 or more characters</div>
-              <label>New password</label>
+              <div style={tipStyle}>* {t('Use 8 or more characters')}</div>
+              <label>{t('New Password')}</label>
               <input 
                 className="form-input"
                 type="password" 
                 name="password" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
-              <label>Confirm password</label>
+              <label>{t('Confirm Password')}</label>
               <input 
                 className="form-input"
                 type="password" 
                 name="confirmedPassword" 
                 value={this.state.confirmedPassword}
                 onChange={this.handleInputChange} />
-              <button className="button login-button button-green" onClick={this.changePassword}>Confirm</button>
+              <button className="button login-button button-green" onClick={this.changePassword}>{t('Confirm')}</button>
             </div>
           </div>
         </div>
@@ -127,4 +130,4 @@ class ChangeTempPassword extends React.Component {
   }
 }
 
-export default withRouter(ChangeTempPassword);
+export default (withTranslation()(withRouter(ChangeTempPassword)));

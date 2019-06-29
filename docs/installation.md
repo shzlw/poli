@@ -7,7 +7,7 @@
 2. Unzip it. The folder structure should look like this:
 
     ```
-    |-- Release
+    |-- poleo-x.y.z
         |-- config
             |-- poleo.properties
         |-- db
@@ -42,6 +42,7 @@
 
     For example:
     ```
+    |-- poleo-x.y.z
         |-- jdbc-drivers
             |-- postgresql-42.2.5.jar
             |-- mysql-connector-java-8.0.12.jar

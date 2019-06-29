@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
-import ComponentViewPanel from '../components/ComponentViewPanel';
-import ComponentEditPanel from '../components/ComponentEditPanel';
+import ComponentViewPanel from './ComponentViewPanel';
+import ComponentEditPanel from './ComponentEditPanel';
 
 import Modal from '../components/Modal';
 import ColorPicker from '../components/ColorPicker';
@@ -476,7 +477,8 @@ class ReportEditView extends React.Component {
     axios.post('/ws/cannedreport', report)
       .then(res => {
         this.setState({
-          showCannedReportPanel: false
+          showCannedReportPanel: false,
+          cannedReportName: ''
         });
         Toast.showSuccess('Saved.');
         this.props.onCannedReportSave();
@@ -484,6 +486,8 @@ class ReportEditView extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const {
       autoRefreshTimerId,
       readableLastRefreshed,
@@ -499,7 +503,7 @@ class ReportEditView extends React.Component {
       <React.Fragment>
         <div className="inline-block">
           <div className="inline-block" style={{marginRight: '8px'}}>
-            Last refreshed: {readableLastRefreshed}
+            {t('Last refreshed')}: {readableLastRefreshed}
           </div>
           { autoRefreshStatus === 'OFF' && (
             <input 
@@ -526,8 +530,8 @@ class ReportEditView extends React.Component {
         <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button ml-4" onClick={this.applyFilters}>
-          <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> Apply Filters
+        <button className="button square-button ml-4" onClick={this.applyFilters}>
+          <FontAwesomeIcon icon="filter" size="lg" fixedWidth />
         </button>
       </React.Fragment>
     );
@@ -541,7 +545,7 @@ class ReportEditView extends React.Component {
     const inEditModeButtonPanel = (
       <React.Fragment>
         <button className="button ml-4" onClick={() => this.openComponentEditPanel(null)}>
-          <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> New Component
+          <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> {t('New Component')}
         </button>
         <button className="button square-button button-red ml-4" onClick={this.deleteReport}>
           <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
@@ -646,7 +650,7 @@ class ReportEditView extends React.Component {
           show={this.state.showComponentEditPanel}
           onClose={() => this.setState({ showComponentEditPanel: false })}
           modalClass={'report-edit-component-dialog'} 
-          title={'Component'} >
+          title={t('Component')} >
           <ComponentEditPanel 
             ref={this.componentEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
@@ -659,9 +663,9 @@ class ReportEditView extends React.Component {
           show={this.state.showCannedReportPanel}
           onClose={() => this.setState({ showCannedReportPanel: false })}
           modalClass={'small-modal-panel'} 
-          title={'Save Canned Report'} >
+          title={t('Save Canned Report')} >
           <div className="form-panel">
-            <label>Name</label>
+            <label>{t('Name')}</label>
             <input 
               className="form-input"
               type="text" 
@@ -670,7 +674,7 @@ class ReportEditView extends React.Component {
               onChange={this.handleInputChange} 
             />
             <button className="button button-green" onClick={this.saveCannedReport}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
             </button>
           </div>
         </Modal>
@@ -679,11 +683,11 @@ class ReportEditView extends React.Component {
           show={this.state.showConfirmDeletionPanel}
           onClose={this.closeConfirmDeletionPanel}
           modalClass={'small-modal-panel'}
-          title={'Confirm Deletion'} >
+          title={t('Confirm Deletion')}>
           <div className="confirm-deletion-panel">
-            Are you sure you want to delete {this.state.objectToDelete.name}?
+            {t('Are you sure you want to delete')} {this.state.objectToDelete.name}?
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
 
         {isEditMode && (
@@ -697,11 +701,11 @@ class ReportEditView extends React.Component {
               </button>
             </div>
             <div className="side-panel">
-              <div className="side-panel-title">General</div>
+              <div className="side-panel-title">{t('General')}</div>
 
               <div className="side-panel-content">
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                  <div className="float-left">Fixed Width</div>
+                  <div className="float-left">{t('Fixed Width')}</div>
                   <div className="float-right">
                     <Checkbox name="isFixedWidth" value="" checked={this.state.style.isFixedWidth} onChange={this.handleStyleValueChange} />
                   </div>
@@ -709,7 +713,7 @@ class ReportEditView extends React.Component {
 
                 { this.state.style.isFixedWidth && (
                   <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                    <div className="float-left">Width</div>
+                    <div className="float-left">{t('Width')}</div>
                     <div className="float-right">
                       <input 
                         className="side-panel-input side-panel-number-input"
@@ -723,7 +727,7 @@ class ReportEditView extends React.Component {
                 )}
 
                 <div className="row side-panel-content-row">
-                  <div className="float-left">Height</div>
+                  <div className="float-left">{t('Height')}</div>
                   <div className="float-right">
                     <input 
                       className="side-panel-input side-panel-number-input"
@@ -738,24 +742,24 @@ class ReportEditView extends React.Component {
               </div>
 
               
-              <div className="side-panel-title row">Background</div>
+              <div className="side-panel-title row">{t('Background')}</div>
               <div className="side-panel-content">
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                  <div className="float-left">Color</div>
+                  <div className="float-left">{t('Color')}</div>
                   <div className="float-right" style={{paddingTop: '4px'}}>
                     <ColorPicker name={'backgroundColor'} value={this.state.style.backgroundColor} onChange={this.handleStyleValueChange} />
                   </div>  
                 </div>
 
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                  <div className="float-left">Snap to grid</div>
+                  <div className="float-left">{t('Snap to grid')}</div>
                   <div className="float-right">
                     <Checkbox name="snapToGrid" value="" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
                   </div>
                 </div>
 
                 <div className="row side-panel-content-row">
-                  <div className="float-left">Show gridlines</div>
+                  <div className="float-left">{t('Show gridlines')}</div>
                   <div className="float-right">
                     <Checkbox name="showGridlines" value="" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
                   </div>
@@ -772,4 +776,4 @@ class ReportEditView extends React.Component {
   };
 }
 
-export default withRouter(ReportEditView);
+export default (withTranslation()(withRouter(ReportEditView)));

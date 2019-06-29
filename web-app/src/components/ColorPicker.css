@@ -19,3 +19,12 @@
   position: fixed;
   z-index: 90;
 }
+
+.colorpicker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 89;
+}

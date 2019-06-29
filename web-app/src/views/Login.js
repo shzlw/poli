@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import { withTranslation } from 'react-i18next';
 
 import './Login.css';
 import Checkbox from '../components/Checkbox';
@@ -115,14 +116,16 @@ class Login extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="login-view">
         <div className="login-panel">
-          <div className="login-app-title">Poleo</div>
+          <div className="login-app-title">{t('Poleo')}</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="login-panel-body">
             <div className="form-panel">
-              <label>Username</label>
+              <label>{t('Username')}</label>
               <input 
                 className="form-input"
                 type="text" 
@@ -130,7 +133,7 @@ class Login extends React.Component {
                 value={this.state.username}
                 onChange={this.handleInputChange} 
               />
-              <label>Password</label>
+              <label>{t('Password')}</label>
               <input 
                 className="form-input"
                 type="password" 
@@ -139,18 +142,18 @@ class Login extends React.Component {
                 onChange={this.handleInputChange} 
               />
               <div>
-                <Checkbox name="rememberMe" value="Remember me" checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} />
+                <Checkbox name="rememberMe" value={t('Remember me')} checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} />
               </div>
-              <button className="button login-button button-green" onClick={this.login}>Login</button>
+              <button className="button login-button button-green" onClick={this.login}>{t('Login')}</button>
             </div>
           </div>
         </div>
         <div className="version-number">
-          Version {this.state.version}
+          {t('Version')} {this.state.version}
         </div>
       </div>
     )
   }
 }
 
-export default withRouter(Login);
+export default (withTranslation()(withRouter(Login)));

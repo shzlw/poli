@@ -51,7 +51,6 @@ class SearchInput extends React.Component {
               type="text"
               name={name}
               value={value}
-              placeholder="Search..."
               onChange={this.handleInputChange}
               className="form-input search-input-input"
               style={inputStyle}

@@ -1,4 +1,4 @@
-# **Poleo** `破力`
+# **Poleo**
 
 [![Version](https://img.shields.io/badge/Version-0.8.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)

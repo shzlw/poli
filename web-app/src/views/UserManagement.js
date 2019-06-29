@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import User from './User';
 import Group from './Group';
@@ -21,18 +22,20 @@ class UserManagement extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="full-page-content">
         <Tabs
           activeTab={this.state.activeTab}
           onTabChange={this.onTabChange}
           >
-          <div title="Group">
+          <div title={t('Group')}>
             <div style={{paddingTop: '10px'}}>
               <Group />
             </div>
           </div>
-          <div title="User">
+          <div title={t('User')}>
             <div style={{paddingTop: '10px'}}>
               <User {...this.props} />
             </div>
@@ -43,4 +46,4 @@ class UserManagement extends React.Component {
   };
 }
 
-export default UserManagement;
+export default (withTranslation()(UserManagement));

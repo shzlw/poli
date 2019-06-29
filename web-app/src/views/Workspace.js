@@ -74,6 +74,8 @@ class Workspace extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+    
     const {
       currentMenuLink,
     } = this.state;
@@ -98,7 +100,7 @@ class Workspace extends React.Component {
           <li key={menu.link} className={active}>
             <Link to={menu.link} onClick={() => this.handleMenuClick(menu.link)}>
               <FontAwesomeIcon icon={menu.icon} fixedWidth />
-              <span className="workspace-nav-menu-text">{menu.value}</span>
+              <span className="workspace-nav-menu-text">{t(menu.value)}</span>
             </Link>
           </li>
         )
@@ -106,9 +108,6 @@ class Workspace extends React.Component {
     }
 
     const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'menu-item-active' : '';
-
-    const { t } = this.props;
-
     return (
       <React.Fragment>
         <div className="workspace-nav">  

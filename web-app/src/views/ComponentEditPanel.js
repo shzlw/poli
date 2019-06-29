@@ -6,20 +6,21 @@ import 'brace/mode/mysql';
 import 'brace/mode/html';
 import 'brace/theme/xcode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
 import './ComponentEditPanel.css';
 
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
-import Tabs from './Tabs';
-import Select from './Select';
-import Table from './Table';
-import ColorPicker from './ColorPicker';
-import SelectButtons from './SelectButtons';
-import InputRange from './filters/InputRange';
-import SearchInput from './SearchInput';
-import Checkbox from './Checkbox';
+import Tabs from '../components/Tabs';
+import Select from '../components/Select';
+import Table from '../components/Table';
+import ColorPicker from '../components/ColorPicker';
+import SelectButtons from '../components/SelectButtons';
+import InputRange from '../components/filters/InputRange';
+import SearchInput from '../components/SearchInput';
+import Checkbox from '../components/Checkbox';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -342,6 +343,7 @@ class ComponentEditPanel extends React.Component {
   }
 
   renderChartConfigPanel = () => {
+    const { t } = this.props;
     const { 
       subType,
       queryResult = {},
@@ -354,7 +356,7 @@ class ComponentEditPanel extends React.Component {
     } = data;
     const colorPlattePanel = (
       <div>
-        <label>Color Platte</label>
+        <label>{t('Color Platte')}</label>
         <Select
           name={'colorPlatte'}
           value={colorPlatte}
@@ -372,7 +374,7 @@ class ComponentEditPanel extends React.Component {
     } = data;
     const seriesChartPanel = (
       <div>
-        <label>X-Axis</label>
+        <label>{t('X-Axis')}</label>
         <Select
           name={'xAxis'}
           value={xAxis}
@@ -382,7 +384,7 @@ class ComponentEditPanel extends React.Component {
           optionValue={'name'}
         />
 
-        <label>Y-Axis</label>
+        <label>{t('Y-Axis')}</label>
         <Select
           name={'yAxis'}
           value={yAxis}
@@ -392,14 +394,14 @@ class ComponentEditPanel extends React.Component {
           optionValue={'name'}
         />
 
-        <label>Has multi-series</label>
+        <label>{t('Has multi-series')}</label>
         <div style={{marginBottom: '8px'}}>
           <Checkbox name="hasMultiSeries" value="" checked={hasMultiSeries} onChange={this.handleComponentDataChange} />
         </div>
 
         {hasMultiSeries && (
           <div>
-            <label>Legend</label>
+            <label>{t('Legend')}</label>
             <Select
               name={'legend'}
               value={legend}
@@ -420,7 +422,7 @@ class ComponentEditPanel extends React.Component {
       } = data;
       chartConfigPanel = (
         <div>
-          <label>Default Page Size</label>
+          <label>{t('Default Page Size')}</label>
           <Select
             name={'defaultPageSize'}
             value={defaultPageSize}
@@ -437,7 +439,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
+          <label>{t('Key')} <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
           <Select
             name={'key'}
             value={key}
@@ -447,7 +449,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
+          <label>{t('Value')} <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
           <Select
             name={'value'}
             value={value}
@@ -469,7 +471,7 @@ class ComponentEditPanel extends React.Component {
         <div>
           {seriesChartPanel}
 
-          <label>Is smooth</label>
+          <label>{t('Is smooth')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="isSmooth" value="" checked={isSmooth} onChange={this.handleComponentDataChange} />
           </div>
@@ -490,14 +492,14 @@ class ComponentEditPanel extends React.Component {
 
           {hasMultiSeries && (
             <div>
-              <label>Is Stacked</label>
+              <label>{t('Is Stacked')}</label>
               <div style={{marginBottom: '8px'}}>
                 <Checkbox name="isStacked" value="" checked={isStacked} onChange={this.handleComponentDataChange} />
               </div>
             </div>
           )}
 
-          <label>Is Horizontal</label>
+          <label>{t('Is Horizontal')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="isHorizontal" value="" checked={isHorizontal} onChange={this.handleComponentDataChange} />
           </div>
@@ -516,7 +518,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          <label>Key <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
+          <label>{t('Key')} <span style={{color: '#8993A4', fontSize: '15px'}}>Text</span></label>
           <Select
             name={'key'}
             value={key}
@@ -526,7 +528,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Value <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
+          <label>{t('Value')} <span style={{color: '#8993A4', fontSize: '15px'}}>Number</span></label>
           <Select
             name={'value'}
             value={value}
@@ -536,7 +538,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Sort</label>
+          <label>{t('Sort')}</label>
           <Select
             name={'sort'}
             value={sort}
@@ -558,7 +560,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          <label>X-Axis</label>
+          <label>{t('X-Axis')}</label>
           <Select
             name={'xAxis'}
             value={xAxis}
@@ -568,7 +570,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Y-Axis</label>
+          <label>{t('Y-Axis')}</label>
           <Select
             name={'yAxis'}
             value={yAxis}
@@ -578,7 +580,7 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Value</label>
+          <label>{t('Value')}</label>
           <Select
             name={'series'}
             value={series}
@@ -588,10 +590,10 @@ class ComponentEditPanel extends React.Component {
             optionValue={'name'}
           />
 
-          <label>Min Value Color</label>
+          <label>{t('Min Value Color')}</label>
           <ColorPicker name={'minColor'} value={minColor} onChange={this.handleComponentDataChange} />
 
-          <label>Max Value Color</label>
+          <label>{t('Max Value Color')}</label>
           <ColorPicker name={'maxColor'} value={maxColor} onChange={this.handleComponentDataChange} />
         </div>
       );
@@ -603,7 +605,7 @@ class ComponentEditPanel extends React.Component {
       } = data;
       chartConfigPanel = (
         <div className="form-panel">
-          <label>Font Size</label>
+          <label>{t('Font Size')}</label>
           <div style={{marginTop: '3px'}}>
             <InputRange
               name="fontSize" 
@@ -614,7 +616,7 @@ class ComponentEditPanel extends React.Component {
               step={1}
             />
           </div>
-          <label>Font Color</label>
+          <label>{t('Font Color')}</label>
           <ColorPicker name={'fontColor'} value={fontColor} onChange={this.handleComponentDataChange} />
         </div>
       );
@@ -626,6 +628,7 @@ class ComponentEditPanel extends React.Component {
   }
 
   renderStaticConfigPanel = () => {
+    const { t } = this.props;
     const { 
       subType,
       data = {}
@@ -638,7 +641,7 @@ class ComponentEditPanel extends React.Component {
       } = data;
       staticConfigPanel = (
         <div className="form-panel">
-          <label>Source</label>
+          <label>{t('Source')}</label>
           <input 
             className="form-input"
             type="text"
@@ -655,14 +658,14 @@ class ComponentEditPanel extends React.Component {
       } = data;
       staticConfigPanel = (
         <div className="form-panel">
-          <label>Value</label>
+          <label>{t('Value')}</label>
           <input 
             className="form-input"
             type="text"
             value={value}
             onChange={(event) => this.handleComponentDataChange('value', event.target.value)} 
           />
-          <label>Font Size</label>
+          <label>{t('Font Size')}</label>
           <div style={{marginTop: '3px'}}>
             <InputRange
               name="fontSize" 
@@ -673,7 +676,7 @@ class ComponentEditPanel extends React.Component {
               step={1}
             />
           </div>
-          <label>Font Color</label>
+          <label>{t('Font Color')}</label>
           <ColorPicker name={'fontColor'} value={fontColor} onChange={this.handleComponentDataChange} />
         </div>
       );
@@ -683,7 +686,7 @@ class ComponentEditPanel extends React.Component {
       } = data;
       staticConfigPanel = (
         <div className="form-panel">
-          <label>Inner Html</label>
+          <label>{t('Inner Html')}</label>
           <AceEditor
             value={innerHtml}
             mode="html"
@@ -711,14 +714,14 @@ class ComponentEditPanel extends React.Component {
       } = data;
       staticConfigPanel = (
         <div className="form-panel">
-          <label>Title</label>
+          <label>{t('Title')}</label>
           <input 
             className="form-input"
             type="text"
             value={title}
             onChange={(event) => this.handleComponentDataChange('title', event.target.value)} 
           />
-          <label>Source</label>
+          <label>{t('Source')}</label>
           <input 
             className="form-input"
             type="text"
@@ -732,6 +735,8 @@ class ComponentEditPanel extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const { 
       type,
       subType,
@@ -760,9 +765,9 @@ class ComponentEditPanel extends React.Component {
           drillItems.push(
             <div key={drill.columnName} className="row table-row">
               <div className="float-left ellipsis" style={{width: '680px'}}>
-                <div className="tag-label">Column</div> <span style={{marginRight: '10px'}}>{drill.columnName}</span>
+                <div className="tag-label">{t('Column')}</div> <span style={{marginRight: '10px'}}>{drill.columnName}</span>
                 <FontAwesomeIcon icon="long-arrow-alt-right" size="lg" fixedWidth />
-                <div className="tag-label" style={{marginLeft: '10px', backgroundColor: '#36B37E'}}>Report</div> {reportName}
+                <div className="tag-label" style={{marginLeft: '10px', backgroundColor: '#36B37E'}}>{t('Report')}</div> {reportName}
               </div>
               <button className="button table-row-button float-right button-red" onClick={() => this.removeDrillThrough(drill)}>
                 <FontAwesomeIcon icon="trash-alt" />
@@ -839,10 +844,10 @@ class ComponentEditPanel extends React.Component {
     return (
       <div>
         <button className="button button-green" onClick={this.save}>
-          <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+          <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
         </button>
         <div className="row mt-10">
-          <label className="float-left inline-text-label bold" style={{width: '100px'}}>Type: </label>
+          <label className="float-left inline-text-label bold" style={{width: '100px'}}>{t('Type')}: </label>
           <div className="float-left">
             <SelectButtons
               name={'type'}
@@ -854,7 +859,7 @@ class ComponentEditPanel extends React.Component {
         </div>
 
         <div className="row mt-10">
-          <label className="float-left inline-text-label bold" style={{width: '100px'}}>Sub Type: </label>
+          <label className="float-left inline-text-label bold" style={{width: '100px'}}>{t('Sub Type')}: </label>
           <div className="float-left" style={{width: '310px'}}>
             <Select
               name={'subType'}
@@ -873,9 +878,9 @@ class ComponentEditPanel extends React.Component {
             {/* ---------- Query Tab ---------- */}
 
             { showQueryTab && (
-              <div title="Query">
+              <div title={t('Query')}>
                 <div className="form-panel" style={{paddingTop: '10px'}}>
-                  <label>DataSource:</label>
+                  <label>{t('DataSource')}:</label>
                   <Select
                     name={'jdbcDataSourceId'}
                     value={this.state.jdbcDataSourceId}
@@ -889,14 +894,14 @@ class ComponentEditPanel extends React.Component {
                     <React.Fragment>
                       <div className="row">
                         <label className="float-left inline-text-label" style={{width: '200px'}}>
-                          {queryTitle}
+                          {t(queryTitle)}
                         </label>
                         <div className="float-right">
                           {!showSchema && (
-                            <button className="button" style={{marginRight: '5px'}} onClick={this.runQuery}>Run Query</button>
+                            <button className="button" style={{marginRight: '5px'}} onClick={this.runQuery}>{t('Run Query')}</button>
                           )}
                           <button className="button" onClick={this.toggleSchemaPanel}>
-                            {schemaButtonValue}
+                            {t(schemaButtonValue)}
                           </button>
                         </div>
                       </div>
@@ -936,7 +941,7 @@ class ComponentEditPanel extends React.Component {
                               }}
                             />
 
-                            <label style={{marginTop: '10px'}}>Result</label>
+                            <label style={{marginTop: '10px'}}>{t('Result')}</label>
                             { error ? (
                                 <div>
                                   {error}
@@ -961,7 +966,7 @@ class ComponentEditPanel extends React.Component {
 
             {/* ---------- Config Tab ---------- */}
 
-            <div title="Config">
+            <div title={t('Config')}>
               <div className="form-panel" style={{paddingTop: '10px'}}>
                 { type === Constants.STATIC && (
                   <div>
@@ -985,7 +990,7 @@ class ComponentEditPanel extends React.Component {
                 { type === Constants.CHART && (
                   <div className="row">
                     <div className="float-left" style={{width: '300px'}}>
-                      <label>Columns</label>
+                      <label>{t('Columns')}</label>
                       <div style={{backgroundColor: '#FFFFFF'}}>
                         {columnItems}
                       </div>
@@ -1002,10 +1007,10 @@ class ComponentEditPanel extends React.Component {
             {/* ---------- Drill Through Tab ---------- */}
             
             { type === Constants.CHART && (
-              <div title="Drill Through">
+              <div title={t('Drill Through')}>
                 <div className="form-panel" style={{paddingTop: '10px'}}>
                   <div>
-                    <label>Column</label>
+                    <label>{t('Column')}</label>
                     <Select
                       name={'drillColumnName'}
                       value={this.state.drillColumnName}
@@ -1015,7 +1020,7 @@ class ComponentEditPanel extends React.Component {
                       optionValue={'name'}
                     />
 
-                    <label>Report</label>
+                    <label>{t('Report')}</label>
                     <Select
                       name={'drillReportId'}
                       value={this.state.drillReportId}
@@ -1024,7 +1029,7 @@ class ComponentEditPanel extends React.Component {
                       optionDisplay={'name'}
                       optionValue={'id'}
                     />
-                    <button className="button" onClick={this.addDrillThrough}>Add</button>
+                    <button className="button" onClick={this.addDrillThrough}>{t('Add')}</button>
                   </div>
                   <div style={{marginTop: '8px'}}>
                     {drillItems}
@@ -1040,4 +1045,4 @@ class ComponentEditPanel extends React.Component {
   };
 }
 
-export default ComponentEditPanel;
+export default (withTranslation('', { withRef: true })(ComponentEditPanel));
