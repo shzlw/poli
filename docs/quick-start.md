@@ -2,7 +2,7 @@
   
 ## First time login
 
-1. Open http://localhost:6688/poleo/login in the browser.
+1. Open http://localhost:6688/poli/login in the browser.
 
 ![login](_images/screenshots/login.jpg)
 

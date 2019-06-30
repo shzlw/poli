@@ -55,7 +55,7 @@ class App extends React.Component {
     // Check if the page is using api key to authenticate first.
     if (apiKey != null) {
       axios.defaults.headers.common = {
-        "Poleo-Api-Key": apiKey
+        "Poli-Api-Key": apiKey
       };
       const loginRequest = {
         apiKey: apiKey
@@ -165,7 +165,7 @@ class App extends React.Component {
     if (isAuthorizing) {
       return (
         <div className="authenticating-panel">
-          <div className="authenticating-panel-title">{t('Poleo')}</div>
+          <div className="authenticating-panel-title">{t('Poli')}</div>
           <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
         </div>
       )

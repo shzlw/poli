@@ -87,7 +87,7 @@ class GridItem extends React.Component {
     this.convertCsv(title, columns, queryResultData);
   }
 
-  convertCsv = (title = 'poleo', columns = [], data = []) => {
+  convertCsv = (title = 'poli', columns = [], data = []) => {
     let csvHeader = '';
     for (let i = 0; i < columns.length; i++) {
       if (i !== 0) {
@@ -229,7 +229,9 @@ class GridItem extends React.Component {
     let componentItem = (<div></div>);
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
-        const { defaultPageSize } = data;
+        const { 
+          defaultPageSize = 10
+        } = data;
         componentItem = (
           <Table
             data={queryResultData}

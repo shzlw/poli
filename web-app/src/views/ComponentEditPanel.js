@@ -841,6 +841,10 @@ class ComponentEditPanel extends React.Component {
     const queryTitle = showSchema ? 'Schema' : 'SQL Query'; 
     const schemaButtonValue = showSchema ? 'Edit Query' : 'Show Schema';
 
+    const componentTypes = Constants.COMPONENT_TYPES.map(component =>
+      t(component)
+    );
+
     return (
       <div>
         <button className="button button-green" onClick={this.save}>
@@ -853,7 +857,7 @@ class ComponentEditPanel extends React.Component {
               name={'type'}
               value={type}
               onChange={this.handleOptionChange}
-              selections={Constants.COMPONENT_TYPES}
+              selections={componentTypes}
             />
           </div>
         </div>

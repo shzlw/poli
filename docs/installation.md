@@ -3,37 +3,37 @@
 
 ## Windows/Linux
 
-1. Download the release zip file via the github [release page](https://github.com/shzlw/poleo/releases).
+1. Download the release zip file via the github [release page](https://github.com/shzlw/poli/releases).
 2. Unzip it. The folder structure should look like this:
 
     ```
-    |-- poleo-x.y.z
+    |-- poli-x.y.z
         |-- config
-            |-- poleo.properties
+            |-- poli.properties
         |-- db
-            |-- poleo.db
+            |-- poli.db
         |-- jdbc-drivers
-        |-- poleo-x.y.z.jar
+        |-- poli-x.y.z.jar
         |-- start.sh
         |-- start.bat
         |...
     ```
 
-3. Modify the poleo.properties file.
+3. Modify the poli.properties file.
 
-    Poleo.db is the SQLite database used by the application. It is pre-loaded with database schema and ready to use.
+    Poli.db is the SQLite database used by the application. It is pre-loaded with database schema and ready to use.
 
-    > Use absolute path to point to the poleo.db file.
+    > Use absolute path to point to the poli.db file.
 
     For example:
     ```
     # Windows
-    spring.datasource.url= jdbc:sqlite:c:/poleo-release/db/poleo.db
+    spring.datasource.url= jdbc:sqlite:c:/poli-release/db/poli.db
 
     or
 
     # Linux
-    spring.datasource.url= jdbc:sqlite:/home/user/poleo-release/db/poleo.db
+    spring.datasource.url= jdbc:sqlite:/home/user/poli-release/db/poli.db
     ```
 
 4. Add JDBC drivers.
@@ -42,7 +42,7 @@
 
     For example:
     ```
-    |-- poleo-x.y.z
+    |-- poli-x.y.z
         |-- jdbc-drivers
             |-- postgresql-42.2.5.jar
             |-- mysql-connector-java-8.0.12.jar
@@ -60,15 +60,15 @@
     ./start.sh
     ```
 
-6. Open http://localhost:6688/poleo/login in chrome.
-7. Done. Welcome to Poleo!
+6. Open http://localhost:6688/poli/login in chrome.
+7. Done. Welcome to Poli!
 
 ## Docker
 
-1. Pull and run the Poleo image.
+1. Pull and run the Poli image.
 
     ```bash
-    docker run -d -p 6688:6688 --name poleo zhonglu/poleo:0.8.0
+    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.8.0
     ```
 2. Add JDBC drivers.
 
@@ -80,6 +80,6 @@
     docker cp postgresql-42.2.5.jar 3afea8d644df:/app/jdbc-drivers
     ```
 
-3. Restart the container and open http://localhost:6688/poleo/login in chrome.
-4. Done. Welcome to Poleo!
+3. Restart the container and open http://localhost:6688/poli/login in chrome.
+4. Done. Welcome to Poli!
 

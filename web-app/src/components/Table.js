@@ -50,7 +50,7 @@ class Table extends React.Component {
       <ReactTable
         data={data}
         columns={columnHeaders}
-        defaultPageSize={defaultPageSize}
+        defaultPageSize={Number(defaultPageSize)}
         previousText={'Prev'}
         nextText={'Next'}
       />

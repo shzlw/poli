@@ -1,6 +1,6 @@
 # Report
 
-Reports are built with components in Poleo that provide insights from the data through self-defined filtering options and visual representations. 
+Reports are built with components in Poli that provide insights from the data through self-defined filtering options and visual representations. 
 
 ## Style customization
 
@@ -40,7 +40,7 @@ This mode allows the Report to be embedded into another application. The report 
 
 For example:
 ```html
-<iframe src="http://localhost:6688/poleo/workspace/report/fullscreen?$toReport=SalesReport$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
+<iframe src="http://localhost:6688/poli/workspace/report/fullscreen?$toReport=SalesReport$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
 ```
 
 There are four url search parameters in this example.

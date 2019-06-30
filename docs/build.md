@@ -15,7 +15,7 @@
 
 ## Building
 
-1. Clone or download the [repository](https://github.com/shzlw/poleo).
+1. Clone or download the [repository](https://github.com/shzlw/poli).
 2. Install the npm packages only the first time.
 
 ```bash
@@ -33,10 +33,10 @@ build.bat
 ./build.sh
 ```
 
-4. The java executable poleo-x.y.z.jar is generated under the target folder. Run this to start the server.
+4. The java executable poli-x.y.z.jar is generated under the target folder. Run this to start the server.
 
 ```
-java -jar target\poleo-x.y.z.jar
+java -jar target\poli-x.y.z.jar
 ```
 
 ## Source code structure
@@ -44,7 +44,7 @@ java -jar target\poleo-x.y.z.jar
 ```
 |-- Repository
     |-- config
-        |-- poleo.properties
+        |-- poli.properties
     |-- db
         |-- schema-sqlite.sql
     |-- src
@@ -57,6 +57,6 @@ java -jar target\poleo-x.y.z.jar
 
 * Src folder contains the java source code.
 * Web-app folder contains the react code.
-* Schema-sqlite.sql contains the database schema for SQLite 3. The poleo.db file in the release is loaded from this schema.
+* Schema-sqlite.sql contains the database schema for SQLite 3. The poli.db file in the release is loaded from this schema.
 * The build scripts build the code in web-app first, copy the generated files to src ~/static folder and finally run maven to build the java project.
 

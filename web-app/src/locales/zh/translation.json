@@ -1,5 +1,5 @@
 {
-  "Poleo": "Poleo",
+  "Poli": "Poli",
   "Report": "报表",
   "Data Source": "数据源",
   "User Management": "用户管理",
@@ -89,5 +89,8 @@
   "Inner Html": "内部 Html",
   "Last refreshed": "上次更新",
   "New Component": "新组件",
-  "Result": "结果"
+  "Result": "结果",
+  "static": "静态",
+  "chart": "图表",
+  "filter": "过滤器"
 }

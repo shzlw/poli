@@ -16,7 +16,7 @@
 
 ## Types
 
-Poleo supports three types of components.
+Poli supports three types of components.
 
 * Static
   * Text
@@ -126,7 +126,7 @@ WHERE 1 = 1
 
 ## Drill through
 
-1. Drill through is used to navigate from one component in a Report to another Report. To use it in Poleo, you need to have at least two reports.
+1. Drill through is used to navigate from one component in a Report to another Report. To use it in Poli, you need to have at least two reports.
 
 ![drillthrough1](_images/screenshots/drillthrough1.jpg)
 

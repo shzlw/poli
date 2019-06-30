@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import './i18n';
 
 ReactDOM.render(
-  <BrowserRouter basename="/poleo">
+  <BrowserRouter basename="/poli">
     <App />
   </BrowserRouter>, 
   document.getElementById('root')
