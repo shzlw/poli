@@ -14,13 +14,26 @@ public class InfoWs {
     @Autowired
     AppProperties appProperties;
 
-    @RequestMapping(value="/version", method = RequestMethod.GET)
-    public String getVersion() {
-        return Constants.CURRENT_VERSION;
+    @RequestMapping(value="/general", method = RequestMethod.GET)
+    public AppInfo getGeneral() {
+        return new AppInfo(Constants.CURRENT_VERSION, appProperties.getLocaleLanguage());
     }
 
-    @RequestMapping(value="/locale", method = RequestMethod.GET)
-    public String getLocaleLanguage() {
-        return appProperties.getLocaleLanguage();
+    private static class AppInfo {
+        private String version;
+        private String localeLanguage;
+
+        public AppInfo(String version, String localeLanguage) {
+            this.version = version;
+            this.localeLanguage = localeLanguage;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getLocaleLanguage() {
+            return localeLanguage;
+        }
     }
 }

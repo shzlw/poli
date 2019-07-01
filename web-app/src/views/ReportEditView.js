@@ -530,8 +530,8 @@ class ReportEditView extends React.Component {
         <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button square-button ml-4" onClick={this.applyFilters}>
-          <FontAwesomeIcon icon="filter" size="lg" fixedWidth />
+        <button className="button ml-4" onClick={this.applyFilters}>
+          <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> {t('Apply Filters')}
         </button>
       </React.Fragment>
     );

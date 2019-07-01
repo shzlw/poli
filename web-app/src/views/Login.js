@@ -18,7 +18,8 @@ class Login extends React.Component {
       username: '',
       password: '',
       version: '',
-      rememberMe: true
+      rememberMe: true,
+      localeLanguage: ''
     };
   }
 
@@ -29,11 +30,15 @@ class Login extends React.Component {
       ownerDocument.addEventListener("keydown", this.onKeyDown);
     }
   
-    axios.get('/info/version')
+    axios.get('/info/general')
       .then(res => {
-        const version = res.data;
+        const info = res.data;
         this.setState({
-          version: version
+          version: info.version,
+          localeLanguage: info.localeLanguage
+        }, () => {
+          const { i18n } = this.props;
+          i18n.changeLanguage(String(this.state.localeLanguage));
         });
       });
 
@@ -149,7 +154,7 @@ class Login extends React.Component {
           </div>
         </div>
         <div className="version-number">
-          {t('Version')} {this.state.version}
+          {t('Version')}: {this.state.version} {t('Locale')}: {this.state.localeLanguage}
         </div>
       </div>
     )
