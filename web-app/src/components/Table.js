@@ -1,9 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import './Table.css';
 
 class Table extends React.Component {
+
+  static propTypes = {
+    data: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
+    defaultPageSize: PropTypes.number,
+    drillThrough: PropTypes.array
+  };
 
   handleTdClick = (reportId, columnName, columnValue) => {
     this.props.onTableTdClick(reportId, columnName, columnValue);
@@ -50,7 +58,7 @@ class Table extends React.Component {
       <ReactTable
         data={data}
         columns={columnHeaders}
-        defaultPageSize={defaultPageSize}
+        defaultPageSize={Number(defaultPageSize)}
         previousText={'Prev'}
         nextText={'Next'}
       />

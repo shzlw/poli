@@ -24,6 +24,12 @@ class ColorPicker extends React.Component {
     this.props.onChange(name, rgba);
   };
 
+  close = () => {
+    this.setState({
+      showPalette: false
+    }); 
+  }
+
   render() {
 
     const color = {
@@ -36,8 +42,12 @@ class ColorPicker extends React.Component {
           <div className="colorpicker-color" style={color}></div>
         </div>
         { this.state.showPalette && (
-          <div className="colorpicker-popover">
-            <ChromePicker color={this.props.value} onChange={this.handleChange} />
+          <div>
+            <div className="colorpicker-overlay" onClick={this.close}>
+            </div>
+            <div className="colorpicker-popover">
+              <ChromePicker color={this.props.value} onChange={this.handleChange} />
+            </div>
           </div>
         )}
       </div>

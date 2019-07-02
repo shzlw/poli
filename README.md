@@ -1,6 +1,6 @@
-# **Poli** `破力`
+# **Poli**
 
-[![Version](https://img.shields.io/badge/Version-0.7.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.8.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://img.shields.io/github/downloads/shzlw/poli/total.svg?color=6554C0)](https://github.com/shzlw/poli/releases)
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
@@ -29,7 +29,7 @@ Open and free for all usages.
 #### :gem: Is that all?
 Auto refresh, drill through, fullscreen, embeds, color themes + more features in development.
 
-## What's New ([latest v0.7.0](https://shzlw.github.io/poli/#/change-logs))
+## What's New ([latest v0.8.0](https://shzlw.github.io/poli/#/change-logs))
 
 ## Gallery
 
@@ -50,7 +50,7 @@ Auto refresh, drill through, fullscreen, embeds, color themes + more features in
 Windows/Linux
 
 ```sh
-java -jar poli-0.7.0.jar
+java -jar poli-0.8.0.jar
 ```
 
 Docker

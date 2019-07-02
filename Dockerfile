@@ -2,7 +2,7 @@ FROM openjdk:8-jre-alpine
 
 WORKDIR /app
 
-COPY target/poli-0.7.0.jar /app/poli-0.7.0.jar
+COPY target/poli-0.8.0.jar /app/poli-0.8.0.jar
 COPY db/poli.db /app/db/poli.db
 COPY start.sh /app/start.sh
 COPY config/poli.docker.properties /app/config/poli.properties

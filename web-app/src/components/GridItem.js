@@ -16,6 +16,7 @@ import Iframe from './widgets/Iframe';
 import TextBox from './widgets/TextBox';
 import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
+import Card from './widgets/Card';
 
 class GridItem extends React.Component {
 
@@ -228,7 +229,9 @@ class GridItem extends React.Component {
     let componentItem = (<div></div>);
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
-        const { defaultPageSize } = data;
+        const { 
+          defaultPageSize = 10
+        } = data;
         componentItem = (
           <Table
             data={queryResultData}
@@ -236,6 +239,20 @@ class GridItem extends React.Component {
             defaultPageSize={defaultPageSize}
             drillThrough={drillThrough}
             onTableTdClick={this.onTableTdClick}
+          />
+        );
+      } else if (subType === Constants.CARD) {
+        const { 
+          fontSize = 16,
+          fontColor = '#000000',
+        } = data;
+        const obj = Util.isArrayEmpty(queryResultData) ? '' : queryResultData[0];
+        const value = Object.values(obj)[0];
+        componentItem = (
+          <Card 
+            fontSize={fontSize} 
+            fontColor={fontColor}
+            value={value}
           />
         );
       } else {

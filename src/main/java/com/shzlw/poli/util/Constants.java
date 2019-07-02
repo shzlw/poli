@@ -4,7 +4,7 @@ public final class Constants {
 
     private Constants() {}
 
-    public static final String CURRENT_VERSION = "0.7.0";
+    public static final String CURRENT_VERSION = "0.8.0";
 
     public static final String SUCCESS = "success";
     public static final String GOOD = "";

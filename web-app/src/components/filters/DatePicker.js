@@ -101,6 +101,12 @@ class DatePicker extends React.Component {
     this.props.onChange(paramName, new Date(year, month, day));
   }
 
+  close = () => {
+    this.setState({
+      showDateSelectPanel: false
+    });
+  }
+
   render() {
     const { showDateSelectPanel } = this.state;
     const { value } = this.props;
@@ -167,37 +173,42 @@ class DatePicker extends React.Component {
     
 
     return (
-      <div className="calendar-container">
+      <div className="calendar-container"> 
         <div className="select-date" onClick={this.toggleDatePanel}>{year}-{displayMonth}-{displayDay}</div>
         { showDateSelectPanel && (
-          <div className="calendar-dialog">
-            <div>
-              <div className="calendar-cell calendar-button" onClick={this.previousMonth}>Prev</div>
-              <div className="display-date">
-                <select 
-                  className="select-year"
-                  value={year} 
-                  onChange={(event) => this.handleOptionChange(YEAR, event.target.value)}>
-                  {yearOptionList}
-                </select>
-                -
-                <select 
-                  className="select-year"
-                  value={month} 
-                  onChange={(event) => this.handleOptionChange(MONTH, event.target.value)}>
-                  {monthOptionList}
-                </select>
+          <div>
+            <div className="calendar-overlay" onClick={this.close}>
+            </div>
+            <div className="calendar-dialog">
+              <div>
+                <div className="calendar-cell calendar-button" onClick={this.previousMonth}>Prev</div>
+                <div className="display-date">
+                  <select 
+                    className="select-year"
+                    value={year} 
+                    onChange={(event) => this.handleOptionChange(YEAR, event.target.value)}>
+                    {yearOptionList}
+                  </select>
+                  -
+                  <select 
+                    className="select-year"
+                    value={month} 
+                    onChange={(event) => this.handleOptionChange(MONTH, event.target.value)}>
+                    {monthOptionList}
+                  </select>
+                </div>
+                <div className="calendar-cell calendar-button" onClick={this.nextMonth}>Next</div>
               </div>
-              <div className="calendar-cell calendar-button" onClick={this.nextMonth}>Next</div>
-            </div>
-            <div className="row">
-              {calendarHeaderCells}
-            </div>
-            <div className="row">
-              {calendarBodyCells}
+              <div className="row">
+                {calendarHeaderCells}
+              </div>
+              <div className="row">
+                {calendarBodyCells}
+              </div>
             </div>
           </div>
         )}
+        
       </div>
     );
   }

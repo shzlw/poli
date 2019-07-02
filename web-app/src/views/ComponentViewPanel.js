@@ -2,18 +2,18 @@
 import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
-import GridLayout from './GridLayout';
 import * as Util from '../api/Util';
-import Modal from './Modal';
 import * as Constants from '../api/Constants';
 
 import './ComponentViewPanel.css';
-import Checkbox from './Checkbox';
-import ColorPicker from './ColorPicker';
-import InputRange from './filters/InputRange';
-import Toast from './Toast';
-
+import Checkbox from '../components/Checkbox';
+import ColorPicker from '../components/ColorPicker';
+import InputRange from '../components/filters/InputRange';
+import Toast from '../components/Toast';
+import Modal from '../components/Modal';
+import GridLayout from '../components/GridLayout';
 
 const BASE_WIDTH = 1200;
 
@@ -481,6 +481,8 @@ class ComponentViewPanel extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const { 
       reportViewWidth,
       showControl
@@ -522,11 +524,11 @@ class ComponentViewPanel extends React.Component {
           show={this.state.showConfirmDeletionPanel}
           onClose={this.closeConfirmDeletionPanel}
           modalClass={'small-modal-panel'}
-          title={'Confirm Deletion'} >
+          title={t('Confirm Deletion')} >
           <div className="confirm-deletion-panel">
-            Are you sure you want to delete this component?
+            {t('Are you sure you want to delete this component?')}
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
 
         {selectedComponent && (
@@ -537,10 +539,10 @@ class ComponentViewPanel extends React.Component {
               </button>
             </div>
 
-            <div className="side-panel-title">Title</div>
+            <div className="side-panel-title">{t('Title')}</div>
             <div className="side-panel-content">
               <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                <div className="float-left">Show</div>
+                <div className="float-left">{t('Show')}</div>
                 <div className="float-right">
                   <Checkbox name="showTitle" value="" checked={selectedComponent.style.showTitle} onChange={this.onStyleValueChange} />
                 </div>
@@ -559,14 +561,14 @@ class ComponentViewPanel extends React.Component {
                   </div>
 
                   <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                    <div className="float-left">Font</div>
+                    <div className="float-left">{t('Font')}</div>
                     <div className="float-right" style={{paddingTop: '4px'}}>
                       <ColorPicker name={'titleFontColor'} value={selectedComponent.style.titleFontColor} onChange={this.onStyleValueChange} />
                     </div>
                   </div>
 
                   <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                    <div className="float-left">Background</div>
+                    <div className="float-left">{t('Background')}</div>
                     <div className="float-right" style={{paddingTop: '4px'}}>
                       <ColorPicker name={'titleBackgroundColor'} value={selectedComponent.style.titleBackgroundColor} onChange={this.onStyleValueChange} />
                     </div>
@@ -575,10 +577,10 @@ class ComponentViewPanel extends React.Component {
               )}
             </div>
             
-            <div className="side-panel-title">Border</div>
+            <div className="side-panel-title">{t('Border')}</div>
             <div className="side-panel-content">
               <div className="row side-panel-content-row">
-                <div className="float-left">Show</div>
+                <div className="float-left">{t('Show')}</div>
                 <div className="float-right">
                   <Checkbox name="showBorder" value="" checked={selectedComponent.style.showBorder} onChange={this.onStyleValueChange} />
                 </div>
@@ -586,7 +588,7 @@ class ComponentViewPanel extends React.Component {
 
               { selectedComponent.style.showBorder && (
                 <div className="row side-panel-content-row">
-                  <div className="float-left">Color</div>
+                  <div className="float-left">{t('Color')}</div>
                   <div className="float-right" style={{paddingTop: '4px'}}>
                     <ColorPicker name={'borderColor'} value={selectedComponent.style.borderColor} onChange={this.onStyleValueChange} />
                   </div>
@@ -594,17 +596,17 @@ class ComponentViewPanel extends React.Component {
               )}
             </div>
 
-            <div className="side-panel-title">Content</div>
+            <div className="side-panel-title">{t('Content')}</div>
             <div className="side-panel-content">
               <div className="row side-panel-content-row">
-                <div className="float-left">Background</div>
+                <div className="float-left">{t('Background')}</div>
                 <div className="float-right" style={{paddingTop: '4px'}}>
                   <ColorPicker name={'contentBackgroundColor'} value={selectedComponent.style.contentBackgroundColor} onChange={this.onStyleValueChange} />
                 </div>
               </div>
             </div>
             
-            <div className="side-panel-title">Z Index</div>
+            <div className="side-panel-title">{t('Z Index')}</div>
             <div className="side-panel-content">
               <InputRange
                 name="zIndex" 
@@ -616,10 +618,10 @@ class ComponentViewPanel extends React.Component {
               />
             </div>
 
-            <div className="side-panel-title">Position</div>
+            <div className="side-panel-title">{t('Position')}</div>
             <div className="side-panel-content">
               <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                <div className="float-left">X</div>
+                <div className="float-left">{t('X')}</div>
                 <div className="float-right">
                   <input 
                     className="side-panel-input side-panel-number-input"
@@ -632,7 +634,7 @@ class ComponentViewPanel extends React.Component {
               </div>
 
               <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                <div className="float-left">Y</div>
+                <div className="float-left">{t('Y')}</div>
                 <div className="float-right">
                   <input 
                     className="side-panel-input side-panel-number-input"
@@ -645,7 +647,7 @@ class ComponentViewPanel extends React.Component {
               </div>
 
               <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                <div className="float-left">Width</div>
+                <div className="float-left">{t('Width')}</div>
                 <div className="float-right">
                   <input 
                     className="side-panel-input side-panel-number-input"
@@ -658,7 +660,7 @@ class ComponentViewPanel extends React.Component {
               </div>
 
               <div className="row side-panel-content-row">
-                <div className="float-left">Height</div>
+                <div className="float-left">{t('Height')}</div>
                 <div className="float-right">
                   <input 
                     className="side-panel-input side-panel-number-input"
@@ -680,4 +682,4 @@ class ComponentViewPanel extends React.Component {
   };
 }
 
-export default ComponentViewPanel;
+export default (withTranslation('', { withRef: true })(ComponentViewPanel));

@@ -7,7 +7,7 @@
 2. Unzip it. The folder structure should look like this:
 
     ```
-    |-- Release
+    |-- poli-x.y.z
         |-- config
             |-- poli.properties
         |-- db
@@ -42,6 +42,7 @@
 
     For example:
     ```
+    |-- poli-x.y.z
         |-- jdbc-drivers
             |-- postgresql-42.2.5.jar
             |-- mysql-connector-java-8.0.12.jar

@@ -14,7 +14,7 @@ import {
   faSquare as farSquare
 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { withTranslation } from 'react-i18next';
 
 import './App.css';
 
@@ -155,6 +155,8 @@ class App extends React.Component {
       isAuthorizing
     } = this.state;
 
+    const { t } = this.props;
+
     let isAuthenticated = false;
     if (sysRole) {
       isAuthenticated = true;
@@ -163,7 +165,7 @@ class App extends React.Component {
     if (isAuthorizing) {
       return (
         <div className="authenticating-panel">
-          <div className="authenticating-panel-title">Poli</div>
+          <div className="authenticating-panel-title">{t('Poli')}</div>
           <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
         </div>
       )
@@ -203,4 +205,4 @@ function PrivateRoute({component: Component, authenticated, ...rest}) {
   )
 }
 
-export default withRouter(App);
+export default (withTranslation()(withRouter(App)));

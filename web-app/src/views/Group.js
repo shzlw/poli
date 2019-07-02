@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
 import Modal from '../components/Modal';
 import Select from '../components/Select';
@@ -208,6 +209,8 @@ class Group extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const { 
       id,
       groups = [],
@@ -280,7 +283,7 @@ class Group extends React.Component {
             />
           </div>
           <button className="button float-left" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> New
+            <FontAwesomeIcon icon="plus" /> {t('New')}
           </button>
         </div>
         <div className="row mt-10">
@@ -291,10 +294,10 @@ class Group extends React.Component {
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
           modalClass={'mid-modal-panel'} 
-          title={mode} >
+          title={t(mode)} >
           <div className="row">
             <div className="form-panel float-left" style={{width: '240px'}}>
-              <label>Name <span className="required">*</span></label>
+              <label>{t('Name')} <span className="required">*</span></label>
               <input 
                 className="form-input"
                 type="text" 
@@ -304,7 +307,7 @@ class Group extends React.Component {
             </div>
             
             <div className="form-panel float-right" style={{width: '240px'}}>
-              <label>Reports</label>
+              <label>{t('Reports')}</label>
               <Select
                 name={'groupReportId'}
                 value={this.state.groupReportId}
@@ -313,14 +316,14 @@ class Group extends React.Component {
                 optionDisplay={'name'}
                 optionValue={'id'}
               />
-              <button className="button" onClick={this.addGroupReport}>Add</button>
+              <button className="button" onClick={this.addGroupReport}>{t('Add')}</button>
               <div style={{marginTop: '8px'}}>
                 {groupReportItems}
               </div>
             </div>
           </div>
           <button className="button mt-3 button-green" onClick={this.save}>
-            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
           </button>
         </Modal>
 
@@ -328,11 +331,11 @@ class Group extends React.Component {
           show={showConfirmDeletionPanel}
           onClose={this.closeConfirmDeletionPanel}
           modalClass={'small-modal-panel'}
-          title={'Confirm Deletion'} >
+          title={t('Confirm Deletion')} >
           <div className="confirm-deletion-panel">
-            Are you sure you want to delete {objectToDelete.name}?
+            {t('Are you sure you want to delete')} {objectToDelete.name}?
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>Delete</button>
+          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
         
       </div>
@@ -340,4 +343,4 @@ class Group extends React.Component {
   }
 }
 
-export default Group;
+export default (withTranslation()(Group));

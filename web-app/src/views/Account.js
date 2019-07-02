@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
 import Toast from '../components/Toast';
 import Modal from '../components/Modal';
@@ -99,6 +100,8 @@ class Account extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const {
       showUpdatePassword,
       username,
@@ -109,38 +112,41 @@ class Account extends React.Component {
     return (
       <div className="full-page-content">
         <div className="form-panel" style={{width: '400px'}}>   
-          <label className="bold">Username</label>
+          <label className="bold">{t('Username')}</label>
           <div className="info-value">{username}</div>
+          <br/>
 
-          <label className="bold">Name</label>
+          <label className="bold">{t('Name')}</label>
           <input 
             className="form-input"
             type="text"   
             name="name" 
             value={this.state.name}
             onChange={this.handleInputChange} />
+          <br/>
 
-          <label className="bold">System Role</label>
+          <label className="bold">{t('System Role')}</label>
           <div className="info-value">{sysRole}</div>
+          <br/>
 
-          <label className="bold">API Key</label>
+          <label className="bold">{t('API Key')}</label>
           <div className="info-value">{apiKey}</div>
-          <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>Generate new API Key</button>
+          <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>{t('Generate new API Key')}</button>
           
           <hr />
 
-          <button className="button mt-3" onClick={this.toggleUpdatePassword}>Change password</button>
+          <button className="button mt-3" onClick={this.toggleUpdatePassword}>{t('Change Password')}</button>
           {
             showUpdatePassword && (
               <div style={{marginTop: '8px'}}>
-                <label>New Password</label>
+                <label>{t('New Password')}</label>
                 <input 
                   className="form-input"
                   type="password" 
                   name="password" 
                   value={this.state.password}
                   onChange={this.handleInputChange} />
-                <label>Confirm Password</label>
+                <label>{t('Confirm Password')}</label>
                 <input 
                   className="form-input"
                   type="password" 
@@ -152,7 +158,7 @@ class Account extends React.Component {
 
           <hr />
           <button className="button mt-10 button-green" onClick={this.save}>
-            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
           </button>
         </div>
 
@@ -160,15 +166,15 @@ class Account extends React.Component {
           show={this.state.showGenerateApiKeyPanel}
           onClose={() => this.setState({ showGenerateApiKeyPanel: false })}
           modalClass={'small-modal-panel'}
-          title={'Confirm'} >
+          title={t('Confirm')} >
           <div className="confirm-deletion-panel">
-            Are you sure you want to generate a new Api Key?
+            {t('Are you sure you want to generate a new Api Key')}?
           </div>
-          <button className="button button-red full-width" onClick={this.generateApiKey}>Confirm</button>
+          <button className="button button-red full-width" onClick={this.generateApiKey}>{t('Confirm')}</button>
         </Modal>
       </div>
     )
   }
 }
 
-export default Account;
+export default (withTranslation()(Account));

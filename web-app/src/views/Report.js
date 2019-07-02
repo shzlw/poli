@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withTranslation } from 'react-i18next';
 
 import './Report.css';
 import * as Constants from '../api/Constants';
@@ -140,7 +141,7 @@ class Report extends Component {
         this.fetchReports();
         this.props.history.push(`/workspace/report/${reportId}`);
         this.setState({
-          activeReportId: reportId
+          activeReportId: reportId,
         });
       })
       .catch(error => {
@@ -191,6 +192,8 @@ class Report extends Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const {
       reports = [],
       activeReportId,
@@ -244,7 +247,7 @@ class Report extends Component {
           <div style={{margin: '8px 5px 5px 5px'}}>
             { editable && (
               <button className="button full-width" onClick={() => this.setState({ showEditPanel: true })}>
-                <FontAwesomeIcon icon="plus" /> New
+                <FontAwesomeIcon icon="plus" /> {t('New')}
               </button>
             )}
           </div>
@@ -262,11 +265,11 @@ class Report extends Component {
               onTabChange={this.onTabChange}
               >
               
-              <div title="Ad Hoc">
+              <div title={t('Ad Hoc')}>
                 {reportRows}
               </div>
 
-              <div title="Canned">
+              <div title={t('Canned')}>
                 {cannedReportRows}
               </div>
               
@@ -301,7 +304,7 @@ class Report extends Component {
               } 
             />
             <EmptyReport
-              info={info}
+              info={t(info)}
             />
           </Switch>
         </div>
@@ -310,9 +313,9 @@ class Report extends Component {
           show={this.state.showEditPanel}
           onClose={() => this.setState({ showEditPanel: false })}
           modalClass={'small-modal-panel'} 
-          title={'New'} >
+          title={t('New')} >
           <div className="form-panel">
-            <label>Name</label>
+            <label>{t('Name')}</label>
             <input 
               className="form-input"
               type="text" 
@@ -321,7 +324,7 @@ class Report extends Component {
               onChange={this.handleInputChange} 
             />
             <button className="button button-green" onClick={this.save}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> Save
+              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
             </button>
           </div>
         </Modal>
@@ -339,4 +342,4 @@ function EmptyReport({info}) {
   )
 }
 
-export default withRouter(Report);
+export default (withTranslation()(withRouter(Report)));
