@@ -54,3 +54,6 @@ export const CHART_COLOR_PLATETTES = [DEFAULT, VINTAGE, ROMA, MACARONS, SHINE];
 
 export const ADHOC = 'adhoc';
 export const CANNED = 'canned';
+
+export const DEFAULT_MIN_COLOR = 'rgba(222, 53, 11, 1)';
+export const DEFAULT_MAX_COLOR = 'rgba(0, 135, 90, 1)';

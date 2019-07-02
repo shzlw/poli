@@ -56,7 +56,7 @@ java -jar poli-0.8.0.jar
 Docker
 
 ```sh
-docker run -d -p 6688:6688 --name poli zhonglu/poli:0.8.0
+docker run -d -p 6688:6688 --name poli zhonglu/poli:0.7.0
 ```
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.

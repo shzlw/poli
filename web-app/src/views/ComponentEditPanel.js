@@ -554,8 +554,8 @@ class ComponentEditPanel extends React.Component {
         xAxis,
         yAxis,
         series,
-        minColor,
-        maxColor
+        minColor = Constants.DEFAULT_MIN_COLOR,
+        maxColor = Constants.DEFAULT_MAX_COLOR
       } = data;
 
       chartConfigPanel = (
@@ -612,7 +612,7 @@ class ComponentEditPanel extends React.Component {
               value={fontSize}
               onChange={this.handleComponentDataChange} 
               min={1}
-              max={50}
+              max={100}
               step={1}
             />
           </div>
@@ -672,7 +672,7 @@ class ComponentEditPanel extends React.Component {
               value={fontSize}
               onChange={this.handleComponentDataChange} 
               min={1}
-              max={50}
+              max={100}
               step={1}
             />
           </div>
