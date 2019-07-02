@@ -2,6 +2,14 @@
 
 ## v0.8.0
 
+#### New Features
+TBD
+
+#### Bug Fixes
+TBD
+
+## v0.7.0
+
 #### Breaking Changes & Upgrade Steps
 - A new databse table needs to be loaded in order to support canned report. 
 
