@@ -146,7 +146,7 @@ WHERE 1 = 1
 
 ## Access permissions
 
-Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](/user-management) for more details.
+Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](user-management.md) for more details.
 
 ## Export CSV
 
