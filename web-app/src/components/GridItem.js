@@ -13,7 +13,6 @@ import Table from './Table';
 import Slicer from './filters/Slicer';
 import ImageBox from './widgets/ImageBox';
 import Iframe from './widgets/Iframe';
-import TextBox from './widgets/TextBox';
 import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
@@ -282,7 +281,7 @@ class GridItem extends React.Component {
       } else if (subType === Constants.SINGLE_VALUE) {
         componentItem = (
           <div className="grid-box-content-panel">
-            <div>
+            <div style={{paddingTop: '5px'}}>
               <input 
                 className="filter-input"
                 type="text"  
@@ -329,7 +328,7 @@ class GridItem extends React.Component {
           value = ''
         } = data;
         componentItem = (
-          <TextBox 
+          <Card 
             fontSize={fontSize} 
             fontColor={fontColor}
             value={value}

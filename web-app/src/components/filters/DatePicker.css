@@ -4,6 +4,10 @@
   clear: both;
 }
 
+.calendar-container {
+  padding-top: 5px;
+}
+
 .calendar-dialog {
   width: 189px;
   border: 1px solid #000000;

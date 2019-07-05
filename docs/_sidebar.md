@@ -2,7 +2,8 @@
 
   - [Installation](installation.md)
   - [Quick Start](quick-start.md)
-  
+  - [Configuration](configuration.md)
+
 - Basic Concepts
 
   - [Data Source](data-source.md)

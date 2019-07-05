@@ -40,7 +40,7 @@ This mode allows the Report to be embedded into another application. The report 
 
 For example:
 ```html
-<iframe src="http://localhost:6688/poli/workspace/report/fullscreen?$toReport=SalesReport$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
+<iframe src="http://localhost:6688/poli/workspace/report/fullscreen?$toReport=SalesReport&$apiKey=ap_12345678&$showControl=true&year=2019"></iframe>
 ```
 
 There are four url search parameters in this example.
@@ -81,4 +81,8 @@ Save the report as canned report.
 Notes
 * Filters are not allowed to change values in canned report.
 * Users can only create/view/delete canned report created by themselves.
+
+## Access permissions
+
+Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](user-management) for more details.
 

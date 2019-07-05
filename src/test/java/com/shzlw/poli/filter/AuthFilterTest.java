@@ -158,14 +158,14 @@ public class AuthFilterTest {
         cookies[0] = cookie;
         String sessionKey = "123";
 
-        List<ViewerAccessRule> viewerAccessRules = Arrays.asList(
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
-                new ViewerAccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
+                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
+                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
         );
 
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
@@ -174,14 +174,42 @@ public class AuthFilterTest {
         Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_VIEWER);
 
-        for (ViewerAccessRule rule : viewerAccessRules) {
+        for (AccessRule rule : accessRules) {
             Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
             Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
 
             authFilter.doFilter(httpRequest, httpResponse, chain);
         }
 
-        Mockito.verify(chain, Mockito.times(viewerAccessRules.size())).doFilter(httpRequest, httpResponse);
+        Mockito.verify(chain, Mockito.times(accessRules.size())).doFilter(httpRequest, httpResponse);
+    }
+
+    public void testViewerValidAccess_unauthorized() throws IOException, ServletException {
+        Cookie[] cookies = new Cookie[1];
+        cookies[0] = cookie;
+        String sessionKey = "123";
+
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/1"),
+                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/report"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/report"),
+                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/report")
+        );
+
+        Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
+        Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
+        Mockito.when(cookie.getValue()).thenReturn(sessionKey);
+        Mockito.when(userService.getUserBySessionKey(sessionKey)).thenReturn(user);
+        Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_VIEWER);
+
+        for (AccessRule rule : accessRules) {
+            Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
+            Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
+
+            authFilter.doFilter(httpRequest, httpResponse, chain);
+        }
+
+        Mockito.verify(chain, Mockito.times(0)).doFilter(httpRequest, httpResponse);
     }
 
     @Test
@@ -190,7 +218,6 @@ public class AuthFilterTest {
         cookies[0] = cookie;
         String sessionKey = null;
         String apiKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -198,9 +225,48 @@ public class AuthFilterTest {
         Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
         Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
 
-        authFilter.doFilter(httpRequest, httpResponse, chain);
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component")
+        );
 
-        Mockito.verify(chain).doFilter(httpRequest, httpResponse);
+        for (AccessRule rule : accessRules) {
+            Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
+            Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
+
+            authFilter.doFilter(httpRequest, httpResponse, chain);
+        }
+
+        Mockito.verify(chain, Mockito.times(accessRules.size())).doFilter(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void testApiKeyAccess_unauthorized() throws IOException, ServletException {
+        Cookie[] cookies = new Cookie[1];
+        cookies[0] = cookie;
+        String sessionKey = null;
+        String apiKey = "123";
+        Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
+        Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
+        Mockito.when(cookie.getValue()).thenReturn(sessionKey);
+        Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY)).thenReturn(apiKey);
+        Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
+        Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
+
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/report")
+        );
+
+        for (AccessRule rule : accessRules) {
+            Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
+            Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
+
+            authFilter.doFilter(httpRequest, httpResponse, chain);
+        }
+
+        Mockito.verify(chain, Mockito.times(0)).doFilter(httpRequest, httpResponse);
     }
 
     @Test
@@ -213,11 +279,11 @@ public class AuthFilterTest {
         authFilter.destroy();
     }
 
-    private static class ViewerAccessRule {
+    private static class AccessRule {
         String method;
         String url;
 
-        public ViewerAccessRule(String method, String url) {
+        public AccessRule(String method, String url) {
             this.method = method;
             this.url = url;
         }

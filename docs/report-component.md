@@ -18,57 +18,106 @@
 
 Poli supports three types of components.
 
-* Static
+### Static
   * Text
   * Image
   * Iframe
   * Html
 
-* Chart
-  * Table
-  * Pie
+### Chart
+
+#### Table
+
+#### Pie
     
-    > Pie chart requires the query to return at least two columns.
+  > The query is required to return at least two columns.
 
-  * Bar
-  * Line
-  * Area
+#### Bar
+#### Line
+#### Area
 
-    > Bar/Line/Area charts support multi-series data.
-
-* Filter
-  * Slicer
-
-    Slicer provides a list of values to select. 
-
-    ![slicer](_images/screenshots/slicer.jpg)
-
-    It requires the query to return one column only.
-
-    ```sql
-    SELECT user_id 
-    FROM trans 
-    GROUP BY user_id 
-    ORDER BY user_id;
-    ```
+  > Bar/Line/Area charts support multi-series data.
   
-  * Single value
+#### Heatmap
 
-  * Date picker
+Data:
+- X-Axis
+- Y-Axis 
+- Value (number)
+- Min Value Color
+- Max Value Color
 
-    The default format is yyyy-MM-dd. For example, 2018-08-10. 
+> The query is required to return at least three columns.
 
-    ![date picker](_images/screenshots/date_picker.jpg)
-    
-    Example to use the query parameters in a query.
+![Heatmap](_images/image-0.8.0/component_heatmap.jpg)
 
-    ```sql
-    SELECT * FROM TRANSACTIONS
-    WHERE 1 = 1
-    {{ AND created_date > :start_date }}
-    {{ AND created_date <= :end_date }}
-    ORDER BY created_date ASC;
-    ```
+#### Treemap
+
+Data:
+- Key (text)
+- Value (number)
+- Color Platte
+
+> The query is required to return at least two columns.
+
+![Treemap](_images/image-0.8.0/component_treemap.jpg)
+
+#### Funnel
+
+Config:
+- Key (text)
+- Value (number)
+- Color Platte
+
+![Funnel](_images/image-0.8.0/component_funnel.jpg)
+
+#### Card
+
+Card displays a single value. 
+
+Config:
+- Font Size
+- Font Color
+
+> The query is required to return one column with one value only.
+
+![Card](_images/image-0.8.0/component_card.jpg)
+
+
+### Filter
+
+#### Slicer
+
+Slicer provides a list of values to select. 
+
+![slicer](_images/screenshots/slicer.jpg)
+
+It requires the query to return one column only.
+
+```sql
+SELECT user_id 
+FROM trans 
+GROUP BY user_id 
+ORDER BY user_id;
+```
+  
+#### Single value
+
+#### Date picker
+
+The default format is yyyy-MM-dd. For example, 2018-08-10. 
+
+![date picker](_images/screenshots/date_picker.jpg)
+
+Example to use the query parameters in a query.
+
+```sql
+SELECT * FROM TRANSACTIONS
+WHERE 1 = 1
+{{ AND created_date > :start_date }}
+{{ AND created_date <= :end_date }}
+ORDER BY created_date ASC;
+```
 
 ## Dynamic SQL query with parameters
 
@@ -143,10 +192,6 @@ WHERE 1 = 1
 4. Report 2 is being displayed and product=Cup is passed along to Report 2. If there are any chart components on Report 2 that use :product query parameter in the query will become reactive.
 
 ![drillthrough4](_images/screenshots/drillthrough4.jpg)
-
-## Access permissions
-
-Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](/user-management) for more details.
 
 ## Export CSV
 

@@ -32,6 +32,7 @@ public class AuthFilter implements Filter {
         if (path.startsWith("/ws/")) {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;
+            boolean isAuthByApiKey = false;
             if (sessionKey != null) {
                 User user = userService.getUserBySessionKey(sessionKey);
                 user.setSessionKey(sessionKey);
@@ -46,18 +47,25 @@ public class AuthFilter implements Filter {
                     if (user != null) {
                         httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                         sysRole = user.getSysRole();
+                        isAuthByApiKey = true;
                     }
                 }
             }
 
             if (sysRole != null) {
                 boolean isValid = false;
-                if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
-                    isValid = validateViewer(httpRequest.getMethod(), path);
-                } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole) || Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
-                    isValid = true;
+                if (isAuthByApiKey) {
+                    // Authorized by using API key
+                    isValid = validateByApiKey(httpRequest.getMethod(), path);
                 } else {
-                    isValid = false;
+                    // Authorized by using cookie.
+                    if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
+                        isValid = validateViewer(httpRequest.getMethod(), path);
+                    } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole) || Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                    }
                 }
 
                 if (isValid) {
@@ -73,7 +81,7 @@ public class AuthFilter implements Filter {
         }
     }
 
-    public String getSessionKey(HttpServletRequest httpRequest) {
+    private static String getSessionKey(HttpServletRequest httpRequest) {
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
@@ -87,7 +95,7 @@ public class AuthFilter implements Filter {
         return null;
     }
 
-    public boolean validateViewer(String requestMethod, String path) {
+    private static boolean validateViewer(String requestMethod, String path) {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
             if (path.startsWith("/ws/report")
@@ -106,6 +114,22 @@ public class AuthFilter implements Filter {
             }
         } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {
             if (path.startsWith("/ws/cannedreport")) {
+                isValid = true;
+            }
+        }
+        return isValid;
+    }
+
+    private static boolean validateByApiKey(String requestMethod, String path) {
+        boolean isValid = false;
+        if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
+            if (path.startsWith("/ws/report")
+                    || path.startsWith("/ws/cannedreport")
+                    || path.startsWith("/ws/component/report/")) {
+                isValid = true;
+            }
+        } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
+            if (path.startsWith("/ws/jdbcquery/component")) {
                 isValid = true;
             }
         }

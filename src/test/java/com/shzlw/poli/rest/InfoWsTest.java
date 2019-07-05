@@ -1,5 +1,8 @@
 package com.shzlw.poli.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shzlw.poli.AppProperties;
+import com.shzlw.poli.dto.AppInfo;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,11 +27,20 @@ public class InfoWsTest {
     @Autowired
     MockMvc mvc;
 
+    @Autowired
+    ObjectMapper mapper;
+
+    @Autowired
+    AppProperties appProperties;
+
     @Test
-    public void testGetVersion() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/info/version")).andExpect(status().isOk())
+    public void testGetAppInfo() throws Exception {
+        MvcResult mvcResult = mvc.perform(get("/info/general")).andExpect(status().isOk())
                 .andReturn();
         String responeText = mvcResult.getResponse().getContentAsString();
-        Assert.assertEquals(Constants.CURRENT_VERSION, responeText);
+        AppInfo appInfo = mapper.readValue(responeText, AppInfo.class);
+
+        Assert.assertEquals(Constants.CURRENT_VERSION, appInfo.getVersion());
+        Assert.assertEquals(appProperties.getLocaleLanguage(), appInfo.getLocaleLanguage());
     }
 }

@@ -13,7 +13,7 @@ class Card extends React.Component {
   render() {
     const {
       value,
-      fontSize = 16,
+      fontSize = 16,    
       fontColor = '#000000'
     } = this.props;
 

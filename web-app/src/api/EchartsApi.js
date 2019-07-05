@@ -423,6 +423,8 @@ const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData
     calculable: true,
     series: [{
       type:'funnel',
+      top: 40,
+      bottom: 10,
       sort: sort,
       data: seriesData
     }]

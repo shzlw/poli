@@ -3,10 +3,23 @@
 ## v0.8.0
 
 #### New Features
-TBD
+- Support i18n customization. Include default language pack for English and Chinese. 
+- Add four new chart types
+  - Treemap
+  - Heatmap
+  - Funnel
+  - Card
 
 #### Bug Fixes
-TBD
+- Fix an issue that sometimes the pagination fails in table chart.
+
+#### Improvements
+- Documentation for poli.properties.
+- Increase the font size range from (1-50) to (1-100) for Text and Card.
+- Add overlay for date picker and color picker. Now clicking anywhere on the screen will close the popup dialog.
+- Clean up the canned report input field when the dialog is closed.
+- Now sharing the report via full screen with api key can only have access to the full screen page.
+- The text in the Text (static) is aligned center both vertically and horizontally by default.
 
 ## v0.7.0
 
