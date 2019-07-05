@@ -33,9 +33,13 @@ class Login extends React.Component {
     axios.get('/info/general')
       .then(res => {
         const info = res.data;
+        const {
+          version,
+          localeLanguage
+        } = info;
         this.setState({
-          version: info.version,
-          localeLanguage: info.localeLanguage
+          version: version,
+          localeLanguage: localeLanguage
         }, () => {
           const { i18n } = this.props;
           i18n.changeLanguage(String(this.state.localeLanguage));

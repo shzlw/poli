@@ -39,7 +39,8 @@ class App extends React.Component {
     this.state = {
       username: '',
       sysRole: '',
-      isAuthorizing: false
+      isAuthorizing: false,
+      localeLanguage: ''
     }
   }
 
@@ -75,12 +76,28 @@ class App extends React.Component {
     const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
 
     const {
-      sysRole
+      sysRole,
+      localeLanguage
     } = this.state;
 
     let isAuthenticated = false;
     if (sysRole) {
       isAuthenticated = true;
+    }
+
+    if (!localeLanguage) {
+      axios.get('/info/general')
+        .then(res => {
+          const info = res.data;
+          const {
+            localeLanguage
+          } = info;
+          const { i18n } = this.props;
+          i18n.changeLanguage(String(localeLanguage));
+          this.setState({
+            localeLanguage: localeLanguage
+          });
+        });
     }
 
     if (!isAuthenticated && rememberMe) {
