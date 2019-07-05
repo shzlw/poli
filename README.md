@@ -3,6 +3,7 @@
 [![Version](https://img.shields.io/badge/Version-0.8.0-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://img.shields.io/github/downloads/shzlw/poli/total.svg?color=6554C0)](https://github.com/shzlw/poli/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/zhonglu/poli.svg)](https://cloud.docker.com/u/zhonglu/repository/docker/zhonglu/poli)
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
@@ -61,7 +62,7 @@ java -jar poli-0.8.0.jar
 Docker
 
 ```sh
-docker run -d -p 6688:6688 --name poli zhonglu/poli:0.7.0
+docker run -d -p 6688:6688 --name poli zhonglu/poli:0.8.0
 ```
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.
