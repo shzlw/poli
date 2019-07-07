@@ -464,7 +464,8 @@ class ComponentEditPanel extends React.Component {
       );
     } else if (subType === Constants.LINE || subType === Constants.AREA) {
       const {
-        isSmooth = false
+        isSmooth = false,
+        showAllAxisLabels = false
       } = data;
 
       chartConfigPanel = (
@@ -476,6 +477,11 @@ class ComponentEditPanel extends React.Component {
             <Checkbox name="isSmooth" value="" checked={isSmooth} onChange={this.handleComponentDataChange} />
           </div>
 
+          <label>{t('Show all axis labels')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="showAllAxisLabels" value="" checked={showAllAxisLabels} onChange={this.handleComponentDataChange} />
+          </div>
+
           {colorPlattePanel}
         </div>
       );
@@ -483,7 +489,8 @@ class ComponentEditPanel extends React.Component {
       const {
         hasMultiSeries = false,
         isStacked = true,
-        isHorizontal = false
+        isHorizontal = false,
+        showAllAxisLabels = false
       } = data;
 
       chartConfigPanel = (
@@ -502,6 +509,11 @@ class ComponentEditPanel extends React.Component {
           <label>{t('Is Horizontal')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="isHorizontal" value="" checked={isHorizontal} onChange={this.handleComponentDataChange} />
+          </div>
+
+          <label>{t('Show all axis labels')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="showAllAxisLabels" value="" checked={showAllAxisLabels} onChange={this.handleComponentDataChange} />
           </div>
 
           {colorPlattePanel}
@@ -555,7 +567,8 @@ class ComponentEditPanel extends React.Component {
         yAxis,
         series,
         minColor = Constants.DEFAULT_MIN_COLOR,
-        maxColor = Constants.DEFAULT_MAX_COLOR
+        maxColor = Constants.DEFAULT_MAX_COLOR,
+        showAllAxisLabels = false
       } = data;
 
       chartConfigPanel = (
@@ -595,6 +608,11 @@ class ComponentEditPanel extends React.Component {
 
           <label>{t('Max Value Color')}</label>
           <ColorPicker name={'maxColor'} value={maxColor} onChange={this.handleComponentDataChange} />
+
+          <label>{t('Show all axis labels')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="showAllAxisLabels" value="" checked={showAllAxisLabels} onChange={this.handleComponentDataChange} />
+          </div>
         </div>
       );
       
@@ -637,7 +655,8 @@ class ComponentEditPanel extends React.Component {
     let staticConfigPanel = (<div></div>);
     if (subType === Constants.IMAGE) {
       const {
-        src
+        src,
+        isFull = false
       } = data;
       staticConfigPanel = (
         <div className="form-panel">
@@ -648,6 +667,11 @@ class ComponentEditPanel extends React.Component {
             value={src}
             onChange={(event) => this.handleComponentDataChange('src', event.target.value)} 
           />
+
+          <label>{t('Is Full Size')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="isFull" value="" checked={isFull} onChange={this.handleComponentDataChange} />
+          </div>
         </div>
       );
     } else if (subType === Constants.TEXT) {

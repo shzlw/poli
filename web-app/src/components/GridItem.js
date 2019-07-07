@@ -308,10 +308,14 @@ class GridItem extends React.Component {
     } else if (type === Constants.STATIC) {
       if (subType === Constants.IMAGE) {
         const { 
-          src = '' 
+          src = '',
+          isFull = false,
         } = data;
         componentItem = (
-          <ImageBox src={src} />
+          <ImageBox 
+            src={src}
+            isFull={isFull} 
+          />
         );
       } else if (subType === Constants.IFRAME) {
         const {

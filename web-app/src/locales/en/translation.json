@@ -80,7 +80,7 @@
   "Color Platte": "Color Platte",
   "Is smooth": "Is smooth",
   "Is Stacked": "Is Stacked",
-  "Is Horizontal": "s Horizontal",
+  "Is Horizontal": "Is Horizontal",
   "Sort": "Sort",
   "Min Value Color": "Min Value Color",
   "Max Value Color": "Max Value Color",
@@ -94,5 +94,7 @@
   "Result": "Result",
   "static": "static",
   "chart": "chart",
-  "filter": "filter"
+  "filter": "filter",
+  "Is Full Size": "Is Full Size",
+  "Show all axis labels": "Show all axis labels"
 }

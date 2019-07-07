@@ -137,7 +137,16 @@ const getPieOption = (data, config) => {
 /**
  * Bar Chart
  */
-const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, series, isHorizontal) => {
+const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, series, config = {}) => {
+  const {
+    isHorizontal = false,
+    showAllAxisLabels = false,
+  } = config;
+
+  const axisLabel = showAllAxisLabels ? {
+    interval: 0
+  } : {};
+
   let xAxis = {};
   let yAxis = {};
   if (isHorizontal) {
@@ -146,12 +155,16 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
     };
     yAxis = {
       type: 'category',
-      data: axisData
+      data: axisData,
+      axisLabel: {
+        interval: 0
+      }
     }
   } else {
     xAxis = {
       type: 'category',
-      data: axisData
+      data: axisData,
+      axisLabel: axisLabel
     };
     yAxis = {
       type: 'value'
@@ -187,7 +200,6 @@ const getBarOption = (data, config, title) => {
     yAxis,
     hasMultiSeries = false,
     isStacked = true,
-    isHorizontal = false,
     colorPlatte = 'default'
   } = config;
 
@@ -226,20 +238,29 @@ const getBarOption = (data, config, title) => {
   }
 
   if (hasMultiSeries) {
-    return getBarOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, isHorizontal);
+    return getBarOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
   } else {
     const series = {
       data: seriesData,
       type: type
     }
-    return getBarOptionTemplate(colorPlatte, null, xAxisData, series, isHorizontal);
+    return getBarOptionTemplate(colorPlatte, null, xAxisData, series, config);
   }
 }
 
 /**
  * Line chart
  */
-const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series) => {
+const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series, config = {}) => {
+  const {
+    showAllAxisLabels = false
+  } = config;
+
+  const axisLabel = showAllAxisLabels ? {
+    interval: 0
+  } : {};
+
+
   const legend = legendData !== null ? {
     data: legendData
   }: {};
@@ -257,7 +278,8 @@ const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     },
     xAxis: {
       type: 'category',
-      data: xAxisData
+      data: xAxisData,
+      axisLabel: axisLabel
     },
     yAxis: {
       type: 'value'
@@ -309,21 +331,29 @@ const getLineOption = (data, config) => {
   }
 
   if (hasMultiSeries) {
-    return getLineOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData);
+    return getLineOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
   } else {
     const series = {
       data: seriesData,
       type: type,
       smooth: isSmooth
     }
-    return getLineOptionTemplate(colorPlatte, null, xAxisData, series);
+    return getLineOptionTemplate(colorPlatte, null, xAxisData, series, config);
   }
 }
 
 /**
  * Area chart
  */
-const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series) => {
+const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series, config = {}) => {
+  const {
+    showAllAxisLabels = false
+  } = config;
+
+  const axisLabel = showAllAxisLabels ? {
+    interval: 0
+  } : {};
+
   const legend = legendData !== null ? {
     data: legendData
   }: {};
@@ -341,7 +371,8 @@ const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: xAxisData
+      data: xAxisData,
+      axisLabel: axisLabel
     },
     yAxis: {
       type: 'value'
@@ -394,7 +425,7 @@ const getAreaOption = (data, config) => {
   }
 
   if (hasMultiSeries) {
-    return getAreaOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData);
+    return getAreaOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
   } else {
     const series = {
       data: seriesData,
@@ -402,14 +433,18 @@ const getAreaOption = (data, config) => {
       areaStyle: {},
       smooth: isSmooth
     }
-    return getAreaOptionTemplate(colorPlatte, null, xAxisData, series);
+    return getAreaOptionTemplate(colorPlatte, null, xAxisData, series, config);
   }
 }
 
 /**
  * Funnel chart
  */
-const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData, sort) => {
+const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData, config = {}) => {
+  const {
+    sort = 'descending'
+  } = config;
+
   return {
     color: getColorPlatte(colorPlatte),
     tooltip: {
@@ -435,11 +470,10 @@ const getFunnelOption = (data, config) => {
   const {
     key,
     value,
-    colorPlatte,
-    sort = 'descending'
+    colorPlatte
   } = config;
   const result = keyValueToLegendSeries(key, value, data);
-  return getFunnelOptionTemplate(colorPlatte, result.legendData, result.seriesData, sort);
+  return getFunnelOptionTemplate(colorPlatte, result.legendData, result.seriesData, config);
 }
 
 const getTreemapOptionTemplate = (colorPlatte = 'default', seriesData) => {
@@ -486,7 +520,17 @@ const getTreemapOption = (data, config) => {
   return getTreemapOptionTemplate(colorPlatte, seriesData);
 }
 
-const getHeatmapOptionTemplate = (xAxisData, yAxisData, seriesData, min, max, minColor = '#FFFFFF', maxColor = '#000000') => {
+const getHeatmapOptionTemplate = (xAxisData, yAxisData, seriesData, min, max, config = {}) => {
+  const {
+    minColor = Constants.DEFAULT_MIN_COLOR, 
+    maxColor = Constants.DEFAULT_MAX_COLOR,
+    showAllAxisLabels = false
+  } = config;
+
+  const axisLabel = showAllAxisLabels ? {
+    interval: 0
+  } : {};
+
   return {
     animation: false,
     grid: {
@@ -501,7 +545,8 @@ const getHeatmapOptionTemplate = (xAxisData, yAxisData, seriesData, min, max, mi
       data: xAxisData,
       splitArea: {
         show: true
-      }
+      },
+      axisLabel: axisLabel
     },
     yAxis: {
       type: 'category',
@@ -547,9 +592,7 @@ const getHeatmapOption = (data, config) => {
   const {
     xAxis,
     yAxis,
-    series,
-    minColor,
-    maxColor
+    series
   } = config;
 
   const xAxisData = [];
@@ -587,7 +630,7 @@ const getHeatmapOption = (data, config) => {
     seriesData.push([xIndex, yIndex, seriesVal]);
   }
 
-  return getHeatmapOptionTemplate(xAxisData, yAxisData, seriesData, min, max, minColor, maxColor);
+  return getHeatmapOptionTemplate(xAxisData, yAxisData, seriesData, min, max, config);
 }
 
 

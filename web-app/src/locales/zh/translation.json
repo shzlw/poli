@@ -94,5 +94,7 @@
   "Result": "结果",
   "static": "静态",
   "chart": "图表",
-  "filter": "过滤器"
+  "filter": "过滤器",
+  "Is Full Size": "全尺寸",
+  "Show all axis labels": "显示所有Axis的标签"
 }

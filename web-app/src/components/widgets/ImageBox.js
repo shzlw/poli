@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './ImageBox.css';
 
 class ImageBox extends React.Component {
 
   static propTypes = {
-    src: PropTypes.string.isRequired
+    src: PropTypes.string.isRequired,
+    isFull: PropTypes.bool
   };
 
   render() {
-    const style = {
-      width: '100%',
-      height: '100%',
-      objectFit: 'contain',
-      display: 'block'
-    }
+    const {
+      isFull = false,
+      src
+    } = this.props;
+
+    const imageClass = isFull ? 'image-full' : 'image-original-scale';
 
     return (
       <img 
-        style={style}
-        src={this.props.src} 
+        className={imageClass}
+        src={src} 
         alt="not available"
       />
     );

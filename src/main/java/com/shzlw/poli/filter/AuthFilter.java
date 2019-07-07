@@ -35,8 +35,8 @@ public class AuthFilter implements Filter {
             boolean isAuthByApiKey = false;
             if (sessionKey != null) {
                 User user = userService.getUserBySessionKey(sessionKey);
-                user.setSessionKey(sessionKey);
                 if (user != null) {
+                    user.setSessionKey(sessionKey);
                     httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                     sysRole = user.getSysRole();
                 }
