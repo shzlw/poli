@@ -32,7 +32,7 @@ Open and free for all usages.
 #### :gem: Is that all?
 Auto refresh, drill through, fullscreen, embeds, color themes + more features in development.
 
-## What's New ([latest v0.8.1](https://shzlw.github.io/poli/#/change-logs))
+## What's New ([latest](https://shzlw.github.io/poli/#/change-logs))
 
 
 ![poli v0.8.0](http://66.228.42.235:8080/image-0.8.0/bob_glass_en.jpg)
