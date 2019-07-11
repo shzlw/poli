@@ -1,4 +1,4 @@
--- v0.8.0 for SQLite
+-- v0.8.1 for SQLite
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;

@@ -28,10 +28,13 @@ class SelectButtons extends React.Component {
     } =  this.props;
     const buttonItems = [];
     for (let i = 0; i < selections.length; i++) {
-      const current = selections[i];
-      const activeClass = current === value ? 'select-button-active' : '';
+      const {
+        display,
+        value: actualValue
+      } = selections[i];
+      const activeClass = actualValue === value ? 'select-button-active' : '';
       buttonItems.push(
-        <div className={`select-button ${activeClass}`} onClick={() => this.clickButton(current)} key={current}>{current}</div>
+        <div className={`select-button ${activeClass}`} onClick={() => this.clickButton(actualValue)} key={actualValue}>{display}</div>
       )
     }
 

@@ -865,9 +865,12 @@ class ComponentEditPanel extends React.Component {
     const queryTitle = showSchema ? 'Schema' : 'SQL Query'; 
     const schemaButtonValue = showSchema ? 'Edit Query' : 'Show Schema';
 
-    const componentTypes = Constants.COMPONENT_TYPES.map(component =>
-      t(component)
-    );
+    const componentTypes = Constants.COMPONENT_TYPES.map(component => {
+      return {
+        display: t(component),
+        value: component
+      }
+    });
 
     return (
       <div>

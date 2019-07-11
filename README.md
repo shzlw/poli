@@ -1,6 +1,6 @@
 # **Poli**
 
-[![Version](https://img.shields.io/badge/Version-0.8.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.8.1-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://img.shields.io/github/downloads/shzlw/poli/total.svg?color=6554C0)](https://github.com/shzlw/poli/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/zhonglu/poli.svg)](https://cloud.docker.com/u/zhonglu/repository/docker/zhonglu/poli)
@@ -32,7 +32,7 @@ Open and free for all usages.
 #### :gem: Is that all?
 Auto refresh, drill through, fullscreen, embeds, color themes + more features in development.
 
-## What's New ([latest v0.8.0](https://shzlw.github.io/poli/#/change-logs))
+## What's New ([latest v0.8.1](https://shzlw.github.io/poli/#/change-logs))
 
 
 ![poli v0.8.0](http://66.228.42.235:8080/image-0.8.0/bob_glass_en.jpg)
@@ -56,7 +56,7 @@ Auto refresh, drill through, fullscreen, embeds, color themes + more features in
 Windows/Linux
 
 ```sh
-java -jar poli-0.8.0.jar
+java -jar poli-0.8.1.jar
 ```
 
 Docker

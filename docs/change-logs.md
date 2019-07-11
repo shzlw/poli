@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.8.0
+## v0.8.1
 
 ### New Features
 - Support [i18n customization](configuration?id=internationalization-i18n). Include default language pack for English and Chinese. 

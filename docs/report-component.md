@@ -49,7 +49,7 @@ Data:
 
 > The query is required to return at least three columns.
 
-![Heatmap](_images/image-0.8.0/component_heatmap.jpg)
+![Heatmap](_images/image-0.8.1/component_heatmap.jpg)
 
 #### Treemap
 
@@ -60,7 +60,7 @@ Data:
 
 > The query is required to return at least two columns.
 
-![Treemap](_images/image-0.8.0/component_treemap.jpg)
+![Treemap](_images/image-0.8.1/component_treemap.jpg)
 
 #### Funnel
 
@@ -69,7 +69,7 @@ Config:
 - Value (number)
 - Color Platte
 
-![Funnel](_images/image-0.8.0/component_funnel.jpg)
+![Funnel](_images/image-0.8.1/component_funnel.jpg)
 
 #### Card
 
@@ -81,7 +81,7 @@ Config:
 
 > The query is required to return one column with one value only.
 
-![Card](_images/image-0.8.0/component_card.jpg)
+![Card](_images/image-0.8.1/component_card.jpg)
 
 
 ### Filter
