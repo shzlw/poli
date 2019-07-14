@@ -68,7 +68,7 @@
 1. Pull and run the Poli image.
 
     ```bash
-    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.8.0
+    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.8.1
     ```
 2. Add JDBC drivers.
 

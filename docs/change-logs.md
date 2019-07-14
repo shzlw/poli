@@ -1,5 +1,16 @@
 # Change Logs
 
+## v0.8.1
+
+### Bug Fixes
+- Fix an issue that the sub type selection doesn't work after the i18n is changed to another language other than en.
+- Fix an issue that the auth filter may throw an NPE.
+
+### Improvements
+
+* Allow Image to display in full scale.
+* Add a new flag "Show All Axis Labels" for charts that support axis label to force the chart to display all labels.
+
 ## v0.8.0
 
 ### New Features
