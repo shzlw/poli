@@ -130,7 +130,8 @@ class Report extends Component {
         height: Constants.DEFAULT_REPORT_HEIGHT,
         backgroundColor: 'rgba(233, 235, 238, 1)',
         isFixedWidth: true,
-        fixedWidth: Constants.DEFAULT_REPORT_FIXED_WIDTH
+        fixedWidth: Constants.DEFAULT_REPORT_FIXED_WIDTH,
+        autoFilter: false
       }
     };
 

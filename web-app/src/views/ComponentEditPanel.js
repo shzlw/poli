@@ -483,12 +483,12 @@ class ComponentEditPanel extends React.Component {
         <div>
           {seriesChartPanel}
 
-          <label>{t('Is smooth')}</label>
+          <label>{t('Is Smooth')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="isSmooth" value="" checked={isSmooth} onChange={this.handleComponentDataChange} />
           </div>
 
-          <label>{t('Show all axis labels')}</label>
+          <label>{t('Show All Axis Labels')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="showAllAxisLabels" value="" checked={showAllAxisLabels} onChange={this.handleComponentDataChange} />
           </div>

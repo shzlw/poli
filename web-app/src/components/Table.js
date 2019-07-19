@@ -56,14 +56,15 @@ class Table extends React.Component {
       )
     }
 
-    const pageSize = showPagination ? Number(defaultPageSize) : data.length;
-    
+    const pageSize = showPagination ? undefined : data.length;
+
     return (
       <ReactTable
         data={data}
         columns={columnHeaders}
         showPagination={showPagination}
-        defaultPageSize={pageSize}
+        defaultPageSize={Number(defaultPageSize)}
+        pageSize={pageSize}
         previousText={'Prev'}
         nextText={'Next'}
       />

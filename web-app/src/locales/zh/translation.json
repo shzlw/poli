@@ -45,8 +45,8 @@
   "Height": "高度",
   "Background": "背景",
   "Color": "颜色",
-  "Snap to grid": "吸附网格",
-  "Show gridlines": "显示网格",
+  "Snap To Grid": "吸附网格",
+  "Show Gridlines": "显示网格",
   "Are you sure you want to delete this component?": "您确定要删除这个组件吗？",
   "Title": "标题",
   "Show": "显示",
@@ -78,7 +78,7 @@
   "Key": "主键",
   "Value": "值",
   "Color Platte": "调色板",
-  "Is smooth": "顺滑",
+  "Is Smooth": "顺滑",
   "Is Stacked": "堆叠",
   "Is Horizontal": "水平",
   "Sort": "顺序",
@@ -96,6 +96,8 @@
   "chart": "图表",
   "filter": "过滤器",
   "Is Full Size": "全尺寸",
-  "Show all axis labels": "显示所有Axis的标签",
-  "Show Pagination": "显示分页"
+  "Show All Axis Labels": "显示所有Axis的标签",
+  "Show Pagination": "显示分页",
+  "Control": "控制",
+  "Auto Filter": "自动过滤"
 }

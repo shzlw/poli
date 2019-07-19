@@ -379,6 +379,22 @@ class ReportEditView extends React.Component {
     }
   }
 
+  onComponentFilterInputChange = () => {
+    if (this.isAutoFilter()) {
+      this.applyFilters();
+    }
+  }
+
+  isAutoFilter = () => {
+    const {
+      style = {}
+    } = this.state;
+    const {
+      autoFilter = false
+    } = style;
+    return autoFilter;
+  }
+
   goBackToFromReport = () => {
     this.props.history.goBack();
   }
@@ -530,9 +546,12 @@ class ReportEditView extends React.Component {
         <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button ml-4" onClick={this.applyFilters}>
-          <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> {t('Apply Filters')}
-        </button>
+
+        { !this.isAutoFilter() && (
+          <button className="button ml-4" onClick={this.applyFilters}>
+            <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> {t('Apply Filters')}
+          </button>
+        )}
       </React.Fragment>
     );
 
@@ -642,6 +661,7 @@ class ReportEditView extends React.Component {
           onComponentEdit={this.openComponentEditPanel}
           onStyleValueChange={this.onStyleValueChange}
           onComponentContentClick={this.onComponentContentClick}
+          onComponentFilterInputChange={this.onComponentFilterInputChange}
           reportType={reportType}
           {...this.state.style}
         />
@@ -738,7 +758,6 @@ class ReportEditView extends React.Component {
                     />
                   </div>  
                 </div>
-
               </div>
 
               
@@ -752,19 +771,29 @@ class ReportEditView extends React.Component {
                 </div>
 
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
-                  <div className="float-left">{t('Snap to grid')}</div>
+                  <div className="float-left">{t('Snap To Grid')}</div>
                   <div className="float-right">
                     <Checkbox name="snapToGrid" value="" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
                   </div>
                 </div>
 
                 <div className="row side-panel-content-row">
-                  <div className="float-left">{t('Show gridlines')}</div>
+                  <div className="float-left">{t('Show Gridlines')}</div>
                   <div className="float-right">
                     <Checkbox name="showGridlines" value="" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
                   </div>
                 </div>
 
+              </div>
+
+              <div className="side-panel-title row">{t('Control')}</div>
+              <div className="side-panel-content">
+                <div className="row side-panel-content-row">
+                  <div className="float-left">{t('Auto Filter')}</div>
+                  <div className="float-right">
+                    <Checkbox name="autoFilter" value="" checked={this.state.style.autoFilter} onChange={this.handleStyleValueChange} />
+                  </div>
+                </div>
               </div>
 
             </div>

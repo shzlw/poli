@@ -358,6 +358,8 @@ class ComponentViewPanel extends React.Component {
 
     this.setState({
       components: newComponents
+    }, () => {
+      this.props.onComponentFilterInputChange();
     });   
   }
 
