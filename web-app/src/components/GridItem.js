@@ -229,7 +229,8 @@ class GridItem extends React.Component {
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
         const { 
-          defaultPageSize = 10
+          defaultPageSize = 10,
+          showPagination = true
         } = data;
         componentItem = (
           <Table
@@ -237,6 +238,7 @@ class GridItem extends React.Component {
             columns={columns}
             defaultPageSize={defaultPageSize}
             drillThrough={drillThrough}
+            showPagination={showPagination}
             onTableTdClick={this.onTableTdClick}
           />
         );

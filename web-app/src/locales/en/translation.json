@@ -96,5 +96,6 @@
   "chart": "chart",
   "filter": "filter",
   "Is Full Size": "Is Full Size",
-  "Show all axis labels": "Show all axis labels"
+  "Show all axis labels": "Show all axis labels",
+  "Show Pagination": "Show Pagination"
 }

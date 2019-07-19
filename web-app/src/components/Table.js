@@ -10,7 +10,8 @@ class Table extends React.Component {
     data: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
     defaultPageSize: PropTypes.number,
-    drillThrough: PropTypes.array
+    drillThrough: PropTypes.array,
+    showPagination: PropTypes.bool
   };
 
   handleTdClick = (reportId, columnName, columnValue) => {
@@ -22,7 +23,8 @@ class Table extends React.Component {
       data = [],
       columns = [],
       drillThrough = [],
-      defaultPageSize = 10
+      defaultPageSize = 10,
+      showPagination = true
     } = this.props;
 
     const columnHeaders = [];
@@ -54,11 +56,14 @@ class Table extends React.Component {
       )
     }
 
+    const pageSize = showPagination ? Number(defaultPageSize) : data.length;
+    
     return (
       <ReactTable
         data={data}
         columns={columnHeaders}
-        defaultPageSize={Number(defaultPageSize)}
+        showPagination={showPagination}
+        defaultPageSize={pageSize}
         previousText={'Prev'}
         nextText={'Next'}
       />

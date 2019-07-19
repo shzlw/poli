@@ -418,17 +418,28 @@ class ComponentEditPanel extends React.Component {
     let chartConfigPanel;
     if (subType === Constants.TABLE) {
       const {
-        defaultPageSize = 10
+        defaultPageSize = 10,
+        showPagination = true
       } = data;
       chartConfigPanel = (
         <div>
-          <label>{t('Default Page Size')}</label>
-          <Select
-            name={'defaultPageSize'}
-            value={defaultPageSize}
-            onChange={this.handleComponentDataChange}
-            options={TABLE_DEFAULT_PAGE_SIZES}
-          />
+          <label>{t('Show Pagination')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="showPagination" value="" checked={showPagination} onChange={this.handleComponentDataChange} />
+          </div>
+
+          {showPagination && (
+            <div>
+              <label>{t('Default Page Size')}</label>
+              <Select
+                name={'defaultPageSize'}
+                value={defaultPageSize}
+                onChange={this.handleComponentDataChange}
+                options={TABLE_DEFAULT_PAGE_SIZES}
+              />
+            </div>
+          )}
+          
         </div>
       );
     } else if (subType === Constants.PIE || subType === Constants.TREEMAP) {
