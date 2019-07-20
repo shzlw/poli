@@ -29,7 +29,10 @@ class User extends React.Component {
       tempPassword: '',
       sysRole: Constants.SYS_ROLE_VIEWER,
       userGroupId: '',
-      userGroups: []
+      userGroups: [],
+      userAttributes: [],
+      attrKey: '',
+      attrValue: ''
     };
   }
 
@@ -60,7 +63,10 @@ class User extends React.Component {
       tempPassword: '',
       sysRole: '',
       userGroupId: '',
-      userGroups: []
+      userGroups: [],
+      userAttributes: [],
+      attrKey: '',
+      attrValue: ''
     };
   }
 
@@ -90,6 +96,7 @@ class User extends React.Component {
   }
 
   openEditPanel = (user) => {
+    this.clearEditPanel();
     if (user !== null) {
       axios.get('/ws/user/' + user.id)
         .then(res => {
@@ -100,11 +107,10 @@ class User extends React.Component {
             name: result.name,
             tempPassword: '',
             sysRole: result.sysRole,
-            userGroups: result.userGroups
+            userGroups: result.userGroups,
+            userAttributes: result.userAttributes
           });
         });
-    } else {
-      this.clearEditPanel();
     }
 
     this.setState({
@@ -137,7 +143,8 @@ class User extends React.Component {
       name,
       tempPassword,
       sysRole,
-      userGroups
+      userGroups,
+      userAttributes
     } = this.state;
 
     if (!username) {
@@ -155,12 +162,12 @@ class User extends React.Component {
       }
     }
 
-
-    let user = {
+    const user = {
       username: username,
       name: name,
       sysRole: selectedSysRole,
-      userGroups: userGroups
+      userGroups: userGroups,
+      userAttributes: userAttributes
     };
 
     if (id !== null) {
@@ -231,6 +238,44 @@ class User extends React.Component {
     } 
   }
 
+  addUserAttribute = () => {
+    const { 
+      attrKey,
+      attrValue,
+      userAttributes = []
+    } = this.state;
+    if (!attrKey) {
+      return;
+    }
+    const index = userAttributes.findIndex(attr => attr.attrKey === attrKey);
+    if (index === -1) {
+      const newUserAttributes = [...userAttributes];
+      newUserAttributes.push({
+        attrKey: attrKey,
+        attrValue: attrValue
+      });
+      this.setState({
+        userAttributes: newUserAttributes,
+        attrKey: '',
+        attrValue: ''
+      });
+    }
+  }
+
+  removeUserAttribute = (attrKey) => {
+    const { 
+      userAttributes = [] 
+    } = this.state;
+    const index = userAttributes.findIndex(attr => attr.attrKey === attrKey);
+    if (index !== -1) {
+      const newUserAttributes = [...userAttributes];
+      newUserAttributes.splice(index, 1);
+      this.setState({
+        userAttributes: newUserAttributes
+      });
+    } 
+  }
+
   confirmDelete = () => {
     const { 
       objectToDelete = {} 
@@ -265,6 +310,7 @@ class User extends React.Component {
       users = [],
       groups = [],
       userGroups = [],
+      userAttributes = [],
       searchValue,
       showConfirmDeletionPanel,
       objectToDelete = {}
@@ -329,6 +375,15 @@ class User extends React.Component {
       }
     }
 
+    const userAttributeItems = userAttributes.map(attr =>
+      <div key={attr.attrKey} className="row table-row">
+        <div className="float-left ellipsis" style={{width: '180px'}}>{attr.attrKey}: {attr.attrValue}</div>
+        <button className="button table-row-button float-right button-red" onClick={() => this.removeUserAttribute(attr.attrKey)}>
+          <FontAwesomeIcon icon="trash-alt" />
+        </button>
+      </div>
+    );
+
     return (
       <div>
         <div class="row">
@@ -351,7 +406,7 @@ class User extends React.Component {
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'mid-modal-panel'} 
+          modalClass={'large-modal-panel'} 
           title={t(mode)} >
 
           <div className="row">
@@ -407,24 +462,52 @@ class User extends React.Component {
               
             </div>
 
-            { Constants.SYS_ROLE_VIEWER === this.state.sysRole && (
-              <div className="form-panel float-right" style={{width: '240px'}}>
-            
-                <label>{t('Groups')}</label>
-                <Select
-                  name={'userGroupId'}
-                  value={this.state.userGroupId}
-                  onChange={this.handleIntegerOptionChange}
-                  options={groups}
-                  optionDisplay={'name'}
-                  optionValue={'id'}
-                />
-                <button className="button" onClick={this.addUserGroup}>{t('Add')}</button>
-                <div style={{marginTop: '8px'}}>
-                  {userGroupItems}
-                </div>
+            <div className="form-panel float-left" style={{width: '240px', marginLeft: '20px'}}>
+              <label>{t('Attributes')}</label>
+              <label>{t('Key')} <span className="required">*</span></label>
+              <input 
+                className="form-input"
+                type="text" 
+                name="attrKey" 
+                value={this.state.attrKey}
+                onChange={this.handleInputChange} 
+              />
+                
+              <label>{t('Value')}</label>
+              <input 
+                className="form-input"
+                type="text" 
+                name="attrValue" 
+                value={this.state.attrValue}
+                onChange={this.handleInputChange} 
+              />
+
+              <button className="button" onClick={this.addUserAttribute}>{t('Add')}</button>
+              <div style={{marginTop: '8px'}}>
+                {userAttributeItems}
               </div>
-            )}
+            </div>
+
+            <div className="form-panel float-left" style={{width: '240px', marginLeft: '20px'}}>
+              { Constants.SYS_ROLE_VIEWER === this.state.sysRole && (
+                <div>
+                  <label>{t('Groups')}</label>
+                  <Select
+                    name={'userGroupId'}
+                    value={this.state.userGroupId}
+                    onChange={this.handleIntegerOptionChange}
+                    options={groups}
+                    optionDisplay={'name'}
+                    optionValue={'id'}
+                  />
+                  <button className="button" onClick={this.addUserGroup}>{t('Add')}</button>
+                  <div style={{marginTop: '8px'}}>
+                    {userGroupItems}
+                  </div>
+                </div>  
+              )}      
+            </div>
+
           </div>
           <button className="button mt-3 button-green" onClick={this.save}>
             <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}

@@ -29,6 +29,7 @@ class ReportEditView extends React.Component {
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
+      isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
       isFullScreenView: false,
@@ -181,6 +182,8 @@ class ReportEditView extends React.Component {
             style: result.style
           }, () => {
             this.refresh();
+            // When the view is loaded the first time, apply the filters immediately because the url params are available already.
+            this.applyFilters();
           });
         });
     });
@@ -326,6 +329,9 @@ class ReportEditView extends React.Component {
     } else if (reportType === Constants.CANNED) {
       // TODO: query local data.
     }
+    this.setState({
+      isPendingApplyFilters: false
+    });
     this.updateLastRefreshed();
   }
 
@@ -382,6 +388,10 @@ class ReportEditView extends React.Component {
   onComponentFilterInputChange = () => {
     if (this.isAutoFilter()) {
       this.applyFilters();
+    } else {
+      this.setState({
+        isPendingApplyFilters: true
+      });
     }
   }
 
@@ -511,9 +521,11 @@ class ReportEditView extends React.Component {
       isFullScreenView,
       fromReport,
       showControl,
-      reportType
+      reportType,
+      isPendingApplyFilters
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
+    const pendingApplyFiltersStyle = isPendingApplyFilters ? 'button-green' : '';
 
     const commonButtonPanel = (
       <React.Fragment>
@@ -548,7 +560,7 @@ class ReportEditView extends React.Component {
         </button>
 
         { !this.isAutoFilter() && (
-          <button className="button ml-4" onClick={this.applyFilters}>
+          <button className={`button ml-4 ${pendingApplyFiltersStyle}`} onClick={this.applyFilters}>
             <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> {t('Apply Filters')}
           </button>
         )}

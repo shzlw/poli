@@ -93,6 +93,14 @@ IF NOT EXISTS p_canned_report (
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 
+CREATE TABLE
+IF NOT EXISTS p_user_attribute (
+    user_id INTEGER NOT NULL,
+    attr_key VARCHAR
+    attr_value VARCHAR
+    FOREIGN KEY (user_id) REFERENCES p_user(id)
+);
+
 CREATE UNIQUE INDEX p_report_unique_name_index ON p_report(name);
 
 INSERT INTO p_user(username, temp_password, sys_role)

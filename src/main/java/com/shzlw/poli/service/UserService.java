@@ -40,7 +40,11 @@ public class UserService {
         }
 
         try {
-            User user = SESSION_USER_CACHE.get(sessionKey, () -> userDao.findBySessionKey(sessionKey));
+            User user = SESSION_USER_CACHE.get(sessionKey, () -> {
+                User u = userDao.findBySessionKey(sessionKey);
+                u.setUserAttributes(userDao.findUserAttributes(u.getId()));
+                return u;
+            });
             return user;
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;
@@ -53,7 +57,11 @@ public class UserService {
         }
 
         try {
-            User user = API_KEY_USER_CACHE.get(apiKey, () -> userDao.findByApiKey(apiKey));
+            User user = API_KEY_USER_CACHE.get(apiKey, () -> {
+                User u = userDao.findByApiKey(apiKey);
+                u.setUserAttributes(userDao.findUserAttributes(u.getId()));
+                return u;
+            });
             return user;
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;

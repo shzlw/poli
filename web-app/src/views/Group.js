@@ -81,6 +81,7 @@ class Group extends React.Component {
   }
 
   openEditPanel = (group) => {
+    this.clearEditPanel();
     if (group !== null) {
       axios.get('/ws/group/' + group.id)
         .then(res => {
@@ -91,9 +92,8 @@ class Group extends React.Component {
             groupReports: result.groupReports
           });
         });
-    } else {
-      this.clearEditPanel();
     }
+    
     this.setState({
       groupReportId: '',
       showEditPanel: true

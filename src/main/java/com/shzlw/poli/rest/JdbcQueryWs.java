@@ -7,6 +7,7 @@ import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.Component;
 import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.service.ReportService;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +74,9 @@ public class JdbcQueryWs {
         if (isAccessValid) {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, filterParams);
+            User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+            List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
+            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams);
             return new ResponseEntity(queryResult, HttpStatus.OK);
         }
 
@@ -98,5 +102,28 @@ public class JdbcQueryWs {
             }
         }
         return isValid;
+    }
+
+    protected List<FilterParameter> addUserAttributesToFilterParams(List<UserAttribute> userAttributes, List<FilterParameter> filterParams) {
+        if (userAttributes == null || userAttributes.isEmpty()) {
+            return filterParams;
+        }
+
+        List<FilterParameter> newFilterParams = new ArrayList<>();
+        for (UserAttribute attr : userAttributes) {
+            // Transform every user attribute to a single value filter param.
+            FilterParameter param = new FilterParameter();
+            param.setType(Constants.FILTER_TYPE_SINGLE);
+            // For example: $user_attr[division]
+            param.setParam(CommonUtil.getParamByAttrKey(attr.getAttrKey()));
+            param.setValue(attr.getAttrValue());
+            newFilterParams.add(param);
+        }
+
+        if (filterParams != null && !filterParams.isEmpty()) {
+            newFilterParams.addAll(filterParams);
+        }
+
+        return newFilterParams;
     }
 }

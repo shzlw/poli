@@ -139,6 +139,7 @@ class DataSource extends Component {
   }
 
   openEditPanel = (ds) => {
+    this.clearEditPanel();
     if (ds !== null) {
       this.setState({
         showUpdatePassword: false,
@@ -149,8 +150,6 @@ class DataSource extends Component {
         name: ds.name,
         ping: ds.ping
       });
-    } else {
-      this.clearEditPanel();
     }
     
     this.setState({

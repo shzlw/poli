@@ -24,4 +24,8 @@ public final class CommonUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
     }
+
+    public static String getParamByAttrKey(String attrKey) {
+        return "$user_attr[" + attrKey + "]";
+    }
 }

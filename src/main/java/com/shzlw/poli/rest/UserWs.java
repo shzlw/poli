@@ -3,6 +3,7 @@ package com.shzlw.poli.rest;
 import com.shzlw.poli.dao.CannedReportDao;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
@@ -55,6 +56,8 @@ public class UserWs {
         }
         List<Long> userGroups = userDao.findUserGroups(userId);
         user.setUserGroups(userGroups);
+        List<UserAttribute> userAttributes = userDao.findUserAttributes(userId);
+        user.setUserAttributes(userAttributes);
         return user;
     }
 
@@ -69,6 +72,7 @@ public class UserWs {
 
         long userId = userDao.insertUser(user.getUsername(), user.getName(), user.getTempPassword(), user.getSysRole());
         userDao.insertUserGroups(userId, user.getUserGroups());
+        userDao.insertUserAttributes(userId, user.getUserAttributes());
         return new ResponseEntity<Long>(userId, HttpStatus.CREATED);
     }
 
@@ -88,6 +92,8 @@ public class UserWs {
         userDao.updateUser(user);
         userDao.deleteUserGroups(userId);
         userDao.insertUserGroups(userId, user.getUserGroups());
+        userDao.deleteUserAttributes(userId);
+        userDao.insertUserAttributes(userId, user.getUserAttributes());
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
@@ -103,6 +109,7 @@ public class UserWs {
 
         userService.invalidateSessionUserCache(savedUser.getSessionKey());
         cannedReportDao.deleteByUserId(userId);
+        userDao.deleteUserAttributes(userId);
         userDao.deleteUserGroups(userId);
         userDao.deleteUser(userId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

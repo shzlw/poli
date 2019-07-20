@@ -29,6 +29,8 @@ public class User {
 
     private List<Long> userGroups = new ArrayList<>();
 
+    private List<UserAttribute> userAttributes = new ArrayList<>();
+
     public User() {}
 
     public long getId() {
@@ -109,6 +111,14 @@ public class User {
 
     public void setUserGroups(List<Long> userGroups) {
         this.userGroups = userGroups;
+    }
+
+    public List<UserAttribute> getUserAttributes() {
+        return userAttributes;
+    }
+
+    public void setUserAttributes(List<UserAttribute> userAttributes) {
+        this.userAttributes = userAttributes;
     }
 
     @Override

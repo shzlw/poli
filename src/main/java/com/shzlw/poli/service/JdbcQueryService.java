@@ -9,6 +9,7 @@ import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
 import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,11 @@ public class JdbcQueryService {
         }
     }
 
-    public QueryResult queryComponentByParams(DataSource dataSource, String sql, List<FilterParameter> filterParams) {
+    public QueryResult queryComponentByParams(
+            DataSource dataSource,
+            String sql,
+            List<FilterParameter> filterParams
+    ) {
         if (dataSource == null) {
             return QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND);
         } else if (StringUtils.isEmpty(sql)) {

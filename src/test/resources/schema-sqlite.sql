@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
 DROP TABLE IF EXISTS p_datasource;
+DROP TABLE IF EXISTS p_user_attribute;
 DROP TABLE IF EXISTS p_group_user;
 DROP TABLE IF EXISTS p_user;
 DROP TABLE IF EXISTS p_group;
@@ -92,6 +93,15 @@ IF NOT EXISTS p_canned_report (
     created_at INTEGER NOT NULL,
     name TEXT NOT NULL,
     data TEXT,
+    FOREIGN KEY (user_id) REFERENCES p_user(id)
+);
+
+-- table added in v0.9.0
+CREATE TABLE
+IF NOT EXISTS p_user_attribute (
+    user_id INTEGER NOT NULL,
+    attr_key TEXT,
+    attr_value TEXT,
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 
