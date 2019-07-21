@@ -1,5 +1,28 @@
 # Change Logs
 
+## v0.9.0
+
+### Breaking Changes & Upgrade Steps
+- A new databse table needs to be loaded in order to support row level security. 
+
+  ```sh
+  ./sqlite3 poli.db
+
+  -- File is located at upgrade/poli_upgrade_v0.9.0.sql
+  sqlite> .read poli_upgrade_v0.9.0.sql
+  ```
+
+### New Features
+
+- User attributes can be defined at per user level and be used in dynamic query to support row level security.
+- The selected component can be moved by using arrow key in order to provide more precise control.
+- New option to enable/disable auto filtering on report level.
+- New option to toggle table pagination.
+
+### Improvements
+- When filters are modified, the color of the "apply filters" button will be changed to show indication.
+- When the report view is loaded with url parameters from drill through, the filter values will be applied immediately.
+
 ## v0.8.1
 
 ### Bug Fixes
@@ -40,8 +63,8 @@
   ```sh
   ./sqlite3 poli.db
 
-  -- File is in upgrade/poleo_upgrade_v0.7.0.sql
-  sqlite> .read poleo_upgrade_v0.7.0.sql
+  -- File is located at upgrade/poli_upgrade_v0.7.0.sql
+  sqlite> .read poli_upgrade_v0.7.0.sql
   ```
 
 ### New Features

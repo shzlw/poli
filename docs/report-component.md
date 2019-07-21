@@ -7,6 +7,8 @@
 
   Components can be repositioned and resized on the report. If you'd like to stack/overlap components, z index field can be used to control the stacking order.
 
+  > The selected component can be moved by using arrow key in order to provide more precise control.
+
 * Border
 * Content background color 
 
@@ -49,7 +51,7 @@ Data:
 
 > The query is required to return at least three columns.
 
-![Heatmap](_images/image-0.8.1/component_heatmap.jpg)
+![Heatmap](_images/screenshots/component_heatmap.jpg)
 
 #### Treemap
 
@@ -60,7 +62,7 @@ Data:
 
 > The query is required to return at least two columns.
 
-![Treemap](_images/image-0.8.1/component_treemap.jpg)
+![Treemap](_images/screenshots/component_treemap.jpg)
 
 #### Funnel
 
@@ -69,7 +71,7 @@ Config:
 - Value (number)
 - Color Platte
 
-![Funnel](_images/image-0.8.1/component_funnel.jpg)
+![Funnel](_images/screenshots/component_funnel.jpg)
 
 #### Card
 
@@ -81,7 +83,7 @@ Config:
 
 > The query is required to return one column with one value only.
 
-![Card](_images/image-0.8.1/component_card.jpg)
+![Card](_images/screenshots/component_card.jpg)
 
 
 ### Filter
@@ -175,21 +177,21 @@ WHERE 1 = 1
 
 ## Drill through
 
-1. Drill through is used to navigate from one component in a Report to another Report. To use it in Poli, you need to have at least two reports.
+Drill through is used to navigate from one component in a Report to another Report. To use it in Poli, you need to have at least two reports.
 
 ![drillthrough1](_images/screenshots/drillthrough1.jpg)
 
-2. Create a pie chart in Report 1. Go to Drill Through tab. Choose the source column and destination report.
+1. Create a pie chart in Report 1. Go to Drill Through tab. Choose the source column and destination report.
 
 ![drillthrough2](_images/screenshots/drillthrough2.jpg)
 
-3. Click the Cup piece on the pie chart.
+2. Click the Cup piece on the pie chart.
 
 > If this component has drill through defined, there will be a --> icon on the title bar.
 
 ![drillthrough3](_images/screenshots/drillthrough3.jpg)
 
-4. Report 2 is being displayed and product=Cup is passed along to Report 2. If there are any chart components on Report 2 that use :product query parameter in the query will become reactive.
+3. Report 2 is being displayed and product=Cup is passed along to Report 2. If there are any chart components on Report 2 that use :product query parameter in the query will become reactive.
 
 ![drillthrough4](_images/screenshots/drillthrough4.jpg)
 
@@ -198,4 +200,35 @@ WHERE 1 = 1
 Click export button at the top right corner of the chart to export chart data as CSV file.
 
 ![export csv](_images/screenshots/export_csv.jpg)
+
+> The CSV file exported is in UTF-8 and it might take extra steps in Excel for it to be recognized.
+
+## Row Level Security
+
+To limit the user access to all records in the table, the records returned by the query can be controlled at row level based on the user attributes defined at per user level.
+
+To use this feature, you would need to go to User page to add some user attributes and then use them in the dynamic query.
+
+For example,
+
+Assume that we have a table: department_data. The goal here is to have user1 who is from Engineering department to only see the records for Engineering department. 
+
+![rls table](_images/screenshots/rls_table.jpg)
+
+1. Create a new user: user1. Define a user attribute on the User page.
+
+
+2. Create a table chart using
+
+```sql
+SELECT *
+FROM department_data 
+WHERE 1 = 1 
+{{ AND department = :$user_attr[department] }}
+```
+
+> The syntax for using user attribute parameters in dynamic query is: :$user_attr[@YOUR_USER_ATTRUBTE_KEY]
+
+3. Login in as user1 and check the report. Only one record is displayed.
+
 
