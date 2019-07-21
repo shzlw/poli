@@ -22,11 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -75,6 +72,12 @@ public class JdbcQueryWs {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
             User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+
+            List<UserAttribute> userAttributes = user.getUserAttributes();
+            LOGGER.info("userAttributes: {}", userAttributes.size());
+            for (UserAttribute attr : userAttributes) {
+                LOGGER.info("attr: {}", attr);
+            }
             List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
             QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams);
             return new ResponseEntity(queryResult, HttpStatus.OK);
@@ -113,7 +116,7 @@ public class JdbcQueryWs {
         for (UserAttribute attr : userAttributes) {
             // Transform every user attribute to a single value filter param.
             FilterParameter param = new FilterParameter();
-            param.setType(Constants.FILTER_TYPE_SINGLE);
+            param.setType(Constants.FILTER_TYPE_USER_ATTRIBUTE);
             // For example: $user_attr[division]
             param.setParam(CommonUtil.getParamByAttrKey(attr.getAttrKey()));
             param.setValue(attr.getAttrValue());

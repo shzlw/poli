@@ -1,7 +1,6 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.CannedReport;
-import com.shzlw.poli.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

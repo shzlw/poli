@@ -24,6 +24,7 @@ public final class Constants {
     public static final String FILTER_TYPE_SLICER = "slicer";
     public static final String FILTER_TYPE_SINGLE = "single";
     public static final String FILTER_TYPE_DATE_PICKER = "date picker";
+    public static final String FILTER_TYPE_USER_ATTRIBUTE = "user attribute";
 
     public static final String SLICER_SELECT_ALL = "select all";
     public static final String SLICER_SELECT_NONE = "select none";

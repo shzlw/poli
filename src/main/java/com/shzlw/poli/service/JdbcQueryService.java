@@ -8,8 +8,6 @@ import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
-import com.shzlw.poli.model.JdbcDataSource;
-import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +25,8 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
+import java.util.*;
 
 @Service
 public class JdbcQueryService {
@@ -206,7 +204,9 @@ public class JdbcQueryService {
                 String name = param.getParam();
                 String value = param.getValue();
 
-                if (type.equals(Constants.FILTER_TYPE_SLICER)) {
+                if (type.equals(Constants.FILTER_TYPE_USER_ATTRIBUTE)) {
+                    namedParameters.put(name, value);
+                } else if (type.equals(Constants.FILTER_TYPE_SLICER)) {
                     String remark = param.getRemark();
                     if (remark == null) {
                         try {

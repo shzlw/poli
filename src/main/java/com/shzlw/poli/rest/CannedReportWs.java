@@ -2,7 +2,6 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.CannedReportDao;
 import com.shzlw.poli.model.CannedReport;
-import com.shzlw.poli.model.Component;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;

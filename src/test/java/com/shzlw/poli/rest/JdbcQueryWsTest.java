@@ -125,7 +125,7 @@ public class JdbcQueryWsTest {
         List<FilterParameter> newFilterParams = jdbcQueryWs.addUserAttributesToFilterParams(userAttributes, filterParams);
 
         Assert.assertEquals(2, newFilterParams.size());
-        Assert.assertEquals(Constants.FILTER_TYPE_SINGLE, newFilterParams.get(0).getType());
+        Assert.assertEquals(Constants.FILTER_TYPE_USER_ATTRIBUTE, newFilterParams.get(0).getType());
         Assert.assertEquals(CommonUtil.getParamByAttrKey(attrKey), newFilterParams.get(0).getParam());
         Assert.assertEquals(attrValue, newFilterParams.get(0).getValue());
 
