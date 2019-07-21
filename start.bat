@@ -1,1 +1,1 @@
-java -jar poli-0.8.1.jar --spring.config.name=application,poli
+java -jar poli-0.9.0.jar --spring.config.name=application,poli

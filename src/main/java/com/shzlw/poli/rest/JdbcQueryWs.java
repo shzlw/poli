@@ -72,12 +72,6 @@ public class JdbcQueryWs {
             String sql = component.getSqlQuery();
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
             User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-
-            List<UserAttribute> userAttributes = user.getUserAttributes();
-            LOGGER.info("userAttributes: {}", userAttributes.size());
-            for (UserAttribute attr : userAttributes) {
-                LOGGER.info("attr: {}", attr);
-            }
             List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
             QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams);
             return new ResponseEntity(queryResult, HttpStatus.OK);

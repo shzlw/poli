@@ -218,6 +218,8 @@ Assume that we have a table: department_data. The goal here is to have user1 who
 1. Create a new user: user1. Define a user attribute on the User page.
 
 
+![rls user attributes](_images/screenshots/rls_user_attributes.jpg)
+
 2. Create a table chart using
 
 ```sql

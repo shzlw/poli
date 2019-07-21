@@ -109,7 +109,8 @@ public class AuthFilter implements Filter {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
-            if (path.startsWith("/ws/jdbcquery")) {
+            if (path.startsWith("/ws/jdbcquery")
+                || path.startsWith("/ws/cannedreport")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {

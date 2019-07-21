@@ -165,6 +165,7 @@ public class AuthFilterTest {
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
                 new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/cannedreport"),
                 new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
         );
 

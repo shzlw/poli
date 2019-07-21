@@ -23,6 +23,10 @@
 - When filters are modified, the color of the "apply filters" button will be changed to show indication.
 - When the report view is loaded with url parameters from drill through, the filter values will be applied immediately.
 
+### Bug Fixes
+- Fix an issue that the report group modification doesn't update the user report cache.
+- Fix an issue that the user with viewer role cannot save canned report.
+
 ## v0.8.1
 
 ### Bug Fixes

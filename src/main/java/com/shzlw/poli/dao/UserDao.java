@@ -154,6 +154,11 @@ public class UserDao {
         return jt.queryForList(sql, new Object[]{ userId }, Long.class);
     }
 
+    public List<Long> findGroupUsers(long groupId) {
+        String sql = "SELECT user_id FROM p_group_user WHERE group_id = ?";
+        return jt.queryForList(sql, new Object[]{ groupId }, Long.class);
+    }
+
     public List<UserAttribute> findUserAttributes(long userId) {
         String sql = "SELECT attr_key, attr_value FROM p_user_attribute WHERE user_id = ?";
         return jt.query(sql, new Object[]{ userId }, (rs, i) -> {

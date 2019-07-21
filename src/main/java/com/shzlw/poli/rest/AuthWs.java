@@ -69,11 +69,11 @@ public class AuthWs {
         }
 
         User user = userDao.findBySessionKey(sessionKey);
-        user.setUserAttributes(userDao.findUserAttributes(user.getId()));
         if (user == null) {
             return LoginResponse.ofError(INVALID_USERNAME_PASSWORD);
         }
 
+        user.setUserAttributes(userDao.findUserAttributes(user.getId()));
         userService.newOrUpdateUser(user, user.getSessionKey(), sessionKey);
         return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
     }

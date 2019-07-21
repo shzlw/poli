@@ -1,4 +1,4 @@
--- v0.8.1 for PostgreSQL
+-- v0.9.0 for PostgreSQL
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
