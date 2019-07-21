@@ -147,7 +147,7 @@ class ReportEditView extends React.Component {
   }
 
   onKeyDown = (event) => {
-    if(event.keyCode === 13) {
+    if (event.keyCode === 13) {
       this.applyFilters();
     }
   }

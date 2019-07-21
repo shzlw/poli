@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
@@ -33,6 +34,19 @@ class ComponentViewPanel extends React.Component {
   }
 
   componentDidMount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.addEventListener("keydown", this.onKeyDown);
+    }
+  }
+
+  componentWillUnmount() {
+    const thisNode = ReactDOM.findDOMNode(this);
+    if (thisNode) {
+      const { ownerDocument } = thisNode;
+      ownerDocument.removeEventListener('keydown', this.onKeyDown);
+    }
   }
 
   handleInputChange = (name, value, isNumber = false) => {
@@ -482,6 +496,77 @@ class ComponentViewPanel extends React.Component {
     }
   }
 
+  onKeyDown = (event) => {
+    const { keyCode } = event;
+    if (keyCode < 37 || keyCode > 40) {
+      return;
+    }
+
+    const selectedComponent = this.getSelectedComponent();
+    if (selectedComponent == null) {
+      return;
+    }
+
+    let {
+      x,
+      y,
+      width,
+      height
+    } = selectedComponent;
+
+    const COMPONENT_BORDER = 2;
+
+    switch (event.keyCode) {
+      case 37:
+        // Left
+        if (x <= 0) {
+          return;
+        }
+        x--;
+        this.handleInputChange('x', x, true);
+        break;
+      case 38:
+        // Up
+        if (y <= 0) {
+          return;
+        }
+        y--;
+        this.handleInputChange('y', y, true);
+        break;
+      case 39:
+        // Right
+        if (x + width + COMPONENT_BORDER * 2 >= this.state.gridWidth) {
+          return;
+        }
+        x++;
+        this.handleInputChange('x', x, true);
+        break;
+      case 40:
+        // Down
+        if (y + height + COMPONENT_BORDER * 2 >= this.props.height) {
+          return;
+        }
+        y++;
+        this.handleInputChange('y', y, true);
+        break;
+      default:
+        return;
+    }
+  }
+
+  getSelectedComponent = () => {
+    const {
+      selectedComponentId,
+      components = []
+    } = this.state;
+    if (selectedComponentId === 0) {
+      return null;
+    }
+    const index = components.findIndex(w => w.id === selectedComponentId);
+    const selectedComponent = index === -1 ? null : components[index];
+    return selectedComponent;
+  }
+
   render() {
     const { t } = this.props;
 
@@ -490,12 +575,7 @@ class ComponentViewPanel extends React.Component {
       showControl
     } = this.props;
 
-    const {
-      selectedComponentId,
-      components = []
-    } = this.state;
-    const index = components.findIndex(w => w.id === selectedComponentId);
-    const selectedComponent = index === -1 ? null : components[index];
+    const selectedComponent = this.getSelectedComponent();
 
     const top = showControl ? '50px' : '10px';
     const style = {
