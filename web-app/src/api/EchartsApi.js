@@ -605,7 +605,7 @@ const getHeatmapOption = (data, config) => {
     const row = data[i];
     const xAxisVal = row[xAxis];
     const yAxisVal = row[yAxis];
-    const seriesVal = row[series];
+    const seriesVal = Number(row[series]);
     
     let xIndex = xAxisData.findIndex(a => a == xAxisVal);
     if (xIndex === -1) {
