@@ -498,6 +498,10 @@ class ComponentViewPanel extends React.Component {
 
   onKeyDown = (event) => {
     const { keyCode } = event;
+    if (!event.shiftKey) {
+      return;
+    }
+    
     if (keyCode < 37 || keyCode > 40) {
       return;
     }
