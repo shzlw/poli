@@ -197,7 +197,7 @@ Drill through is used to navigate from one component in a Report to another Repo
 
 ## Export CSV
 
-Click export button at the top right corner of the chart to export chart data as CSV file.
+Hover the cursor over the top right corner of the chart and click export button to export chart data as CSV file.
 
 ![export csv](_images/screenshots/export_csv.jpg)
 
