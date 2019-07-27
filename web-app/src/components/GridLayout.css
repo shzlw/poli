@@ -66,6 +66,7 @@
 
 .download-csv-button {
   display: none;
+  z-index: 10;
 }
 
 .grid-title-button-panel:hover .download-csv-button {

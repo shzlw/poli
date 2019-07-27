@@ -81,3 +81,7 @@
 .ReactTable .rt-thead .rt-td.-sort-desc {
   box-shadow: inset 0 -3px 0 0 #0065FF;
 }
+
+.ReactTable .rt-resizer {
+  z-index: auto !important;
+}

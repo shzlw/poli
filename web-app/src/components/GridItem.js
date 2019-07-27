@@ -464,11 +464,11 @@ class GridItem extends React.Component {
           </div>
         )}
 
-        {readModeButtonGroup}
-        
         <div className="grid-box-content" style={contentStyle}>
           {this.renderComponentContent()}
         </div>
+
+        {readModeButtonGroup}
 
         { isEditMode && (
           <GridResizable 
