@@ -45,6 +45,7 @@ class GridLayout extends React.Component {
         onComponentRemove={this.props.onComponentRemove}
         onComponentFilterInputChange={this.props.onComponentFilterInputChange}
         onComponentContentClick={this.props.onComponentContentClick}
+        onComponentCsvExport={this.props.onComponentCsvExport}
       />
     );
 

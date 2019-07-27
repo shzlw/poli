@@ -29,7 +29,11 @@ class ComponentViewPanel extends React.Component {
       showGridlines: false,
       showConfirmDeletionPanel: false,
       objectToDelete: {},
-      selectedComponentId: 0
+      selectedComponentId: 0,
+      showExportCsvPanel: false,
+      csvFilename: '',
+      csvColumns: [],
+      csvData: []
     };
   }
 
@@ -49,7 +53,13 @@ class ComponentViewPanel extends React.Component {
     }
   }
 
-  handleInputChange = (name, value, isNumber = false) => {
+  handleInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  handleComponentInputChange = (name, value, isNumber = false) => {
     let val = isNumber ? (parseInt(value, 10) || 0) : value;
     const {
       selectedComponentId,
@@ -124,18 +134,18 @@ class ComponentViewPanel extends React.Component {
     return Math.floor(num * BASE_WIDTH / gridWidth);
   }
 
-  fetchComponents = (reportId, viewWidth) => {
+  fetchComponents = (reportId, viewWidth, postRefreshCallback) => {
     if (reportId === null) {
       return;
     }
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
-        this.buildViewPanel(result, viewWidth, true);
+        this.buildViewPanel(result, viewWidth, true, postRefreshCallback);
       });
   }
 
-  buildViewPanel = (components, viewWidth, isAdhoc) => {
+  buildViewPanel = (components, viewWidth, isAdhoc, postRefreshCallback) => {
     // Reorganize the filter component to push the datepicker filters to the end of the array so
     // they will be rendered later. Among them, the one with larger Y value should be rendered first.
     let reorderedComponents = [];
@@ -157,7 +167,7 @@ class ComponentViewPanel extends React.Component {
       this.resizeGrid(viewWidth);
       if (isAdhoc) {
         this.queryFilters();
-        this.queryCharts();
+        this.queryCharts([], postRefreshCallback);
       }
     });
   }
@@ -174,7 +184,7 @@ class ComponentViewPanel extends React.Component {
     return newComponents;
   }
  
-  queryCharts(urlFilterParams = []) {
+  queryCharts(urlFilterParams = [], postRefreshCallback) {
     // Append the url filter params to the existing filer params if it exists.
     const filterParams = this.getFilterParams().concat(urlFilterParams);
     const { components } = this.state;
@@ -527,7 +537,7 @@ class ComponentViewPanel extends React.Component {
           return;
         }
         x--;
-        this.handleInputChange('x', x, true);
+        this.handleComponentInputChange('x', x, true);
         break;
       case 38:
         // Up
@@ -535,7 +545,7 @@ class ComponentViewPanel extends React.Component {
           return;
         }
         y--;
-        this.handleInputChange('y', y, true);
+        this.handleComponentInputChange('y', y, true);
         break;
       case 39:
         // Right
@@ -543,7 +553,7 @@ class ComponentViewPanel extends React.Component {
           return;
         }
         x++;
-        this.handleInputChange('x', x, true);
+        this.handleComponentInputChange('x', x, true);
         break;
       case 40:
         // Down
@@ -551,7 +561,7 @@ class ComponentViewPanel extends React.Component {
           return;
         }
         y++;
-        this.handleInputChange('y', y, true);
+        this.handleComponentInputChange('y', y, true);
         break;
       default:
         return;
@@ -569,6 +579,58 @@ class ComponentViewPanel extends React.Component {
     const index = components.findIndex(w => w.id === selectedComponentId);
     const selectedComponent = index === -1 ? null : components[index];
     return selectedComponent;
+  }
+
+  onComponentCsvExport = (title = 'poli', columns = [], data = []) => {
+    this.setState({
+      csvFilename: title,
+      showExportCsvPanel: true,
+      csvColumns: columns,
+      csvData: data
+    });
+  }
+
+  downloadCsv = () => {
+    const {
+      csvFilename: title,
+      csvColumns: columns,
+      csvData: data
+    } = this.state;
+
+    let csvHeader = '';
+    for (let i = 0; i < columns.length; i++) {
+      if (i !== 0) {
+          csvHeader += ',';
+      }
+      csvHeader += columns[i].name;
+    }
+
+    let csvBody = '';
+    for (let i = 0; i < data.length; i++) {
+        const row = Object.values(data[i]);
+        csvBody += row.join(',') + '\r\n';
+    } 
+
+    const csvData = csvHeader + '\r\n' + csvBody;
+    const filename = title + '.csv';
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) { 
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    this.setState({
+      csvFilename: '',
+      showExportCsvPanel: false,
+      csvColumns: [],
+      csvData: []
+    });
   }
 
   render() {
@@ -604,6 +666,7 @@ class ComponentViewPanel extends React.Component {
           onComponentRemove={this.openConfirmDeletionPanel} 
           onComponentFilterInputChange={this.onComponentFilterInputChange}
           onComponentContentClick={this.props.onComponentContentClick}
+          onComponentCsvExport={this.onComponentCsvExport}
         />
         
         <Modal 
@@ -615,6 +678,26 @@ class ComponentViewPanel extends React.Component {
             {t('Are you sure you want to delete this component?')}
           </div>
           <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
+        </Modal>
+
+        <Modal 
+          show={this.state.showExportCsvPanel}
+          onClose={() => this.setState({ showExportCsvPanel: false })}
+          modalClass={'small-modal-panel'} 
+          title={t('Export as CSV')} >
+          <div className="form-panel">
+            <label>{t('File Name')}</label>
+            <input 
+              className="form-input"
+              type="text" 
+              name="csvFilename" 
+              value={this.state.csvFilename}
+              onChange={this.handleInputChange} 
+            />
+            <button className="button button-green" onClick={this.downloadCsv}>
+              <FontAwesomeIcon icon="file-download" size="lg" fixedWidth /> {t('Export')}
+            </button>
+          </div>
         </Modal>
 
         {selectedComponent && (
@@ -642,7 +725,7 @@ class ComponentViewPanel extends React.Component {
                       type="text" 
                       name="title" 
                       value={selectedComponent.title}
-                      onChange={(event) => this.handleInputChange('title', event.target.value)} 
+                      onChange={(event) => this.handleComponentInputChange('title', event.target.value)} 
                     />
                   </div>
 
@@ -714,7 +797,7 @@ class ComponentViewPanel extends React.Component {
                     type="text" 
                     name="x" 
                     value={selectedComponent.x}
-                    onChange={(event) => this.handleInputChange('x', event.target.value, true)}
+                    onChange={(event) => this.handleComponentInputChange('x', event.target.value, true)}
                   />
                 </div>
               </div>
@@ -727,7 +810,7 @@ class ComponentViewPanel extends React.Component {
                     type="text" 
                     name="y" 
                     value={selectedComponent.y}
-                    onChange={(event) => this.handleInputChange('y', event.target.value, true)}
+                    onChange={(event) => this.handleComponentInputChange('y', event.target.value, true)}
                   />
                 </div>
               </div>
@@ -740,7 +823,7 @@ class ComponentViewPanel extends React.Component {
                     type="text" 
                     name="width" 
                     value={selectedComponent.width}
-                    onChange={(event) => this.handleInputChange('width', event.target.value, true)}
+                    onChange={(event) => this.handleComponentInputChange('width', event.target.value, true)}
                   />
                 </div>
               </div>
@@ -753,7 +836,7 @@ class ComponentViewPanel extends React.Component {
                     type="text" 
                     name="height" 
                     value={selectedComponent.height}
-                    onChange={(event) => this.handleInputChange('height', event.target.value, true)}
+                    onChange={(event) => this.handleComponentInputChange('height', event.target.value, true)}
                   />
                 </div>
               </div>

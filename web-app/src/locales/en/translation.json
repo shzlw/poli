@@ -100,5 +100,8 @@
   "Show Pagination": "Show pagination",
   "Control": "Control",
   "Auto Filter": "Auto Filter",
-  "Attributes": "Attributes"
+  "Attributes": "Attributes",
+  "File Name": "File Name",
+  "Export as CSV": "Export as CSV",
+  "Export": "Export"
 }
