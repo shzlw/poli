@@ -134,18 +134,18 @@ class ComponentViewPanel extends React.Component {
     return Math.floor(num * BASE_WIDTH / gridWidth);
   }
 
-  fetchComponents = (reportId, viewWidth, postRefreshCallback) => {
+  fetchComponents = (reportId, viewWidth, urlFilterParams) => {
     if (reportId === null) {
       return;
     }
     axios.get(`/ws/component/report/${reportId}`)
       .then(res => {
         const result = res.data;
-        this.buildViewPanel(result, viewWidth, true, postRefreshCallback);
+        this.buildViewPanel(result, viewWidth, true, urlFilterParams);
       });
   }
 
-  buildViewPanel = (components, viewWidth, isAdhoc, postRefreshCallback) => {
+  buildViewPanel = (components, viewWidth, isAdhoc, urlFilterParams) => {
     // Reorganize the filter component to push the datepicker filters to the end of the array so
     // they will be rendered later. Among them, the one with larger Y value should be rendered first.
     let reorderedComponents = [];
@@ -167,7 +167,7 @@ class ComponentViewPanel extends React.Component {
       this.resizeGrid(viewWidth);
       if (isAdhoc) {
         this.queryFilters();
-        this.queryCharts([], postRefreshCallback);
+        this.queryCharts(urlFilterParams);
       }
     });
   }
@@ -183,8 +183,8 @@ class ComponentViewPanel extends React.Component {
     }
     return newComponents;
   }
- 
-  queryCharts(urlFilterParams = [], postRefreshCallback) {
+
+  queryCharts(urlFilterParams = []) {
     // Append the url filter params to the existing filer params if it exists.
     const filterParams = this.getFilterParams().concat(urlFilterParams);
     const { components } = this.state;
@@ -194,7 +194,7 @@ class ComponentViewPanel extends React.Component {
         type,
       } = components[i];
       if (type === Constants.CHART) {
-        this.queryChart(id, filterParams);
+        this.queryChart(id, filterParams)
       }
     }
   }

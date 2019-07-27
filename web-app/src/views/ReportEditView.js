@@ -182,8 +182,6 @@ class ReportEditView extends React.Component {
             style: result.style
           }, () => {
             this.refresh();
-            // When the view is loaded the first time, apply the filters immediately because the url params are available already.
-            this.applyFilters();
           });
         });
     });
@@ -234,7 +232,7 @@ class ReportEditView extends React.Component {
     } = this.state;
 
     if (reportType === Constants.ADHOC) {
-      this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, null);
+      this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, this.getUrlFilterParams());
     } else if (reportType === Constants.CANNED) {
       const { 
         components = []
