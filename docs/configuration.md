@@ -20,7 +20,6 @@ The maximum number of data source pool size.
 
 
 ```
-# Linux
 poli.datasource-maximum-pool-size=50
 ```
 
@@ -29,7 +28,6 @@ poli.datasource-maximum-pool-size=50
 The maximum number of records returned in the JDBC result set. Default value is 1000. Use -1 to return unlimited rows.
 
 ```
-# Linux
 poli.maximum-query-records=1000
 ```
 ## Internationalization (i18n)

@@ -6,6 +6,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -21,6 +22,9 @@ public class GroupDao {
 
     @Autowired
     JdbcTemplate jt;
+
+    @Autowired
+    NamedParameterJdbcTemplate npjt;
 
     public List<Group> findAll() {
         String sql = "SELECT id, name FROM p_group";
@@ -42,13 +46,12 @@ public class GroupDao {
     }
 
     public long insertGroup(String name) {
-        String sql = "INSERT INTO p_group(name) VALUES(?)";
+        String sql = "INSERT INTO p_group(name) VALUES(:name)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Group.NAME, name);
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jt.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
-            return ps;
-        }, keyHolder);
+        npjt.update(sql, params, keyHolder, new String[] { Group.ID});
         return keyHolder.getKey().longValue();
     }
 

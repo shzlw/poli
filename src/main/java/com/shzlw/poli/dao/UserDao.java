@@ -180,7 +180,7 @@ public class UserDao {
         params.addValue(User.SYS_ROLE, sysRole);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        npjt.update(sql, params, keyHolder, new String[] { User.ID});
+        npjt.update(sql, params, keyHolder, new String[] { User.ID });
         return keyHolder.getKey().longValue();
     }
 

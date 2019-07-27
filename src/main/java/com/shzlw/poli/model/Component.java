@@ -6,6 +6,21 @@ import com.shzlw.poli.util.RawStringDeserialzier;
 
 public class Component {
 
+    public static final String ID = "id";
+    public static final String REPORT_ID = "report_id";
+    public static final String DATASOURCE_ID = "datasource_id";
+    public static final String TITLE = "title";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String TYPE = "type";
+    public static final String SUB_TYPE = "sub_type";
+    public static final String SQL_QUERY = "sql_query";
+    public static final String DATA = "data";
+    public static final String DRILL_THROUGH = "drill_through";
+    public static final String STYLE = "style";
+
     private long id;
     private String title;
     private int x;

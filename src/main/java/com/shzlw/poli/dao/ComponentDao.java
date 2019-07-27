@@ -1,18 +1,19 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.Component;
+import com.shzlw.poli.model.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -20,6 +21,9 @@ public class ComponentDao {
 
     @Autowired
     JdbcTemplate jt;
+
+    @Autowired
+    NamedParameterJdbcTemplate npjt;
 
     public List<Component> findByReportId(long reportId) {
         String sql = "SELECT id, datasource_id, report_id, title, sql_query, width, height, x, y, data, drill_through, style, type, sub_type "
@@ -70,26 +74,35 @@ public class ComponentDao {
 
     public long insert(Component c) {
         String sql = "INSERT INTO p_component(report_id, datasource_id, title, sql_query, width, height, x, y, data, drill_through, style, type, sub_type) "
-                    + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jt.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, c.getReportId());
-            ps.setLong(2, c.getJdbcDataSourceId());
-            ps.setString(3, c.getTitle());
-            ps.setString(4, c.getSqlQuery());
-            ps.setInt(5, c.getWidth());
-            ps.setInt(6, c.getHeight());
-            ps.setInt(7, c.getX());
-            ps.setInt(8, c.getY());
-            ps.setString(9, c.getData());
-            ps.setString(10, c.getDrillThrough());
-            ps.setString(11, c.getStyle());
-            ps.setString(12, c.getType());
-            ps.setString(13, c.getSubType());
-            return ps;
-        }, keyHolder);
+                    + "VALUES(:report_id, :datasource_id, :title, :sql_query, :width, :height, :x, :y, :data, :drill_through, :style, :type, :sub_type)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Component.REPORT_ID, c.getReportId());
+        params.addValue(Component.DATASOURCE_ID, c.getJdbcDataSourceId());
+        params.addValue(Component.TITLE, c.getTitle());
+        params.addValue(Component.SQL_QUERY, c.getSqlQuery());
+        params.addValue(Component.WIDTH, c.getWidth());
+        params.addValue(Component.HEIGHT, c.getHeight());
+        params.addValue(Component.X, c.getX());
+        params.addValue(Component.Y, c.getY());
+        params.addValue(Component.DATA, c.getData());
+        params.addValue(Component.DRILL_THROUGH, c.getDrillThrough());
+        params.addValue(Component.STYLE, c.getStyle());
+        params.addValue(Component.TYPE, c.getType());
+        params.addValue(Component.SUB_TYPE, c.getSubType());
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        npjt.update(sql, params, keyHolder, new String[] { Report.ID});
+        return keyHolder.getKey().longValue();
+    }
+
+    public long insert(String name, String style) {
+        String sql = "INSERT INTO p_report(name, style) VALUES(:name, :style)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Report.NAME, name);
+        params.addValue(Report.STYLE, style);
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        npjt.update(sql, params, keyHolder, new String[] { Report.ID});
         return keyHolder.getKey().longValue();
     }
 
@@ -113,20 +126,20 @@ public class ComponentDao {
         @Override
         public Component mapRow(ResultSet rs, int i) throws SQLException {
             Component c = new Component();
-            c.setId(rs.getLong("id"));
-            c.setReportId(rs.getLong("report_id"));
-            c.setJdbcDataSourceId(rs.getLong("datasource_id"));
-            c.setTitle(rs.getString("title"));
-            c.setSqlQuery(rs.getString("sql_query"));
-            c.setX(rs.getInt("x"));
-            c.setY(rs.getInt("y"));
-            c.setWidth(rs.getInt("width"));
-            c.setHeight(rs.getInt("height"));
-            c.setData(rs.getString("data"));
-            c.setDrillThrough(rs.getString("drill_through"));
-            c.setStyle(rs.getString("style"));
-            c.setType(rs.getString("type"));
-            c.setSubType(rs.getString("sub_type"));
+            c.setId(rs.getLong(Component.ID));
+            c.setReportId(rs.getLong(Component.REPORT_ID));
+            c.setJdbcDataSourceId(rs.getLong(Component.DATASOURCE_ID));
+            c.setTitle(rs.getString(Component.TITLE));
+            c.setSqlQuery(rs.getString(Component.SQL_QUERY));
+            c.setX(rs.getInt(Component.X));
+            c.setY(rs.getInt(Component.Y));
+            c.setWidth(rs.getInt(Component.WIDTH));
+            c.setHeight(rs.getInt(Component.HEIGHT));
+            c.setData(rs.getString(Component.DATA));
+            c.setDrillThrough(rs.getString(Component.DRILL_THROUGH));
+            c.setStyle(rs.getString(Component.STYLE));
+            c.setType(rs.getString(Component.TYPE));
+            c.setSubType(rs.getString(Component.SUB_TYPE));
             return c;
         }
     }

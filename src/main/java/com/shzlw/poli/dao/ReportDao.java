@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -20,6 +20,9 @@ public class ReportDao {
 
     @Autowired
     JdbcTemplate jt;
+
+    @Autowired
+    NamedParameterJdbcTemplate npjt;
 
     public List<Report> findAll() {
         String sql = "SELECT id, name, style FROM p_report";
@@ -55,15 +58,13 @@ public class ReportDao {
     }
 
     public long insert(String name, String style) {
-        String sql = "INSERT INTO p_report(name, style) VALUES(?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jt.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
-            ps.setString(2, style);
-            return ps;
-        }, keyHolder);
+        String sql = "INSERT INTO p_report(name, style) VALUES(:name, :style)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(Report.NAME, name);
+        params.addValue(Report.STYLE, style);
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        npjt.update(sql, params, keyHolder, new String[] { Report.ID});
         return keyHolder.getKey().longValue();
     }
 

@@ -6,6 +6,13 @@ import com.shzlw.poli.util.RawStringDeserialzier;
 
 public class CannedReport {
 
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String CREATED_AT = "created_at";
+    public static final String CREATED_BY = "created_by";
+    public static final String USER_ID = "user_id";
+    public static final String DATA = "data";
+
     private long id;
     private String name;
     private String createdBy;
