@@ -8,6 +8,7 @@ import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
+import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,13 +103,26 @@ public class JdbcQueryService {
             return QueryResult.ofError(Constants.ERROR_EMPTY_SQL_QUERY);
         }
 
-        NamedParameterJdbcTemplate npTemplate = new NamedParameterJdbcTemplate(dataSource);
+        NamedParameterJdbcTemplate npjt = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = getNamedParameters(filterParams);
-        String parsedSql = parseSqlStatementWithParams(sql, namedParameters);
 
+        // Handle multiple SQL statements.
+        // If there are multiple sql statements, only return query results from the last query.
+        List<String> sqls = CommonUtil.getQueryStatements(sql);
+        int preQueryNumber = sqls.size() - 1;
+        for (int i = 0; i < preQueryNumber; i++) {
+            String parsedSql = parseSqlStatementWithParams(sqls.get(i), namedParameters);
+            npjt.execute(parsedSql, (ps) -> ps.execute());
+        }
+
+        String parsedSql = parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
+        return executeQuery(npjt, parsedSql, namedParameters);
+    }
+
+    private QueryResult executeQuery(NamedParameterJdbcTemplate npjt, String sql, Map<String, Object> namedParameters) {
         int maxQueryRecords = appProperties.getMaximumQueryRecords();
 
-        QueryResult result = npTemplate.query(parsedSql, namedParameters, new ResultSetExtractor<QueryResult>() {
+        QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
             public QueryResult extractData(ResultSet rs) {
@@ -152,7 +166,6 @@ public class JdbcQueryService {
 
         return result;
     }
-
 
     public static String parseSqlStatementWithParams(String sql, Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();
