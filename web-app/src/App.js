@@ -72,8 +72,9 @@ class App extends React.Component {
       return;
     }
 
+    const isFullScreenView = pathname.indexOf('/workspace/report/fullscreen') !== -1;
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
-    const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
+    const rememberMe = (rememberMeConfig && rememberMeConfig === Constants.YES) || isFullScreenView;
 
     const {
       sysRole,
