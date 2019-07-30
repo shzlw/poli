@@ -18,18 +18,33 @@ spring.datasource.url=jdbc:sqlite:c:/poli/poli.db
 
 The maximum number of data source pool size.
 
-
 ```
 poli.datasource-maximum-pool-size=50
 ```
 
 ## Number of query results
 
-The maximum number of records returned in the JDBC result set. Default value is 1000. Use -1 to return unlimited rows.
+The maximum number of records returned in the JDBC result set. Default value is -1 which returns unlimited rows
 
 ```
 poli.maximum-query-records=1000
 ```
+
+## All multiple SQL statements
+
+Allow to run multiple SQL query statements in the query editor. If there are multiple SQL statements, only the last one will return query results.
+
+```
+poli.allow-multiple-query-statements=true
+```
+
+For example, when query against PostgreSQL, set the search_path in the first statement and query in the second statement.
+
+```sql
+set search_path to MY_SCHEMA;
+select * from MY_TABLE;
+```
+
 ## Internationalization (i18n)
 
 Currently Poli supports two languages: English and Chinese. The default language can be switched via changing the poli.properties
