@@ -1,5 +1,22 @@
 # Change Logs
 
+## v0.9.1
+
+### Improvements
+- Now press shift + arrow key to move component instead of pressing arrow key only.
+- Add a pop up that allows renaming the CSV file before it is exported.
+- Support multiple SQL statements in the query editor. Add a new global configuration value to enable/disable this feature. (poli.allow-multiple-query-statements)
+- Set default maximum-query-records to unlimited.
+- Add new script to build the release folder.
+
+### Bug Fixes
+- Fix an issue that heatmap displays wrong max and min value.
+- Fix the wrong column types in schema-postgresql.sql.
+- Fix the exception thrown from GeneratedKeyHolder when using PostgreSQL as data store.
+- Fix an issue when hover over the CSV button in a titleless table, the cursor flips between pointer and resizer.
+- Fix an issue that the URL parameters are not used in the query when the report is initialized.
+- Fix an issue that accessing the full screen view will direct the user to the login page when remember me is not checked.
+
 ## v0.9.0
 
 ### Breaking Changes & Upgrade Steps
@@ -13,7 +30,6 @@
   ```
 
 ### New Features
-
 - User attributes can be defined at per user level and be used in dynamic query to support row level security.
 - The selected component can be moved by using arrow key in order to provide more precise control.
 - New option to enable/disable auto filtering on report level.
@@ -34,9 +50,8 @@
 - Fix an issue that the auth filter may throw an NPE.
 
 ### Improvements
-
-* Allow Image to display in full scale.
-* Add a new flag "Show All Axis Labels" for charts that support axis label to force the chart to display all labels.
+- Allow Image to display in full scale.
+- Add a new flag "Show All Axis Labels" for charts that support axis label to force the chart to display all labels.
 
 ## v0.8.0
 

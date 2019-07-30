@@ -95,7 +95,7 @@ IF NOT EXISTS p_canned_report (
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 
--- table added in v0.9.0
+-- table added in v0.9.1
 CREATE TABLE
 IF NOT EXISTS p_user_attribute (
     user_id INTEGER NOT NULL,

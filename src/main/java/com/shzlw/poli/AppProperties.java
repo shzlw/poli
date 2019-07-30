@@ -15,10 +15,13 @@ public class AppProperties {
 
     String localeLanguage;
 
+    Boolean allowMultipleQueryStatements;
+
     public AppProperties() {
         datasourceMaximumPoolSize = 50;
         maximumQueryRecords = 1000;
         localeLanguage = "en";
+        allowMultipleQueryStatements = false;
     }
 
     public Integer getDatasourceMaximumPoolSize() {
@@ -43,5 +46,13 @@ public class AppProperties {
 
     public void setLocaleLanguage(String localeLanguage) {
         this.localeLanguage = localeLanguage;
+    }
+
+    public Boolean getAllowMultipleQueryStatements() {
+        return allowMultipleQueryStatements;
+    }
+
+    public void setAllowMultipleQueryStatements(Boolean allowMultipleQueryStatements) {
+        this.allowMultipleQueryStatements = allowMultipleQueryStatements;
     }
 }

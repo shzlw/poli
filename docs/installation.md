@@ -3,7 +3,7 @@
 
 ## Windows/Linux
 
-1. Download the release zip file via the github [release page](https://github.com/shzlw/poli/releases).
+1. Download the release poli-x.y.z.zip file via the github [release page](https://github.com/shzlw/poli/releases).
 2. Unzip it. The folder structure should look like this:
 
     ```
@@ -68,7 +68,7 @@
 1. Pull and run the Poli image.
 
     ```bash
-    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.9.0
+    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.9.1
     ```
 2. Add JDBC drivers.
 

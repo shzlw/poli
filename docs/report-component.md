@@ -7,7 +7,7 @@
 
   Components can be repositioned and resized on the report. If you'd like to stack/overlap components, z index field can be used to control the stacking order.
 
-  > The selected component can be moved by using arrow key in order to provide more precise control.
+  > The selected component can be moved by pressing shift + arrow key in order to provide more precise control.
 
 * Border
 * Content background color 

@@ -110,9 +110,11 @@ public class JdbcQueryService {
         // If there are multiple sql statements, only return query results from the last query.
         List<String> sqls = CommonUtil.getQueryStatements(sql);
         int preQueryNumber = sqls.size() - 1;
-        for (int i = 0; i < preQueryNumber; i++) {
-            String parsedSql = parseSqlStatementWithParams(sqls.get(i), namedParameters);
-            npjt.execute(parsedSql, (ps) -> ps.execute());
+        if (appProperties.getAllowMultipleQueryStatements()) {
+            for (int i = 0; i < preQueryNumber; i++) {
+                String parsedSql = parseSqlStatementWithParams(sqls.get(i), namedParameters);
+                npjt.execute(parsedSql, (ps) -> ps.execute());
+            }
         }
 
         String parsedSql = parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
