@@ -30,25 +30,23 @@ public class AuthFilter implements Filter {
         String path = httpRequest.getServletPath();
 
         if (path.startsWith("/ws/")) {
-            String sessionKey = getSessionKey(httpRequest);
+            String apiKey = httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY);
             String sysRole = null;
             boolean isAuthByApiKey = false;
-            if (sessionKey != null) {
+            if (apiKey != null) {
+                User user = userService.getUserByApiKey(apiKey);
+                if (user != null) {
+                    httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
+                    sysRole = user.getSysRole();
+                    isAuthByApiKey = true;
+                }
+            } else {
+                String sessionKey = getSessionKey(httpRequest);
                 User user = userService.getUserBySessionKey(sessionKey);
                 if (user != null) {
                     user.setSessionKey(sessionKey);
                     httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                     sysRole = user.getSysRole();
-                }
-            } else {
-                String apiKey = httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY);
-                if (apiKey != null) {
-                    User user = userService.getUserByApiKey(apiKey);
-                    if (user != null) {
-                        httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
-                        sysRole = user.getSysRole();
-                        isAuthByApiKey = true;
-                    }
                 }
             }
 
