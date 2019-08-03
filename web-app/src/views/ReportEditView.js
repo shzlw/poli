@@ -18,7 +18,6 @@ import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
 import './Report.css';
 
-
 class ReportEditView extends React.Component {
 
   constructor(props) {
@@ -29,6 +28,8 @@ class ReportEditView extends React.Component {
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
+      showBookmarkPanel: false,
+      showSharePanel: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
@@ -45,7 +46,10 @@ class ReportEditView extends React.Component {
       reportType: '',
       reportViewWidth: 1000,
       cannedReportName: '',
-      cannedReportData: {}
+      cannedReportData: {},
+      // share url
+      expiredBy: new Date(),
+      shareUrl: ''
     }
 
     this.componentViewPanel = React.createRef();
@@ -509,6 +513,58 @@ class ReportEditView extends React.Component {
       });
   }
 
+  openBookmarkPanel = () => {
+    this.setState({
+      showBookmarkPanel: true
+    });
+  }
+  
+  addToFavourite = () => {
+
+  }
+
+  removeFromFavourite = () => {
+
+  }
+
+  openSharePanel = () => {
+    this.setState({
+      showSharePanel: true
+    });
+  }
+
+  generateShareUrl = () => {
+    const {
+      reportId,
+      reportType,
+      expiredBy
+    } = this.state;
+
+    const reportShare = {
+      reportId: reportId,
+      reportType: reportType,
+      expiredBy: Math.round((expiredBy).getTime() / 1000)
+    }
+
+    const href = window.location.href;
+    const start = href.indexOf('/poli/workspace');
+    if (start === -1) {
+      Toast.showError('Cannot find poli workspace URL pattern.');
+      return;
+    }
+    const urlPrefix = href.substring(0, start);
+    
+    axios.post('/ws/report/share', reportShare)
+      .then(res => {
+        const shareKey = res.data;
+        const shareUrl = urlPrefix + `/poli/workspace/report/fullscreen?$shareKey=${shareKey}`;
+        console.log('shareUrl', shareUrl);
+        this.setState({
+          shareUrl: shareUrl
+        })
+      });
+  }
+
   render() {
     const { t } = this.props;
 
@@ -555,6 +611,12 @@ class ReportEditView extends React.Component {
         </button>
         <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button ml-4" onClick={this.openBookmarkPanel}>
+          <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button ml-4" onClick={this.openSharePanel}>
+          <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
         </button>
 
         { !this.isAutoFilter() && (
@@ -718,6 +780,28 @@ class ReportEditView extends React.Component {
             {t('Are you sure you want to delete')} {this.state.objectToDelete.name}?
           </div>
           <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
+        </Modal>
+
+        <Modal 
+          show={this.state.showBookmarkPanel}
+          onClose={() => this.setState({ showBookmarkPanel: false })}
+          modalClass={'small-modal-panel'}
+          title={t('Favourite')}>
+          <div>
+            Add/Remove to favourite
+          </div>
+        </Modal>
+
+        <Modal 
+          show={this.state.showSharePanel}
+          onClose={() => this.setState({ showSharePanel: false })}
+          modalClass={'small-modal-panel'}
+          title={t('Share')}>
+          <div>
+            share
+            {this.state.reportId}-{this.state.reportType}-{this.state.expiredBy.toUTCString()}-{this.state.shareUrl}
+          </div>
+          <button className="button button-red full-width" onClick={this.generateShareUrl}>{t('Generate URL')}</button>
         </Modal>
 
         {isEditMode && (

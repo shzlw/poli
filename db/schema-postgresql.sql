@@ -1,4 +1,4 @@
--- v0.9.1 for PostgreSQL
+-- For PostgreSQL
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
@@ -23,7 +23,7 @@ IF NOT EXISTS p_datasource (
 CREATE TABLE
 IF NOT EXISTS p_report (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR NOT NULL,
+    name VARCHAR NOT NULL UNIQUE,
     style VARCHAR
 );
 
@@ -100,8 +100,6 @@ IF NOT EXISTS p_user_attribute (
     attr_value VARCHAR,
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
-
-CREATE UNIQUE INDEX p_report_unique_name_index ON p_report(name);
 
 INSERT INTO p_user(username, temp_password, sys_role)
 VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');

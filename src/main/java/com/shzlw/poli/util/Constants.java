@@ -15,6 +15,7 @@ public final class Constants {
 
     public static final String API_KEY_PREFIX = "apk_";
     public static final String SESSION_KEY_PREFIX = "sk_";
+    public static final String SHARE_KEY_PREFIX = "sha_";
 
     public static final String PASSWORD_SALT = "awesome";
 

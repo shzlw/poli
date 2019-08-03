@@ -129,7 +129,7 @@ class Account extends React.Component {
           <div className="info-value">{sysRole}</div>
           <br/>
 
-          <label className="bold">{t('API Key')}</label>
+          <label className="bold">{t('API Key')} <span className="required">**Deprecated</span></label>
           <div className="info-value">{apiKey}</div>
           <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>{t('Generate new API Key')}</button>
           

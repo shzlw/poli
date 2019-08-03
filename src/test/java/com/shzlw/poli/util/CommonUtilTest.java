@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -23,6 +24,22 @@ public class CommonUtilTest {
 
         Assert.assertEquals(0, dateTime.truncatedTo(ChronoUnit.SECONDS).compareTo(newDateTime.truncatedTo(ChronoUnit.SECONDS)));
         Assert.assertEquals(epoch, newEpoch);
+    }
+
+    @Test
+    public void testToReadableDateTime() {
+        String date = "2019-01-01 01:00:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:s");
+        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        Assert.assertEquals(date, CommonUtil.toReadableDateTime(dateTime));
+    }
+
+    @Test
+    public void testToReadableDate() {
+        String date = "2019-01-01 01:00:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:s");
+        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        Assert.assertEquals("2019-01-01", CommonUtil.toReadableDate(dateTime));
     }
 
     @Test

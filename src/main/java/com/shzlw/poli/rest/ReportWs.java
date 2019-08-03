@@ -2,10 +2,15 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
+import com.shzlw.poli.dao.ReportShareDao;
+import com.shzlw.poli.dto.ReportShareRow;
 import com.shzlw.poli.model.Report;
+import com.shzlw.poli.model.ReportShare;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
+import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
+import com.shzlw.poli.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,6 +34,9 @@ public class ReportWs {
 
     @Autowired
     ReportService reportService;
+
+    @Autowired
+    ReportShareDao reportShareDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
@@ -81,5 +90,23 @@ public class ReportWs {
         componentDao.deleteByReportId(id);
         reportDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/share", method = RequestMethod.POST)
+    @Transactional
+    public String generateReportShareUrl(@RequestBody ReportShare reportShare,
+                                         HttpServletRequest request) {
+        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
+        String shareKey = Constants.SHARE_KEY_PREFIX + PasswordUtil.getUniqueId();
+        long createdAt = CommonUtil.toEpoch(LocalDateTime.now());
+        reportShareDao.insert(shareKey, reportShare.getReportId(), reportShare.getReportType(),
+                user.getId(), createdAt, reportShare.getExpiredBy());
+        return shareKey;
+    }
+
+    @RequestMapping(value = "/share", method = RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public List<ReportShareRow> findAllReportShares() {
+        return reportShareDao.findAll();
     }
 }
