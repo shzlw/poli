@@ -1,8 +1,8 @@
 package com.shzlw.poli.dto;
 
-import com.shzlw.poli.model.ReportShare;
+import com.shzlw.poli.model.SharedReport;
 
-public class ReportShareRow extends ReportShare {
+public class SharedReportRow extends SharedReport {
 
     public static final String REPORT_NAME = "report_name";
     public static final String CREATED_BY = "created_by";
@@ -12,7 +12,7 @@ public class ReportShareRow extends ReportShare {
     private String createDateTime;
     private String expirationDate;
 
-    public ReportShareRow() {}
+    public SharedReportRow() {}
 
     public String getReportName() {
         return reportName;

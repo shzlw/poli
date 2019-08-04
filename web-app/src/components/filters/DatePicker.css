@@ -10,9 +10,10 @@
 
 .calendar-dialog {
   width: 189px;
-  border: 1px solid #000000;
+  border: 1px solid #dfe1e6;
   position: fixed;
   background-color: #FFFFFF;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 .calendar-cell {
@@ -28,16 +29,18 @@
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
   box-shadow: none !important;
-  border: 2px solid #DFE1E6 !important;
+  border: 2px solid #dfe1e6 !important;
   padding: 5px 8px;
   cursor: pointer;
   width: 100%;
+  background-color: #FFFFFF;
 }
 
 .calendar-container .header-cell {
-  border: 1px solid #000000;
-  background-color: #000000;
-  color: #FFFFFF;
+  border: 1px solid #dfe1e6;
+  background-color: #dfe1e6;
+  color: #000000;
+  font-weight: bold;
 }
 
 .calendar-container .body-cell {
@@ -78,6 +81,7 @@
 .calendar-container .select-year {
   height: 20px;
   margin-top: 3px;
+  border: 1px solid #dfe1e6 !important;
 }
 
 .calendar-overlay {

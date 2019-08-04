@@ -157,7 +157,7 @@ class GridItem extends React.Component {
   }
 
   onDatePickerChange = (componentId, date) => { 
-    const epoch = Math.round((date).getTime() / 1000);
+    const epoch = Math.round((date).getTime());
     const data = {
       value: epoch
     };
@@ -265,7 +265,7 @@ class GridItem extends React.Component {
           </div>
         );
       } else if (subType === Constants.DATE_PICKER) {
-        const date = value ? new Date(parseInt(value, 10) * 1000) : new Date();
+        const date = value ? new Date(parseInt(value, 10)) : new Date();
         componentItem = (
           <div className="grid-box-content-panel">
             <DatePicker 

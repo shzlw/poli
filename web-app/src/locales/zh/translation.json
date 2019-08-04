@@ -104,5 +104,12 @@
   "File Name": "文件名",
   "Export as CSV": "导出CSV",
   "Export": "导出",
-  "Event": "Event"
+  "Event": "Event",
+  "Generate URL": "Generate URL",
+  "Share": "Share",
+  "Created By": "Created By", 
+  "Create Date": "Create Date", 
+  "Expired By": "Expired By", 
+  "Share Key": "Share Key", 
+  "Actions": "Actions"
 }

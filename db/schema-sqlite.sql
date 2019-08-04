@@ -1,5 +1,5 @@
 -- For SQLite
-DROP TABLE IF EXISTS p_report_share;
+DROP TABLE IF EXISTS p_shared_report;
 DROP TABLE IF EXISTS p_project_report;
 DROP TABLE IF EXISTS p_project;
 DROP TABLE IF EXISTS p_group_report;
@@ -132,7 +132,7 @@ IF NOT EXISTS p_user_favourite (
 );
 
 CREATE TABLE
-IF NOT EXISTS p_report_share (
+IF NOT EXISTS p_shared_report (
     id INTEGER NOT NULL PRIMARY KEY,
     share_key VARCHAR NOT NULL,
     report_id INTEGER NOT NULL,

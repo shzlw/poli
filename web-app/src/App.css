@@ -40,7 +40,6 @@ body,
 
 .form-panel .form-input,
 .form-panel ul,
-.form-panel .info-value 
 .form-input {
   margin-bottom: 10px;
 }
@@ -335,6 +334,43 @@ h1 {
   font-size: 16px;
 }
 
+/* Talbe */
+.poli-table-panel {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.poli-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  background-color: #FFFFFF;
+}
+
+.poli-table thead tr {
+  border-bottom: 2px solid #0065FF;
+}
+
+.poli-table td {
+  border: 1px solid #ccc;
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.poli-table th {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.poli-table th, td {
+  font-size: 16px;
+  padding: 5px;
+  vertical-align: inherit;
+  white-space: nowrap;
+}
+
 /* Charts */
 .echarts {
   width: 100% !important;
@@ -372,6 +408,10 @@ h1 {
 
 .display-none {
   display: none;
+}
+
+.word-break-all {
+  word-break: break-all;
 }
 
 hr {

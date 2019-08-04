@@ -2,10 +2,10 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
-import com.shzlw.poli.dao.ReportShareDao;
-import com.shzlw.poli.dto.ReportShareRow;
+import com.shzlw.poli.dao.SharedReportDao;
+import com.shzlw.poli.dto.SharedReportRow;
 import com.shzlw.poli.model.Report;
-import com.shzlw.poli.model.ReportShare;
+import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.util.CommonUtil;
@@ -36,7 +36,7 @@ public class ReportWs {
     ReportService reportService;
 
     @Autowired
-    ReportShareDao reportShareDao;
+    SharedReportDao sharedReportDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
@@ -94,19 +94,19 @@ public class ReportWs {
 
     @RequestMapping(value = "/share", method = RequestMethod.POST)
     @Transactional
-    public String generateReportShareUrl(@RequestBody ReportShare reportShare,
+    public String generateSharedReportUrl(@RequestBody SharedReport sharedReport,
                                          HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         String shareKey = Constants.SHARE_KEY_PREFIX + PasswordUtil.getUniqueId();
         long createdAt = CommonUtil.toEpoch(LocalDateTime.now());
-        reportShareDao.insert(shareKey, reportShare.getReportId(), reportShare.getReportType(),
-                user.getId(), createdAt, reportShare.getExpiredBy());
+        sharedReportDao.insert(shareKey, sharedReport.getReportId(), sharedReport.getReportType(),
+                user.getId(), createdAt, sharedReport.getExpiredBy());
         return shareKey;
     }
 
     @RequestMapping(value = "/share", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public List<ReportShareRow> findAllReportShares() {
-        return reportShareDao.findAll();
+    public List<SharedReportRow> findAllSharedReports() {
+        return sharedReportDao.findAll();
     }
 }

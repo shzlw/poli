@@ -13,6 +13,7 @@ import Modal from '../components/Modal';
 import ColorPicker from '../components/ColorPicker';
 import Checkbox from '../components/Checkbox';
 import Toast from '../components/Toast';
+import DatePicker from '../components/filters/DatePicker';
 
 import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
@@ -529,7 +530,9 @@ class ReportEditView extends React.Component {
 
   openSharePanel = () => {
     this.setState({
-      showSharePanel: true
+      showSharePanel: true,
+      shareUrl: '',
+      expiredBy: new Date(),
     });
   }
 
@@ -540,10 +543,10 @@ class ReportEditView extends React.Component {
       expiredBy
     } = this.state;
 
-    const reportShare = {
+    const sharedReport = {
       reportId: reportId,
       reportType: reportType,
-      expiredBy: Math.round((expiredBy).getTime() / 1000)
+      expiredBy: Math.round((expiredBy).getTime())
     }
 
     const href = window.location.href;
@@ -554,15 +557,20 @@ class ReportEditView extends React.Component {
     }
     const urlPrefix = href.substring(0, start);
     
-    axios.post('/ws/report/share', reportShare)
+    axios.post('/ws/report/share', sharedReport)
       .then(res => {
         const shareKey = res.data;
         const shareUrl = urlPrefix + `/poli/workspace/report/fullscreen?$shareKey=${shareKey}`;
-        console.log('shareUrl', shareUrl);
         this.setState({
           shareUrl: shareUrl
-        })
+        });
       });
+  }
+
+  onDatePickerChange = (name, date) => { 
+    this.setState({
+      [name]: date
+    });
   }
 
   render() {
@@ -612,12 +620,6 @@ class ReportEditView extends React.Component {
         <button className="button square-button ml-4" onClick={this.refresh}>
           <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
         </button>
-        <button className="button square-button ml-4" onClick={this.openBookmarkPanel}>
-          <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
-        </button>
-        <button className="button square-button ml-4" onClick={this.openSharePanel}>
-          <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
-        </button>
 
         { !this.isAutoFilter() && (
           <button className={`button ml-4 ${pendingApplyFiltersStyle}`} onClick={this.applyFilters}>
@@ -627,10 +629,19 @@ class ReportEditView extends React.Component {
       </React.Fragment>
     );
 
-    const fullScreenButton = (
-      <button className="button square-button ml-4" onClick={this.fullScreen}>
-        <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
-      </button>
+    // buttons not displayed in full screen view.
+    const fullScreenExcludeButtonPanel = (
+      <React.Fragment>
+        <button className="button square-button ml-4" onClick={this.openBookmarkPanel}>
+          <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button ml-4" onClick={this.openSharePanel}>
+          <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
+        </button>
+        <button className="button square-button ml-4" onClick={this.fullScreen}>
+          <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+        </button>
+      </React.Fragment>
     );
 
     const inEditModeButtonPanel = (
@@ -664,7 +675,7 @@ class ReportEditView extends React.Component {
               <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
                 <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
               </button>
-              {fullScreenButton}
+              {fullScreenExcludeButtonPanel}
               {editButton}
             </React.Fragment>
           );
@@ -677,7 +688,7 @@ class ReportEditView extends React.Component {
               <button className="button square-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
                 <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
               </button>
-              {fullScreenButton}
+              {fullScreenExcludeButtonPanel}
             </React.Fragment>
           );
         } else if (reportType === Constants.CANNED) {
@@ -795,13 +806,34 @@ class ReportEditView extends React.Component {
         <Modal 
           show={this.state.showSharePanel}
           onClose={() => this.setState({ showSharePanel: false })}
-          modalClass={'small-modal-panel'}
+          modalClass={'mid-modal-panel'}
           title={t('Share')}>
-          <div>
-            share
-            {this.state.reportId}-{this.state.reportType}-{this.state.expiredBy.toUTCString()}-{this.state.shareUrl}
+          <div className="form-panel">
+            <label>{t('Name')}</label>
+            <div className="form-input">{this.state.name}</div>
+
+            <label>{t('Type')}</label>
+            <div className="form-input">{this.state.reportType}</div>
+
+            <label style={{marginBottom: '3px'}}>{t('Expiration Date')}</label>
+            <div style={{marginBottom: '8px'}}>
+              <DatePicker 
+                name={'expiredBy'}
+                value={this.state.expiredBy}
+                onChange={this.onDatePickerChange}
+                readOnly={false}
+              />
+            </div>
+
+            { this.state.shareUrl && (
+              <React.Fragment>
+                <label>{t('Share URL')}</label>
+                <div className="form-input word-break-all">{this.state.shareUrl}</div>
+              </React.Fragment>
+            )}
+
+            <button className="button button-green full-width" onClick={this.generateShareUrl}>{t('Generate URL')}</button>
           </div>
-          <button className="button button-red full-width" onClick={this.generateShareUrl}>{t('Generate URL')}</button>
         </Modal>
 
         {isEditMode && (

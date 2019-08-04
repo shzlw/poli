@@ -1,6 +1,6 @@
 package com.shzlw.poli.model;
 
-public class ReportShare {
+public class SharedReport {
 
     public static final String ID = "id";
     public static final String SHARE_KEY = "share_key";
@@ -18,7 +18,7 @@ public class ReportShare {
     private long createdAt;
     private long expiredBy;
 
-    public ReportShare() {}
+    public SharedReport() {}
 
     public long getId() {
         return id;
