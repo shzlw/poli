@@ -9,7 +9,7 @@ import {
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, 
   faLongArrowAltRight, faWrench, faArchive, faFileDownload,
-  faHeart, faShareSquare
+  faHeart, faShareSquare, faSearchLocation
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faSquare as farSquare
@@ -32,7 +32,7 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare,
   faLongArrowAltRight, faWrench, farSquare, faArchive, faFileDownload,
-  faHeart, faShareSquare
+  faHeart, faShareSquare, faSearchLocation
 );
 
 class App extends React.Component {
@@ -48,6 +48,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.configAxiosInterceptors();
+    this.configLocaleLanguage();
 
     const pathname = this.props.location.pathname;
     const search = this.props.location.search;
@@ -55,8 +56,10 @@ class App extends React.Component {
 
     const params = new URLSearchParams(search);
     const apiKey = params.get('$apiKey');
-    // Check if the page is using api key to authenticate first.
-    if (apiKey != null) {
+    const isFullScreenView = pathname.indexOf('/workspace/report/fullscreen') !== -1;
+    const hasApiKey = apiKey != null;
+    // Only allow using ApiKey in fullscreen view.
+    if (isFullScreenView && hasApiKey) {
       axios.defaults.headers.common = {
         "Poli-Api-Key": apiKey
       };
@@ -73,34 +76,17 @@ class App extends React.Component {
       });
       return;
     }
-
-    const isFullScreenView = pathname.indexOf('/workspace/report/fullscreen') !== -1;
+    
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
     const rememberMe = (rememberMeConfig && rememberMeConfig === Constants.YES) || isFullScreenView;
 
     const {
-      sysRole,
-      localeLanguage
+      sysRole
     } = this.state;
 
     let isAuthenticated = false;
     if (sysRole) {
       isAuthenticated = true;
-    }
-
-    if (!localeLanguage) {
-      axios.get('/info/general')
-        .then(res => {
-          const info = res.data;
-          const {
-            localeLanguage
-          } = info;
-          const { i18n } = this.props;
-          i18n.changeLanguage(String(localeLanguage));
-          this.setState({
-            localeLanguage: localeLanguage
-          });
-        });
     }
 
     if (!isAuthenticated && rememberMe) {
@@ -166,6 +152,28 @@ class App extends React.Component {
         }
         return Promise.reject(error);
     });
+  }
+
+  configLocaleLanguage = () => {
+    const {
+      localeLanguage
+    } = this.state;
+    if (localeLanguage) {
+      return;
+    }
+
+    axios.get('/info/general')
+      .then(res => {
+        const info = res.data;
+        const {
+          localeLanguage
+        } = info;
+        const { i18n } = this.props;
+        i18n.changeLanguage(String(localeLanguage));
+        this.setState({
+          localeLanguage: localeLanguage
+        });
+      });
   }
    
   render() {
