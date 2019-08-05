@@ -72,15 +72,20 @@ public class UserDao {
         String sql = "SELECT id, username, name, sys_role, session_key "
                     + "FROM p_user WHERE api_key=?";
         try {
-            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, (rs, i) -> {
-                User r = new User();
-                r.setId(rs.getLong(User.ID));
-                r.setUsername(rs.getString(User.USERNAME));
-                r.setName(rs.getString(User.NAME));
-                r.setSysRole(rs.getString(User.SYS_ROLE));
-                r.setSessionKey(rs.getString(User.SESSION_KEY));
-                return r;
-            });
+            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, new UserSesssionKeyMapper());
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public User findByShareKey(String shareKey) {
+        String sql = "SELECT u.id, u.username, u.name, u.sys_role, u.session_key "
+                    + "FROM p_user u, p_shared_report sr "
+                    + "WHERE u.id = sr.user_id "
+                    + "AND sr.share_key=?";
+        try {
+            User user = (User) jt.queryForObject(sql, new Object[]{ shareKey }, new UserSesssionKeyMapper());
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -289,6 +294,19 @@ public class UserDao {
             r.setName(rs.getString(User.NAME));
             r.setSysRole(rs.getString(User.SYS_ROLE));
             r.setApiKey(rs.getString(User.API_KEY));
+            return r;
+        }
+    }
+
+    private static class UserSesssionKeyMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int i) throws SQLException {
+            User r = new User();
+            r.setId(rs.getLong(User.ID));
+            r.setUsername(rs.getString(User.USERNAME));
+            r.setName(rs.getString(User.NAME));
+            r.setSysRole(rs.getString(User.SYS_ROLE));
+            r.setSessionKey(rs.getString(User.SESSION_KEY));
             return r;
         }
     }

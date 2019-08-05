@@ -4,6 +4,7 @@ import com.shzlw.poli.dto.SharedReportRow;
 import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -26,12 +27,22 @@ public class SharedReportDao {
     NamedParameterJdbcTemplate npjt;
 
     public List<SharedReportRow> findAll() {
-        String sql = "SELECT rs.id, share_key, r.name AS report_name, rs.report_type, u.username AS created_by, rs.created_at, rs.expired_by "
-                    + "FROM p_shared_report rs "
-                    + "LEFT JOIN p_user u ON rs.user_id = u.id "
-                    + "LEFT JOIN p_report r ON rs.report_id = r.id "
-                    + "ORDER BY rs.created_at DESC";
+        String sql = "SELECT sr.id, share_key, r.name AS report_name, sr.report_type, u.username AS created_by, sr.created_at, sr.expired_by "
+                    + "FROM p_shared_report sr "
+                    + "LEFT JOIN p_user u ON sr.user_id = u.id "
+                    + "LEFT JOIN p_report r ON sr.report_id = r.id "
+                    + "ORDER BY sr.created_at DESC";
         return jt.query(sql, new Object[] {}, new SharedReportRowMapper());
+    }
+
+    public List<SharedReport> findByReportId(long reportId) {
+        String sql = "SELECT share_key, expired_by FROM p_shared_report WHERE report_id=?";
+        return jt.query(sql, new Object[] { reportId }, (rs, i) -> {
+            SharedReport r = new SharedReport();
+            r.setShareKey(rs.getString(SharedReport.SHARE_KEY));
+            r.setExpiredBy(rs.getLong(SharedReport.EXPIRED_BY));
+            return r;
+        });
     }
 
     public long insert(String shareKey, long reportId, String reportType, long userId, long createdAt, long expiredBy) {
@@ -48,6 +59,45 @@ public class SharedReportDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjt.update(sql, params, keyHolder, new String[] { SharedReport.ID });
         return keyHolder.getKey().longValue();
+    }
+
+    public SharedReport findById(long id) {
+        String sql = "SELECT id, share_key, report_id, report_type, user_id, created_at, expired_by "
+                    + "FROM p_shared_report WHERE id=?";
+        try {
+            return (SharedReport) jt.queryForObject(sql, new Object[]{ id }, new SharedReportRawMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public SharedReport findByShareKey(String shareKey) {
+        String sql = "SELECT id, share_key, report_id, report_type, user_id, created_at, expired_by "
+                + "FROM p_shared_report WHERE share_key=?";
+        try {
+            return (SharedReport) jt.queryForObject(sql, new Object[]{ shareKey }, new SharedReportRawMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public int delete(long id) {
+        String sql = "DELETE FROM p_shared_report WHERE id=?";
+        return jt.update(sql, new Object[]{ id });
+    }
+
+    private static class SharedReportRawMapper implements RowMapper<SharedReport> {
+        @Override
+        public SharedReport mapRow(ResultSet rs, int i) throws SQLException {
+            SharedReport r = new SharedReport();
+            r.setId(rs.getLong(SharedReport.ID));
+            r.setShareKey(rs.getString(SharedReport.SHARE_KEY));
+            r.setReportType(rs.getString(SharedReport.REPORT_TYPE));
+            r.setUserId(rs.getLong(SharedReport.USER_ID));
+            r.setCreatedAt(rs.getLong(SharedReport.CREATED_AT));
+            r.setExpiredBy(rs.getLong(SharedReport.EXPIRED_BY));
+            return r;
+        }
     }
 
     private static class SharedReportRowMapper implements RowMapper<SharedReportRow> {

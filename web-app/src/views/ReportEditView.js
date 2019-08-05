@@ -70,8 +70,12 @@ class ReportEditView extends React.Component {
       const url = this.props.location.search;
       const params = new URLSearchParams(url);
       const reportName = params.get('$toReport');
+      const shareKey = params.get('$shareKey');
       if (reportName !== null) {
         this.loadViewByReportName();
+        return;
+      } else if (shareKey !== null) {
+        this.loadViewByShareKey();
         return;
       }
     }
@@ -181,6 +185,35 @@ class ReportEditView extends React.Component {
       axios.get(`/ws/report/name/${reportName}`)
         .then(res => {
           const result = res.data;
+          this.setState({
+            reportId: result.id,
+            name: result.name,
+            style: result.style
+          }, () => {
+            this.refresh();
+          });
+        });
+    });
+  }
+
+  loadViewByShareKey = () => {
+    const url = this.props.location.search;
+    const params = new URLSearchParams(url);
+    const shareKey = params.get('$shareKey');
+    const reportViewWidth = this.getPageWidth();
+    this.setState({
+      isFullScreenView: true,
+      reportViewWidth: reportViewWidth,
+      reportType: Constants.ADHOC
+    }, () => {
+      // MAYBE: support canned report? can only handle Adhoc report for now.
+      axios.get(`/ws/report/sharekey/${shareKey}`)
+        .then(res => {
+          const result = res.data;
+          if (!result) {
+            Toast.showError('The report is no longer available.');
+            return;
+          }
           this.setState({
             reportId: result.id,
             name: result.name,
@@ -557,7 +590,7 @@ class ReportEditView extends React.Component {
     }
     const urlPrefix = href.substring(0, start);
     
-    axios.post('/ws/report/share', sharedReport)
+    axios.post('/ws/sharedreport/generate-sharekey', sharedReport)
       .then(res => {
         const shareKey = res.data;
         const shareUrl = urlPrefix + `/poli/workspace/report/fullscreen?$shareKey=${shareKey}`;
@@ -806,7 +839,7 @@ class ReportEditView extends React.Component {
         <Modal 
           show={this.state.showSharePanel}
           onClose={() => this.setState({ showSharePanel: false })}
-          modalClass={'mid-modal-panel'}
+          modalClass={'small-modal-panel'}
           title={t('Share')}>
           <div className="form-panel">
             <label>{t('Name')}</label>

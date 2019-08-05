@@ -56,9 +56,26 @@ public class ReportWs {
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Report findOneByName(@PathVariable("name") String name,
-                                   HttpServletRequest request) {
+                                HttpServletRequest request) {
         List<Report> reports = findAll(request);
         return reports.stream().filter(d -> d.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    @RequestMapping(value = "/sharekey/{shareKey}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
+    public Report findOneBySharekey(@PathVariable("shareKey") String shareKey,
+                                    HttpServletRequest request) {
+        SharedReport sharedReport = sharedReportDao.findByShareKey(shareKey);
+        if (sharedReport == null) {
+            return null;
+        }
+
+        if (sharedReport.getExpiredBy() < CommonUtil.toEpoch(LocalDateTime.now())) {
+            return null;
+        }
+
+        List<Report> reports = findAll(request);
+        return reports.stream().filter(r -> r.getId() == sharedReport.getId()).findFirst().orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -90,23 +107,5 @@ public class ReportWs {
         componentDao.deleteByReportId(id);
         reportDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(value = "/share", method = RequestMethod.POST)
-    @Transactional
-    public String generateSharedReportUrl(@RequestBody SharedReport sharedReport,
-                                         HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        String shareKey = Constants.SHARE_KEY_PREFIX + PasswordUtil.getUniqueId();
-        long createdAt = CommonUtil.toEpoch(LocalDateTime.now());
-        sharedReportDao.insert(shareKey, sharedReport.getReportId(), sharedReport.getReportType(),
-                user.getId(), createdAt, sharedReport.getExpiredBy());
-        return shareKey;
-    }
-
-    @RequestMapping(value = "/share", method = RequestMethod.GET)
-    @Transactional(readOnly = true)
-    public List<SharedReportRow> findAllSharedReports() {
-        return sharedReportDao.findAll();
     }
 }

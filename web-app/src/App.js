@@ -56,25 +56,43 @@ class App extends React.Component {
 
     const params = new URLSearchParams(search);
     const apiKey = params.get('$apiKey');
+    const shareKey = params.get('$shareKey');
     const isFullScreenView = pathname.indexOf('/workspace/report/fullscreen') !== -1;
-    const hasApiKey = apiKey != null;
-    // Only allow using ApiKey in fullscreen view.
-    if (isFullScreenView && hasApiKey) {
-      axios.defaults.headers.common = {
-        "Poli-Api-Key": apiKey
-      };
-      const loginRequest = {
-        apiKey: apiKey
-      };
-      this.setState({
-        isAuthorizing: true
-      }, () => {
-        axios.post('/auth/login/apikey', loginRequest)
-          .then(res => {
-            this.handleLoginResponse(res.data, currentPath);
-          });
-      });
-      return;
+    if (isFullScreenView) {
+      // Only allow using ApiKey in fullscreen view.
+      if (apiKey !== null) {
+        const loginRequest = {
+          apiKey: apiKey
+        };
+        this.setState({
+          isAuthorizing: true
+        }, () => {
+          axios.post('/auth/login/apikey', loginRequest)
+            .then(res => {
+              axios.defaults.headers.common = {
+                "Poli-Api-Key": apiKey
+              };
+              this.handleLoginResponse(res.data, currentPath);
+            });
+        });
+        return;   
+      } else if (shareKey !== null) {
+        // Only allow using ShareKey in fullscreen view.
+        const loginRequest = {
+          shareKey: shareKey
+        };
+        this.setState({
+          isAuthorizing: true
+        }, () => {
+          axios.post('/auth/login/sharekey', loginRequest)
+            .then(res => {
+              axios.defaults.headers.common = {
+                "Poli-Share-Key": shareKey
+              };
+              this.handleLoginResponse(res.data, currentPath);
+            });
+        });
+      }
     }
     
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);

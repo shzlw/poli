@@ -422,7 +422,7 @@ class ComponentViewPanel extends React.Component {
           const { value } = component;
           let dateStr = '';
           if (value) {
-            const date = new Date(parseInt(value, 10) * 1000);
+            const date = new Date(parseInt(value, 10));
             const year = date.getFullYear();
             const month = date.getMonth() + 1;
             const day = date.getDate();
