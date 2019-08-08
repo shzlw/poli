@@ -86,10 +86,10 @@ class SharedReportView extends React.Component {
         <td style={{width: '50px'}}>
           <div className="float-right">
             <button className="icon-button card-icon-button" onClick={() => this.openSharedReport(sharedReport.shareKey)}>
-              <FontAwesomeIcon icon="tv" />
+              <FontAwesomeIcon icon="tv" size="lg" />
             </button>
             <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(sharedReport)}>
-              <FontAwesomeIcon icon="trash-alt" />
+              <FontAwesomeIcon icon="trash-alt" size="lg" />
             </button>
           </div>
         </td>

@@ -253,11 +253,14 @@ class Report extends Component {
             )}
           </div>
           <div style={{margin: '8px 5px 5px 5px'}}>
-            <SearchInput 
-              name={'searchValue'} 
+            <input 
+              type="text"
+              name="searchValue"
               value={this.state.searchValue} 
-              onChange={this.handleNameInputChange} 
-              inputWidth={117}
+              onChange={(event) => this.handleNameInputChange('searchValue', event.target.value)} 
+              className="form-input"
+              placeholder="Search..."
+              style={{marginBottom: '5px'}}
             />
           </div>
           <div style={{padding: '0px 5px'}}>
