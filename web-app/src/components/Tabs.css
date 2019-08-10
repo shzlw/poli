@@ -10,13 +10,10 @@
   list-style: none;
   margin-bottom: -1px;
   padding: 6px 12px;
-  min-width: 50px;
   cursor: pointer;
 }
 
 .tab-header-active {
-  background-color: white;
-  border: 1px solid #ccc;
   border-bottom: 3px solid #0065FF;
 }
 

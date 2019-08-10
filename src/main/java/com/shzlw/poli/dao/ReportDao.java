@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -46,6 +47,19 @@ public class ReportDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public List<Report> findFavouritesByUserId(long userId) {
+        String sql = "SELECT r.id, r.name "
+                    + "FROM p_report r, p_user_favourite uf "
+                    + "WHERE r.id = uf.report_id "
+                    + "AND uf.user_id = ?";
+        return jt.query(sql, new Object[] { userId }, (rs, i) -> {
+            Report r = new Report();
+            r.setId(rs.getLong(Report.ID));
+            r.setName(rs.getString(Report.NAME));
+            return r;
+        });
     }
 
     public Report findByName(String name) {

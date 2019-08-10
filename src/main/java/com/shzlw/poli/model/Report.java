@@ -1,5 +1,6 @@
 package com.shzlw.poli.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.shzlw.poli.util.RawStringDeserialzier;
@@ -26,6 +27,9 @@ public class Report {
      */
     private String style;
 
+    @JsonProperty(value = "isFavourite")
+    private boolean isFavourite;
+
     public long getId() {
         return id;
     }
@@ -40,6 +44,14 @@ public class Report {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
     }
 
     @JsonRawValue

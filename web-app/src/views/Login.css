@@ -1,6 +1,15 @@
 .login-view {
 }
 
+.login-input {
+  padding: 7px 10px !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+.login-input:focus {
+  border: 2px solid #0065FF !important;
+}
+
 .login-panel {
   padding: 15px;
   position: fixed;

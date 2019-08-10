@@ -19,6 +19,8 @@ import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
 import './Report.css';
 
+
+
 class ReportEditView extends React.Component {
 
   constructor(props) {
@@ -29,7 +31,6 @@ class ReportEditView extends React.Component {
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
-      showBookmarkPanel: false,
       showSharePanel: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
@@ -44,13 +45,14 @@ class ReportEditView extends React.Component {
       reportId: 0,
       name: '',
       style: {},
+      isFavourite: false,
       reportType: '',
       reportViewWidth: 1000,
       cannedReportName: '',
       cannedReportData: {},
       // share url
       expiredBy: new Date(),
-      shareUrl: ''
+      shareUrl: '',
     }
 
     this.componentViewPanel = React.createRef();
@@ -103,7 +105,8 @@ class ReportEditView extends React.Component {
                 reportId: report.id,
                 name: report.name,
                 style: report.style,
-                reportType: reportType
+                reportType: reportType,
+                isFavourite: report.isFavourite
               }, () => {
                 this.refresh();
               });
@@ -225,10 +228,18 @@ class ReportEditView extends React.Component {
     });
   }
 
-  handleInputChange = (event) => {
+  handleInputChange = (name, value) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [name]: value
     });
+  }
+
+  handleFavouriteCheckbox = (name, value) => {
+    this.setState({
+      [name]: value
+    });
+
+    
   }
 
   getPageWidth = () => {
@@ -546,19 +557,22 @@ class ReportEditView extends React.Component {
         this.props.onCannedReportSave();
       });
   }
-
-  openBookmarkPanel = () => {
-    this.setState({
-      showBookmarkPanel: true
-    });
-  }
   
-  addToFavourite = () => {
+  toggleFavourite = () => {
+    const {
+      reportId,
+      isFavourite
+    } = this.state;
+    const status = isFavourite ? 'remove' : 'add';
 
-  }
-
-  removeFromFavourite = () => {
-
+    axios.post(`/ws/report/favourite/${reportId}/${status}`)
+      .then(res => {
+        this.setState(prevState => ({
+          isFavourite: !prevState.isFavourite
+        }), () => {
+          this.props.onFavouriteChange(reportId, this.state.isFavourite);
+        }); 
+      });
   }
 
   openSharePanel = () => {
@@ -617,28 +631,27 @@ class ReportEditView extends React.Component {
       fromReport,
       showControl,
       reportType,
-      isPendingApplyFilters
+      isPendingApplyFilters,
+      isFavourite
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
     const pendingApplyFiltersStyle = isPendingApplyFilters ? 'button-green' : '';
 
     const commonButtonPanel = (
       <React.Fragment>
-        <div className="inline-block">
-          <div className="inline-block" style={{marginRight: '8px'}}>
-            {t('Last refreshed')}: {readableLastRefreshed}
-          </div>
-          { autoRefreshStatus === 'OFF' && (
-            <input 
-              className="form-input inline-block"
-              type="text" 
-              name="refreshInterval" 
-              value={this.state.refreshInterval}
-              onChange={this.handleInputChange}
-              style={{width: '50px'}}
-            />
-          )}
+        <div className="inline-block" style={{marginRight: '8px', lineHeight: '32px'}}>
+          {t('Last refreshed')}: {readableLastRefreshed}
         </div>
+        { autoRefreshStatus === 'OFF' && (
+          <input 
+            className="form-input inline-block"
+            type="text" 
+            name="refreshInterval" 
+            value={this.state.refreshInterval}
+            onChange={(event) => this.handleInputChange('refreshInterval', event.target.value)}
+            style={{width: '50px', marginRight: '4px'}}
+          />
+        )}
         <button className="button square-button flat-button" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
@@ -665,8 +678,12 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button flat-button ml-4" onClick={this.openBookmarkPanel}>
-          <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+        <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
+          { isFavourite ? (
+            <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+          ) : (
+            <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
+          )}
         </button>
         <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
           <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
@@ -758,7 +775,7 @@ class ReportEditView extends React.Component {
                     type="text" 
                     name="name" 
                     value={this.state.name}
-                    onChange={this.handleInputChange}  
+                    onChange={(event) => this.handleInputChange('name', event.target.value)}  
                   />
                 )
               }
@@ -807,7 +824,7 @@ class ReportEditView extends React.Component {
               type="text" 
               name="cannedReportName" 
               value={this.state.cannedReportName}
-              onChange={this.handleInputChange} 
+              onChange={(event) => this.handleInputChange('cannedReportName', event.target.value)} 
             />
             <button className="button button-green" onClick={this.saveCannedReport}>
               <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
@@ -827,26 +844,16 @@ class ReportEditView extends React.Component {
         </Modal>
 
         <Modal 
-          show={this.state.showBookmarkPanel}
-          onClose={() => this.setState({ showBookmarkPanel: false })}
-          modalClass={'small-modal-panel'}
-          title={t('Favourite')}>
-          <div>
-            Add/Remove to favourite
-          </div>
-        </Modal>
-
-        <Modal 
           show={this.state.showSharePanel}
           onClose={() => this.setState({ showSharePanel: false })}
           modalClass={'small-modal-panel'}
           title={t('Share')}>
           <div className="form-panel">
             <label>{t('Name')}</label>
-            <div className="form-input">{this.state.name}</div>
+            <div className="form-input bg-grey">{this.state.name}</div>
 
             <label>{t('Type')}</label>
-            <div className="form-input">{this.state.reportType}</div>
+            <div className="form-input bg-grey">{this.state.reportType}</div>
 
             <label style={{marginBottom: '3px'}}>{t('Expiration Date')}</label>
             <div style={{marginBottom: '8px'}}>
@@ -861,7 +868,7 @@ class ReportEditView extends React.Component {
             { this.state.shareUrl && (
               <React.Fragment>
                 <label>{t('Share URL')}</label>
-                <div className="form-input word-break-all">{this.state.shareUrl}</div>
+                <div className="form-input word-break-all bg-grey">{this.state.shareUrl}</div>
               </React.Fragment>
             )}
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import './Tabs.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Tabs extends React.Component {
 
@@ -17,7 +18,12 @@ class Tabs extends React.Component {
     let tabContent = null;
     for (let i = 0; i < children.length; i++) {
       if (children[i]) {
-        const title = children[i].props.title;
+        const { 
+          title,
+          icon,
+          iconOnly = false
+        } = children[i].props;
+        
         let active = '';
         if (title === activeTab) {
           active = 'tab-header-active';
@@ -25,7 +31,13 @@ class Tabs extends React.Component {
         }
         
         tabHeaders.push(
-          <li className={`tab-header-item ${active}`} key={i} onClick={() => this.handleTabClick(title)}>{title}</li>
+          <li className={`tab-header-item ${active}`} key={i} onClick={() => this.handleTabClick(title)}>
+            { iconOnly ? (
+              <FontAwesomeIcon icon={icon} size="lg" />
+            ) : (
+              <React.Fragment>{title}</React.Fragment>
+            )}
+          </li>
         );
       }
     }

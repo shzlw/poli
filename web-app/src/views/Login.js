@@ -136,7 +136,7 @@ class Login extends React.Component {
             <div className="form-panel">
               <label>{t('Username')}</label>
               <input 
-                className="form-input"
+                className="form-input login-input"
                 type="text" 
                 name="username" 
                 value={this.state.username}
@@ -144,7 +144,7 @@ class Login extends React.Component {
               />
               <label>{t('Password')}</label>
               <input 
-                className="form-input"
+                className="form-input login-input"
                 type="password" 
                 name="password" 
                 value={this.state.password}

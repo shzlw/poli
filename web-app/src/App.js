@@ -9,10 +9,11 @@ import {
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, 
   faLongArrowAltRight, faWrench, faArchive, faFileDownload,
-  faHeart, faShareSquare, faSearchLocation
+  faHeart, faShareSquare, faSearchLocation, faClipboard
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  faSquare as farSquare
+  faSquare as farSquare,
+  faHeart as farHeart
 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
@@ -32,7 +33,7 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare,
   faLongArrowAltRight, faWrench, farSquare, faArchive, faFileDownload,
-  faHeart, faShareSquare, faSearchLocation
+  faHeart, farHeart, faShareSquare, faSearchLocation, faClipboard,
 );
 
 class App extends React.Component {

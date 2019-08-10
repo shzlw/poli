@@ -1,5 +1,6 @@
 -- For SQLite
 DROP TABLE IF EXISTS p_shared_report;
+DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_project_report;
 DROP TABLE IF EXISTS p_project;
 DROP TABLE IF EXISTS p_group_report;
@@ -7,7 +8,6 @@ DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
 DROP TABLE IF EXISTS p_datasource;
 DROP TABLE IF EXISTS p_user_attribute;
-DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_canned_report;
 DROP TABLE IF EXISTS p_group_user;
 DROP TABLE IF EXISTS p_user;
@@ -109,8 +109,7 @@ IF NOT EXISTS p_user_attribute (
 CREATE TABLE
 IF NOT EXISTS p_project (
     id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT
+    name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE
@@ -123,10 +122,17 @@ IF NOT EXISTS p_project_report (
 );
 
 CREATE TABLE
+IF NOT EXISTS p_group_project (
+    project_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    PRIMARY KEY (project_id, group_id),
+    FOREIGN KEY (project_id) REFERENCES p_project(id),
+    FOREIGN KEY (group_id) REFERENCES p_group(id)
+);
+
+CREATE TABLE
 IF NOT EXISTS p_user_favourite (
     user_id INTEGER NOT NULL,
-    type TEXT NOT NULL,
-    project_id INTEGER,
     report_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
