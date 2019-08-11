@@ -43,8 +43,10 @@ class ComponentEditPanel extends React.Component {
       type: Constants.STATIC,
       subType: Constants.TEXT,
       style: this.initialStyle,
+      // filter
       data: {},
       queryParameter: '',
+      defaultParamValue: '',
       drillThrough: [],
       drillReports: [],
       drillColumnName: '',
@@ -117,10 +119,12 @@ class ComponentEditPanel extends React.Component {
             });
           } else if (type === Constants.FILTER) {
             const {
-              queryParameter
+              queryParameter = '',
+              defaultParamValue = ''
             } = component.data;
             this.setState({
-              queryParameter: queryParameter
+              queryParameter: queryParameter,
+              defaultParamValue: defaultParamValue
             });
             if (subType === Constants.SLICER) {
 
@@ -237,13 +241,14 @@ class ComponentEditPanel extends React.Component {
       component.drillThrough = drillThrough;
     } else if (type === Constants.FILTER) {
       const  {
-        queryParameter
+        queryParameter,
+        defaultParamValue = ''
       } = this.state;
       component.data = {
-        queryParameter: queryParameter
+        queryParameter: queryParameter,
+        defaultParamValue: defaultParamValue
       }
     }
-    
 
     if (componentId === null) {
       component.style = this.initialStyle;
@@ -1018,13 +1023,22 @@ class ComponentEditPanel extends React.Component {
 
                 { type === Constants.FILTER && (
                   <div>
-                    <label>Parameter</label>
+                    <label>{t('Parameter')}</label>
                     <input 
                       className="form-input"
                       type="text" 
                       name="queryParameter" 
                       value={this.state.queryParameter}
                       onChange={(event) => this.handleInputChange('queryParameter', event.target.value)} 
+                    />
+
+                    <label>{t('Default Value')}</label>
+                    <input 
+                      className="form-input"
+                      type="text" 
+                      name="defaultParamValue" 
+                      value={this.state.defaultParamValue}
+                      onChange={(event) => this.handleInputChange('defaultParamValue', event.target.value)} 
                     />
                   </div>
                 )}

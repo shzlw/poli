@@ -3,7 +3,6 @@
 ## v0.10.0
 
 ### Breaking Changes & Upgrade Steps
-- The share/embed function is redesigned. Using $apiKey to embed reports is considered deprecated in this version and will be removed in v0.11.0. Check the new documents for more details to migrate.
 
 
 ## v0.9.1

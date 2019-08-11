@@ -111,7 +111,8 @@ public class AuthFilter implements Filter {
             if (path.startsWith("/ws/report")
                     || path.startsWith("/ws/cannedreport")
                     || path.startsWith("/ws/component/report/")
-                    || path.startsWith("/ws/user/account")) {
+                    || path.startsWith("/ws/user/account")
+                    || path.startsWith("/ws/sharedreport/generate-sharekey")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_PUT.equals(requestMethod)) {
@@ -120,7 +121,8 @@ public class AuthFilter implements Filter {
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")
-                || path.startsWith("/ws/cannedreport")) {
+                || path.startsWith("/ws/cannedreport")
+                || path.startsWith("/ws/report/favourite")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {

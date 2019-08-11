@@ -111,5 +111,7 @@
   "Create Date": "Create Date", 
   "Expired By": "Expired By", 
   "Share Key": "Share Key", 
-  "Actions": "Actions"
+  "Actions": "Actions",
+  "Parameter": "Parameter",
+  "Default Value": "Default Value"
 }
