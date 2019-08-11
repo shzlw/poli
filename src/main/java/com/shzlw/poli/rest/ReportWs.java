@@ -4,14 +4,12 @@ import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
 import com.shzlw.poli.dao.SharedReportDao;
 import com.shzlw.poli.dao.UserFavouriteDao;
-import com.shzlw.poli.dto.SharedReportRow;
 import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
-import com.shzlw.poli.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -96,7 +94,7 @@ public class ReportWs {
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         reportService.invalidateCache(user.getId());
-        long id = reportDao.insert(report.getName(), report.getStyle());
+        long id = reportDao.insert(report.getName(), report.getStyle(), report.getProject());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
 

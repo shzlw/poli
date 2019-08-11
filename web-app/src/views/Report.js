@@ -29,10 +29,13 @@ class Report extends Component {
       showEditPanel: false,
       activeReportId: 0,
       name: '',
+      project: '',
       cannedReports: [],
       activeTab: AD_HOC,
       activeCannedReportId: 0,
-      favouriteReports: []
+      favouriteReports: [],
+      projects: [],
+      nonProjectReports: []
     }
   }
 
@@ -70,9 +73,35 @@ class Report extends Component {
   fetchReports = () => {
     axios.get('/ws/report')
       .then(res => {
-        const reports = res.data;
+        const reports = res.data || [];
+        const projects = [];
+        const nonProjectReports = [];
+        for (let i = 0; i < reports.length; i++) {
+          const report = reports[i];
+          const {
+            project
+          } = report;
+          if (project) {
+            const index = projects.findIndex(p => p.name === project);
+            if (index !== -1) {
+              projects[i].reports.push(report);
+            } else {
+              const reports = [];
+              reports.push(report);
+              projects.push({
+                showReports: false,
+                name: project,
+                reports: reports
+              });
+            }
+          } else {
+            nonProjectReports.push(report);
+          } 
+        }
         this.setState({ 
-          reports: reports 
+          reports: reports,
+          projects: projects,
+          nonProjectReports: nonProjectReports
         });
       });
   }
@@ -122,13 +151,15 @@ class Report extends Component {
   closeEditPanel = () => {
     this.setState({
       showEditPanel: false,
-      name: ''
+      name: '',
+      project: ''
     });
   }
 
   save = () => {
     const {
-      name
+      name,
+      project
     } = this.state;
 
     if (!name) {
@@ -138,6 +169,7 @@ class Report extends Component {
 
     const report = {
       name: name,
+      project: project,
       style: {
         height: Constants.DEFAULT_REPORT_HEIGHT,
         backgroundColor: 'rgba(233, 235, 238, 1)',
@@ -208,6 +240,20 @@ class Report extends Component {
     this.fetchFavouriteReports();
   }
 
+  toggleProject = (projectName) => {
+    const {
+      projects
+    } = this.state;
+
+    const index = projects.findIndex(p => p.name === projectName);
+    const newProjects = [...projects];
+    const { showReports = false } = newProjects[index];
+    newProjects[index].showReports = !showReports;
+    this.setState({
+      projects: newProjects
+    });
+  }
+
   render() {
     const { t } = this.props;
 
@@ -217,7 +263,9 @@ class Report extends Component {
       searchValue,
       cannedReports = [],
       activeCannedReportId,
-      favouriteReports = []
+      favouriteReports = [],
+      projects = [],
+      nonProjectReports = []
     } = this.state;
 
     const {
@@ -225,13 +273,48 @@ class Report extends Component {
     } = this.props;
     const editable = sysRole === Constants.SYS_ROLE_VIEWER ? false : true;
 
-    const reportRows = [];
-    for (let i = 0; i < reports.length; i++) {
-      const report = reports[i];
+    const projectRows = [];
+    for (let i = 0; i < projects.length; i++) {
+      const {
+        name: projectName,
+        reports = [],
+        showReports = false
+      } = projects[i];
+      const reportRows = [];
+      for (let j = 0; j < reports.length; j++) {
+        const report = reports[j];
+        const reportName = report.name;
+        const menuActive = activeReportId === report.id ? 'report-menu-item-active' : '';
+        if (!searchValue || (searchValue && reportName.includes(searchValue))) {
+          reportRows.push(
+            (
+              <div key={j} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewReport(report.id)}>
+                {reportName}
+              </div>
+            )
+          )
+        }
+      }
+
+      projectRows.push(
+        <div key={i}>
+          <div className="project-row" onClick={() => this.toggleProject(projectName)}>{projectName}</div>
+          {showReports && (
+            <div>
+              {reportRows}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const nonProjectReportRows = [];
+    for (let i = 0; i < nonProjectReports.length; i++) {
+      const report = nonProjectReports[i];
       const name = report.name;
       const menuActive = activeReportId === report.id ? 'report-menu-item-active' : '';
       if (!searchValue || (searchValue && name.includes(searchValue))) {
-        reportRows.push(
+        nonProjectReportRows.push(
           (
             <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewReport(report.id)}>
               {name}
@@ -307,7 +390,8 @@ class Report extends Component {
               </div>
               
               <div title={t('Ad Hoc')} iconOnly={true} icon={'clipboard'}>
-                {reportRows}
+                {projectRows}
+                {nonProjectReportRows}
               </div>
 
               <div title={t('Canned')} iconOnly={true} icon={'archive'}>
@@ -365,6 +449,16 @@ class Report extends Component {
               value={this.state.name}
               onChange={this.handleInputChange} 
             />
+
+            <label>{t('Project')}</label>
+            <input 
+              className="form-input"
+              type="text" 
+              name="project" 
+              value={this.state.project}
+              onChange={this.handleInputChange} 
+            />
+
             <button className="button button-green" onClick={this.save}>
               <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
             </button>

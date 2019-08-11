@@ -118,5 +118,6 @@
   "Left": "Left",
   "Right": "Right",
   "Top": "Top",
-  "Bottom": "Bottom"
+  "Bottom": "Bottom",
+  "Project": "Project"
 }

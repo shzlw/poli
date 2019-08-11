@@ -13,6 +13,7 @@ public class Report {
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String STYLE = "style";
+    public static final String PROJECT = "project";
 
     private long id;
     private String name;
@@ -26,6 +27,8 @@ public class Report {
      * }
      */
     private String style;
+
+    private String project;
 
     @JsonProperty(value = "isFavourite")
     private boolean isFavourite;
@@ -44,6 +47,14 @@ public class Report {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public boolean isFavourite() {

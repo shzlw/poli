@@ -26,7 +26,8 @@ CREATE TABLE
 IF NOT EXISTS p_report (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
-    style TEXT
+    style TEXT,
+    project TEXT
 );
 
 CREATE TABLE

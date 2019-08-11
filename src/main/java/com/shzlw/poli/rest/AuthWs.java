@@ -1,6 +1,5 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.dao.SharedReportDao;
 import com.shzlw.poli.dao.UserDao;
 import com.shzlw.poli.dto.LoginResponse;
 import com.shzlw.poli.model.SharedReport;

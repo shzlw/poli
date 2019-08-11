@@ -44,6 +44,7 @@ class ReportEditView extends React.Component {
       fromReport: '',
       reportId: 0,
       name: '',
+      project: '',
       style: {},
       isFavourite: false,
       reportType: '',
@@ -234,14 +235,6 @@ class ReportEditView extends React.Component {
     });
   }
 
-  handleFavouriteCheckbox = (name, value) => {
-    this.setState({
-      [name]: value
-    });
-
-    
-  }
-
   getPageWidth = () => {
     const thisNode = ReactDOM.findDOMNode(this);
     return thisNode.clientWidth - 40;
@@ -313,6 +306,7 @@ class ReportEditView extends React.Component {
     const {
       reportId,
       name,
+      project,
       style = {}
     } = this.state;
 
@@ -329,6 +323,7 @@ class ReportEditView extends React.Component {
     const report = {
       id: reportId, 
       name: name,
+      project: project,
       style: style
     };
 
@@ -890,6 +885,20 @@ class ReportEditView extends React.Component {
               <div className="side-panel-title">{t('General')}</div>
 
               <div className="side-panel-content">
+                <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
+                  <div className="float-left">{t('Project')}</div>
+                  <div className="float-right">
+                    <input 
+                      className="side-panel-input"
+                      type="text" 
+                      name="project" 
+                      value={this.state.project}
+                      onChange={(event) => this.handleInputChange('project', event.target.value)} 
+                      style={{width: '80px'}}
+                    />
+                  </div>
+                </div>
+
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
                   <div className="float-left">{t('Fixed Width')}</div>
                   <div className="float-right">

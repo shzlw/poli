@@ -102,3 +102,10 @@
   color: #DFDFDF;
   z-index: 60;
 }
+
+.project-row {
+  border-left: 3px solid red;
+  margin: 5px 0px;
+  padding: 5px 8px;
+  cursor: pointer;
+}
