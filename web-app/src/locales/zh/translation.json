@@ -113,5 +113,10 @@
   "Share Key": "Share Key", 
   "Actions": "Actions",
   "Parameter": "Parameter",
-  "Default Value": "Default Value"
+  "Default Value": "Default Value",
+  "Grid": "Grid",
+  "Left": "Left",
+  "Right": "Right",
+  "Top": "Top",
+  "Bottom": "Bottom"
 }

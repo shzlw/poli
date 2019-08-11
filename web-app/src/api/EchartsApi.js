@@ -141,6 +141,10 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
   const {
     isHorizontal = false,
     showAllAxisLabels = false,
+    gridTop = 30,
+    gridBottom = 5,
+    gridLeft = 10,
+    gridRight = 15
   } = config;
 
   const axisLabel = showAllAxisLabels ? {
@@ -180,10 +184,10 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 5,
-      left: 10,
-      right: 15,
+      top: Number(gridTop),
+      bottom: Number(gridBottom),
+      left: Number(gridLeft),
+      right: Number(gridRight),
       containLabel: true
     },
     legend: legend,
@@ -253,7 +257,11 @@ const getBarOption = (data, config, title) => {
  */
 const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series, config = {}) => {
   const {
-    showAllAxisLabels = false
+    showAllAxisLabels = false,
+    gridTop = 30,
+    gridBottom = 5,
+    gridLeft = 10,
+    gridRight = 15
   } = config;
 
   const axisLabel = showAllAxisLabels ? {
@@ -270,10 +278,10 @@ const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 5,
-      left: 10,
-      right: 15,
+      top: Number(gridTop),
+      bottom: Number(gridBottom),
+      left: Number(gridLeft),
+      right: Number(gridRight),
       containLabel: true
     },
     xAxis: {
@@ -347,7 +355,11 @@ const getLineOption = (data, config) => {
  */
 const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, series, config = {}) => {
   const {
-    showAllAxisLabels = false
+    showAllAxisLabels = false,
+    gridTop = 30,
+    gridBottom = 5,
+    gridLeft = 10,
+    gridRight = 15
   } = config;
 
   const axisLabel = showAllAxisLabels ? {
@@ -362,10 +374,10 @@ const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     tooltip: {
     },
     grid:{
-      top: 30,
-      bottom: 5,
-      left: 10,
-      right: 15,
+      top: Number(gridTop),
+      bottom: Number(gridBottom),
+      left: Number(gridLeft),
+      right: Number(gridRight),
       containLabel: true
     },
     xAxis: {

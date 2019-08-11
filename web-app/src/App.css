@@ -331,6 +331,11 @@ h1 {
   font-size: 16px;
 }
 
+.hint-text {
+  color: #8993A4;
+  font-size: 15px;
+}
+
 /* Talbe */
 .poli-table-panel {
   width: 100%;

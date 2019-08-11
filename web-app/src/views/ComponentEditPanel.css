@@ -31,3 +31,14 @@
   color: #FFFFFF;
   display: inline-block;
 }
+
+.grid-label {
+  line-height: 32px;
+  margin-right: 5px;
+}
+
+.grid-input {
+  width: 50px;
+  margin-right: 8px;
+  text-align: right;
+}
