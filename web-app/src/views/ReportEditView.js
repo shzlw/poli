@@ -631,7 +631,7 @@ class ReportEditView extends React.Component {
       isFavourite
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
-    const pendingApplyFiltersStyle = isPendingApplyFilters ? 'button-green' : '';
+    const pendingApplyFiltersStyle = isPendingApplyFilters ? 'font-blue' : '';
 
     const commonButtonPanel = (
       <React.Fragment>

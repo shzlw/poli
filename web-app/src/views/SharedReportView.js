@@ -99,7 +99,7 @@ class SharedReportView extends React.Component {
     return (
       <div className="full-page-content">
         <div style={{marginBottom: '10px', fontSize: '20px'}}>
-          Shared Reports
+          {t('Shared Reports')}
         </div>
         <div className="poli-table-panel">
           <table className="poli-table">

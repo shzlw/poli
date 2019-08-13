@@ -439,8 +439,8 @@ hr {
 }
 
 .button-green {
-  background-color: #36B37E;
-  color: #FFFFFF;
+  background-color: #36B37E !important;
+  color: #FFFFFF !important;
 }
 
 .button-green:hover {
@@ -469,7 +469,7 @@ hr {
 }
 
 .flat-button {
-  background: transparent !important;
+  background-color: transparent !important;
   color: #091E42;
 }
 
@@ -480,6 +480,10 @@ hr {
 
 .bg-grey {
   background-color: #dddfe2;
+}
+
+.font-blue {
+  color: #0065FF;
 }
 
 /* Tooltip */

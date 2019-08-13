@@ -83,7 +83,7 @@ class Report extends Component {
           if (project) {
             const index = projects.findIndex(p => p.name === project);
             if (index !== -1) {
-              projects[i].reports.push(report);
+              projects[index].reports.push(report);
             } else {
               const reports = [];
               reports.push(report);

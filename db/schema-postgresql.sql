@@ -121,8 +121,8 @@ IF NOT EXISTS p_shared_report (
     report_id INTEGER NOT NULL,
     report_type VARCHAR NOT NULL,
     user_id INTEGER NOT NULL,
-    created_at INTEGER NOT NULL,
-    expired_by INTEGER NOT NULL,
+    created_at BIGINT NOT NULL,
+    expired_by BIGINT NOT NULL,
     FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );

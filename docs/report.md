@@ -86,19 +86,23 @@ Notes
 
 The report can be shared through a link to public recipients who don't have access to Poli. 
 
-Click the share button. Select the expiration date and press generate button. A shared report URL with a unique shared key will be generated.
+Click the share button. 
 
-SCREENSHOT
+![share button](_images/screenshots/share_button.jpg)
+
+Select the expiration date and press generate button. A shared report URL with a unique shared key will be generated.
+
+![share dialog](_images/screenshots/share_dialog.jpg)
 
 The shared report history can be viewed and managed under the event menu.
 
-SCREENSHOT
+![share event](_images/screenshots/share_event.jpg)
 
 ## Favourite
 
 Favourite list provides a quick access to the reports that are marked as favourite. Toggling the favourite button(heart) can add/remove report to/rom the favourite list.
 
-SCREENSHOT
+![favourite](_images/screenshots/favourite.jpg)
 
 ## Access permissions
 
