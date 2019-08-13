@@ -32,7 +32,7 @@ public class AuthFilter implements Filter {
         if (path.startsWith("/ws/")) {
             String sessionKey = getSessionKey(httpRequest);
             String sysRole = null;
-            boolean isAuthByApiKey = false;
+            boolean isAuthByKey = false;
             if (sessionKey != null) {
                 User user = userService.getUserBySessionKey(sessionKey);
                 if (user != null) {
@@ -47,16 +47,26 @@ public class AuthFilter implements Filter {
                     if (user != null) {
                         httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
                         sysRole = user.getSysRole();
-                        isAuthByApiKey = true;
+                        isAuthByKey = true;
+                    }
+                } else {
+                    String shareKey = httpRequest.getHeader(Constants.HTTP_HEADER_SHARE_KEY);
+                    if (shareKey != null) {
+                        User user = userService.getUserByShareKey(shareKey);
+                        if (user != null) {
+                            httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
+                            sysRole = user.getSysRole();
+                            isAuthByKey = true;
+                        }
                     }
                 }
             }
 
             if (sysRole != null) {
                 boolean isValid = false;
-                if (isAuthByApiKey) {
-                    // Authorized by using API key
-                    isValid = validateByApiKey(httpRequest.getMethod(), path);
+                if (isAuthByKey) {
+                    // Authorized by using API key or Share Key
+                    isValid = validateByKey(httpRequest.getMethod(), path);
                 } else {
                     // Authorized by using cookie.
                     if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
@@ -101,7 +111,8 @@ public class AuthFilter implements Filter {
             if (path.startsWith("/ws/report")
                     || path.startsWith("/ws/cannedreport")
                     || path.startsWith("/ws/component/report/")
-                    || path.startsWith("/ws/user/account")) {
+                    || path.startsWith("/ws/user/account")
+                    || path.startsWith("/ws/sharedreport/generate-sharekey")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_PUT.equals(requestMethod)) {
@@ -110,7 +121,8 @@ public class AuthFilter implements Filter {
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")
-                || path.startsWith("/ws/cannedreport")) {
+                || path.startsWith("/ws/cannedreport")
+                || path.startsWith("/ws/report/favourite")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {
@@ -121,7 +133,7 @@ public class AuthFilter implements Filter {
         return isValid;
     }
 
-    private static boolean validateByApiKey(String requestMethod, String path) {
+    private static boolean validateByKey(String requestMethod, String path) {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
             if (path.startsWith("/ws/report")

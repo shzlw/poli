@@ -399,7 +399,7 @@ class User extends React.Component {
             <FontAwesomeIcon icon="plus" /> {t('New')}
           </button>
         </div>
-        <div className="row mt-10">
+        <div className="row" style={{marginTop: '8px'}}>
           {userItems}
         </div>
 

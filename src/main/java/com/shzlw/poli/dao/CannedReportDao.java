@@ -1,7 +1,6 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.CannedReport;
-import com.shzlw.poli.service.JdbcQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,6 @@ public class CannedReportDao {
     }
 
     public long insert(long userId, long createdAt, String name, String data) {
-        LOGGER.info("userId: {}, createdAt: {}, name: {}, data: {}", userId, createdAt, name, data);
         String sql = "INSERT INTO p_canned_report(user_id, created_at, name, data) "
                     + "VALUES(:user_id, :created_at, :name, :data)";
         MapSqlParameterSource params = new MapSqlParameterSource();

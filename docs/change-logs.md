@@ -1,5 +1,36 @@
 # Change Logs
 
+## v0.10.0
+
+### Breaking Changes & Upgrade Steps
+  ```sh
+  -- Backup your database before you make changes to it
+  ./sqlite3 poli.db
+
+  -- File is located at upgrade/poli_upgrade_v0.10.0.sql
+  sqlite> .read poli_upgrade_v0.10.0.sql
+  ```
+
+  Check upgrade for more details.
+
+### New Features
+- A shared report URL can be generated with an expiration date defined through the share button. The shared report history can be viewed and managed under the event menu.
+- Reports can be grouped into projects which are collapsible on the side report menu.
+- Reports can be marked as farourite for quick access through the favourite button.
+- Allow to set default parameter value for filter commponent.
+- For Line/Bar/Area charts, the margin of the chart grid can be adjusted.
+
+### Improvements
+- Using $apiKey in the URL doesn't allow access to the report page but only the full screen page. The full screen report can still be embedded into another application and the report name and other parameters can be changed on the fly.
+- UI is refined to provide a cleaner user experience.
+- Add samples in docuemnt on how to setup data source for MySQL and SQL Server.
+- Add new upgrade steps for windows/linux.
+
+
+### Bug Fixes
+- Fix an issue that the full screen page doesn't display locale language.
+- Fix an issue that the search input on report page doesn't display correctly if the scroll bar shows.
+
 ## v0.9.1
 
 ### Improvements

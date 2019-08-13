@@ -7,7 +7,7 @@ body,
   margin: 0;
   padding: 0;
   font-family: Tahoma, Geneva, sans-serif;
-  color: #172B4D;
+  color: #091E42;
   background-color: #F5F5F5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -39,9 +39,7 @@ body,
 }
 
 .form-panel .form-input,
-.form-panel ul,
-.form-panel .info-value 
-.form-input {
+.form-panel ul {
   margin-bottom: 10px;
 }
 
@@ -101,32 +99,29 @@ body,
 }
 
 .icon-button {
-  border-radius: 4px;
+  border-radius: 2px;
   border: 0;
-  font-weight: 700;
-  height: 30px;
-  width: 30px;
+  height: 28px;
+  width: 28px;
   outline: none;
   padding: 0px !important;
   cursor: pointer;
 }
 
 .square-button {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   padding: 0px !important;
 }
 
 .button {
   background: #0065FF;
   color: #fff;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  border-radius: 4px;
+  border-radius: 2px;
   border: 0;
-  font-weight: 700;
-  height: 36px;
-  line-height: 36px;
-  padding: 0px 12px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0px 8px;
   outline: none;
   cursor: pointer;
 }
@@ -135,7 +130,6 @@ body,
   color: #FFFFFF;
   cursor: pointer;
   background-color: #2684FF;
-  box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
 }
 
 .form-input,
@@ -145,11 +139,10 @@ body,
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
   width: 100%;
-  padding: 7px 10px;
-  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
-  border: 2px solid #FFFFFF;
+  padding: 6px 8px;
+  border: 1px solid #dddfe2;
   outline: 0;
-  border-radius: 4px;
+  border-radius: 2px;
   background: #FFFFFF;
   font-size: 16px;
 }
@@ -158,13 +151,17 @@ body,
   color: #aab7c4;
 }
 
+.form-input:hover {
+  color: #aab7c4;
+}
+
 .form-input:focus {
-  border: 2px solid #0065FF; 
+  border: 1px solid #0065FF; 
 }
 
 .inline-text-label {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
 }
 
 textarea {
@@ -210,12 +207,12 @@ h1 {
 }
 
 .table-row {
-  padding: 4px 6px;
-  margin-bottom: 6px;
+  padding: 2px 6px;
+  margin-bottom: 3px;
   background-color: #FFFFFF;
   box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   outline: 0;
-  border-radius: 4px;
+  border-radius: 2px;
   background: #FFFFFF;
   line-height: 28px;
 }
@@ -328,11 +325,53 @@ h1 {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
-  box-shadow: none !important;
-  border: 2px solid #DFE1E6 !important;
+  border: 1px solid #DFE1E6 !important;
   padding: 5px 8px;
   width: 100%;
   font-size: 16px;
+}
+
+.hint-text {
+  color: #8993A4;
+  font-size: 15px;
+}
+
+/* Talbe */
+.poli-table-panel {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.poli-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  background-color: #FFFFFF;
+}
+
+.poli-table thead tr {
+  border-bottom: 2px solid #0065FF;
+}
+
+.poli-table th, td {
+  font-size: 15px;
+  padding: 3px 5px;
+  vertical-align: inherit;
+  white-space: nowrap;
+}
+
+.poli-table td {
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.poli-table th {
+  font-size: 16px !important;
+  padding: 4px 6px;
+  font-weight: bold;
 }
 
 /* Charts */
@@ -374,12 +413,16 @@ h1 {
   display: none;
 }
 
+.word-break-all {
+  word-break: break-all;
+}
+
 hr {
   display: block;
   height: 1px;
   border: 0;
   border-top: 1px solid #ccc;
-  margin: 10px 0;
+  margin: 8px 0;
   padding: 0; 
 }
 
@@ -396,8 +439,8 @@ hr {
 }
 
 .button-green {
-  background-color: #36B37E;
-  color: #FFFFFF;
+  background-color: #36B37E !important;
+  color: #FFFFFF !important;
 }
 
 .button-green:hover {
@@ -423,6 +466,24 @@ hr {
 .button-black:hover {
   background-color: #172B4D;
   color: #FFFFFF;
+}
+
+.flat-button {
+  background-color: transparent !important;
+  color: #091E42;
+}
+
+.flat-button:hover {
+  background-color: #C1C7D0 !important;
+  color: #FFFFFF !important;
+}
+
+.bg-grey {
+  background-color: #dddfe2;
+}
+
+.font-blue {
+  color: #0065FF;
 }
 
 /* Tooltip */

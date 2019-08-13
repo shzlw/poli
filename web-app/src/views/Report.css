@@ -28,7 +28,6 @@
   margin: 5px 0px;
   padding: 5px 8px;
   color: #8993A4;
-  line-height: 26px;
   cursor: pointer;
 }
 
@@ -38,8 +37,9 @@
 
 .report-menu-item-active {
   border-left: 3px solid #0065FF;
-  background-color: #1E1E1E;
-  color: #FFFFFF;
+  background-color: #C1C7D0;
+  color: #091E42;
+  font-weight: 700;
 }
 
 .report-content-component-panel {
@@ -102,4 +102,14 @@
   background-color: #4B4B4B; 
   color: #DFDFDF;
   z-index: 60;
+}
+
+.project-row {
+  margin: 5px 0px;
+  padding: 3px 0px;
+  cursor: pointer;
+}
+
+.project-row:hover {
+  background-color: #C1C7D0;
 }

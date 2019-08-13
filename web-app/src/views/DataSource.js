@@ -254,7 +254,7 @@ class DataSource extends Component {
             <FontAwesomeIcon icon="plus" /> {t('New')}
           </button>
         </div>
-        <div className="row mt-10">
+        <div className="row" style={{marginTop: '8px'}}>
           {jdbcDataSourceItems}
         </div>
 

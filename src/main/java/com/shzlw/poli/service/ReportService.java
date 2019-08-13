@@ -45,7 +45,6 @@ public class ReportService {
                 List<Report> reports = new ArrayList<>();
                 if (Constants.SYS_ROLE_VIEWER.equals(user.getSysRole())) {
                     reports = reportDao.findByViewer(user.getId());
-                    LOGGER.info("reports: {}", reports.size());
                 } else {
                     reports = reportDao.findAll();
                 }

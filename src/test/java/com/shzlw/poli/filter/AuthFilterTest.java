@@ -163,9 +163,11 @@ public class AuthFilterTest {
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/sharedreport/generate-sharekey"),
                 new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/cannedreport"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "Report"),
                 new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
         );
 

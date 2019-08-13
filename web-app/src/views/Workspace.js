@@ -9,6 +9,7 @@ import UserManagement from './UserManagement';
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
+import EventView from './EventView';
 
 import Toast from '../components/Toast';
 
@@ -32,6 +33,11 @@ const MENU_ITEMS = [
     link: '/workspace/usermanagement',
     value: 'User Management',
     icon: 'users-cog'
+  },
+  {
+    link: '/workspace/event',
+    value: 'Event',
+    icon: 'search-location'
   }
 ];
 
@@ -133,6 +139,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/account" component={Account} />
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
+            <Route exact path="/workspace/event" component={EventView} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
             <Route component={PageNotFound} />
           </Switch>

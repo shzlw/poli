@@ -109,14 +109,14 @@ class ChangeTempPassword extends React.Component {
               <div style={tipStyle}>* {t('Use 8 or more characters')}</div>
               <label>{t('New Password')}</label>
               <input 
-                className="form-input"
+                className="form-input login-input"
                 type="password" 
                 name="password" 
                 value={this.state.username}
                 onChange={this.handleInputChange} />
               <label>{t('Confirm Password')}</label>
               <input 
-                className="form-input"
+                className="form-input login-input"
                 type="password" 
                 name="confirmedPassword" 
                 value={this.state.confirmedPassword}

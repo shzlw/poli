@@ -103,5 +103,22 @@
   "Attributes": "Attributes",
   "File Name": "File Name",
   "Export as CSV": "Export as CSV",
-  "Export": "Export"
+  "Export": "Export",
+  "Event": "Event",
+  "Generate URL": "Generate URL",
+  "Share": "Share",
+  "Shared Reports": "Shared Reports",
+  "Created By": "Created By", 
+  "Create Date": "Create Date", 
+  "Expired By": "Expired By", 
+  "Share Key": "Share Key", 
+  "Actions": "Actions",
+  "Parameter": "Parameter",
+  "Default Value": "Default Value",
+  "Grid": "Grid",
+  "Left": "Left",
+  "Right": "Right",
+  "Top": "Top",
+  "Bottom": "Bottom",
+  "Project": "Project"
 }

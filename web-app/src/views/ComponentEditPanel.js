@@ -43,8 +43,10 @@ class ComponentEditPanel extends React.Component {
       type: Constants.STATIC,
       subType: Constants.TEXT,
       style: this.initialStyle,
+      // filter
       data: {},
       queryParameter: '',
+      defaultParamValue: '',
       drillThrough: [],
       drillReports: [],
       drillColumnName: '',
@@ -117,10 +119,12 @@ class ComponentEditPanel extends React.Component {
             });
           } else if (type === Constants.FILTER) {
             const {
-              queryParameter
+              queryParameter = '',
+              defaultParamValue = ''
             } = component.data;
             this.setState({
-              queryParameter: queryParameter
+              queryParameter: queryParameter,
+              defaultParamValue: defaultParamValue
             });
             if (subType === Constants.SLICER) {
 
@@ -237,13 +241,14 @@ class ComponentEditPanel extends React.Component {
       component.drillThrough = drillThrough;
     } else if (type === Constants.FILTER) {
       const  {
-        queryParameter
+        queryParameter,
+        defaultParamValue = ''
       } = this.state;
       component.data = {
-        queryParameter: queryParameter
+        queryParameter: queryParameter,
+        defaultParamValue: defaultParamValue
       }
     }
-    
 
     if (componentId === null) {
       component.style = this.initialStyle;
@@ -415,6 +420,59 @@ class ComponentEditPanel extends React.Component {
       </div>
     );
 
+    const {
+      gridTop = 30,
+      gridBottom = 5,
+      gridLeft = 10,
+      gridRight = 15
+    } = data;
+    const gridPanel = (
+      <div>
+        <label>{t('Grid')}</label>
+        <div className="row">
+          <div className="float-left grid-label">{t('Left')}</div>
+          <div className="float-left">
+            <input 
+              className="form-input grid-input"
+              type="text"
+              value={gridLeft}
+              onChange={(event) => this.handleComponentDataChange('gridLeft', event.target.value)} 
+            />
+          </div>
+
+          <div className="float-left grid-label">{t('Top')}</div>
+          <div className="float-left">
+            <input 
+              className="form-input grid-input"
+              type="text"
+              value={gridTop}
+              onChange={(event) => this.handleComponentDataChange('gridTop', event.target.value)} 
+            />
+          </div>
+
+          <div className="float-left grid-label">{t('Right')}</div>
+          <div className="float-left">
+            <input 
+              className="form-input grid-input"
+              type="text"
+              value={gridRight}
+              onChange={(event) => this.handleComponentDataChange('gridRight', event.target.value)} 
+            />
+          </div>
+
+          <div className="float-left grid-label">{t('Bottom')}</div>
+          <div className="float-left grid-input">
+            <input 
+              className="form-input"
+              type="text"
+              value={gridBottom}
+              onChange={(event) => this.handleComponentDataChange('gridBottom', event.target.value)} 
+            />
+          </div>
+        </div>
+      </div>
+    );
+
     let chartConfigPanel;
     if (subType === Constants.TABLE) {
       const {
@@ -494,6 +552,7 @@ class ComponentEditPanel extends React.Component {
           </div>
 
           {colorPlattePanel}
+          {gridPanel}
         </div>
       );
     } else if (subType === Constants.BAR) {
@@ -528,6 +587,7 @@ class ComponentEditPanel extends React.Component {
           </div>
 
           {colorPlattePanel}
+          {gridPanel}
         </div>
       );
     } else if (subType === Constants.FUNNEL) {
@@ -835,6 +895,12 @@ class ComponentEditPanel extends React.Component {
       subTypes = Constants.FILTER_TYPES;
     }
 
+    let defaultValueHint = '';
+    if (subType === Constants.SLICER) {
+      defaultValueHint = ' (E.g., value1,value2)';
+    } else if (subType === Constants.DATE_PICKER) {
+      defaultValueHint = ' (E.g., 2019-01-01)';
+    }
 
     // Render the schema.
     const schemaItems = [];
@@ -1018,13 +1084,26 @@ class ComponentEditPanel extends React.Component {
 
                 { type === Constants.FILTER && (
                   <div>
-                    <label>Parameter</label>
+                    <label>{t('Parameter')}</label>
                     <input 
                       className="form-input"
                       type="text" 
                       name="queryParameter" 
                       value={this.state.queryParameter}
                       onChange={(event) => this.handleInputChange('queryParameter', event.target.value)} 
+                    />
+
+                    <label>{t('Default Value')} 
+                      <span className="hint-text">
+                        {defaultValueHint}
+                      </span>
+                    </label>
+                    <input 
+                      className="form-input"
+                      type="text" 
+                      name="defaultParamValue" 
+                      value={this.state.defaultParamValue}
+                      onChange={(event) => this.handleInputChange('defaultParamValue', event.target.value)} 
                     />
                   </div>
                 )}

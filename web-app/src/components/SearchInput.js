@@ -52,7 +52,7 @@ class SearchInput extends React.Component {
               name={name}
               value={value}
               onChange={this.handleInputChange}
-              className="form-input search-input-input"
+              className="search-input-input"
               style={inputStyle}
             />
           </div>

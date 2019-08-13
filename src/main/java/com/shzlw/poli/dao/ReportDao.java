@@ -25,22 +25,21 @@ public class ReportDao {
     NamedParameterJdbcTemplate npjt;
 
     public List<Report> findAll() {
-        String sql = "SELECT id, name, style FROM p_report";
+        String sql = "SELECT id, name, style, project FROM p_report";
         return jt.query(sql, new Object[] {}, new ReportRowMapper());
     }
 
     public List<Report> findByViewer(long userId) {
-        String sql = "SELECT d.id, d.name, d.style "
+        String sql = "SELECT d.id, d.name, d.style, d.project "
                     + "FROM p_group_report gd, p_report d, p_group_user gu "
                     + "WHERE gd.report_id = d.id "
                     + "AND gd.group_id = gu.group_id "
-                    + "AND gu.user_id = ? "
-                    + "GROUP BY d.id, d.name, d.style";
+                    + "AND gu.user_id = ?";
         return jt.query(sql, new Object[] { userId }, new ReportRowMapper());
     }
 
     public Report findById(long id) {
-        String sql = "SELECT id, name, style FROM p_report WHERE id=?";
+        String sql = "SELECT id, name, style, project FROM p_report WHERE id=?";
         try {
             return (Report) jt.queryForObject(sql, new Object[]{ id }, new ReportRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -48,8 +47,22 @@ public class ReportDao {
         }
     }
 
+    public List<Report> findFavouritesByUserId(long userId) {
+        String sql = "SELECT r.id, r.name, r.project "
+                    + "FROM p_report r, p_user_favourite uf "
+                    + "WHERE r.id = uf.report_id "
+                    + "AND uf.user_id = ?";
+        return jt.query(sql, new Object[] { userId }, (rs, i) -> {
+            Report r = new Report();
+            r.setId(rs.getLong(Report.ID));
+            r.setName(rs.getString(Report.NAME));
+            r.setProject(rs.getString(Report.PROJECT));
+            return r;
+        });
+    }
+
     public Report findByName(String name) {
-        String sql = "SELECT id, name, style FROM p_report WHERE name=?";
+        String sql = "SELECT id, name, style, project FROM p_report WHERE name=?";
         try {
             return (Report) jt.queryForObject(sql, new Object[]{ name }, new ReportRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -57,11 +70,12 @@ public class ReportDao {
         }
     }
 
-    public long insert(String name, String style) {
-        String sql = "INSERT INTO p_report(name, style) VALUES(:name, :style)";
+    public long insert(String name, String style, String project) {
+        String sql = "INSERT INTO p_report(name, style, project) VALUES(:name, :style, :project)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Report.NAME, name);
         params.addValue(Report.STYLE, style);
+        params.addValue(Report.PROJECT, project);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjt.update(sql, params, keyHolder, new String[] { Report.ID});
@@ -69,8 +83,8 @@ public class ReportDao {
     }
 
     public int update(Report r) {
-        String sql = "UPDATE p_report SET name=?, style=? WHERE id=?";
-        return jt.update(sql, new Object[] { r.getName(), r.getStyle(), r.getId() });
+        String sql = "UPDATE p_report SET name=?, style=?, project=? WHERE id=?";
+        return jt.update(sql, new Object[] { r.getName(), r.getStyle(), r.getProject(), r.getId() });
     }
 
     public int delete(long id) {
@@ -86,6 +100,7 @@ public class ReportDao {
             r.setId(rs.getLong(Report.ID));
             r.setName(rs.getString(Report.NAME));
             r.setStyle(rs.getString(Report.STYLE));
+            r.setProject(rs.getString(Report.PROJECT));
             return r;
         }
     }

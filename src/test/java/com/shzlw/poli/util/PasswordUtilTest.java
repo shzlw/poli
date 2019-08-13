@@ -6,14 +6,14 @@ import org.junit.Test;
 public class PasswordUtilTest {
 
     @Test
-    public void test() {
+    public void testDecryptEncrypt() {
         String value = "1234567890";
         String b = PasswordUtil.decrypt(PasswordUtil.encrypt(value));
         Assert.assertEquals(value, b);
     }
 
     @Test
-    public void testEncryptedPassword() {
+    public void testEncryptedPassword_2() {
         String password = "1234567890";
         Assert.assertEquals(password, PasswordUtil.getDecryptedPassword(PasswordUtil.getEncryptedPassword(password)));
 

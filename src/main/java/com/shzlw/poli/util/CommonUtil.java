@@ -23,10 +23,14 @@ public final class CommonUtil {
         return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    public static String getCurrentReadableDateTime() {
-        LocalDateTime now = LocalDateTime.now();
+    public static String toReadableDateTime(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return now.format(formatter);
+        return localDateTime.format(formatter);
+    }
+
+    public static String toReadableDate(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDateTime.format(formatter);
     }
 
     public static String getParamByAttrKey(String attrKey) {
