@@ -29,4 +29,22 @@ Password: test
 Ping: SELECT 1
 ```
 
+MySQL
+```
+Connection Url: jdbc:mysql://127.0.0.1:3306/testdb
+Driver Class Name: com.mysql.jdbc.Driver
+Ping: SELECT 1
+
+-- If use MySQL Connector/J 8.0 or higher
+Driver Class Name: com.mysql.cj.jdbc.Driver
+```
+
+SQL Server
+
+```
+Connection Url: jdbc:sqlserver://127.0.0.1:1433;databaseName=testdb
+Driver Class Name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+Ping: SELECT 1
+```
+
 > Use the ping button to test the connection.

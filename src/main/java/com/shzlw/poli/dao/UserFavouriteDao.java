@@ -25,4 +25,14 @@ public class UserFavouriteDao {
         String sql = "DELETE FROM p_user_favourite WHERE user_id=? AND report_id=?";
         return jt.update(sql, new Object[]{ userId, reportId });
     }
+
+    public int deleteByUserId(long userId) {
+        String sql = "DELETE FROM p_user_favourite WHERE user_id=?";
+        return jt.update(sql, new Object[]{ userId });
+    }
+
+    public int deleteByReportId(long reportId) {
+        String sql = "DELETE FROM p_user_favourite WHERE report_id=?";
+        return jt.update(sql, new Object[]{ reportId });
+    }
 }

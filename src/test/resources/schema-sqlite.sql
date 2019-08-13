@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS p_shared_report;
 DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_group_report;
@@ -25,7 +26,8 @@ CREATE TABLE
 IF NOT EXISTS p_report (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
-    style TEXT
+    style TEXT,
+    project TEXT
 );
 
 CREATE TABLE
@@ -106,22 +108,25 @@ IF NOT EXISTS p_user_attribute (
 CREATE TABLE
 IF NOT EXISTS p_user_favourite (
     user_id INTEGER NOT NULL,
-    report_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES p_user(id)
+    report_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, report_id),
+    FOREIGN KEY (user_id) REFERENCES p_user(id),
+    FOREIGN KEY (report_id) REFERENCES p_report(id)
 );
 
 CREATE TABLE
 IF NOT EXISTS p_shared_report (
     id INTEGER NOT NULL PRIMARY KEY,
-    share_key VARCHAR NOT NULL,
+    share_key TEXT NOT NULL,
     report_id INTEGER NOT NULL,
-    report_type VARCHAR NOT NULL,
+    report_type TEXT NOT NULL,
     user_id INTEGER NOT NULL,
     created_at INTEGER NOT NULL,
     expired_by INTEGER NOT NULL,
     FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
+
 -- In test, set admin password.
 INSERT INTO p_user(username, password, sys_role)
 VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');

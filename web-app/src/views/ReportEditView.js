@@ -107,7 +107,8 @@ class ReportEditView extends React.Component {
                 name: report.name,
                 style: report.style,
                 reportType: reportType,
-                isFavourite: report.isFavourite
+                isFavourite: report.isFavourite,
+                project: report.project
               }, () => {
                 this.refresh();
               });

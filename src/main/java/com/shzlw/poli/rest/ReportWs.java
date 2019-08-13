@@ -110,12 +110,14 @@ public class ReportWs {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Transactional
-    public ResponseEntity<?> delete(@PathVariable("id") long id,
+    public ResponseEntity<?> delete(@PathVariable("id") long reportId,
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         reportService.invalidateCache(user.getId());
-        componentDao.deleteByReportId(id);
-        reportDao.delete(id);
+        sharedReportDao.deleteByReportId(reportId);
+        userFavouriteDao.deleteByReportId(reportId);
+        componentDao.deleteByReportId(reportId);
+        reportDao.delete(reportId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 

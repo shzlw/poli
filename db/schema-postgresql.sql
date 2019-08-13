@@ -1,4 +1,6 @@
 -- For PostgreSQL
+DROP TABLE IF EXISTS p_shared_report;
+DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_group_report;
 DROP TABLE IF EXISTS p_component;
 DROP TABLE IF EXISTS p_report;
@@ -24,7 +26,8 @@ CREATE TABLE
 IF NOT EXISTS p_report (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR NOT NULL UNIQUE,
-    style VARCHAR
+    style VARCHAR,
+    project VARCHAR
 );
 
 CREATE TABLE
@@ -98,6 +101,29 @@ IF NOT EXISTS p_user_attribute (
     user_id INTEGER NOT NULL,
     attr_key VARCHAR NOT NULL,
     attr_value VARCHAR,
+    FOREIGN KEY (user_id) REFERENCES p_user(id)
+);
+
+-- v0.10.0 new tables
+CREATE TABLE
+IF NOT EXISTS p_user_favourite (
+    user_id INTEGER NOT NULL,
+    report_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, report_id),
+    FOREIGN KEY (user_id) REFERENCES p_user(id),
+    FOREIGN KEY (report_id) REFERENCES p_report(id)
+);
+
+CREATE TABLE
+IF NOT EXISTS p_shared_report (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    share_key VARCHAR NOT NULL,
+    report_id INTEGER NOT NULL,
+    report_type VARCHAR NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    expired_by INTEGER NOT NULL,
+    FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 

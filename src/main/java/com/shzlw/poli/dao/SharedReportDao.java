@@ -86,6 +86,16 @@ public class SharedReportDao {
         return jt.update(sql, new Object[]{ id });
     }
 
+    public int deleteByUserId(long userId) {
+        String sql = "DELETE FROM p_shared_report WHERE user_id=?";
+        return jt.update(sql, new Object[]{ userId });
+    }
+
+    public int deleteByReportId(long reportId) {
+        String sql = "DELETE FROM p_shared_report WHERE report_id=?";
+        return jt.update(sql, new Object[]{ reportId });
+    }
+
     private static class SharedReportRawMapper implements RowMapper<SharedReport> {
         @Override
         public SharedReport mapRow(ResultSet rs, int i) throws SQLException {

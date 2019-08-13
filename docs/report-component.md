@@ -121,6 +121,21 @@ WHERE 1 = 1
 ORDER BY created_date ASC;
 ```
 
+## Default parameter value
+
+The default parameter value can be set in filter. It is used in the dynamic query when the report is first initialized.
+
+
+| Filter       | Format              | Example       |
+| ------------ | ------------------- | ------------- |
+| Slicer       | string1,string2,... | bottle,glass  |
+| Single Value | string              | cup           |
+| Date Picker  | YYYY-MM-DD          | 2019-01-01    |
+
+> Slicer supports a list of default selections. Each value should be separated by comma.
+
+> Date Picker has to follow the YYYY-MM-DD format.
+
 ## Dynamic SQL query with parameters
 
 To use this feature, you would need to create at least one filter and one chart component. Here is how it works.

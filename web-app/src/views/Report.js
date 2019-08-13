@@ -10,7 +10,6 @@ import * as Constants from '../api/Constants';
 import ReportEditView from './ReportEditView';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
-import SearchInput from '../components/SearchInput';
 import Tabs from '../components/Tabs';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
@@ -288,7 +287,7 @@ class Report extends Component {
         if (!searchValue || (searchValue && reportName.includes(searchValue))) {
           reportRows.push(
             (
-              <div key={j} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewReport(report.id)}>
+              <div key={j} className={`report-menu-item ellipsis ${menuActive}`} style={{marginLeft: '12px'}} onClick={() => this.viewReport(report.id)}>
                 {reportName}
               </div>
             )
@@ -298,7 +297,17 @@ class Report extends Component {
 
       projectRows.push(
         <div key={i}>
-          <div className="project-row" onClick={() => this.toggleProject(projectName)}>{projectName}</div>
+          <div className="project-row ellipsis" onClick={() => this.toggleProject(projectName)}>
+            {showReports ? (
+              <React.Fragment>
+                <FontAwesomeIcon icon="angle-right" size="lg" fixedWidth /> {projectName}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <FontAwesomeIcon icon="angle-down" size="lg" fixedWidth /> {projectName}
+              </React.Fragment>
+            )}
+          </div>
           {showReports && (
             <div>
               {reportRows}

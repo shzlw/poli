@@ -82,6 +82,24 @@ Notes
 * Filters are not allowed to change values in canned report.
 * Users can only create/view/delete canned report created by themselves.
 
+## Share
+
+The report can be shared through a link to public recipients who don't have access to Poli. 
+
+Click the share button. Select the expiration date and press generate button. A shared report URL with a unique shared key will be generated.
+
+SCREENSHOT
+
+The shared report history can be viewed and managed under the event menu.
+
+SCREENSHOT
+
+## Favourite
+
+Favourite list provides a quick access to the reports that are marked as favourite. Toggling the favourite button(heart) can add/remove report to/rom the favourite list.
+
+SCREENSHOT
+
 ## Access permissions
 
 Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](user-management) for more details.
