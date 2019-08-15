@@ -73,7 +73,7 @@ public class SharedReportDao {
 
     public SharedReport findByShareKey(String shareKey) {
         String sql = "SELECT id, share_key, report_id, report_type, user_id, created_at, expired_by "
-                + "FROM p_shared_report WHERE share_key=?";
+                    + "FROM p_shared_report WHERE share_key=?";
         try {
             return (SharedReport) jt.queryForObject(sql, new Object[]{ shareKey }, new SharedReportRawMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -103,6 +103,7 @@ public class SharedReportDao {
             r.setId(rs.getLong(SharedReport.ID));
             r.setShareKey(rs.getString(SharedReport.SHARE_KEY));
             r.setReportType(rs.getString(SharedReport.REPORT_TYPE));
+            r.setReportId(rs.getLong(SharedReport.REPORT_ID));
             r.setUserId(rs.getLong(SharedReport.USER_ID));
             r.setCreatedAt(rs.getLong(SharedReport.CREATED_AT));
             r.setExpiredBy(rs.getLong(SharedReport.EXPIRED_BY));

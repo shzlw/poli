@@ -73,8 +73,7 @@ public class ReportWs {
 
     @RequestMapping(value = "/sharekey/{shareKey}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public Report findOneBySharekey(@PathVariable("shareKey") String shareKey,
-                                    HttpServletRequest request) {
+    public Report findOneBySharekey(@PathVariable("shareKey") String shareKey) {
         SharedReport sharedReport = sharedReportDao.findByShareKey(shareKey);
         if (sharedReport == null) {
             return null;
@@ -84,8 +83,7 @@ public class ReportWs {
             return null;
         }
 
-        List<Report> reports = findAll(request);
-        return reports.stream().filter(r -> r.getId() == sharedReport.getId()).findFirst().orElse(null);
+        return reportDao.findById(sharedReport.getReportId());
     }
 
     @RequestMapping(method = RequestMethod.POST)

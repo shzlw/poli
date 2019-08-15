@@ -64,6 +64,8 @@ class App extends React.Component {
     if (isFullScreenView) {
       // Only allow using ApiKey in fullscreen view.
       if (apiKey !== null) {
+        delete axios.defaults.headers.common['Poli-Share-Key'];
+
         const loginRequest = {
           apiKey: apiKey
         };
@@ -80,6 +82,8 @@ class App extends React.Component {
         });
         return;   
       } else if (shareKey !== null) {
+        delete axios.defaults.headers.common['Poli-Api-Key'];
+
         // Only allow using ShareKey in fullscreen view.
         const loginRequest = {
           shareKey: shareKey
@@ -96,6 +100,9 @@ class App extends React.Component {
             });
         });
       }
+    } else {
+      delete axios.defaults.headers.common['Poli-Api-Key'];
+      delete axios.defaults.headers.common['Poli-Share-Key'];
     }
     
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);

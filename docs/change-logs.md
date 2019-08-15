@@ -17,7 +17,7 @@
 - A shared report URL can be generated with an expiration date defined through the share button. The shared report history can be viewed and managed under the event menu.
 - Reports can be grouped into projects which are collapsible on the side report menu.
 - Reports can be marked as farourite for quick access through the favourite button.
-- Allow to set default parameter value for filter commponent.
+- Allow to set default parameter value for filter component.
 - For Line/Bar/Area charts, the margin of the chart grid can be adjusted.
 
 ### Improvements
