@@ -296,7 +296,7 @@ public class AuthFilterTest {
         Mockito.when(sharedLinkInfo.getComponentQueryUrls()).thenReturn(componentQueryUrls);
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey" + shareKey),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey/" + shareKey),
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/" + reportId),
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/" + reportId),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/1"),

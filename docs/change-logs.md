@@ -1,6 +1,14 @@
 # Change Logs
 
-## v0.10.0
+## v0.10.1
+
+### Improvements
+- Set default JDBC fetch size to 100.
+
+### Bug Fixes
+- Fix multiple issues that affect shared report to work properly.
+
+## v0.10.1
 
 ### Breaking Changes & Upgrade Steps
   ```sh
