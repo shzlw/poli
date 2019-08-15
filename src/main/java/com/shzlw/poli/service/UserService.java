@@ -4,6 +4,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.shzlw.poli.dao.UserDao;
+import com.shzlw.poli.dto.SharedLinkInfo;
+import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -31,14 +35,6 @@ public class UserService {
      * Value: User
      */
     private static final Cache<String, User> API_KEY_USER_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build();
-
-    /**
-     * Key: Share key
-     * Value: User
-     */
-    private static final Cache<String, User> SHARE_KEY_USER_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
@@ -79,23 +75,6 @@ public class UserService {
         }
     }
 
-    public User getUserByShareKey(String shareKey) {
-        if (StringUtils.isEmpty(shareKey)) {
-            return null;
-        }
-
-        try {
-            User user = SHARE_KEY_USER_CACHE.get(shareKey, () -> {
-                User u = userDao.findByShareKey(shareKey);
-                u.setUserAttributes(userDao.findUserAttributes(u.getId()));
-                return u;
-            });
-            return user;
-        } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
-            return null;
-        }
-    }
-
     public void newOrUpdateUser(User user, String oldSessionKey, String newSessionKey) {
         invalidateSessionUserCache(oldSessionKey);
         SESSION_USER_CACHE.put(newSessionKey, user);
@@ -110,12 +89,6 @@ public class UserService {
     public void invalidateApiKeyUserCache(String apiKey) {
         if (apiKey != null) {
             API_KEY_USER_CACHE.invalidate(apiKey);
-        }
-    }
-
-    public void invalidateShareKeyUserCache(String shareKey) {
-        if (shareKey != null) {
-            SHARE_KEY_USER_CACHE.invalidate(shareKey);
         }
     }
 }

@@ -4,6 +4,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.shzlw.poli.dao.ReportDao;
+import com.shzlw.poli.dao.UserDao;
+import com.shzlw.poli.dto.SharedLinkInfo;
 import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.Constants;
@@ -13,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 

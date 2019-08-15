@@ -4,6 +4,8 @@ import com.shzlw.poli.dao.SharedReportDao;
 import com.shzlw.poli.dto.SharedReportRow;
 import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.service.ReportService;
+import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
@@ -26,7 +28,7 @@ public class SharedReportWs {
     SharedReportDao sharedReportDao;
 
     @Autowired
-    UserService userService;
+    SharedReportService sharedReportService;
 
     @RequestMapping(value="/generate-sharekey", method = RequestMethod.POST)
     @Transactional
@@ -61,7 +63,7 @@ public class SharedReportWs {
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         SharedReport sharedReport = sharedReportDao.findById(id);
-        userService.invalidateShareKeyUserCache(sharedReport.getShareKey());
+        sharedReportService.invalidateSharedLinkInfoCacheByShareKey(sharedReport.getShareKey());
         sharedReportDao.delete(id);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }

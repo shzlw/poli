@@ -99,6 +99,7 @@ class App extends React.Component {
               this.handleLoginResponse(res.data, currentPath);
             });
         });
+        return;
       }
     } else {
       delete axios.defaults.headers.common['Poli-Api-Key'];

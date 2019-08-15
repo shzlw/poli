@@ -8,6 +8,7 @@ import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
+import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ReportWs {
 
     @Autowired
     UserFavouriteDao userFavouriteDao;
+
+    @Autowired
+    SharedReportService sharedReportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
@@ -112,6 +116,7 @@ public class ReportWs {
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         reportService.invalidateCache(user.getId());
+        sharedReportService.invalidateSharedLinkInfoCacheByReportId(reportId);
         sharedReportDao.deleteByReportId(reportId);
         userFavouriteDao.deleteByReportId(reportId);
         componentDao.deleteByReportId(reportId);

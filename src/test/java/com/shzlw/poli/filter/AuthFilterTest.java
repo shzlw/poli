@@ -1,6 +1,8 @@
 package com.shzlw.poli.filter;
 
+import com.shzlw.poli.dto.SharedLinkInfo;
 import com.shzlw.poli.model.User;
+import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import org.junit.Test;
@@ -19,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthFilterTest {
@@ -30,6 +34,9 @@ public class AuthFilterTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    SharedReportService sharedReportService;
 
     @Mock
     HttpServletRequest httpRequest;
@@ -48,6 +55,9 @@ public class AuthFilterTest {
 
     @Mock
     FilterConfig filterConfig;
+
+    @Mock
+    SharedLinkInfo sharedLinkInfo;
 
     @Test
     public void testAccessNotProtectedResource() throws IOException, ServletException {
@@ -226,7 +236,6 @@ public class AuthFilterTest {
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
         Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY)).thenReturn(apiKey);
         Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
-        Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
 
         List<AccessRule> accessRules = Arrays.asList(
                 new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
@@ -256,10 +265,77 @@ public class AuthFilterTest {
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
         Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY)).thenReturn(apiKey);
         Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
-        Mockito.when(user.getSysRole()).thenReturn(Constants.SYS_ROLE_ADMIN);
 
         List<AccessRule> accessRules = Arrays.asList(
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/report")
+        );
+
+        for (AccessRule rule : accessRules) {
+            Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
+            Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
+
+            authFilter.doFilter(httpRequest, httpResponse, chain);
+        }
+
+        Mockito.verify(chain, Mockito.times(0)).doFilter(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void testShareKeyAccess() throws IOException, ServletException {
+        String shareKey = "123";
+        long reportId = 1;
+        Set<String> componentQueryUrls = new HashSet<>();
+        for (int i = 1; i <= 3; i++) {
+            componentQueryUrls.add("/ws/jdbcquery/component/" + i);
+        }
+
+        Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_SHARE_KEY)).thenReturn(shareKey);
+        Mockito.when(sharedReportService.getSharedLinkInfoByShareKey(shareKey)).thenReturn(sharedLinkInfo);
+        Mockito.when(sharedLinkInfo.getUser()).thenReturn(user);
+        Mockito.when(sharedLinkInfo.getReportId()).thenReturn(reportId);
+        Mockito.when(sharedLinkInfo.getComponentQueryUrls()).thenReturn(componentQueryUrls);
+
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey" + shareKey),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/" + reportId),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/" + reportId),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/1"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/2"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/3")
+        );
+
+        for (AccessRule rule : accessRules) {
+            Mockito.when(httpRequest.getMethod()).thenReturn(rule.method);
+            Mockito.when(httpRequest.getServletPath()).thenReturn(rule.url);
+
+            authFilter.doFilter(httpRequest, httpResponse, chain);
+        }
+
+        Mockito.verify(chain, Mockito.times(accessRules.size())).doFilter(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void testShareKeyAccess_unauthorized() throws IOException, ServletException {
+        String shareKey = "123";
+        long reportId = 1;
+        Set<String> componentQueryUrls = new HashSet<>();
+        for (int i = 1; i <= 3; i++) {
+            componentQueryUrls.add("/ws/jdbcquery/component/" + i);
+        }
+
+        Mockito.when(httpRequest.getHeader(Constants.HTTP_HEADER_SHARE_KEY)).thenReturn(shareKey);
+        Mockito.when(sharedReportService.getSharedLinkInfoByShareKey(shareKey)).thenReturn(sharedLinkInfo);
+        Mockito.when(sharedLinkInfo.getUser()).thenReturn(user);
+        Mockito.when(sharedLinkInfo.getReportId()).thenReturn(reportId);
+        Mockito.when(sharedLinkInfo.getComponentQueryUrls()).thenReturn(componentQueryUrls);
+
+        List<AccessRule> accessRules = Arrays.asList(
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey/456"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/2"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/2"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/4"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/5"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/6")
         );
 
         for (AccessRule rule : accessRules) {
