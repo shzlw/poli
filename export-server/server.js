@@ -1,5 +1,4 @@
 const http = require('http');
-const qs = require('querystring');
 const puppeteer = require('puppeteer');
 
 const hostname = '127.0.0.1';
@@ -14,8 +13,10 @@ const server = http.createServer((request, response) => {
     pdfHandler(request).then(pdf => {
       response.setHeader('Content-Type', 'application/pdf');
       response.setHeader('Content-Length', pdf.length);
-      response.end(pdf);
-    });
+      response.end(Buffer.from(pdf));
+    }).catch(error => {
+      console.log(error);
+    })
   } else {
     response.end('Hello Poli!');
   }
@@ -23,23 +24,23 @@ const server = http.createServer((request, response) => {
 
 async function pdfHandler(request) {
   const body = await getPostBody(request);
-  const pdf = await generatePDF(body);
+  const exportRequest = JSON.parse(body);
+  const pdf = await generatePDF(exportRequest);
   return pdf;
 }
-
 
 function getPostBody(request) {
   return new Promise((resolve, reject) => {
     let body = '';
     request.on('data', (chunk) => {
       body += chunk;
-      if (body.length > 1e7) {
+      if (body.length > 1e8) {
         request.connection.destroy();
       }
     });
 
     request.on('end', () => {
-      resolve(qs.parse(body));
+      resolve(body);
     });
 
     request.on("error", (err) => {
@@ -48,15 +49,31 @@ function getPostBody(request) {
   });
 }
 
-async function generatePDF(data) {
+
+async function generatePDF(exportRequest) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const width = parseInt(exportRequest.width, 10);
+  const height = parseInt(exportRequest.height, 10);
+
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  const content = data;
-  await page.setContent(content);
-  // await page.emulateMedia('screen');
+  const cookie = {
+    name: 'pskey',
+    value: exportRequest.sessionKey,
+    domain: 'localhost',
+    path: '/',
+    expires: Math.floor(tomorrow.getTime() / 1000)
+  };
+  await page.setCookie(cookie);
+  await page.setViewport({ width: width, height: height });
+  await page.goto('http://localhost:6688/poli/workspace/report/fullscreen?$showControl=false&$toReport=' + exportRequest.reportName, {waitUntil: 'networkidle2'});
+  await page.waitFor(2000);
   const pdf = await page.pdf({
-    path: 'test.pdf', 
-    format: 'A4'
+    width: width,
+    height: height,
+    printBackground: true 
   });
   await browser.close();
   return pdf;

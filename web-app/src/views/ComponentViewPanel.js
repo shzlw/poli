@@ -679,13 +679,12 @@ class ComponentViewPanel extends React.Component {
     const { t } = this.props;
 
     const { 
-      reportViewWidth,
-      showControl
+      reportViewWidth
     } = this.props;
 
     const selectedComponent = this.getSelectedComponent();
 
-    const top = showControl ? '50px' : '10px';
+    const top = '50px';
     const style = {
       top: top,
       width: reportViewWidth + 'px'

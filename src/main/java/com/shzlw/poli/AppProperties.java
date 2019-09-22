@@ -3,8 +3,6 @@ package com.shzlw.poli;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-;
-
 @Component
 @ConfigurationProperties(prefix = "poli")
 public class AppProperties {
@@ -16,6 +14,8 @@ public class AppProperties {
     String localeLanguage;
 
     Boolean allowMultipleQueryStatements;
+
+    String exportServerUrl;
 
     public AppProperties() {
         datasourceMaximumPoolSize = 50;
@@ -54,5 +54,13 @@ public class AppProperties {
 
     public void setAllowMultipleQueryStatements(Boolean allowMultipleQueryStatements) {
         this.allowMultipleQueryStatements = allowMultipleQueryStatements;
+    }
+
+    public String getExportServerUrl() {
+        return exportServerUrl;
+    }
+
+    public void setExportServerUrl(String exportServerUrl) {
+        this.exportServerUrl = exportServerUrl;
     }
 }

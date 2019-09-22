@@ -171,7 +171,7 @@ class ReportEditView extends React.Component {
     const params = new URLSearchParams(url);
 
     let showControl = params.get('$showControl');
-    showControl = showControl == null ? true : (showControl ? true: false);
+    showControl = showControl === null ? true : showControl === 'true';
     const fromReport = params.get('$fromReport');
     const reportName = params.get('$toReport');
     let reportType = params.get('$reportType');
@@ -382,6 +382,47 @@ class ReportEditView extends React.Component {
     const { name } = this.state;
     const url = `/workspace/report/fullscreen?$toReport=${name}`;
     window.open(url, '_blank');
+  }
+
+  exportToPdf = () => {
+    const { 
+      reportId,
+      name,
+      style
+    } = this.state;
+    const viewWidth = style.isFixedWidth ? style.fixedWidth : 1200;
+    const width = parseInt(viewWidth, 10) + 50;
+    const height = parseInt(style.height, 10) + 50;
+    const exportInfo = {
+      reportId: reportId,
+      reportName: name,
+      width: width,
+      height: height
+    }
+
+    axios.post('/ws/report/pdf', exportInfo,
+      {
+        responseType: 'arraybuffer',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/pdf'
+        }
+      })
+      .then(res => {
+        const pdfData = res.data;
+        const filename = name + '.pdf';
+        const blob = new Blob([pdfData]);
+        const link = document.createElement("a");
+        if (link.download !== undefined) { 
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", filename);
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
   }
 
   handleStyleValueChange = (name, value) => {
@@ -687,6 +728,9 @@ class ReportEditView extends React.Component {
         <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
           <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
         </button>
+        <button className="button square-button flat-button ml-4" onClick={this.exportToPdf}>
+          <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth />
+        </button>
       </React.Fragment>
     );
 
@@ -749,43 +793,43 @@ class ReportEditView extends React.Component {
 
     return (
       <React.Fragment>
-        { showControl && (
-          <div className="report-menu-panel row">
-            <div className="float-left">
-              {fromReport && (
-                <div className="report-drillthrough-name" onClick={this.goBackToFromReport}>
-                  <span className="link-label">{fromReport}</span> >
+        <div className="report-menu-panel row">
+          <div className="float-left">
+            {fromReport && (
+              <div className="report-drillthrough-name" onClick={this.goBackToFromReport}>
+                <span className="link-label">{fromReport}</span> >
+              </div>
+            )}
+          </div>
+          <div className="float-left">
+            {
+              isFullScreenView || !isEditMode ?
+              (
+                <div className="report-name">
+                  {this.state.name}
                 </div>
-              )}
-            </div>
-            <div className="float-left">
-              {
-                isFullScreenView || !isEditMode ?
-                (
-                  <div className="report-name">
-                    {this.state.name}
-                  </div>
-                ) :(
-                  <input 
-                    className="form-input report-name-input"
-                    type="text" 
-                    name="name" 
-                    value={this.state.name}
-                    onChange={(event) => this.handleInputChange('name', event.target.value)}  
-                  />
-                )
-              }
-            </div>
+              ) :(
+                <input 
+                  className="form-input report-name-input"
+                  type="text" 
+                  name="name" 
+                  value={this.state.name}
+                  onChange={(event) => this.handleInputChange('name', event.target.value)}  
+                />
+              )
+            }
+          </div>
+          { showControl && (
             <div className="float-right">
               {buttonGroupPanel}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        
 
         <ComponentViewPanel 
           ref={this.componentViewPanel} 
           isEditMode={isEditMode}
-          showControl={this.state.showControl}
           reportViewWidth={this.state.reportViewWidth}
           onComponentEdit={this.openComponentEditPanel}
           onStyleValueChange={this.onStyleValueChange}
