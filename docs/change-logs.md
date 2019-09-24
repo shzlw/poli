@@ -8,7 +8,7 @@
 ### Bug Fixes
 - Fix multiple issues that affect shared report to work properly.
 
-## v0.10.1
+## v0.10.0
 
 ### Breaking Changes & Upgrade Steps
   ```sh
