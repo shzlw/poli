@@ -113,3 +113,31 @@
 .project-row:hover {
   background-color: #C1C7D0;
 }
+
+.exporting-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 90px;
+  margin-top: -45px;
+  margin-left: -80px;
+  text-align: center;
+}
+
+.exporting-panel-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0px 0px 15px 0px;
+  color: #FFFFFF;
+}
+
+.exporting-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+}

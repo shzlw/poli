@@ -32,6 +32,7 @@ class ReportEditView extends React.Component {
       showCannedReportPanel: false,
       showControl: true,
       showSharePanel: false,
+      showExportToPdfPanel: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
@@ -54,6 +55,9 @@ class ReportEditView extends React.Component {
       // share url
       expiredBy: new Date(),
       shareUrl: '',
+      // export to pdf
+      pdfName: '',
+      isExporting: false
     }
 
     this.componentViewPanel = React.createRef();
@@ -388,7 +392,8 @@ class ReportEditView extends React.Component {
     const { 
       reportId,
       name,
-      style
+      style,
+      pdfName
     } = this.state;
     const viewWidth = style.isFixedWidth ? style.fixedWidth : 1200;
     const width = parseInt(viewWidth, 10) + 50;
@@ -400,6 +405,11 @@ class ReportEditView extends React.Component {
       height: height
     }
 
+    this.setState({ 
+      showExportToPdfPanel: false,
+      isExporting: true
+    });
+
     axios.post('/ws/report/pdf', exportInfo,
       {
         responseType: 'arraybuffer',
@@ -410,7 +420,7 @@ class ReportEditView extends React.Component {
       })
       .then(res => {
         const pdfData = res.data;
-        const filename = name + '.pdf';
+        const filename = pdfName + '.pdf';
         const blob = new Blob([pdfData]);
         const link = document.createElement("a");
         if (link.download !== undefined) { 
@@ -422,6 +432,10 @@ class ReportEditView extends React.Component {
           link.click();
           document.body.removeChild(link);
         }
+
+        this.setState({
+          isExporting: false
+        });
       });
   }
 
@@ -620,6 +634,14 @@ class ReportEditView extends React.Component {
     });
   }
 
+  openExportToPdfPanel = () => {
+    const { name } = this.state;
+    this.setState({
+      showExportToPdfPanel: true,
+      pdfName: name,
+    });
+  }
+
   generateShareUrl = () => {
     const {
       reportId,
@@ -669,7 +691,8 @@ class ReportEditView extends React.Component {
       showControl,
       reportType,
       isPendingApplyFilters,
-      isFavourite
+      isFavourite,
+      isExporting
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
     const pendingApplyFiltersStyle = isPendingApplyFilters ? 'font-blue' : '';
@@ -728,7 +751,7 @@ class ReportEditView extends React.Component {
         <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
           <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
         </button>
-        <button className="button square-button flat-button ml-4" onClick={this.exportToPdf}>
+        <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
           <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth />
         </button>
       </React.Fragment>
@@ -916,6 +939,25 @@ class ReportEditView extends React.Component {
           </div>
         </Modal>
 
+        <Modal 
+          show={this.state.showExportToPdfPanel}
+          onClose={() => this.setState({ showExportToPdfPanel: false })}
+          modalClass={'small-modal-panel'}
+          title={t('Export To PDF')}>
+          <div className="form-panel">
+            <label>{t('Name')}</label>
+            <input 
+              className="form-input"
+              type="text" 
+              name="pdfName" 
+              value={this.state.pdfName}
+              onChange={(event) => this.handleInputChange('pdfName', event.target.value)} 
+            />
+
+            <button className="button button-green full-width" onClick={this.exportToPdf}>{t('Export')}</button>
+          </div>
+        </Modal>
+
         {isEditMode && (
           <div className="report-side-panel">
             <div className="side-panel-content" style={{margin: '3px 0px'}}>
@@ -1016,6 +1058,15 @@ class ReportEditView extends React.Component {
                 </div>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {isExporting && (
+          <div className="exporting-overlay">
+            <div className="exporting-panel">
+              <div className="exporting-panel-title">{t('Exporting...')}</div>
+              <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
             </div>
           </div>
         )}

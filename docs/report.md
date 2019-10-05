@@ -104,6 +104,10 @@ Favourite list provides a quick access to the reports that are marked as favouri
 
 ![favourite](_images/screenshots/favourite.jpg)
 
+## Export to PDF
+
+node poli-report-server.js
+
 ## Access permissions
 
 Reports can be edited by Admin/Developer users, associated with a Group and viewed by all users. Check [User Management](user-management) for more details.

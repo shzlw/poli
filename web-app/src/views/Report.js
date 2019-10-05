@@ -16,7 +16,6 @@ const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
 const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT, ROUTE_WORKSPACE_CANNED_REPORT];
 const AD_HOC = 'Ad Hoc';
-const FAVOURITE = 'Favourite';
 
 class Report extends Component {
 

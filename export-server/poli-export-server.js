@@ -1,6 +1,7 @@
 const http = require('http');
 const puppeteer = require('puppeteer');
 
+const poli = 'http://localhost:6688/poli';
 const hostname = '127.0.0.1';
 const port = 6689;
 
@@ -68,7 +69,7 @@ async function generatePDF(exportRequest) {
   };
   await page.setCookie(cookie);
   await page.setViewport({ width: width, height: height });
-  await page.goto('http://localhost:6688/poli/workspace/report/fullscreen?$showControl=false&$toReport=' + exportRequest.reportName, {waitUntil: 'networkidle2'});
+  await page.goto(poli + '/workspace/report/fullscreen?$showControl=false&$toReport=' + exportRequest.reportName, {waitUntil: 'networkidle2'});
   await page.waitFor(2000);
   const pdf = await page.pdf({
     width: width,
