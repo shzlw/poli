@@ -66,6 +66,14 @@
             <version>4.2.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>1.3.61</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
