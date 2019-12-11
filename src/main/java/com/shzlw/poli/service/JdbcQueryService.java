@@ -134,12 +134,14 @@ public class JdbcQueryService {
                     String[] columnNames = new String[columnCount + 1];
                     List<Column> columns = new ArrayList<>();
                     for (int i = 1; i <= columnCount; i++) {
-                        String columnName = metadata.getColumnName(i);
                         int columnType = metadata.getColumnType(i);
                         String dbType = metadata.getColumnTypeName(i);
                         int length = metadata.getColumnDisplaySize(i);
-                        columnNames[i] = columnName;
-                        columns.add(new Column(columnName, JDBC_TYPE_MAP.get(columnType), dbType, length));
+                        // Use column label to fetch the column alias instead of using column name.
+                        // If there is no alias, column label is the same as column name.
+                        String columnLabel = metadata.getColumnLabel(i);
+                        columnNames[i] = columnLabel;
+                        columns.add(new Column(columnLabel, JDBC_TYPE_MAP.get(columnType), dbType, length));
                     }
 
                     ObjectMapper mapper = new ObjectMapper();
