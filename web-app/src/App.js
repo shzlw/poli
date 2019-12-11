@@ -10,7 +10,7 @@ import {
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, 
   faLongArrowAltRight, faWrench, faArchive, faFileDownload,
   faHeart, faShareSquare, faSearchLocation, faClipboard, 
-  faAngleRight, faAngleDown, faFilePdf
+  faAngleRight, faAngleDown, faFilePdf, faEllipsisH
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faSquare as farSquare,
@@ -35,7 +35,7 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare,
   faLongArrowAltRight, faWrench, farSquare, faArchive, faFileDownload,
   faHeart, farHeart, faShareSquare, faSearchLocation, faClipboard,
-  faAngleRight, faAngleDown, faFilePdf
+  faAngleRight, faAngleDown, faFilePdf, faEllipsisH
 );
 
 class App extends React.Component {

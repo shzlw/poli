@@ -106,7 +106,7 @@ Favourite list provides a quick access to the reports that are marked as favouri
 
 ## Export to PDF
 
-node poli-report-server.js
+node poli-export-server.js
 
 ## Access permissions
 

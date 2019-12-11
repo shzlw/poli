@@ -14,6 +14,7 @@ import ColorPicker from '../components/ColorPicker';
 import Checkbox from '../components/Checkbox';
 import Toast from '../components/Toast';
 import DatePicker from '../components/filters/DatePicker';
+import DropdownDialog from '../components/DropdownDialog';
 
 import * as Constants from '../api/Constants';
 import * as Util from '../api/Util';
@@ -27,12 +28,14 @@ class ReportEditView extends React.Component {
     super(props);
     
     this.state = {
+      // Modal
       showComponentEditPanel: false,
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
       showSharePanel: false,
       showExportToPdfPanel: false,
+      showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
@@ -738,21 +741,8 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
-          { isFavourite ? (
-            <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
-          ) : (
-            <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
-          )}
-        </button>
-        <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
-          <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
-        </button>
-        <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
-          <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
-        </button>
-        <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
-          <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth />
+        <button className="button square-button flat-button ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
+          <FontAwesomeIcon icon="ellipsis-h" size="lg" fixedWidth />
         </button>
       </React.Fragment>
     );
@@ -813,6 +803,33 @@ class ReportEditView extends React.Component {
         }
       }
     }
+
+    /**
+     * <div>
+              <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
+                { isFavourite ? (
+                  <FontAwesomeIcon icon="heart" size="lg" fixedWidth /> 
+                ) : (
+                  <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
+                )}
+              </button>
+            </div>
+            <div>
+              <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
+                <FontAwesomeIcon icon="share-square" size="lg" fixedWidth /> Share
+              </button>
+            </div>
+            <div>
+              <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
+                <FontAwesomeIcon icon="tv" size="lg" fixedWidth /> Full screen
+              </button>
+            </div>
+            <div>
+              <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
+                <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth /> Export to PDF
+              </button>
+            </div>
+     */
 
     return (
       <React.Fragment>
@@ -1070,6 +1087,31 @@ class ReportEditView extends React.Component {
             </div>
           </div>
         )}
+
+        <DropdownDialog 
+          show={this.state.showFunctionButtonDialog}
+          onClose={() => this.setState({ showFunctionButtonDialog: false })}
+          >
+          <div className="form-panel">
+            <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
+              { isFavourite ? (
+                <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+              ) : (
+                <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
+              )}
+            </button>
+            <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
+              <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
+            </button>
+            <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
+              <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+            </button>
+            <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
+              <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth />
+            </button>
+          </div>
+        </DropdownDialog>
+        
 
       </React.Fragment>
     )

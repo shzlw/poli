@@ -1,4 +1,4 @@
-# **Poli**
+# **Poli BI （魄力BI）**
 
 [![Version](https://img.shields.io/badge/Version-0.10.1-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
@@ -7,9 +7,9 @@
 [![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
 [![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
 
-Poli is an easy-to-use SQL reporting application built for SQL lovers!
+Poli BI is an easy-to-use SQL reporting application built for SQL lovers!
 
-## Why Poli
+## Why Poli BI
 
 #### :zap: Self-hosted & easy setup
 Platform independent web application. Single JAR file + Single SQLite DB file. Get up and running in 5 minutes.

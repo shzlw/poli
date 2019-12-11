@@ -16,14 +16,8 @@
 ## Building
 
 1. Clone or download the [repository](https://github.com/shzlw/poli).
-2. Install the npm packages only the first time.
 
-```bash
-cd web-app
-npm install
-```
-
-3. Run the build script.
+2. Run the build script.
 
 ```
 # Windows
@@ -33,7 +27,7 @@ build.bat
 ./build.sh
 ```
 
-4. The java executable poli-x.y.z.jar is generated under the target folder. Run this to start the server.
+3. The java executable poli-x.y.z.jar is generated under the target folder. Run this to start the server.
 
 ```
 java -jar target\poli-x.y.z.jar

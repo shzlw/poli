@@ -1,0 +1,22 @@
+.dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+}
+
+.dropdown-panel {
+  position: fixed;
+  z-index: 151;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  top: 80px;
+  right: 35px;
+  background-color: #FFFFFF;
+}
+
+.dropdown-body {
+  padding: 8px;
+}
