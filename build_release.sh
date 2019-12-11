@@ -1,5 +1,13 @@
 
-release=poli-$1
+VERSION=$(./version)
+if [ $# -eq 0 ]; then
+  echo "No arguments specified. Use default version: $VERSION"
+else
+  VERSION=$1
+  echo "Version entered: $VERSION"
+fi
+
+release=poli-$VERSION
 mkdir $release
 
 rm -rf src/main/resources/static/*
@@ -10,6 +18,7 @@ cp -r build/* ../src/main/resources/static/
 cd ..
 mvn clean install -DskipTests
 
+cp -r export-server $release
 cp target/poli-*.jar $release
 cp -r docs $release
 cp LICENSE $release
@@ -25,7 +34,11 @@ mkdir $release/db
 cd $release/db
 sqlite3 poli.db < ../../db/schema-sqlite.sql
 chmod 755 poli.db
+cd ../..
+mv $release release
 
+cd release
+zip -r $release.zip $release/
 
 
 

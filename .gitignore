@@ -9,3 +9,5 @@ jdbc-drivers/*
 
 # Ignore the files copied from web-app build
 src/main/resources/static
+
+release/

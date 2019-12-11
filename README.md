@@ -75,6 +75,10 @@ Check [installation guide](https://shzlw.github.io/poli/#/installation) for more
 
 Poli's documentation and other information can be found at [here](https://shzlw.github.io/poli/).
 
+## Run on GCP
+
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+
 ## License
 
 MIT License

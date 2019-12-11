@@ -1,0 +1,4 @@
+#!/bin/sh
+VERSION=0.10.1
+
+echo $VERSION
