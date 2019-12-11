@@ -6,7 +6,8 @@
 - Support export report to PDF. 
   ```sh
   -- The export server is optional and placed under export-server folder. 
-  -- New configuration value needs to be specified in the poli.properties: poli.export-server-url=http://127.0.0.1:6689/pdf
+  -- New configuration value needs to be specified in the poli.properties:
+  -- poli.export-server-url=http://127.0.0.1:6689/pdf
   -- Start the export server.
   node poli-export-server.js
   ```
@@ -15,7 +16,7 @@
 ### Improvements
 - Improve the build scripts and Dockerfile.
 - Add "Run on Google Cloud" button.
-- 
+- Add a more options button to group buttons on report page.
 
 ### Bug Fixes
 - Fix the issue that the query returns column name instead of column alias.
