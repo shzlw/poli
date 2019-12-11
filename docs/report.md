@@ -110,6 +110,9 @@ The report can be exported to a PDF file. The PDF export server is optional and 
 
   ```sh
   cd export-server
+  npm install
+  
+  -- Start the server
   node poli-export-server.js
   ```
 
