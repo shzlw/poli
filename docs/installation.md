@@ -68,7 +68,7 @@
 1. Pull and run the Poli image.
 
     ```bash
-    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.10.1
+    docker run -d -p 6688:6688 --name poli zhonglu/poli:0.11.0
     ```
 2. Add JDBC drivers.
 
@@ -77,9 +77,13 @@
     For example,
 
     ```sh
-    docker cp postgresql-42.2.5.jar 3afea8d644df:/app/jdbc-drivers
+    docker cp postgresql-42.2.5.jar poli:/app/jdbc-drivers
     ```
 
-3. Restart the container and open http://localhost:6688/poli/login in chrome.
-4. Done. Welcome to Poli!
+3. Restart the container
+    ```sh
+    docker restart poli
+    ```
+
+4. Open http://localhost:6688/poli/login in chrome. Welcome to Poli!
 

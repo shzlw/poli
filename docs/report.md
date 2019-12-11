@@ -106,7 +106,25 @@ Favourite list provides a quick access to the reports that are marked as favouri
 
 ## Export to PDF
 
-node poli-export-server.js
+The report can be exported to a PDF file. The PDF export server is optional and available under export-server folder. Nodejs is required to start it.
+
+  ```sh
+  cd export-server
+  node poli-export-server.js
+  ```
+
+A new config value needs to be added in the poli.properties.
+
+  ```
+  poli.export-server-url=http://127.0.0.1:6689/pdf
+  ```
+Open the report. Click the export to pdf button.
+
+![export_to_pdf_button](_images/screenshots/export_to_pdf_button.jpg)
+
+Rename the PDF file abd hit export button. A PDF file should be downloaded. If the export server is not up, an empty PDF file might be generated.
+
+![export_to_pdf_dialog](_images/screenshots/export_to_pdf_dialog.jpg)
 
 ## Access permissions
 

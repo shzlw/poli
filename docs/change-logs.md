@@ -3,8 +3,22 @@
 ## v0.11.0
 
 ### New Features
-- Support export report to PDF. New configuration value: poli.export-server-url=http://127.0.0.1:6689/pdf
+- Support export report to PDF. 
+  ```sh
+  -- The export server is optional and placed under export-server folder. 
+  -- New configuration value needs to be specified in the poli.properties: poli.export-server-url=http://127.0.0.1:6689/pdf
+  -- Start the export server.
+  node poli-export-server.js
+  ```
 - Add new Spanish translation #41.
+
+### Improvements
+- Improve the build scripts and Dockerfile.
+- Add "Run on Google Cloud" button.
+- 
+
+### Bug Fixes
+- Fix the issue that the query returns column name instead of column alias.
 
 ## v0.10.1
 
