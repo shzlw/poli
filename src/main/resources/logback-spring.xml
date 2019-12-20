@@ -1,25 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--应用名-->
+    <property name="APP_NAME" value="poli-server" />
+    <!--日志根目录-->
+    <property name="LOG_HOME" value="/data/applog" />
+    <!--日志通用输出格式-->
+    <property name="SERIOUS_PATTERN_COMMON" value="[%X{X-B3-TraceId}] [%X{clientIp}] %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n"/><!-- %X{ip} -->
 
-        <file>log/server.txt</file>
 
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+    <!--业务摘要 日志-->
+    <appender name="appDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}/${APP_NAME}-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+                <!--时间,日志级别, traceid, [(业务类型)(接口名称 方法,接口版本号, 处理结果,耗时)(结果码)(请 求参数列表)]-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,%X{X-B3-TraceId},[%X{bizType},%X{interfaceName},%X{version},%X{result},%X{cost},%X{resultCode},%msg] %n
             </Pattern>
         </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/server-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
-            <maxFileSize>3MB</maxFileSize>
-            <maxHistory>5</maxHistory>
-            <totalSizeCap>15MB</totalSizeCap>
-        </rollingPolicy>
-
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="ROLLING" />
+    <!--数据库访问摘要日志-->
+    <appender name="dalDbDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/dal/dal-db-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间，应用名，逻辑数据库名，traceid，[(数 据库操作源)，( 数据库操作类型，具体sql，结果，耗时)]。
+                   sql的value不能打印。
+                -->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},${APP_NAME},%X{logicDatabase},%X{X-B3-TraceId},[%X{dataSourceName},%X{operateType},%X{showSql},%X{result},%X{cost}] - %msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--缓存访问 摘要日志-->
+    <appender name="cacheMqDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/cache/cache-mq-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间, 日志级别，应用名，traceid, ,业务类型， 缓存关键id，处理结果,耗时-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,${APP_NAME},%X{X-B3-TraceId},%X{bizType},%X{cacheId},%X{result},%X{cost} - %msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--缓存访问 摘要日志-->
+    <appender name="cacheRedisDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/cache/cache-redis-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间, 日志级别，应用名，traceid, ,业务类型， 缓存关键id，处理结果,耗时-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,${APP_NAME},%X{X-B3-TraceId},%X{bizType},%X{cacheId},%X{result},%X{cost} - %msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+
+    <!--支付宝调用摘要日志-->
+    <appender name="alipayDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}/${APP_NAME}-alipay-external-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间，日志级别，应用名，外部应用，traceid,[(业务类型)(外部地址，处理结果，耗时)(请求 参数)]-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,${APP_NAME},%X{X-B3-TraceId},[%X{bizType},%X{externalUrl},%X{result},%X{resultCode},%X{resultMsg},%X{cost}] -%msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--外部第三方httpclient调用摘要日志-->
+    <appender name="httpClientDigest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}/${APP_NAME}-httpClient-external-digest.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间, 日志级别，应用名，traceid, ,业务类型， 缓存关键id，处理结果,耗时-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,${APP_NAME},%X{X-B3-TraceId},[%X{bizType},%X{externalUrl},%X{result},%X{cost}] - %msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+
+    <!--业务日志-->
+    <appender name="appLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}/${APP_NAME}.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                <!--时间, 日志级别，应用名，traceid, ,业务类型， 缓存关键id，处理结果,耗时-->
+                %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} %-5level ${APP_NAME} %thread %logger{35} %X{X-B3-TraceId} %X{bizType} - %msg %n
+            </Pattern>
+        </encoder>
+    </appender>
+
+
+    <!--错误日志 1. 所有系统错误信息都需要打印出来;
+                2. 业务错误不允许打印在该日志文件中;-->
+    <appender name="systemError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}/${APP_NAME}-common-error.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 触发策略，达到一定条件时将通知appender，触发滚动 -->
+            <maxFileSize>500MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd} %d{HH:mm:ss.SSS},%-5level,%X{X-B3-TraceId},%X{bizType} - %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="com.ptc.board.log.web.TraceLogContextFilter">
+        <appender-ref ref="httpClientDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.AliyunProducerImplProxy">
+        <appender-ref ref="cacheMqDigest"/>
+    </logger>
+    <logger name="com.ptc.board.log.proxy.AliyunConsumerListenerProxy">
+        <appender-ref ref="cacheMqDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.AliOpenApiClientProxy">
+        <appender-ref ref="alipayDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.MybatisInterceptorProxy">
+        <appender-ref ref="dalDbDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.HttpNutzProxy">
+        <appender-ref ref="httpClientDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.CommonDigestProxy">
+        <appender-ref ref="appDigest"/>
+    </logger>
+
+    <logger name="com.ptc.board.log.proxy.BizDigestAspect">
+        <appender-ref ref="systemError"/>
+    </logger>
+
+    <!--TODO 此处改为自身应用系统的包名 线上使用info及以上级别-->
+    <logger name="cn.dd.pay.order" level="info">
+        <appender-ref ref="appLog"/>
+    </logger>
+
+    <!-- 所有的异常，打印到common-error -->
+    <root level="ERROR">
+        <appender-ref ref="systemError" />
     </root>
+
+
+
+    <!--开发控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} [%X{X-B3-TraceId}] - %msg %n</pattern>
+        </encoder>
+    </appender>
+    <!--TODO 此处改为自身应用系统的包名 线上使用info及以上级别-->
+    <root level="INFO">
+        <appender-ref ref="console" />
+    </root>
+
 </configuration>
