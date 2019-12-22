@@ -67,6 +67,15 @@ docker run -d -p 6688:6688 --name poli zhonglu/poli:0.11.0
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.
 
+
+
+except  PDF
+
+cd export-server
+npm install
+-- Start the server
+node poli-export-server.js
+
 ## Download
 
 [Download](https://github.com/shzlw/poli/releases) the latest version of Poli via the github release page.

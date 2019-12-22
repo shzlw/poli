@@ -130,7 +130,7 @@ class Login extends React.Component {
     return (
       <div className="login-view">
         <div className="login-panel">
-          <div className="login-app-title">{t('Poli')}</div>
+          <div className="login-app-title">{t('中植保险报表系统')}</div>
           <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="login-panel-body">
             <div className="form-panel">
