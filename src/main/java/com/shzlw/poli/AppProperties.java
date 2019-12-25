@@ -20,7 +20,7 @@ public class AppProperties {
     public AppProperties() {
         datasourceMaximumPoolSize = 50;
         maximumQueryRecords = 1000;
-        localeLanguage = "en";
+        localeLanguage = "zh";
         allowMultipleQueryStatements = false;
     }
 

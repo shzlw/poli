@@ -32,7 +32,7 @@ public class UserDaoTest {
 //		long i = userDao.deleteUser(1);
 //		log.info("######" + i);
 //	}
-	@Test
+//	@Test
 	public void saveDict(){
 		List list=new ArrayList();
 	try {

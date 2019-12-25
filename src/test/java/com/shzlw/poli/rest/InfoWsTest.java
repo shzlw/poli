@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.AppProperties;
 import com.shzlw.poli.dto.AppInfo;
 import com.shzlw.poli.util.Constants;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations="classpath:application-test.properties")
+@Slf4j
 public class InfoWsTest {
 
     @Autowired
@@ -39,7 +43,8 @@ public class InfoWsTest {
                 .andReturn();
         String responeText = mvcResult.getResponse().getContentAsString();
         AppInfo appInfo = mapper.readValue(responeText, AppInfo.class);
-
+        log.info(appInfo.getVersion());
+        log.info(appInfo.getLocaleLanguage());
         Assert.assertEquals(Constants.CURRENT_VERSION, appInfo.getVersion());
         Assert.assertEquals(appProperties.getLocaleLanguage(), appInfo.getLocaleLanguage());
     }

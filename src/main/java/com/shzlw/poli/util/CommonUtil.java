@@ -64,7 +64,7 @@ public final class CommonUtil {
 				while (entries.hasNext()) {
 					Entry<String, Object> entry = entries.next();
 					String key = entry.getKey();
-					String value = (String) entry.getValue();
+					String value = entry.getValue().toString();
 					System.out.println(key + ":" + value);
 					if (!"".equals(value)) {
 						for (int i = 1; i < sqls.length; i++) {

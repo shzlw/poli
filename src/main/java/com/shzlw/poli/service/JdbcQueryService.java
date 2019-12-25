@@ -194,6 +194,7 @@ public class JdbcQueryService {
                         }
 
                         if (hasParam) {
+                        	
                             sb.append(clause);
                         }
 
