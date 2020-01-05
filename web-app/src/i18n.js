@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 import translationEN from './locales/en/translation';
 import translationZH from './locales/zh/translation';
 import translationES from './locales/es/translation';
+import translationFR from './locales/fr/translation';
 
 // the translations
 const resources = {
@@ -15,6 +16,9 @@ const resources = {
   },
   es: {
     translation: translationES
+  },
+  fr: {
+    translation: translationFR
   }
 };
 

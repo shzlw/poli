@@ -47,7 +47,14 @@ select * from MY_TABLE;
 
 ## Internationalization (i18n)
 
-Currently Poli supports two languages: English and Chinese. The default language can be switched via changing the poli.properties
+Currently Poli supports four languages:
+
+* English
+* Chinese
+* Spanish
+* French
+
+The default language can be switched via changing the poli.properties
 
 ```
 # English
@@ -55,6 +62,12 @@ poli.locale-language=en
 
 # Chinese
 poli.locale-language=zh
+
+# Spanish
+poli.locale-language=es
+
+# French
+poli.locale-language=fr
 ```
 
 ## Steps to add your own translations
