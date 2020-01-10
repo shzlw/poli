@@ -709,6 +709,35 @@ class ComponentEditPanel extends React.Component {
           <ColorPicker name={'fontColor'} value={fontColor} onChange={this.handleComponentDataChange} />
         </div>
       );
+    } else if (subType === Constants.KANBAN) {
+      const { 
+        groupByField = '',
+        blockTitleField = ''
+      } = data;
+      // kanban
+      chartConfigPanel = (
+        <div className="form-panel">
+          <label>{t('Group By')}</label>
+          <Select
+            name={'groupByField'}
+            value={groupByField}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+
+          <label>{t('Block Title')}</label>
+          <Select
+            name={'blockTitleField'}
+            value={blockTitleField}
+            onChange={this.handleComponentDataChange}
+            options={columns}
+            optionDisplay={'name'}
+            optionValue={'name'}
+          />
+        </div>
+      );
     } else {
       chartConfigPanel = (<div></div>);
     }

@@ -20,7 +20,8 @@ export const HEATMAP = 'heatmap';
 export const TREEMAP = 'treemap';
 export const FUNNEL = 'funnel';
 export const CARD = 'card';
-export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP];
+export const KANBAN = 'kanban';
+export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP, KANBAN];
 
 export const IMAGE = 'image';
 export const TEXT = 'text';

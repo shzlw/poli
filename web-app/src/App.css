@@ -486,4 +486,38 @@ hr {
   color: #0065FF;
 }
 
-/* Tooltip */
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e1e2e1;
+  border: 0px none transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e1e2e1;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #e1e2e1;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 0px none #ffffff;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-track:active {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -16,6 +16,7 @@ import Iframe from './widgets/Iframe';
 import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
+import Kanban from '../components/kanban/Kanban';
 
 class GridItem extends React.Component {
 
@@ -226,6 +227,19 @@ class GridItem extends React.Component {
             value={value}
           />
         );
+      } else if (subType === Constants.KANBAN) {
+        const { 
+          groupByField = '',
+          blockTitleField = ''
+        } = data;
+        componentItem = (
+          <Kanban 
+            data={queryResultData} 
+            groupByField={groupByField} 
+            blockTitleField={blockTitleField} 
+          />
+        );
+        
       } else {
         const chartOption = EchartsApi.getChartOption(subType, queryResultData, data, title);
         componentItem = (
