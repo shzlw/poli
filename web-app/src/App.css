@@ -129,7 +129,7 @@ body,
 .button:hover {
   color: #FFFFFF;
   cursor: pointer;
-  background-color: #2684FF;
+  background-color: #003ccb;
 }
 
 .form-input,
@@ -262,14 +262,14 @@ h1 {
 .side-panel-title {
   padding: 4px 8px; 
   background-color: #393939; 
-  border-top: 2px solid #1E1E1E; 
-  border-bottom: 2px solid #1E1E1E; 
+  border-top: 2px solid #00001c; 
+  border-bottom: 2px solid #00001c; 
 }
 
 .side-panel-button {
   color: #DFDFDF;
   background-color: #696969;
-  border: 1px solid #1E1E1E;
+  border: 1px solid #00001c;
   border-radius: 2px;
   padding: 4px 8px;
   text-align: center;
@@ -294,7 +294,7 @@ h1 {
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
   background-color: #373737;
-  border: 1px solid #1E1E1E;
+  border: 1px solid #00001c;
   color: #dfdfdf;
   width: 100%;
   height: 30px;
@@ -444,8 +444,8 @@ hr {
 }
 
 .button-green:hover {
-  background-color: #57D9A3;
-  color: #FFFFFF;
+  background-color: #008251 !important;
+  color: #FFFFFF !important;
 }
 
 .button-red {
@@ -454,7 +454,7 @@ hr {
 }
 
 .button-red:hover {
-  background-color: #FF7452;
+  background-color: #c41a00;
   color: #FFFFFF;
 }
 
@@ -464,7 +464,7 @@ hr {
 }
 
 .button-black:hover {
-  background-color: #172B4D;
+  background-color: #00001c;
   color: #FFFFFF;
 }
 
