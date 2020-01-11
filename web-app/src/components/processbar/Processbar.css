@@ -1,0 +1,22 @@
+.progress-container {
+  background: #ddd;
+  overflow: hidden;
+  position: relative;
+  width: inherit;
+  height: 22px;
+}
+
+.progress-bar {
+  background: #f80;
+  left: 0;
+  position: absolute;
+  top: 0;
+  height: 22px;
+}
+
+.progress-value {
+  color: green;
+  position: absolute;
+  top: 0px;
+  right: 8px;
+}

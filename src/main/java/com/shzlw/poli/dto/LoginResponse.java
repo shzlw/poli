@@ -15,7 +15,7 @@ public class LoginResponse {
         return new LoginResponse(error);
     }
 
-    public static LoginResponse ofSucess(String username, String sysRole, boolean isTempPassword) {
+    public static LoginResponse ofSuccess(String username, String sysRole, boolean isTempPassword) {
         return new LoginResponse(username, sysRole, isTempPassword);
     }
 

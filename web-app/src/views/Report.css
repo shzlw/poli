@@ -37,8 +37,7 @@
 
 .report-menu-item-active {
   border-left: 3px solid #0065FF;
-  background-color: #00001c;
-  color: #FFFFFF;
+  color: #0065FF;
   font-weight: 700;
 }
 
@@ -108,10 +107,6 @@
   margin: 5px 0px;
   padding: 3px 0px;
   cursor: pointer;
-}
-
-.project-row:hover {
-  background-color: #C1C7D0;
 }
 
 .exporting-panel {

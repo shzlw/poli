@@ -9,7 +9,7 @@ import * as Constants from '../api/Constants';
 
 import GridDraggable from './GridDraggable';
 import GridResizable from './GridResizable';
-import Table from './Table';
+import Table from './table/Table';
 import Slicer from './filters/Slicer';
 import ImageBox from './widgets/ImageBox';
 import Iframe from './widgets/Iframe';
@@ -201,8 +201,21 @@ class GridItem extends React.Component {
       if (subType === Constants.TABLE) {
         const { 
           defaultPageSize = 10,
-          showPagination = true
+          showPagination = true,
+          fixedHeader = false,
+          columnConfigs = []
         } = data;
+
+        let tableHeight = null;
+        if (fixedHeader) {
+          const {
+            height,
+            style = {}
+          } = this.props;
+          const { showTitle = true } = style; 
+          tableHeight = showTitle ? height - 30 : height - 2;
+        }
+
         componentItem = (
           <Table
             data={queryResultData}
@@ -211,6 +224,7 @@ class GridItem extends React.Component {
             drillThrough={drillThrough}
             showPagination={showPagination}
             onTableTdClick={this.onTableTdClick}
+            height={tableHeight}
           />
         );
       } else if (subType === Constants.CARD) {

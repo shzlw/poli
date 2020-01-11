@@ -83,4 +83,4 @@ Poli's documentation and other information can be found at [here](https://shzlw.
 
 MIT License
 
-Copyright (c) 2019 Zhonglu Wang
+Copyright (c) Zhonglu Wang

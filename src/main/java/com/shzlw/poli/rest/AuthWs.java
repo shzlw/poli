@@ -60,7 +60,7 @@ public class AuthWs {
         sessionKeyCookie.setPath("/");
         response.addCookie(sessionKeyCookie);
 
-        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), isTempPassword);
+        return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), isTempPassword);
     }
 
     @RequestMapping(value="/login/cookie", method= RequestMethod.POST)
@@ -77,7 +77,7 @@ public class AuthWs {
 
         user.setUserAttributes(userDao.findUserAttributes(user.getId()));
         userService.newOrUpdateUser(user, user.getSessionKey(), sessionKey);
-        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
+        return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), false);
     }
 
     @RequestMapping(value="/login/apikey", method= RequestMethod.POST)
@@ -89,7 +89,7 @@ public class AuthWs {
             return LoginResponse.ofError(INVALID_API_KEY);
         }
 
-        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
+        return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), false);
     }
 
     @RequestMapping(value="/login/sharekey", method= RequestMethod.POST)
@@ -101,7 +101,7 @@ public class AuthWs {
             return LoginResponse.ofError(INVALID_SHARE_KEY);
         }
 
-        return LoginResponse.ofSucess(user.getUsername(), user.getSysRole(), false);
+        return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), false);
     }
 
     @RequestMapping(value="/logout", method= RequestMethod.GET)

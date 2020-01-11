@@ -15,7 +15,7 @@ import * as Constants from '../api/Constants';
 
 import Tabs from '../components/Tabs';
 import Select from '../components/Select';
-import Table from '../components/Table';
+import Table from '../components//table/Table';
 import ColorPicker from '../components/ColorPicker';
 import SelectButtons from '../components/SelectButtons';
 import InputRange from '../components/filters/InputRange';
@@ -477,10 +477,12 @@ class ComponentEditPanel extends React.Component {
     if (subType === Constants.TABLE) {
       const {
         defaultPageSize = 10,
-        showPagination = true
+        showPagination = true,
+        fixedHeader = false,
+        columnConfigs = []
       } = data;
       chartConfigPanel = (
-        <div>
+        <div className="form-panel">
           <label>{t('Show Pagination')}</label>
           <div style={{marginBottom: '8px'}}>
             <Checkbox name="showPagination" value="" checked={showPagination} onChange={this.handleComponentDataChange} />
@@ -497,7 +499,16 @@ class ComponentEditPanel extends React.Component {
               />
             </div>
           )}
-          
+
+          <label>{t('Fixed Header')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="fixedHeader" value="" checked={fixedHeader} onChange={this.handleComponentDataChange} />
+          </div>
+
+          <label>{t('Columns')}</label>
+          <div>
+            
+          </div>
         </div>
       );
     } else if (subType === Constants.PIE || subType === Constants.TREEMAP) {
