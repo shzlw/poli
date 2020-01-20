@@ -10,6 +10,9 @@ import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
 import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,9 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.*;
-
+@Slf4j
 @Service
 public class JdbcQueryService {
 
@@ -105,10 +109,9 @@ public class JdbcQueryService {
 
         NamedParameterJdbcTemplate npjt = new NamedParameterJdbcTemplate(dataSource);
         Map<String, Object> namedParameters = getNamedParameters(filterParams);
-
         // Handle multiple SQL statements.
         // If there are multiple sql statements, only return query results from the last query.
-        List<String> sqls = CommonUtil.getQueryStatements(sql);
+        List<String> sqls = CommonUtil.getQueryStatements(sql,namedParameters);
         int preQueryNumber = sqls.size() - 1;
         if (appProperties.getAllowMultipleQueryStatements()) {
             for (int i = 0; i < preQueryNumber; i++) {
@@ -123,7 +126,8 @@ public class JdbcQueryService {
 
     private QueryResult executeQuery(NamedParameterJdbcTemplate npjt, String sql, Map<String, Object> namedParameters) {
         int maxQueryRecords = appProperties.getMaximumQueryRecords();
-
+        log.info("sql="+sql);
+       
         QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
@@ -190,6 +194,7 @@ public class JdbcQueryService {
                         }
 
                         if (hasParam) {
+                        	
                             sb.append(clause);
                         }
 
@@ -210,7 +215,7 @@ public class JdbcQueryService {
     }
 
     public Map<String, Object> getNamedParameters(final List<FilterParameter> filterParams) {
-        Map<String, Object> namedParameters = new HashMap<>();
+        Map<String, Object> namedParameters = new LinkedHashMap<>();
         if (filterParams == null || filterParams.isEmpty()) {
             return namedParameters;
         }

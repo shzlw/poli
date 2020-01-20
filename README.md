@@ -67,6 +67,31 @@ docker run -d -p 6688:6688 --name poli zhonglu/poli:0.11.0
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.
 
+
+
+except  PDF
+
+cd export-server
+npm install
+-- Start the server
+node poli-export-server.js
+
+
+
+2019.12.24工作日志
+
+
+
+1、拉取开源报表形成柱图，饼图
+
+2、查询分公司列表，修改开源源码分组条件
+
+3、修改开源源码实现组件多条件查询
+
+4、核心系统结算状态梳理
+
+
+
 ## Download
 
 [Download](https://github.com/shzlw/poli/releases) the latest version of Poli via the github release page.

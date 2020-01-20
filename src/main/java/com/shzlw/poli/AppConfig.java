@@ -1,14 +1,17 @@
 package com.shzlw.poli;
 
-import com.shzlw.poli.filter.AuthFilter;
-import okhttp3.OkHttpClient;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.concurrent.TimeUnit;
+import com.shzlw.poli.filter.AuthFilter;
+
+import okhttp3.OkHttpClient;
+
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
@@ -42,4 +45,5 @@ public class AppConfig implements WebMvcConfigurer {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
-}
+ 
+    }
