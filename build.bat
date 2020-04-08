@@ -8,4 +8,4 @@ cd ..
 xcopy web-app\build\static src\main\resources\static\static /s /i
 xcopy web-app\build\favicon.ico src\main\resources\static
 xcopy web-app\build\index.html src\main\resources\static
-call mvn clean install -DskipTests
+call mvn clean package -DskipTests

@@ -2,7 +2,7 @@
 <configuration>
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>log/server.txt</file>
+        <file>log/server.log</file>
 
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
@@ -11,7 +11,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/server-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <fileNamePattern>log/server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>3MB</maxFileSize>
             <maxHistory>5</maxHistory>
             <totalSizeCap>15MB</totalSizeCap>
