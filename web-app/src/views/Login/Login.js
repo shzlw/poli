@@ -7,8 +7,8 @@ import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import './Login.css';
-import Checkbox from '../components/Checkbox';
-import * as Constants from '../api/Constants';
+import Checkbox from '../../components/Checkbox';
+import * as Constants from '../../api/Constants';
 
 class Login extends React.Component {
 

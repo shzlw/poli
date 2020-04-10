@@ -468,7 +468,7 @@ class Report extends Component {
             />
 
             <button className="button button-green" onClick={this.save}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
+              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
             </button>
           </div>
         </Modal>

@@ -1,35 +1,4 @@
 
-html,
-body,
-#root,
-.app {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  color: #212121;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -webkit-transition: all 0.15s ease;
-  transition: all 0.15s ease;
-}
-
-textarea, input, button, select { 
-  font-family: inherit; 
-  font-size: inherit; 
-}
-
-a {
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 .authenticating-panel {
   position: fixed;
   top: 50%;
@@ -113,8 +82,9 @@ a {
   margin: 5px 0px 15px 0px;
 }
 
+/* Button */
 .icon-button {
-  border-radius: 2px;
+  border-radius: 4px;
   border: 0;
   height: 28px;
   width: 28px;
@@ -124,27 +94,28 @@ a {
 }
 
 .square-button {
-  width: 32px;
-  height: 32px;
+  width: 33px;
+  height: 33px;
+  border: 0 !important;
   padding: 0px !important;
 }
 
 .button {
-  background: #0065FF;
-  color: #fff;
-  border-radius: 2px;
-  border: 0;
-  height: 32px;
-  line-height: 32px;
+  background-color: #FFFFFF;
+  color: #212121;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  height: 33px;
   padding: 0px 8px;
   outline: none;
   cursor: pointer;
 }
 
+.icon-button:hover,
+.square-button:hover,
 .button:hover {
-  color: #FFFFFF;
   cursor: pointer;
-  background-color: #003ccb;
+  background-color: #efefef;
 }
 
 .form-input,
@@ -157,7 +128,7 @@ a {
   padding: 6px 8px;
   border: 1px solid #e0e0e0;
   outline: 0;
-  border-radius: 2px;
+  border-radius: 4px;
   background: #FFFFFF;
   font-size: 16px;
 }
@@ -173,10 +144,6 @@ a {
 .inline-text-label {
   height: 32px;
   line-height: 32px;
-}
-
-textarea {
-  resize: vertical;
 }
 
 h1 {
@@ -223,7 +190,7 @@ h1 {
   background-color: #FFFFFF;
   box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   outline: 0;
-  border-radius: 2px;
+  border-radius: 4px;
   background: #FFFFFF;
   line-height: 28px;
 }
@@ -281,7 +248,7 @@ h1 {
   color: #DFDFDF;
   background-color: #696969;
   border: 1px solid #00001c;
-  border-radius: 2px;
+  border-radius: 4px;
   padding: 4px 8px;
   text-align: center;
   text-decoration: none;
@@ -312,7 +279,7 @@ h1 {
   font-size: 16px;
   line-height: 16px;
   padding: 4px 8px;
-  border-radius: 2px;
+  border-radius: 4px;
   outline: 0;
 }
 
@@ -385,68 +352,15 @@ h1 {
   font-weight: bold;
 }
 
-/* Charts */
-.echarts {
-  width: 100% !important;
-  height: 100% !important;
+
+.button-blue {
+  background-color: #0065FF !important;
+  color: #FFFFFF !important;
 }
 
-/* Utility */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.inline-block {
-  display: inline-block;
-}
-
-.ellipsis {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.display-block {
-  display: block;
-}
-
-.display-none {
-  display: none;
-}
-
-.word-break-all {
-  word-break: break-all;
-}
-
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 8px 0;
-  padding: 0; 
-}
-
-.bold {
-  font-weight: 700;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.full-width {
-  width: 100%;
+.button-blue:hover {
+  background-color: #003ccb !important;
+  color: #FFFFFF !important;
 }
 
 .button-green {
@@ -460,33 +374,34 @@ hr {
 }
 
 .button-red {
-  background-color: #ef5350;
-  color: #FFFFFF;
+  background-color: #ef5350 !important;
+  color: #FFFFFF !important;
 }
 
 .button-red:hover {
-  background-color: #b61827;
-  color: #FFFFFF;
+  background-color: #b61827 !important;
+  color: #FFFFFF !important;
 }
 
 .button-black {
-  background-color: #424242;
-  color: #FFFFFF;
+  background-color: #424242 !important;
+  color: #FFFFFF !important;
 }
 
 .button-black:hover {
-  background-color: #1b1b1b;
-  color: #FFFFFF;
+  background-color: #1b1b1b !important;
+  color: #FFFFFF !important;
 }
 
-.flat-button {
+.button-transparent {
+  border: 0 !important;
   background-color: transparent !important;
   color: #212121;
 }
 
-.flat-button:hover {
-  background-color: #C1C7D0 !important;
-  color: #FFFFFF !important;
+.button-transparent:hover {
+  border: 0 !important;
+  background-color: #efefef !important;
 }
 
 .bg-grey {
@@ -497,38 +412,3 @@ hr {
   color: #0065FF;
 }
 
-/* Scroll bar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #e1e2e1;
-  border: 0px none transparent;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #e1e2e1;
-}
-
-::-webkit-scrollbar-thumb:active {
-  background: #e1e2e1;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffffff;
-  border: 0px none #ffffff;
-}
-
-::-webkit-scrollbar-track:hover {
-  background: #ffffff;
-}
-
-::-webkit-scrollbar-track:active {
-  background: #ffffff;
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}

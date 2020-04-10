@@ -24,8 +24,8 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 import './App.css';
 
-import Login from './views/Login';
-import ChangeTempPassword from './views/ChangeTempPassword';
+import Login from './views/Login/Login';
+import ChangeTempPassword from './views/Login/ChangeTempPassword';
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
 import * as Constants from './api/Constants';

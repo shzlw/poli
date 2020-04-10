@@ -736,7 +736,7 @@ class ComponentViewPanel extends React.Component {
               onChange={this.handleInputChange} 
             />
             <button className="button button-green" onClick={this.downloadCsv}>
-              <FontAwesomeIcon icon="file-download" size="lg" fixedWidth /> {t('Export')}
+              <FontAwesomeIcon icon="file-download"  fixedWidth /> {t('Export')}
             </button>
           </div>
         </Modal>

@@ -223,13 +223,13 @@ class DataSource extends Component {
               <div className="card-footer row">
                 <div className="float-right">
                   <button className="icon-button card-icon-button" onClick={() => this.openEditPanel(ds)}>
-                    <FontAwesomeIcon icon="edit" size="lg" />
+                    <FontAwesomeIcon icon="edit"  />
                   </button>
                   <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(ds)}>
-                    <FontAwesomeIcon icon="trash-alt" size="lg" />
+                    <FontAwesomeIcon icon="trash-alt"  />
                   </button>
                   <button className="icon-button card-icon-button" onClick={() => this.ping(ds.id)}>
-                    <FontAwesomeIcon icon="plug" size="lg" />
+                    <FontAwesomeIcon icon="plug"  />
                   </button>
                 </div>
               </div>
@@ -330,7 +330,7 @@ class DataSource extends Component {
               onChange={this.handleInputChange} 
             />
             <button className="button mt-3 button-green" onClick={this.save}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
+              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
             </button>
           </div>
         </Modal>

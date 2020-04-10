@@ -901,7 +901,7 @@ class ComponentEditPanel extends React.Component {
             <div key={drill.columnName} className="row table-row">
               <div className="float-left ellipsis" style={{width: '680px'}}>
                 <div className="tag-label">{t('Column')}</div> <span style={{marginRight: '10px'}}>{drill.columnName}</span>
-                <FontAwesomeIcon icon="long-arrow-alt-right" size="lg" fixedWidth />
+                <FontAwesomeIcon icon="long-arrow-alt-right"  fixedWidth />
                 <div className="tag-label" style={{marginLeft: '10px', backgroundColor: '#66bb6a'}}>{t('Report')}</div> {reportName}
               </div>
               <button className="button table-row-button float-right button-red" onClick={() => this.removeDrillThrough(drill)}>
@@ -992,7 +992,7 @@ class ComponentEditPanel extends React.Component {
     return (
       <div>
         <button className="button button-green" onClick={this.save}>
-          <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
+          <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
         </button>
         <div className="row mt-10">
           <label className="float-left inline-text-label bold" style={{width: '100px'}}>{t('Type')}: </label>

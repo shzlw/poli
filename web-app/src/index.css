@@ -1,0 +1,127 @@
+html,
+body,
+#root,
+.app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Tahoma, Geneva, sans-serif;
+  color: #212121;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-transition: all 0.15s ease;
+  transition: all 0.15s ease;
+}
+
+textarea, 
+input, 
+button, 
+select { 
+  font-family: inherit; 
+  font-size: inherit; 
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Charts */
+.echarts {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Utility */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
+.word-break-all {
+  word-break: break-all;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 8px 0;
+  padding: 0; 
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e1e2e1;
+  border: 0px none transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e1e2e1;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #e1e2e1;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 0px none #ffffff;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-track:active {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

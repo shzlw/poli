@@ -715,24 +715,24 @@ class ReportEditView extends React.Component {
             style={{width: '50px', marginRight: '4px'}}
           />
         )}
-        <button className="button square-button flat-button" onClick={this.toggleAutoRefresh}>
+        <button className="button square-button button-transparent" onClick={this.toggleAutoRefresh}>
           {
             autoRefreshStatus === 'ON' ? 
             (
-              <FontAwesomeIcon icon="stop-circle" size="lg" fixedWidth />
+              <FontAwesomeIcon icon="stop-circle"  fixedWidth />
             ) : 
             (
-              <FontAwesomeIcon icon="play-circle" size="lg" fixedWidth />
+              <FontAwesomeIcon icon="play-circle"  fixedWidth />
             )
           }
         </button>
-        <button className="button square-button flat-button ml-4" onClick={this.refresh}>
-          <FontAwesomeIcon icon="redo-alt" size="lg" fixedWidth />
+        <button className="button square-button button-transparent ml-4" onClick={this.refresh}>
+          <FontAwesomeIcon icon="redo-alt"  fixedWidth />
         </button>
 
         { !this.isAutoFilter() && (
-          <button className={`button flat-button ml-4 ${pendingApplyFiltersStyle}`} onClick={this.applyFilters}>
-            <FontAwesomeIcon icon="filter" size="lg" fixedWidth /> {t('Apply Filters')}
+          <button className={`button button-transparent ml-4 ${pendingApplyFiltersStyle}`} onClick={this.applyFilters}>
+            <FontAwesomeIcon icon="filter"  fixedWidth /> {t('Apply Filters')}
           </button>
         )}
       </React.Fragment>
@@ -741,26 +741,26 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button flat-button ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
-          <FontAwesomeIcon icon="ellipsis-h" size="lg" fixedWidth />
+        <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
+          <FontAwesomeIcon icon="ellipsis-h"  fixedWidth />
         </button>
       </React.Fragment>
     );
 
     const inEditModeButtonPanel = (
       <React.Fragment>
-        <button className="button flat-button ml-4" onClick={() => this.openComponentEditPanel(null)}>
-          <FontAwesomeIcon icon="calendar-plus" size="lg" fixedWidth /> {t('New Component')}
+        <button className="button button-transparent ml-4" onClick={() => this.openComponentEditPanel(null)}>
+          <FontAwesomeIcon icon="calendar-plus"  fixedWidth /> {t('New Component')}
         </button>
-        <button className="button square-button flat-button ml-4" onClick={this.deleteReport}>
-          <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
+        <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
+          <FontAwesomeIcon icon="trash-alt"  fixedWidth />
         </button>
       </React.Fragment>
     )
 
     const editButton = (
-      <button className="button square-button flat-button ml-4" onClick={this.edit}>
-        <FontAwesomeIcon icon="edit" size="lg" fixedWidth />
+      <button className="button square-button button-transparent ml-4" onClick={this.edit}>
+        <FontAwesomeIcon icon="edit"  fixedWidth />
       </button>
     );
 
@@ -775,8 +775,8 @@ class ReportEditView extends React.Component {
           buttonGroupPanel = (
             <React.Fragment>
               {commonButtonPanel}
-              <button className="button square-button flat-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-                <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
+              <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+                <FontAwesomeIcon icon="archive"  fixedWidth />
               </button>
               {fullScreenExcludeButtonPanel}
               {editButton}
@@ -788,16 +788,16 @@ class ReportEditView extends React.Component {
           buttonGroupPanel = (
             <React.Fragment>
               {commonButtonPanel}
-              <button className="button square-button flat-button ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-                <FontAwesomeIcon icon="archive" size="lg" fixedWidth />
+              <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+                <FontAwesomeIcon icon="archive"  fixedWidth />
               </button>
               {fullScreenExcludeButtonPanel}
             </React.Fragment>
           );
         } else if (reportType === Constants.CANNED) {
           buttonGroupPanel = (
-            <button className="button square-button flat-button ml-4" onClick={this.deleteReport}>
-              <FontAwesomeIcon icon="trash-alt" size="lg" fixedWidth />
+            <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
+              <FontAwesomeIcon icon="trash-alt"  fixedWidth />
             </button>
           );
         }
@@ -806,27 +806,27 @@ class ReportEditView extends React.Component {
 
     /**
      * <div>
-              <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
+              <button className="button square-button button-transparent ml-4" onClick={this.toggleFavourite}>
                 { isFavourite ? (
-                  <FontAwesomeIcon icon="heart" size="lg" fixedWidth /> 
+                  <FontAwesomeIcon icon="heart"  fixedWidth /> 
                 ) : (
-                  <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
+                  <FontAwesomeIcon icon={['far', 'heart']}  fixedWidth />
                 )}
               </button>
             </div>
             <div>
-              <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
-                <FontAwesomeIcon icon="share-square" size="lg" fixedWidth /> Share
+              <button className="button square-button button-transparent ml-4" onClick={this.openSharePanel}>
+                <FontAwesomeIcon icon="share-square"  fixedWidth /> Share
               </button>
             </div>
             <div>
-              <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
-                <FontAwesomeIcon icon="tv" size="lg" fixedWidth /> Full screen
+              <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+                <FontAwesomeIcon icon="tv"  fixedWidth /> Full screen
               </button>
             </div>
             <div>
-              <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
-                <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth /> Export to PDF
+              <button className="button square-button button-transparent ml-4" onClick={this.openExportToPdfPanel}>
+                <FontAwesomeIcon icon="file-pdf"  fixedWidth /> Export to PDF
               </button>
             </div>
      */
@@ -907,7 +907,7 @@ class ReportEditView extends React.Component {
               onChange={(event) => this.handleInputChange('cannedReportName', event.target.value)} 
             />
             <button className="button button-green" onClick={this.saveCannedReport}>
-              <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
+              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
             </button>
           </div>
         </Modal>
@@ -979,10 +979,10 @@ class ReportEditView extends React.Component {
           <div className="report-side-panel">
             <div className="side-panel-content" style={{margin: '3px 0px'}}>
               <button className="icon-button button-green" onClick={this.save}>
-                <FontAwesomeIcon icon="save" size="lg"  />
+                <FontAwesomeIcon icon="save"   />
               </button>
               <button className="icon-button button-black" style={{marginLeft: '5px'}} onClick={this.cancelEdit}>
-                <FontAwesomeIcon icon="times" size="lg" />
+                <FontAwesomeIcon icon="times"  />
               </button>
             </div>
             <div className="side-panel">
@@ -1093,21 +1093,21 @@ class ReportEditView extends React.Component {
           onClose={() => this.setState({ showFunctionButtonDialog: false })}
           >
           <div className="form-panel">
-            <button className="button square-button flat-button ml-4" onClick={this.toggleFavourite}>
+            <button className="button square-button button-transparent ml-4" onClick={this.toggleFavourite}>
               { isFavourite ? (
-                <FontAwesomeIcon icon="heart" size="lg" fixedWidth />
+                <FontAwesomeIcon icon="heart"  fixedWidth />
               ) : (
-                <FontAwesomeIcon icon={['far', 'heart']} size="lg" fixedWidth />
+                <FontAwesomeIcon icon={['far', 'heart']}  fixedWidth />
               )}
             </button>
-            <button className="button square-button flat-button ml-4" onClick={this.openSharePanel}>
-              <FontAwesomeIcon icon="share-square" size="lg" fixedWidth />
+            <button className="button square-button button-transparent ml-4" onClick={this.openSharePanel}>
+              <FontAwesomeIcon icon="share-square"  fixedWidth />
             </button>
-            <button className="button square-button flat-button ml-4" onClick={this.fullScreen}>
-              <FontAwesomeIcon icon="tv" size="lg" fixedWidth />
+            <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+              <FontAwesomeIcon icon="tv"  fixedWidth />
             </button>
-            <button className="button square-button flat-button ml-4" onClick={this.openExportToPdfPanel}>
-              <FontAwesomeIcon icon="file-pdf" size="lg" fixedWidth />
+            <button className="button square-button button-transparent ml-4" onClick={this.openExportToPdfPanel}>
+              <FontAwesomeIcon icon="file-pdf"  fixedWidth />
             </button>
           </div>
         </DropdownDialog>

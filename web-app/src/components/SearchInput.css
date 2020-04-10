@@ -5,7 +5,7 @@
 
 .search-input-icon {
   width: 32px;
-  height: 32px;
+  height: 33px;
   background-color: #FFFFFF;
   border-radius: 4px 0px 0px 4px;
 }
@@ -33,9 +33,11 @@
 .search-input-reset-button {
   border-radius: 0px 4px 4px 0px;
   width: 32px;
+  height: 33px;
   box-shadow: none;
   background-color: #FFFFFF;
   color: #172B4D;
+  border: 0;
 }
 
 .search-input-reset-button:hover {

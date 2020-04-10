@@ -342,10 +342,10 @@ class User extends React.Component {
               <div className="card-footer row">
                 <div className="float-right">
                   <button className="icon-button card-icon-button" onClick={() => this.openEditPanel(user)}>
-                    <FontAwesomeIcon icon="edit" size="lg" />
+                    <FontAwesomeIcon icon="edit"  />
                   </button>
                   <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(user)}>
-                    <FontAwesomeIcon icon="trash-alt" size="lg" />
+                    <FontAwesomeIcon icon="trash-alt"  />
                   </button>
                 </div>
               </div>
@@ -510,7 +510,7 @@ class User extends React.Component {
 
           </div>
           <button className="button mt-3 button-green" onClick={this.save}>
-            <FontAwesomeIcon icon="save" size="lg" fixedWidth /> {t('Save')}
+            <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
           </button>
         </Modal>
 
