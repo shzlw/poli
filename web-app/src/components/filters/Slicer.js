@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Checkbox from '../Checkbox';
+import Checkbox from '../Checkbox/Checkbox';
 import './Slicer.css';
 
 class Slicer extends React.Component {

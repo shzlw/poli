@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import * as Constants from '../api/Constants';
+import * as Constants from '../../api/Constants';
 
-import Modal from '../components/Modal/Modal';
-import Select from '../components/Select';
-import SearchInput from '../components/SearchInput';
+import Modal from '../../components/Modal/Modal';
+import Select from '../../components/Select';
+import SearchInput from '../../components/SearchInput/SearchInput';
 
 class User extends React.Component {
 

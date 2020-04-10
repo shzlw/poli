@@ -18,6 +18,7 @@
   border: 0;
   outline: none;
   color: #8993A4;
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
 }
 
 .selectbuttons-container .select-button:hover {

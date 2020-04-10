@@ -5,8 +5,8 @@
   bottom: 0;
   width: 199px;
   overflow-y: auto;
-  border-right: 1px solid #DBDBDB;
-  background-color: #F5F5F5;
+  border-right: 1px solid #ccc;
+  background-color: #efefef;
 }
   
 .report-content {
@@ -15,7 +15,7 @@
   left: 200px;
   right: 0;
   bottom: 0;
-  background-color: #F5F5F5;
+  background-color: #FFFFFF;
   overflow: auto;
 }
 
@@ -25,8 +25,8 @@
 
 .report-menu-item {
   border-left: 3px solid #EBECF0;
-  margin: 5px 0px;
-  padding: 5px 8px;
+  margin: 3px 0px;
+  padding: 3px 6px;
   color: #8993A4;
   cursor: pointer;
 }

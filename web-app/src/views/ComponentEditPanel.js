@@ -13,14 +13,14 @@ import './ComponentEditPanel.css';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
-import Tabs from '../components/Tabs';
+import Tabs from '../components/Tabs/Tabs';
 import Select from '../components/Select';
 import Table from '../components//table/Table';
-import ColorPicker from '../components/ColorPicker';
-import SelectButtons from '../components/SelectButtons';
+import ColorPicker from '../components/ColorPicker/ColorPicker';
+import SelectButtons from '../components/SelectButtons/SelectButtons';
 import InputRange from '../components/filters/InputRange';
-import SearchInput from '../components/SearchInput';
-import Checkbox from '../components/Checkbox';
+import SearchInput from '../components/SearchInput/SearchInput';
+import Checkbox from '../components/Checkbox/Checkbox';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 

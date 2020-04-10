@@ -1,4 +1,10 @@
 
+.toast-msg-body {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  width: 280px;
+}
+
 .authenticating-panel {
   position: fixed;
   top: 50%;
@@ -34,7 +40,7 @@
 }
 
 .panel {
-  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   border: 0;
   outline: 0;
   border-radius: 4px;
@@ -91,6 +97,7 @@
   outline: none;
   padding: 0px !important;
   cursor: pointer;
+  box-shadow: none !important;
 }
 
 .square-button {
@@ -98,6 +105,7 @@
   height: 33px;
   border: 0 !important;
   padding: 0px !important;
+  box-shadow: none !important;
 }
 
 .button {
@@ -208,7 +216,7 @@ h1 {
   border-radius: 4px;
   margin: 0px 10px 10px 0px;
   background-color: #FFFFFF;
-  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   width: 160px;
   height: 160px;
   display:flex;

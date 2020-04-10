@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import Modal from '../components/Modal/Modal';
-import Select from '../components/Select';
-import SearchInput from '../components/SearchInput';
+import Modal from '../../components/Modal/Modal';
+import Select from '../../components/Select';
+import SearchInput from '../../components/SearchInput/SearchInput';
 
 class Group extends React.Component {
 

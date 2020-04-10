@@ -4,7 +4,7 @@ import { withTranslation } from 'react-i18next';
 
 import User from './User';
 import Group from './Group';
-import Tabs from '../components/Tabs';
+import Tabs from '../../components/Tabs/Tabs';
 
 class UserManagement extends React.Component {
 

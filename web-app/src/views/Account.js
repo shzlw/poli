@@ -112,10 +112,10 @@ class Account extends React.Component {
     return (
       <div className="full-page-content">
         <div className="form-panel" style={{width: '400px'}}>   
-          <label className="bold">{t('Username')}</label>
+          <label>{t('Username')}</label>
           <div className="form-input bg-grey">{username}</div>
 
-          <label className="bold">{t('Name')}</label>
+          <label>{t('Name')}</label>
           <input 
             className="form-input"
             type="text"   
@@ -124,10 +124,10 @@ class Account extends React.Component {
             onChange={this.handleInputChange} />
           <br/>
 
-          <label className="bold">{t('System Role')}</label>
+          <label>{t('System Role')}</label>
           <div className="form-input bg-grey">{sysRole}</div>
 
-          <label className="bold">{t('API Key')}</label>
+          <label>{t('API Key')}</label>
           <div className="form-input bg-grey">{apiKey}</div>
           <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>{t('Generate new API Key')}</button>
           

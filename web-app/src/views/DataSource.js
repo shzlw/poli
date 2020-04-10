@@ -6,7 +6,7 @@ import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import Modal from '../components/Modal/Modal';
-import SearchInput from '../components/SearchInput';
+import SearchInput from '../components/SearchInput/SearchInput';
 
 class DataSource extends Component {
 

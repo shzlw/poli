@@ -10,7 +10,7 @@ import './Report.css';
 import * as Constants from '../api/Constants';
 import ReportEditView from './ReportEditView';
 import Modal from '../components/Modal/Modal';
-import Tabs from '../components/Tabs';
+import Tabs from '../components/Tabs/Tabs';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import DataSource from './DataSource';
 import Report from './Report';
-import UserManagement from './UserManagement';
+import UserManagement from './UserManagement/UserManagement';
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';

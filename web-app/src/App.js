@@ -181,7 +181,8 @@ class App extends React.Component {
     axios.interceptors.response.use((response) => {
         return response;
       }, (error) => {
-        toast.error(Util.toReadableServerError(error));
+        const readableServerError = Util.toReadableServerError(error);
+        toast.error(() => <div className="toast-msg-body">{readableServerError}</div>);
         const statusCode = error.response.status;
         if(statusCode === 401 || statusCode === 403) { 
           this.onLogout();
@@ -253,7 +254,7 @@ class App extends React.Component {
         </Switch>
         <ToastContainer
           position="top-center"
-          autoClose={3000} 
+          autoClose={false}
           draggable={false}
           hideProgressBar
           closeOnClick
