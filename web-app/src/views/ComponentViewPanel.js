@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
@@ -12,8 +13,7 @@ import './ComponentViewPanel.css';
 import Checkbox from '../components/Checkbox';
 import ColorPicker from '../components/ColorPicker';
 import InputRange from '../components/filters/InputRange';
-import Toast from '../components/Toast';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 import GridLayout from '../components/GridLayout';
 
 const BASE_WIDTH = 1200;
@@ -534,7 +534,7 @@ class ComponentViewPanel extends React.Component {
         height
       } = selectedComponent;
       if (x < 0 || y < 0 || width < 30 || height < 30 || height > this.props.height) {
-        Toast.showError('Invalid position value');
+        toast.error('Invalid position value');
         return;
       }
       this.resizeComponentToBase(selectedComponent, gridWidth);

@@ -38,3 +38,17 @@ export const getReadableDiffTime = (d1, d2) => {
 export const leftPadZero = (n) => {
   return parseInt(n, 10) < 10 ? '0' + n : n;
 }
+
+// Spring rest error
+// {"timestamp":"2019-12-18T20:50:29.009+0000",
+// "status":405,
+// "error":"Method Not Allowed",
+// "message":"Request method 'GET' not supported",
+// "path":"/auth/signup"}
+export const toReadableServerError = (error) => {
+  const resData = error.response.data || {};
+  const serverError = resData.error;
+  const serverMsg = resData.message;
+  const displayError = serverError + ": " + serverMsg;
+  return displayError;
+}

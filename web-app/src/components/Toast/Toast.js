@@ -1,8 +1,8 @@
 import React from 'react';
 import './Toast.css';
 
-const COLOR_RED = '#FF5630';
-const COLOR_GREEN = '#36B37E';
+const COLOR_RED = '#ef5350';
+const COLOR_GREEN = '#66bb6a';
 
 class Toast extends React.Component {
 

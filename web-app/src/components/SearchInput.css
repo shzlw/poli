@@ -15,7 +15,7 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
-  width: 100%;
+  width: calc(100% - 64px);
   margin: 0px !important;
   padding: 5px 0px !important;
   box-shadow: none !important;

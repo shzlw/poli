@@ -3,13 +3,13 @@ import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import * as Constants from '../api/Constants';
 
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 import Select from '../components/Select';
 import SearchInput from '../components/SearchInput';
-import Toast from '../components/Toast';
 
 class User extends React.Component {
 
@@ -148,7 +148,7 @@ class User extends React.Component {
     } = this.state;
 
     if (!username) {
-      Toast.showError('Enter a username.');
+      toast.error('Enter a username.');
       return;
     }
 
@@ -157,7 +157,7 @@ class User extends React.Component {
       if (sysRole) {
         selectedSysRole = sysRole;
       } else {
-        Toast.showError('Select a role.');
+        toast.error('Select a role.');
         return;
       }
     }
@@ -174,7 +174,7 @@ class User extends React.Component {
       user.id = id;
       if (showUpdatePassword) {
         if (!tempPassword || tempPassword.length < 8) {
-          Toast.showError(`Use 8 or more characters for password.`);
+          toast.error(`Use 8 or more characters for password.`);
           return;
         }
         user.tempPassword = tempPassword;
@@ -187,12 +187,12 @@ class User extends React.Component {
           this.fetchUsers();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
         
     } else {
       if (!tempPassword || tempPassword.length < 8) {
-        Toast.showError(`Use 8 or more characters for password.`);
+        toast.error(`Use 8 or more characters for password.`);
         return;
       }
       user.tempPassword = tempPassword;
@@ -204,7 +204,7 @@ class User extends React.Component {
           this.fetchUsers();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
     } 
   }

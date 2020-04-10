@@ -4,12 +4,12 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import './Report.css';
 import * as Constants from '../api/Constants';
 import ReportEditView from './ReportEditView';
-import Modal from '../components/Modal';
-import Toast from '../components/Toast';
+import Modal from '../components/Modal/Modal';
 import Tabs from '../components/Tabs';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
@@ -161,7 +161,7 @@ class Report extends Component {
     } = this.state;
 
     if (!name) {
-      Toast.showError('Enter a name.');
+      toast.error('Enter a name.');
       return;
     }
 
@@ -188,7 +188,7 @@ class Report extends Component {
         });
       })
       .catch(error => {
-        Toast.showError('The name exists. Try another.');
+        toast.error('The name exists. Try another.');
       });
   }
 

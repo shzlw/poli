@@ -3,7 +3,7 @@ import axios from 'axios';
 import { withTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const SHARED_REPORT_TABLE_HEADERS = ['Name', 'Type', 'Created By', 'Create Date', 'Expired By', 'Share Key', 'Actions'];
 

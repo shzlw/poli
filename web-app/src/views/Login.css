@@ -7,7 +7,7 @@
 }
 
 .login-input:focus {
-  border: 2px solid #0065FF !important;
+  border: 2px solid #bdbdbd !important;
 }
 
 .login-panel {
@@ -16,13 +16,13 @@
   top: 50%;
   left: 50%;
   width: 300px;
-  margin-top: -230px;
-  margin-left: -150px;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 .login-panel-body {
   padding: 15px;
-  background-color: rgba(18, 91, 152, 0.1);
+  background-color:#eeeeee;
   border-radius: 5px;
 }
 
@@ -42,7 +42,7 @@
 .login-error-msg {
   text-align: center;
   margin-bottom: 5px;
-  color: #FF5630;
+  color: #ef5350;
   font-weight: bold;
 }
 

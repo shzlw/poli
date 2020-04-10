@@ -1,6 +1,6 @@
 package com.shzlw.poli.rest;
 
-import com.shzlw.poli.AppProperties;
+import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dto.AppInfo;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

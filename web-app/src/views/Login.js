@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import './Login.css';
 import Checkbox from '../components/Checkbox';
@@ -14,7 +15,6 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMsg: '',
       username: '',
       password: '',
       version: '',
@@ -75,8 +75,7 @@ class Login extends React.Component {
 
   handleInputChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value,
-      errorMsg: ''
+      [event.target.name]: event.target.value
     });
   }
 
@@ -98,16 +97,12 @@ class Login extends React.Component {
     }
 
     if (!username) {
-      this.setState({
-        errorMsg: 'Enter username.'
-      });
+      toast.error('Enter username');
       return;
     }
 
     if (!password) {
-      this.setState({
-        errorMsg: 'Enter password.'
-      });
+      toast.error('Enter password');
       return;
     }
 
@@ -115,9 +110,7 @@ class Login extends React.Component {
       .then(res => {
         const loginResponse = res.data;
         if (loginResponse.error) {
-          this.setState({
-            errorMsg: loginResponse.error
-          });
+          toast.error(loginResponse.error);
         } else {
           this.props.onLoginSuccess(loginResponse);
         }
@@ -131,7 +124,6 @@ class Login extends React.Component {
       <div className="login-view">
         <div className="login-panel">
           <div className="login-app-title">{t('Poli')}</div>
-          <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="login-panel-body">
             <div className="form-panel">
               <label>{t('Username')}</label>
@@ -150,10 +142,10 @@ class Login extends React.Component {
                 value={this.state.password}
                 onChange={this.handleInputChange} 
               />
-              <div>
+              <div style={{marginBottom: '8px'}}>
                 <Checkbox name="rememberMe" value={t('Remember me')} checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} />
               </div>
-              <button className="button login-button button-green" onClick={this.login}>{t('Login')}</button>
+              <button className="button login-button button-green"onClick={this.login}>{t('Login')}</button>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-package com.shzlw.poli;
+package com.shzlw.poli.config;
 
 import com.shzlw.poli.filter.AuthFilter;
 import okhttp3.OkHttpClient;

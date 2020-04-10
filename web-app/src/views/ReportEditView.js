@@ -5,14 +5,14 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import ComponentViewPanel from './ComponentViewPanel';
 import ComponentEditPanel from './ComponentEditPanel';
 
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 import ColorPicker from '../components/ColorPicker';
 import Checkbox from '../components/Checkbox';
-import Toast from '../components/Toast';
 import DatePicker from '../components/filters/DatePicker';
 import DropdownDialog from '../components/DropdownDialog';
 
@@ -223,7 +223,7 @@ class ReportEditView extends React.Component {
         .then(res => {
           const result = res.data;
           if (!result) {
-            Toast.showError('The report is no longer available.');
+            toast.error('The report is no longer available.');
             return;
           }
           this.setState({
@@ -319,12 +319,12 @@ class ReportEditView extends React.Component {
     } = this.state;
 
     if (style.height < 100) {
-      Toast.showError('Minimum height is 100');
+      toast.error('Minimum height is 100');
       return;
     }
 
     if (style.isFixedWidth && style.fixedWidth < 100) {
-      Toast.showError('Minimum width is 100');
+      toast.error('Minimum width is 100');
       return;
     }
 
@@ -582,13 +582,13 @@ class ReportEditView extends React.Component {
     } = this.state;
 
     if (!cannedReportName) {
-      Toast.showError('Enter a name.');
+      toast.error('Enter a name.');
       return;
     }
 
     const components = this.componentViewPanel.current.getComponentsSnapshot();
     if (Util.isArrayEmpty(components)) {
-      Toast.showError('Report is empty.');
+      toast.error('Report is empty.');
       return;
     }
 
@@ -607,7 +607,7 @@ class ReportEditView extends React.Component {
           showCannedReportPanel: false,
           cannedReportName: ''
         });
-        Toast.showSuccess('Saved.');
+        toast.success('Saved.');
         this.props.onCannedReportSave();
       });
   }
@@ -661,7 +661,7 @@ class ReportEditView extends React.Component {
     const href = window.location.href;
     const start = href.indexOf('/poli/workspace');
     if (start === -1) {
-      Toast.showError('Cannot find poli workspace URL pattern.');
+      toast.error('Cannot find poli workspace URL pattern.');
       return;
     }
     const urlPrefix = href.substring(0, start);

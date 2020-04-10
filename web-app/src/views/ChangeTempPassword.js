@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import './Login.css';
 
@@ -12,7 +13,6 @@ class ChangeTempPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMsg: '',
       password: '',
       confirmedPassword: ''
     };
@@ -55,9 +55,7 @@ class ChangeTempPassword extends React.Component {
     if (password && confirmedPassword
         && password === confirmedPassword) {
       if (password.length < 8) {
-        this.setState({
-          errorMsg: `Use 8 or more characters.`
-        });
+        toast.error('Use 8 or more characters');
         return;
       }
 
@@ -69,17 +67,13 @@ class ChangeTempPassword extends React.Component {
         .then(res => {
           const loginResponse = res.data || {};
           if (loginResponse.error) {
-            this.setState({
-              errorMsg: loginResponse.error
-            });
+            toast.error(loginResponse.error);
           } else {
             this.props.history.push('/workspace/report');
           }
         });
     } else {
-      this.setState({
-        errorMsg: `Those passwords didn't match.`
-      });
+      toast.error(`Those passwords didn't match`);
     }
   }
 
@@ -103,7 +97,6 @@ class ChangeTempPassword extends React.Component {
       <div className="login-view">
         <div className="login-panel">
           <div style={titleStyle}>{t('Change Password')}</div>
-          <div className="login-error-msg">{this.state.errorMsg}</div>
           <div className="login-panel-body">
             <div className="form-panel">
               <div style={tipStyle}>* {t('Use 8 or more characters')}</div>

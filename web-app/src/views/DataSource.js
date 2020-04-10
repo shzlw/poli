@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-import Modal from '../components/Modal';
-import Toast from '../components/Toast';
+import Modal from '../components/Modal/Modal';
 import SearchInput from '../components/SearchInput';
 
 class DataSource extends Component {
@@ -81,7 +81,7 @@ class DataSource extends Component {
     } = this.state;
 
     if (!name) {
-      Toast.showError('Enter a name.');
+      toast.error('Enter a name.');
       return;
     }
 
@@ -106,7 +106,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
     } else {
       ds.password = password;
@@ -117,7 +117,7 @@ class DataSource extends Component {
           this.fetchDataSources();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
     } 
   }
@@ -127,9 +127,9 @@ class DataSource extends Component {
       .then(res => {
         const result = res.data;
         if (result === 'success') {
-          Toast.showSuccess('Ping Succeeded');
+          toast.success('Ping Succeeded');
         } else {
-          Toast.showError(result);
+          toast.error(result);
         }
       });
   }

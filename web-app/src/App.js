@@ -18,6 +18,9 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 
 import './App.css';
 
@@ -26,6 +29,7 @@ import ChangeTempPassword from './views/ChangeTempPassword';
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
 import * as Constants from './api/Constants';
+import * as Util from './api/Util';
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
@@ -125,6 +129,8 @@ class App extends React.Component {
         axios.post('/auth/login/cookie')
           .then(res => {
             this.handleLoginResponse(res.data, currentPath);
+          }).catch(error => {
+            this.onLogout();
           });
       });
     }
@@ -175,6 +181,7 @@ class App extends React.Component {
     axios.interceptors.response.use((response) => {
         return response;
       }, (error) => {
+        toast.error(Util.toReadableServerError(error));
         const statusCode = error.response.status;
         if(statusCode === 401 || statusCode === 403) { 
           this.onLogout();
@@ -244,6 +251,13 @@ class App extends React.Component {
           />
           <Route component={PageNotFound} />
         </Switch>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000} 
+          draggable={false}
+          hideProgressBar
+          closeOnClick
+        />
       </div>
     );
   }

@@ -1,7 +1,7 @@
 package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shzlw.poli.AppProperties;
+import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dto.AppInfo;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;

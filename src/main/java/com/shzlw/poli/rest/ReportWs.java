@@ -1,7 +1,7 @@
 package com.shzlw.poli.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shzlw.poli.AppProperties;
+import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
 import com.shzlw.poli.dao.SharedReportDao;

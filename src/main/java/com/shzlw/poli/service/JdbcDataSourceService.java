@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.RemovalListener;
-import com.shzlw.poli.AppProperties;
+import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
 import com.zaxxer.hikari.HikariDataSource;

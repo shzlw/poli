@@ -1,18 +1,33 @@
 
 html,
 body,
+#root,
 .app {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: Tahoma, Geneva, sans-serif;
-  color: #091E42;
-  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  color: #212121;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -webkit-transition: all 0.15s ease;
   transition: all 0.15s ease;
+}
+
+textarea, input, button, select { 
+  font-family: inherit; 
+  font-size: inherit; 
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .authenticating-panel {
@@ -140,7 +155,7 @@ body,
   box-sizing: border-box;
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #dddfe2;
+  border: 1px solid #e0e0e0;
   outline: 0;
   border-radius: 2px;
   background: #FFFFFF;
@@ -148,15 +163,11 @@ body,
 }
 
 .form-input:placeholder {
-  color: #aab7c4;
-}
-
-.form-input:hover {
-  color: #aab7c4;
+  color: #e0e0e0;
 }
 
 .form-input:focus {
-  border: 1px solid #0065FF; 
+  border: 1px solid #bdbdbd; 
 }
 
 .inline-text-label {
@@ -178,7 +189,7 @@ h1 {
 }
 
 .required {
-  color: #FF5630;
+  color: #ef5350;
 }
 
 .mt-3 {
@@ -439,38 +450,38 @@ hr {
 }
 
 .button-green {
-  background-color: #36B37E !important;
+  background-color: #66bb6a !important;
   color: #FFFFFF !important;
 }
 
 .button-green:hover {
-  background-color: #008251 !important;
+  background-color: #338a3e !important;
   color: #FFFFFF !important;
 }
 
 .button-red {
-  background-color: #FF5630;
+  background-color: #ef5350;
   color: #FFFFFF;
 }
 
 .button-red:hover {
-  background-color: #c41a00;
+  background-color: #b61827;
   color: #FFFFFF;
 }
 
 .button-black {
-  background-color: #091E42;
+  background-color: #424242;
   color: #FFFFFF;
 }
 
 .button-black:hover {
-  background-color: #00001c;
+  background-color: #1b1b1b;
   color: #FFFFFF;
 }
 
 .flat-button {
   background-color: transparent !important;
-  color: #091E42;
+  color: #212121;
 }
 
 .flat-button:hover {
@@ -479,7 +490,7 @@ hr {
 }
 
 .bg-grey {
-  background-color: #dddfe2;
+  background-color: #e0e0e0;
 }
 
 .font-blue {

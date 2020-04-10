@@ -3,9 +3,9 @@ import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-import Toast from '../components/Toast';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 class Account extends React.Component {
 
@@ -75,12 +75,12 @@ class Account extends React.Component {
 
     if (showUpdatePassword) {
       if (password !== confirmedPassword) {
-        Toast.showError(`Those passwords didn't match.`);
+        toast.error(`Those passwords didn't match.`);
         return;
       }  
 
       if (password.length < 8) {
-        Toast.showError(`Use 8 or more characters for password.`);
+        toast.error(`Use 8 or more characters for password.`);
         return;
       }
 
@@ -89,7 +89,7 @@ class Account extends React.Component {
 
     axios.put('/ws/user/account', user)
       .then(res => {
-        Toast.showSuccess('Saved.');
+        toast.success('Saved.');
       });
   }
 

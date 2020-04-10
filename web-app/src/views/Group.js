@@ -3,11 +3,11 @@ import React from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 import Select from '../components/Select';
 import SearchInput from '../components/SearchInput';
-import Toast from '../components/Toast';
 
 class Group extends React.Component {
 
@@ -123,7 +123,7 @@ class Group extends React.Component {
     };
 
     if (!name) {
-      Toast.showError('Enter a name.');
+      toast.error('Enter a name.');
       return;
     }
 
@@ -136,7 +136,7 @@ class Group extends React.Component {
           this.closeEditPanel();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
     } else {
       axios.post('/ws/group', group)
@@ -146,7 +146,7 @@ class Group extends React.Component {
           this.closeEditPanel();
         })
         .catch(error => {
-          Toast.showError('The name exists. Try another.');
+          toast.error('The name exists. Try another.');
         });
     } 
   }

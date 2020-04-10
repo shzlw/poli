@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import DataSource from './DataSource';
 import Report from './Report';
@@ -11,7 +12,6 @@ import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
 import EventView from './EventView';
 
-import Toast from '../components/Toast';
 
 import * as Constants from '../api/Constants';
 import './Workspace.css';
@@ -144,7 +144,6 @@ class Workspace extends React.Component {
             <Route component={PageNotFound} />
           </Switch>
         </div>
-        <Toast />
       </React.Fragment>
     );
   }
