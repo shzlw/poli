@@ -46,7 +46,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
 
         String body = mapper.writeValueAsString(j1);
         mvcResult = mvc.perform(
-                post("/ws/jdbcdatasource")
+                post(JDBCDATASOURCES_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -61,7 +61,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
 
         // Verify the list
         mvcResult = mvc.perform(
-                get("/ws/jdbcdatasource")
+                get(JDBCDATASOURCES_BASE_URL)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
@@ -80,7 +80,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
         j1.setPing("p2");
         body = mapper.writeValueAsString(j1);
         mvcResult = mvc.perform(
-                put("/ws/jdbcdatasource")
+                put(JDBCDATASOURCES_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -96,7 +96,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
         j1.setPassword("p3");
         body = mapper.writeValueAsString(j1);
         mvcResult = mvc.perform(
-                put("/ws/jdbcdatasource")
+                put(JDBCDATASOURCES_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -108,7 +108,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
 
         // ********** Delete **********
         mvcResult = mvc.perform(
-                delete("/ws/jdbcdatasource/" + id)
+                delete(JDBCDATASOURCES_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
@@ -120,7 +120,7 @@ public class JdbcDataSourceWsTest extends AbstractWsTest {
 
     private String findJdbcDataSource(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/jdbcdatasource/" + id)
+                get(JDBCDATASOURCES_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();

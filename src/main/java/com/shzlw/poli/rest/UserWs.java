@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/user")
+@RequestMapping("/ws/users")
 public class UserWs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserWs.class);

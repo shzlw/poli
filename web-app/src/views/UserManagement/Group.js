@@ -61,7 +61,7 @@ class Group extends React.Component {
   }
 
   fetchGroups = () => {
-    axios.get('/ws/group')
+    axios.get('/ws/groups')
       .then(res => {
         const groups = res.data;
         this.setState({ 
@@ -71,7 +71,7 @@ class Group extends React.Component {
   }
 
   fetchReports = () => {
-    axios.get('/ws/report')
+    axios.get('/ws/reports')
       .then(res => {
         const reports = res.data;
         this.setState({ 
@@ -83,7 +83,7 @@ class Group extends React.Component {
   openEditPanel = (group) => {
     this.clearEditPanel();
     if (group !== null) {
-      axios.get('/ws/group/' + group.id)
+      axios.get('/ws/groups/' + group.id)
         .then(res => {
           const result = res.data;
           this.setState({
@@ -129,7 +129,7 @@ class Group extends React.Component {
 
     if (id !== null) {
       group.id = id;
-      axios.put('/ws/group', group)
+      axios.put('/ws/groups', group)
         .then(res => {
           this.clearEditPanel();
           this.fetchGroups();
@@ -139,7 +139,7 @@ class Group extends React.Component {
           toast.error('The name exists. Try another.');
         });
     } else {
-      axios.post('/ws/group', group)
+      axios.post('/ws/groups', group)
         .then(res => {
           this.clearEditPanel();
           this.fetchGroups();
@@ -187,7 +187,7 @@ class Group extends React.Component {
     const { 
       objectToDelete = {} 
     } = this.state;
-    axios.delete('/ws/group/' + objectToDelete.id)
+    axios.delete('/ws/groups/' + objectToDelete.id)
       .then(res => {
         this.fetchGroups();
         this.closeConfirmDeletionPanel();

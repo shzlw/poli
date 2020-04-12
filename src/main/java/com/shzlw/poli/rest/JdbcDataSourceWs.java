@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/jdbcdatasource")
+@RequestMapping("/ws/jdbcdatasources")
 public class JdbcDataSourceWs {
 
     @Autowired

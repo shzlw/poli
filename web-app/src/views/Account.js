@@ -35,7 +35,7 @@ class Account extends React.Component {
   }
 
   fetchUser = () => {
-    axios.get('/ws/user/account')
+    axios.get('/ws/users/account')
       .then(res => {
         const user = res.data;
         this.setState({
@@ -87,7 +87,7 @@ class Account extends React.Component {
       user.password = password;
     }
 
-    axios.put('/ws/user/account', user)
+    axios.put('/ws/users/account', user)
       .then(res => {
         toast.success('Saved.');
       });

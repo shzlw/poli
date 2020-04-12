@@ -69,7 +69,7 @@ class Report extends Component {
   }
 
   fetchReports = () => {
-    axios.get('/ws/report')
+    axios.get('/ws/reports')
       .then(res => {
         const reports = res.data || [];
         const projects = [];
@@ -105,7 +105,7 @@ class Report extends Component {
   }
 
   fetchCannedReports = () => {
-    axios.get('/ws/cannedreport/myreport')
+    axios.get('/ws/cannedreports/myreport')
       .then(res => {
         const cannedReports = res.data;
         this.setState({ 
@@ -115,7 +115,7 @@ class Report extends Component {
   }
 
   fetchFavouriteReports = () => {
-    axios.get('/ws/report/favourite')
+    axios.get('/ws/reports/favourite')
       .then(res => {
         const favouriteReports = res.data;
         this.setState({ 
@@ -177,7 +177,7 @@ class Report extends Component {
       }
     };
 
-    axios.post('/ws/report', report)
+    axios.post('/ws/reports', report)
       .then(res => {
         const reportId = res.data;
         this.closeEditPanel();

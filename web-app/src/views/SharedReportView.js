@@ -23,7 +23,7 @@ class SharedReportView extends React.Component {
   }
 
   fetchSharedReportsRows = () => {
-    axios.get('/ws/sharedreport')
+    axios.get('/ws/sharedreports')
       .then(res => {
         const sharedReportRows = res.data;
         this.setState({ 
@@ -41,7 +41,7 @@ class SharedReportView extends React.Component {
     const { 
       objectToDelete = {} 
     } = this.state;
-    axios.delete('/ws/sharedreport/' + objectToDelete.id)
+    axios.delete('/ws/sharedreports/' + objectToDelete.id)
       .then(res => {
         this.fetchSharedReportsRows();
         this.closeConfirmDeletionPanel();

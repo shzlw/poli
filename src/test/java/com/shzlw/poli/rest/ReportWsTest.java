@@ -39,7 +39,7 @@ public class ReportWsTest extends AbstractWsTest {
         String body = mapper.writeValueAsString(newReport);
 
         mvcResult = mvc.perform(
-                        post("/ws/report")
+                        post(REPORTS_BASE_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                                 .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                             .content(body)
@@ -56,7 +56,7 @@ public class ReportWsTest extends AbstractWsTest {
 
         // Verify the list
         mvcResult = mvc.perform(
-                get("/ws/report")
+                get(REPORTS_BASE_URL)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
@@ -75,7 +75,7 @@ public class ReportWsTest extends AbstractWsTest {
         newReport.setStyle("{}");
         body = mapper.writeValueAsString(newReport);
         mvcResult = mvc.perform(
-                put("/ws/report")
+                put(REPORTS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -85,7 +85,7 @@ public class ReportWsTest extends AbstractWsTest {
 
         // Verify find by name
         mvcResult = mvc.perform(
-                get("/ws/report/name/" + newReport.getName())
+                get(REPORTS_BASE_URL + "/name/" + newReport.getName())
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
@@ -103,7 +103,7 @@ public class ReportWsTest extends AbstractWsTest {
         }
 
         mvcResult = mvc.perform(
-                delete("/ws/report/" + id)
+                delete(REPORTS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
@@ -114,7 +114,7 @@ public class ReportWsTest extends AbstractWsTest {
 
         // Verify there is no component.
         mvcResult = mvc.perform(
-                get("/ws/component/report/" + id)
+                get(COMPONENTS_BASE_URL + "/report/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ public class ReportWsTest extends AbstractWsTest {
         Group g1 = createGroup("g1", Arrays.asList(d1));
         User u1 = createViewer("u1", Arrays.asList(g1.getId()));
         mvcResult = mvc.perform(
-                get("/ws/report")
+                get(REPORTS_BASE_URL)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
         )
                 .andReturn();
@@ -143,7 +143,7 @@ public class ReportWsTest extends AbstractWsTest {
 
     private String findReport(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/report/" + id)
+                get(REPORTS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                 )
                 .andReturn();

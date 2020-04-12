@@ -22,6 +22,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class AbstractWsTest {
 
+    public static final String CANNEDREPORTS_BASE_URL = "/ws/cannedreports";
+    public static final String REPORTS_BASE_URL = "/ws/reports";
+    public static final String USERS_BASE_URL = "/ws/users";
+    public static final String GROUPS_BASE_URL = "/ws/groups";
+    public static final String SHAREDREPORTS_BASE_URL = "/ws/sharedreports";
+    public static final String COMPONENTS_BASE_URL = "/ws/components";
+    public static final String JDBCDATASOURCES_BASE_URL = "/ws/jdbcdatasources";
+
     @Autowired
     ObjectMapper mapper;
 
@@ -53,7 +61,7 @@ public abstract class AbstractWsTest {
         String body = mapper.writeValueAsString(newUser);
 
         mvcResult = this.mvc.perform(
-                post("/ws/user")
+                post("/ws/users")
                         .cookie(cookies)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +73,7 @@ public abstract class AbstractWsTest {
         long newId = Long.parseLong(id);
 
         mvcResult = this.mvc.perform(
-                get("/ws/user/" + id)
+                get("/ws/users/" + id)
                         .cookie(cookies)
         ).andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
@@ -138,7 +146,7 @@ public abstract class AbstractWsTest {
         String body = mapper.writeValueAsString(newReport);
 
         mvcResult = mvc.perform(
-                post("/ws/report")
+                post("/ws/reports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -166,7 +174,7 @@ public abstract class AbstractWsTest {
         String body = mapper.writeValueAsString(w1);
 
         mvcResult = mvc.perform(
-                post("/ws/component")
+                post("/ws/components")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -184,7 +192,7 @@ public abstract class AbstractWsTest {
         String body = mapper.writeValueAsString(g1);
 
         mvcResult = mvc.perform(
-                post("/ws/group")
+                post("/ws/groups")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -205,7 +213,7 @@ public abstract class AbstractWsTest {
         u1.setSysRole(Constants.SYS_ROLE_VIEWER);
         String body = mapper.writeValueAsString(u1);
         mvcResult = this.mvc.perform(
-                post("/ws/user")
+                post("/ws/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)

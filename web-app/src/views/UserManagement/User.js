@@ -76,7 +76,7 @@ class User extends React.Component {
   }
 
   fetchUsers = () => {
-    axios.get('/ws/user')
+    axios.get('/ws/users')
       .then(res => {
         const users = res.data;
         this.setState({ 
@@ -86,7 +86,7 @@ class User extends React.Component {
   }
 
   fetchGroups = () => {
-    axios.get('/ws/group')
+    axios.get('/ws/groups')
       .then(res => {
         const groups = res.data;
         this.setState({ 
@@ -98,7 +98,7 @@ class User extends React.Component {
   openEditPanel = (user) => {
     this.clearEditPanel();
     if (user !== null) {
-      axios.get('/ws/user/' + user.id)
+      axios.get('/ws/users/' + user.id)
         .then(res => {
           const result = res.data;
           this.setState({
@@ -180,7 +180,7 @@ class User extends React.Component {
         user.tempPassword = tempPassword;
       }
       
-      axios.put('/ws/user', user)
+      axios.put('/ws/users', user)
         .then(res => {
           this.clearEditPanel();
           this.closeEditPanel();
@@ -197,7 +197,7 @@ class User extends React.Component {
       }
       user.tempPassword = tempPassword;
 
-      axios.post('/ws/user', user)
+      axios.post('/ws/users', user)
         .then(res => {
           this.clearEditPanel();
           this.closeEditPanel();
@@ -280,7 +280,7 @@ class User extends React.Component {
     const { 
       objectToDelete = {} 
     } = this.state;
-    axios.delete('/ws/user/' + objectToDelete.id)
+    axios.delete('/ws/users/' + objectToDelete.id)
       .then(res => {
         this.fetchUsers();
         this.closeConfirmDeletionPanel();

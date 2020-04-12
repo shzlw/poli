@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/sharedreport")
+@RequestMapping("/ws/sharedreports")
 public class SharedReportWs {
 
     @Autowired

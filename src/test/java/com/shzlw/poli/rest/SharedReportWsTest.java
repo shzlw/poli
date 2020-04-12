@@ -36,7 +36,7 @@ public class SharedReportWsTest extends AbstractWsTest {
         String body = mapper.writeValueAsString(newReport);
 
         mvcResult = mvc.perform(
-                post("/ws/report")
+                post(REPORTS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -54,7 +54,7 @@ public class SharedReportWsTest extends AbstractWsTest {
 
         body = mapper.writeValueAsString(sharedReport);
         mvcResult = mvc.perform(
-                post("/ws/sharedreport/generate-sharekey")
+                post(SHAREDREPORTS_BASE_URL + "/generate-sharekey")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -64,7 +64,7 @@ public class SharedReportWsTest extends AbstractWsTest {
         String shareKey = mvcResult.getResponse().getContentAsString();
 
         mvcResult = mvc.perform(
-                get("/ws/report/sharekey/" + shareKey)
+                get(REPORTS_BASE_URL + "/sharekey/" + shareKey)
                         .requestAttr(Constants.HTTP_HEADER_SHARE_KEY, shareKey)
         )
                 .andReturn();

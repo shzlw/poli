@@ -138,7 +138,7 @@ class ComponentViewPanel extends React.Component {
     if (reportId === null) {
       return;
     }
-    axios.get(`/ws/component/report/${reportId}`)
+    axios.get(`/ws/components/report/${reportId}`)
       .then(res => {
         const result = res.data;
         this.buildViewPanel(result, viewWidth, true, urlFilterParams);
@@ -335,7 +335,7 @@ class ComponentViewPanel extends React.Component {
     const newComponent = {...component};
     const { gridWidth } = this.state;
     this.resizeComponentToBase(newComponent, gridWidth);
-    axios.put('/ws/component/position/', newComponent)
+    axios.put('/ws/components/position/', newComponent)
       .then(res => {
       });
   }
@@ -373,7 +373,7 @@ class ComponentViewPanel extends React.Component {
       objectToDelete
     } = this.state;
     const componentId = objectToDelete;
-    axios.delete(`/ws/component/${componentId}`)
+    axios.delete(`/ws/components/${componentId}`)
       .then(res => {
         const { components } = this.state;
         const index = components.findIndex(w => w.id === componentId);
@@ -481,7 +481,7 @@ class ComponentViewPanel extends React.Component {
   }
 
   handleSavedComponent = (componentId) => {
-    axios.get(`/ws/component/${componentId}`)
+    axios.get(`/ws/components/${componentId}`)
       .then(res => {
         const component = res.data;
         const { 
@@ -539,7 +539,7 @@ class ComponentViewPanel extends React.Component {
       }
       this.resizeComponentToBase(selectedComponent, gridWidth);
       // Save position information and style
-      axios.put('/ws/component/style/', selectedComponent)
+      axios.put('/ws/components/style/', selectedComponent)
       .then(res => {
         this.setState({
           selectedComponentId: 0

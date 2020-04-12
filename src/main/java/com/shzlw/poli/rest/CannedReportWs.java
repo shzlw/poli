@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/cannedreport")
+@RequestMapping("/ws/cannedreports")
 public class CannedReportWs {
 
     @Autowired

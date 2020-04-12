@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/report")
+@RequestMapping("/ws/reports")
 public class ReportWs {
 
     @Autowired

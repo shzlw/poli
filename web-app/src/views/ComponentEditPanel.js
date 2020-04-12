@@ -81,7 +81,7 @@ class ComponentEditPanel extends React.Component {
 
   fetchComponent = async (componentId) => {
     this.setState(this.initialState);
-    axios.get('/ws/jdbcdatasource')
+    axios.get('/ws/jdbcdatasources')
       .then(res => {
         const jdbcDataSources = res.data;
         this.setState({ 
@@ -89,7 +89,7 @@ class ComponentEditPanel extends React.Component {
         });
       });
 
-    axios.get('/ws/report')
+    axios.get('/ws/reports')
       .then(res => {
         const reports = res.data;
         this.setState({ 
@@ -105,7 +105,7 @@ class ComponentEditPanel extends React.Component {
       this.setState({
         componentId: componentId
       })
-      axios.get('/ws/component/' + componentId)
+      axios.get('/ws/components/' + componentId)
         .then(res => {
           const component = res.data;
           const {
@@ -257,14 +257,14 @@ class ComponentEditPanel extends React.Component {
       component.width = 200;
       component.height = 200;
 
-      axios.post('/ws/component', component)
+      axios.post('/ws/components', component)
         .then(res => {
           const componentId = res.data;
           this.props.onSave(componentId);
         });
     } else {
       component.id = componentId;
-      axios.put('/ws/component/data', component)
+      axios.put('/ws/components/data', component)
         .then(res => {
           this.props.onSave(componentId);
         });
@@ -292,7 +292,7 @@ class ComponentEditPanel extends React.Component {
     }), () => {
       if (this.state.showSchema) {
         const { jdbcDataSourceId } = this.state;
-        axios.get(`/ws/jdbcdatasource/schema/${jdbcDataSourceId}`)
+        axios.get(`/ws/jdbcdatasources/schema/${jdbcDataSourceId}`)
           .then(res => {
             const schemas = res.data;
             this.setState({

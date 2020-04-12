@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/component")
+@RequestMapping("/ws/components")
 public class ComponentWs {
 
     @Autowired

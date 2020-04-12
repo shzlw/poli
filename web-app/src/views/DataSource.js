@@ -47,7 +47,7 @@ class DataSource extends Component {
   }
 
   fetchDataSources() {
-    axios.get('/ws/jdbcdatasource')
+    axios.get('/ws/jdbcdatasources')
       .then(res => {
         const jdbcDataSources = res.data;
         this.setState({ 
@@ -100,7 +100,7 @@ class DataSource extends Component {
       }
 
       // Update
-      axios.put('/ws/jdbcdatasource', ds)
+      axios.put('/ws/jdbcdatasources', ds)
         .then(res => {
           this.closeEditPanel();
           this.fetchDataSources();
@@ -111,7 +111,7 @@ class DataSource extends Component {
     } else {
       ds.password = password;
 
-      axios.post('/ws/jdbcdatasource', ds)
+      axios.post('/ws/jdbcdatasources', ds)
         .then(res => {
           this.closeEditPanel();
           this.fetchDataSources();
@@ -123,7 +123,7 @@ class DataSource extends Component {
   }
 
   ping = (id) => {
-    axios.get(`/ws/jdbcdatasource/ping/${id}`)
+    axios.get(`/ws/jdbcdatasources/ping/${id}`)
       .then(res => {
         const result = res.data;
         if (result === 'success') {
@@ -167,7 +167,7 @@ class DataSource extends Component {
     const { 
       objectToDelete = {} 
     } = this.state;
-    axios.delete('/ws/jdbcdatasource/' + objectToDelete.id)
+    axios.delete('/ws/jdbcdatasources/' + objectToDelete.id)
       .then(res => {
         this.fetchDataSources();
         this.closeConfirmDeletionPanel();

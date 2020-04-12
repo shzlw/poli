@@ -42,7 +42,7 @@ public class GroupWsTest extends AbstractWsTest {
         String body = mapper.writeValueAsString(g1);
 
         mvcResult = mvc.perform(
-                post("/ws/group")
+                post(GROUPS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -58,7 +58,7 @@ public class GroupWsTest extends AbstractWsTest {
 
         // Verify the list
         mvcResult = mvc.perform(
-                get("/ws/group")
+                get(GROUPS_BASE_URL)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
@@ -74,7 +74,7 @@ public class GroupWsTest extends AbstractWsTest {
         g1.setName("g2");
         body = mapper.writeValueAsString(g1);
         mvcResult = mvc.perform(
-                put("/ws/group")
+                put(GROUPS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -93,7 +93,7 @@ public class GroupWsTest extends AbstractWsTest {
         g1.setGroupReports(reports);
         body = mapper.writeValueAsString(g1);
         mvcResult = mvc.perform(
-                put("/ws/group")
+                put(GROUPS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -108,7 +108,7 @@ public class GroupWsTest extends AbstractWsTest {
 
         // ********** Delete **********
         mvcResult = mvc.perform(
-                delete("/ws/group/" + id)
+                delete(GROUPS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
@@ -120,7 +120,7 @@ public class GroupWsTest extends AbstractWsTest {
 
     private String findGroup(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/group/" + id)
+                get(GROUPS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();

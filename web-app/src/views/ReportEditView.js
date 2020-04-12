@@ -106,7 +106,7 @@ class ReportEditView extends React.Component {
       } else {
         const { reportType } = this.props;
         if (reportType === Constants.ADHOC) {
-          axios.get(`/ws/report/${reportId}`)
+          axios.get(`/ws/reports/${reportId}`)
             .then(res => {
               const report = res.data;
               this.setState({
@@ -121,7 +121,7 @@ class ReportEditView extends React.Component {
               });
             });
         } else if (reportType === Constants.CANNED) {
-          axios.get(`/ws/cannedreport/${reportId}`)
+          axios.get(`/ws/cannedreports/${reportId}`)
             .then(res => {
               const cannedReport = res.data;
               const { data: report } = cannedReport; 
@@ -194,7 +194,7 @@ class ReportEditView extends React.Component {
       reportType: reportType
     }, () => {
       // MAYBE: support canned report?
-      axios.get(`/ws/report/name/${reportName}`)
+      axios.get(`/ws/reports/name/${reportName}`)
         .then(res => {
           const result = res.data;
           this.setState({
@@ -219,7 +219,7 @@ class ReportEditView extends React.Component {
       reportType: Constants.ADHOC
     }, () => {
       // MAYBE: support canned report? can only handle Adhoc report for now.
-      axios.get(`/ws/report/sharekey/${shareKey}`)
+      axios.get(`/ws/reports/sharekey/${shareKey}`)
         .then(res => {
           const result = res.data;
           if (!result) {
@@ -335,7 +335,7 @@ class ReportEditView extends React.Component {
       style: style
     };
 
-    axios.put('/ws/report/', report)
+    axios.put('/ws/reports/', report)
       .then(res => {
         this.props.onReportSave(reportId);
         this.setState({
@@ -413,7 +413,7 @@ class ReportEditView extends React.Component {
       isExporting: true
     });
 
-    axios.post('/ws/report/pdf', exportInfo,
+    axios.post('/ws/reports/pdf', exportInfo,
       {
         responseType: 'arraybuffer',
         headers: {
@@ -472,7 +472,7 @@ class ReportEditView extends React.Component {
         columnValue
       } = data;
       if (isFullScreenView) {
-        axios.get(`/ws/report/${reportId}`)
+        axios.get(`/ws/reports/${reportId}`)
           .then(res => {
             const report = res.data;
             const nextReport = report.name;
@@ -518,13 +518,13 @@ class ReportEditView extends React.Component {
     const reportId = objectToDelete.id;
     
     if (reportType === Constants.ADHOC) {
-      axios.delete(`/ws/report/${reportId}`)
+      axios.delete(`/ws/reports/${reportId}`)
         .then(res => {
           this.props.onReportDelete(reportId);
           this.closeConfirmDeletionPanel();
         });
     } else if (reportType === Constants.CANNED) {
-      axios.delete(`/ws/cannedreport/${reportId}`)
+      axios.delete(`/ws/cannedreports/${reportId}`)
         .then(res => {
           this.props.onCannedReportDelete(reportId);
           this.closeConfirmDeletionPanel();
@@ -601,7 +601,7 @@ class ReportEditView extends React.Component {
       }
     };
 
-    axios.post('/ws/cannedreport', report)
+    axios.post('/ws/cannedreports', report)
       .then(res => {
         this.setState({
           showCannedReportPanel: false,
@@ -619,7 +619,7 @@ class ReportEditView extends React.Component {
     } = this.state;
     const status = isFavourite ? 'remove' : 'add';
 
-    axios.post(`/ws/report/favourite/${reportId}/${status}`)
+    axios.post(`/ws/reports/favourite/${reportId}/${status}`)
       .then(res => {
         this.setState(prevState => ({
           isFavourite: !prevState.isFavourite
@@ -666,7 +666,7 @@ class ReportEditView extends React.Component {
     }
     const urlPrefix = href.substring(0, start);
     
-    axios.post('/ws/sharedreport/generate-sharekey', sharedReport)
+    axios.post('/ws/sharedreports/generate-sharekey', sharedReport)
       .then(res => {
         const shareKey = res.data;
         const shareUrl = urlPrefix + `/poli/workspace/report/fullscreen?$shareKey=${shareKey}`;

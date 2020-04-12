@@ -43,7 +43,7 @@ public class UserWsTest extends AbstractWsTest {
         u1.setSysRole(Constants.SYS_ROLE_VIEWER);
         String body = mapper.writeValueAsString(u1);
         mvcResult = this.mvc.perform(
-                post("/ws/user")
+                post(USERS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -58,7 +58,7 @@ public class UserWsTest extends AbstractWsTest {
 
         // Verify the list
         mvcResult = this.mvc.perform(
-                get("/ws/user")
+                get(USERS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -78,7 +78,7 @@ public class UserWsTest extends AbstractWsTest {
         u1.setSysRole(Constants.SYS_ROLE_DEVELOPER);
         body = mapper.writeValueAsString(u1);
         mvcResult = mvc.perform(
-                put("/ws/user")
+                put(USERS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -92,7 +92,7 @@ public class UserWsTest extends AbstractWsTest {
         u1.setTempPassword("newTempPassword");
         body = mapper.writeValueAsString(u1);
         mvcResult = mvc.perform(
-                put("/ws/user")
+                put(USERS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
@@ -107,7 +107,7 @@ public class UserWsTest extends AbstractWsTest {
         u1.setTempPassword(null);
         body = mapper.writeValueAsString(u1);
         mvcResult = mvc.perform(
-                put("/ws/user/account")
+                put(USERS_BASE_URL + "/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
                         .content(body)
@@ -117,7 +117,7 @@ public class UserWsTest extends AbstractWsTest {
 
         // ********** Verify account **********
         mvcResult = mvc.perform(
-                get("/ws/user/account")
+                get(USERS_BASE_URL + "/account")
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
         )
                 .andReturn();
@@ -130,7 +130,7 @@ public class UserWsTest extends AbstractWsTest {
         u1.setPassword("newPassword");
         body = mapper.writeValueAsString(u1);
         mvcResult = mvc.perform(
-                put("/ws/user/account")
+                put(USERS_BASE_URL + "/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, u1)
                         .content(body)
@@ -142,14 +142,14 @@ public class UserWsTest extends AbstractWsTest {
 
         // ********** Delete **********
         mvcResult = mvc.perform(
-                delete("/ws/user/" + id)
+                delete(USERS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
         // Verify
         mvcResult = mvc.perform(
-                get("/ws/user/" + id)
+                get(USERS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
@@ -159,7 +159,7 @@ public class UserWsTest extends AbstractWsTest {
 
     private User findUser(long id) throws Exception {
         mvcResult = mvc.perform(
-                get("/ws/user/" + id)
+                get(USERS_BASE_URL + "/" + id)
                         .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
