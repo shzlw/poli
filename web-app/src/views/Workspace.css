@@ -1,9 +1,9 @@
 .workspace-name {
   display: block;
   color: #0065FF;
-  padding: 7px 18px;
+  padding: 7px 16px;
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 700;
   float: left;
   margin-right: 6px;
 }
@@ -34,17 +34,17 @@
 
 .workspace-nav-menu li a {
   display: block;
-  color: #8993A4;
+  color: #ccc;
   text-decoration: none;
-  padding: 9px 14px;   
+  padding: 11px 12px 10px 12px;   
 }
 
 .workspace-nav-menu li a:hover {
-  border-bottom: 3px solid #0065FF;
+  background-color: #003ccb;
 }
 
 .menu-item-active a {
-  border-bottom: 3px solid #0065FF;
+  background-color: #0065FF;
   color: #FFFFFF !important;
 }
 
@@ -65,18 +65,18 @@
 
 .workspace-account-button a {
   display: block;
-  color: #8993A4;
-  padding: 9px 14px;
+  color: #ccc;
+  padding: 11px 12px 10px 12px;
   text-decoration: none;
 }
 
 .workspace-account-button a:hover {
-  border-bottom: 3px solid #0065FF;
+  background-color: #003ccb;
 }
 
 .workspace-logout-button {
-  color: #8993A4;
-  padding: 9px 14px;
+  color: #ccc;
+  padding: 11px 12px 10px 12px;
   text-decoration: none;
   cursor: pointer;
 }

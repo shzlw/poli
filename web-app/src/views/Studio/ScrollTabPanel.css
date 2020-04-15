@@ -1,0 +1,54 @@
+.dynamic-tab-container {
+  box-sizing: border-box;
+  height: 40px;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  margin-top: 3px;
+}
+
+.dynamic-tab-button-group {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  width: 120px;
+  line-height: 40px;
+  height: 40px;
+}
+
+.dynamic-tab-droppable-container {
+  position: absolute;
+  top: 0;
+  left: 120px;
+  right: 0px;
+}
+
+.dynamic-tab-content-container {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.dynamic-tab-select-item {
+  display: flex;
+  height: 33px;
+  line-height: 33px;
+}
+
+.dynamic-tab-select-value {
+  width: 100px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dynamic-tab-close-button {
+  border-radius: 4px;
+  height: 33px;
+  width: 28px;
+  outline: none;
+  padding: 0px !important;
+  cursor: pointer;
+  box-shadow: none !important;
+  border: 0 !important;
+  background-color: transparent !important;
+}

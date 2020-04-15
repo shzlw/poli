@@ -88,6 +88,12 @@
   margin: 5px 0px 15px 0px;
 }
 
+/* Text */
+.form-text {
+  height: 33px;
+  line-height: 33px;
+}
+
 /* Button */
 .icon-button {
   border-radius: 4px;
@@ -211,7 +217,7 @@ h1 {
 
 /* Card */
 .card {
-  border: 0;
+  border: 1px solid #e0e0e0;
   outline: 0;
   border-radius: 4px;
   margin: 0px 10px 10px 0px;

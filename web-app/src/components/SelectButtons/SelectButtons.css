@@ -1,11 +1,11 @@
 .selectbuttons-container {
-  content: "";
-  display: table;
-  clear: both;
+  display: flex;
+  flex-direction: row;
+  width: inherit;
+  box-sizing: border-box;
 }
 
 .selectbuttons-container .select-button {
-  float: left;
   margin-right: 5px;
   min-width: 100px;
   text-align: center;
@@ -19,6 +19,7 @@
   outline: none;
   color: #8993A4;
   box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
+  flex-grow: 1;
 }
 
 .selectbuttons-container .select-button:hover {
@@ -26,7 +27,7 @@
 }
 
 .selectbuttons-container .select-button-active {
-  background-color: #091e42;
+  background-color: #212121;
   color: white;
 }
 

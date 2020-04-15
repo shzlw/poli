@@ -2,16 +2,15 @@ import React from 'react';
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 import DataSource from './DataSource';
-import Report from './Report';
+import Report from './Report/Report';
 import UserManagement from './UserManagement/UserManagement';
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
 import EventView from './EventView';
-
+import Studio from './Studio/Studio';
 
 import * as Constants from '../api/Constants';
 import './Workspace.css';
@@ -19,6 +18,11 @@ import './Workspace.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MENU_ITEMS = [
+  {
+    link: '/workspace/studio',
+    value: 'Studio',
+    icon: 'bolt',
+  }, 
   {
     link: '/workspace/report',
     value: 'Report',
@@ -140,6 +144,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
             <Route exact path="/workspace/event" component={EventView} />
+            <Route exact path="/workspace/studio" component={Studio} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
             <Route component={PageNotFound} />
           </Switch>

@@ -10,7 +10,8 @@ import {
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare, 
   faLongArrowAltRight, faWrench, faArchive, faFileDownload,
   faHeart, faShareSquare, faSearchLocation, faClipboard, 
-  faAngleRight, faAngleDown, faFilePdf, faEllipsisH
+  faAngleRight, faAngleDown, faFilePdf, faEllipsisH, faBolt, faAngleLeft, 
+  faChevronRight, faChevronLeft
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faSquare as farSquare,
@@ -39,7 +40,8 @@ library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faCalendarPlus, faFilter, faExternalLinkAlt, faCheckSquare,
   faLongArrowAltRight, faWrench, farSquare, faArchive, faFileDownload,
   faHeart, farHeart, faShareSquare, faSearchLocation, faClipboard,
-  faAngleRight, faAngleDown, faFilePdf, faEllipsisH
+  faAngleRight, faAngleDown, faFilePdf, faEllipsisH, faBolt, faAngleLeft,
+  faChevronRight, faChevronLeft
 );
 
 class App extends React.Component {
@@ -235,7 +237,7 @@ class App extends React.Component {
         </div>
       )
     }
-    
+
     return (
       <div className="app">
         <Switch>

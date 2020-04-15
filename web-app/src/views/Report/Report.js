@@ -7,10 +7,11 @@ import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import './Report.css';
-import * as Constants from '../api/Constants';
+import * as Constants from '../../api/Constants';
 import ReportEditView from './ReportEditView';
-import Modal from '../components/Modal/Modal';
-import Tabs from '../components/Tabs/Tabs';
+import Modal from '../../components/Modal/Modal';
+import Tabs from '../../components/Tabs/Tabs';
+import SearchInput from '../../components/SearchInput/SearchInput';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
@@ -377,14 +378,10 @@ class Report extends Component {
             )}
           </div>
           <div style={{margin: '8px 5px 5px 5px'}}>
-            <input 
-              type="text"
-              name="searchValue"
+            <SearchInput 
+              name={'searchValue'} 
               value={this.state.searchValue} 
-              onChange={(event) => this.handleNameInputChange('searchValue', event.target.value)} 
-              className="form-input"
-              placeholder="Search..."
-              style={{marginBottom: '5px'}}
+              onChange={this.handleNameInputChange} 
             />
           </div>
           <div style={{padding: '0px 5px'}}>

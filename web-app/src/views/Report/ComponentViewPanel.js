@@ -6,15 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import * as Util from '../api/Util';
-import * as Constants from '../api/Constants';
+import * as Util from '../../api/Util';
+import * as Constants from '../../api/Constants';
 
 import './ComponentViewPanel.css';
-import Checkbox from '../components/Checkbox/Checkbox';
-import ColorPicker from '../components/ColorPicker/ColorPicker';
-import InputRange from '../components/filters/InputRange';
-import Modal from '../components/Modal/Modal';
-import GridLayout from '../components/GridLayout';
+import Checkbox from '../../components/Checkbox/Checkbox';
+import ColorPicker from '../../components/ColorPicker/ColorPicker';
+import InputRange from '../../components/filters/InputRange';
+import Modal from '../../components/Modal/Modal';
+import GridLayout from '../../components/GridLayout';
 
 const BASE_WIDTH = 1200;
 

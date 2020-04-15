@@ -42,24 +42,22 @@ class SearchInput extends React.Component {
 
     return (
       <div className="search-input-container">
-        <div className="row">
-          <div className="search-input-icon float-left">
-            <FontAwesomeIcon icon="search" style={{margin: '10px'}} />
-          </div>
-          <div className="float-left">
-            <input
-              type="text"
-              name={name}
-              value={value}
-              onChange={this.handleInputChange}
-              className="search-input-input"
-              style={inputStyle}
-            />
-          </div>
-          <button className="button search-input-reset-button float-right" onClick={this.reset}>
-            <FontAwesomeIcon icon="times" size="lg" />
-          </button>
+        <div className="search-input-icon">
+          <FontAwesomeIcon icon="search" style={{margin: '8px'}} />
         </div>
+        <input
+          type="text"
+          name={name}
+          value={value}
+          onChange={this.handleInputChange}
+          className="search-input-input"
+          style={inputStyle}
+        />
+        <button className="button search-input-reset-button" onClick={this.reset}>
+          { value && (
+            <FontAwesomeIcon icon="times" size="lg" />
+          )}
+        </button>
       </div>
     );
   }

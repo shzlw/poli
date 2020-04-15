@@ -10,14 +10,14 @@ import { toast } from 'react-toastify';
 import ComponentViewPanel from './ComponentViewPanel';
 import ComponentEditPanel from './ComponentEditPanel';
 
-import Modal from '../components/Modal/Modal';
-import ColorPicker from '../components/ColorPicker/ColorPicker';
-import Checkbox from '../components/Checkbox/Checkbox';
-import DatePicker from '../components/filters/DatePicker';
-import DropdownDialog from '../components/DropdownDialog/DropdownDialog';
+import Modal from '../../components/Modal/Modal';
+import ColorPicker from '../../components/ColorPicker/ColorPicker';
+import Checkbox from '../../components/Checkbox/Checkbox';
+import DatePicker from '../../components/filters/DatePicker';
+import DropdownDialog from '../../components/DropdownDialog/DropdownDialog';
 
-import * as Constants from '../api/Constants';
-import * as Util from '../api/Util';
+import * as Constants from '../../api/Constants';
+import * as Util from '../../api/Util';
 import './Report.css';
 
 

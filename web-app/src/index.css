@@ -34,6 +34,10 @@ textarea {
 }
 
 /* Utility */
+.display-flex {
+  display: flex;
+}
+
 .row:after {
   content: "";
   display: table;

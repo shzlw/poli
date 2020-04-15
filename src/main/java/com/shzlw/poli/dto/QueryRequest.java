@@ -4,6 +4,7 @@ public class QueryRequest {
 
     private long jdbcDataSourceId;
     private String sqlQuery;
+    private int resultLimit;
 
     public QueryRequest() {}
 
@@ -21,5 +22,13 @@ public class QueryRequest {
 
     public void setSqlQuery(String sqlQuery) {
         this.sqlQuery = sqlQuery;
+    }
+
+    public int getResultLimit() {
+        return resultLimit;
+    }
+
+    public void setResultLimit(int resultLimit) {
+        this.resultLimit = resultLimit;
     }
 }

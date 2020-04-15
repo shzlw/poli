@@ -202,8 +202,7 @@ class GridItem extends React.Component {
         const { 
           defaultPageSize = 10,
           showPagination = true,
-          fixedHeader = false,
-          columnConfigs = []
+          fixedHeader = false
         } = data;
 
         let tableHeight = null;

@@ -48,8 +48,10 @@ public class JdbcQueryWs {
     public QueryResult runQuery(@RequestBody QueryRequest queryRequest) {
         long dataSourceId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
+        int resultLimit = queryRequest.getResultLimit();
+
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
-        QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, null);
+        QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, null, resultLimit);
         return queryResult;
     }
 
@@ -73,7 +75,7 @@ public class JdbcQueryWs {
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
             User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
             List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
-            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams);
+            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams, 0);
             return new ResponseEntity(queryResult, HttpStatus.OK);
         }
 

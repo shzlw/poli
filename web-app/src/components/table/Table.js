@@ -12,7 +12,8 @@ class Table extends React.Component {
     defaultPageSize: PropTypes.number,
     drillThrough: PropTypes.array,
     showPagination: PropTypes.bool,
-    height: PropTypes.number
+    height: PropTypes.number,
+    errorMsg: PropTypes.string
   };
 
   handleTdClick = (reportId, columnName, columnValue) => {
@@ -26,7 +27,8 @@ class Table extends React.Component {
       drillThrough = [],
       defaultPageSize = 10,
       showPagination = true,
-      height
+      height,
+      errorMsg
     } = this.props;
 
     const columnHeaders = [];
@@ -52,10 +54,16 @@ class Table extends React.Component {
       columnHeaders.push(header);
     });
 
+    if (errorMsg) {
+      return (
+        <div>{errorMsg}</div>
+      );
+    }
+
     if (data.length === 0 || columns.length === 0) {
       return (
         <div>No data</div>
-      )
+      );
     }
 
     const pageSize = showPagination ? undefined : data.length;

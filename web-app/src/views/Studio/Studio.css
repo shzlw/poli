@@ -1,0 +1,48 @@
+.studio-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  background-color: #FFFFFF;
+}
+
+.studio-sidebar {
+  width: 249px;
+  min-width: 249px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+  background-color: #efefef;
+  padding: 5px;
+}
+
+.studio-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.studio-editor-container {
+  height: 320px;
+}
+
+.studio-result-control-container {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.studio-result-container {
+  overflow-y: auto;
+}
+
+.studio-datasource-container {
+  display: flex;
+  padding: 5px 8px;
+}
+
+.studio-datasource-select {
+  width: 300px;
+}

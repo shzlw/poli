@@ -10,17 +10,17 @@ import { withTranslation } from 'react-i18next';
 
 import './ComponentEditPanel.css';
 
-import * as Util from '../api/Util';
-import * as Constants from '../api/Constants';
+import * as Util from '../../api/Util';
+import * as Constants from '../../api/Constants';
 
-import Tabs from '../components/Tabs/Tabs';
-import Select from '../components/Select';
-import Table from '../components//table/Table';
-import ColorPicker from '../components/ColorPicker/ColorPicker';
-import SelectButtons from '../components/SelectButtons/SelectButtons';
-import InputRange from '../components/filters/InputRange';
-import SearchInput from '../components/SearchInput/SearchInput';
-import Checkbox from '../components/Checkbox/Checkbox';
+import Tabs from '../../components/Tabs/Tabs';
+import Select from '../../components/Select';
+import Table from '../../components/table/Table';
+import ColorPicker from '../../components/ColorPicker/ColorPicker';
+import SelectButtons from '../../components/SelectButtons/SelectButtons';
+import InputRange from '../../components/filters/InputRange';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import Checkbox from '../../components/Checkbox/Checkbox';
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -478,8 +478,7 @@ class ComponentEditPanel extends React.Component {
       const {
         defaultPageSize = 10,
         showPagination = true,
-        fixedHeader = false,
-        columnConfigs = []
+        fixedHeader = false
       } = data;
       chartConfigPanel = (
         <div className="form-panel">
@@ -1062,7 +1061,6 @@ class ComponentEditPanel extends React.Component {
                                 name={'searchSchemaName'} 
                                 value={searchSchemaName} 
                                 onChange={this.handleInputChange} 
-                                inputWidth={200}
                               />
                             </div>
                             <div style={{marginTop: '5px'}}>

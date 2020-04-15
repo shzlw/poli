@@ -95,7 +95,8 @@ public class JdbcQueryService {
     public QueryResult queryComponentByParams(
             DataSource dataSource,
             String sql,
-            List<FilterParameter> filterParams
+            List<FilterParameter> filterParams,
+            int resultLimit
     ) {
         if (dataSource == null) {
             return QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND);
@@ -118,10 +119,14 @@ public class JdbcQueryService {
         }
 
         String parsedSql = parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
-        return executeQuery(npjt, parsedSql, namedParameters);
+        return executeQuery(npjt, parsedSql, namedParameters, resultLimit);
     }
 
-    private QueryResult executeQuery(NamedParameterJdbcTemplate npjt, String sql, Map<String, Object> namedParameters) {
+    private QueryResult executeQuery(NamedParameterJdbcTemplate npjt,
+                                     String sql,
+                                     Map<String, Object> namedParameters,
+                                     int resultLimit) {
+        // Deprecated
         int maxQueryRecords = appProperties.getMaximumQueryRecords();
 
         QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
@@ -155,7 +160,7 @@ public class JdbcQueryService {
                         }
                         array.add(node);
                         rowCount++;
-                        if (maxQueryRecords != -1 && rowCount >= maxQueryRecords) {
+                        if (resultLimit > 0 && rowCount >= resultLimit) {
                             break;
                         }
                     }

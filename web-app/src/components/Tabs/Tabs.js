@@ -11,7 +11,8 @@ class Tabs extends React.Component {
   render() {
     const {
       activeTab,
-      children
+      children,
+      showTabBgColor = false
     } = this.props;
 
     const tabHeaders = [];
@@ -25,13 +26,15 @@ class Tabs extends React.Component {
         } = children[i].props;
         
         let active = '';
+        let tabStyle = {};
         if (title === activeTab) {
           active = 'tab-header-active';
           tabContent = children[i].props.children;
+          tabStyle = showTabBgColor ? {backgroundColor: '#FFFFFF'} : {};
         }
-        
+
         tabHeaders.push(
-          <li className={`tab-header-item ${active}`} key={i} onClick={() => this.handleTabClick(title)}>
+          <li className={`tab-header-item ${active}`} style={tabStyle} key={i} onClick={() => this.handleTabClick(title)}>
             { iconOnly ? (
               <FontAwesomeIcon icon={icon} size="lg" />
             ) : (

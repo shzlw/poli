@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ReportEditView from './ReportEditView';
+import ReportEditView from './Report/ReportEditView';
 
 class ReportFullScreenView extends React.Component {
 
