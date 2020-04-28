@@ -32,12 +32,6 @@ class ScrollTabPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tabs: [],
-      tabContent: '',
-      index: 0,
-      project: '',
-      tableFields: [],
-      tableData: []
     }
   }
 
@@ -62,24 +56,7 @@ class ScrollTabPanel extends React.Component {
   }
 
   addNewTab = () => {
-    const {
-      tabs,
-      index
-    } = this.state;
-    const newTabs = [...tabs];
-    const id = Math.random();
-    newTabs.push({
-      id: 'id' + index,
-      content: 'New Tab' + index
-    });
-    const newIndex = index + 1;
-    this.setState({
-      tabs: newTabs,
-      index: newIndex
-    }, () => {
-      const $container = document.getElementById('studio-tab-droppable-container');
-      $container.scrollLeft += $container.offsetWidth;
-    });
+    
   }
 
   removeTab = (tab) => {
@@ -126,13 +103,13 @@ class ScrollTabPanel extends React.Component {
 
     const {
       tabs = []
-    } = this.state;
+    } = this.props;
 
     const tabHeaders = [];
     for (let i = 0; i < tabs.length; i++) {
       const item = tabs[i];
       tabHeaders.push(
-        <Draggable key={item.id} draggableId={item.id} index={i}>
+        <Draggable key={i} draggableId={item.id} index={i}>
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
@@ -143,9 +120,9 @@ class ScrollTabPanel extends React.Component {
                 provided.draggableProps.style
               )}
             >
-              <div className={`dynamic-tab-select-item`} key={i} onClick={() => this.handleTabClick(item)}>
-                <div className="dynamic-tab-select-value">{item.content}</div>
-                <button className="button dynamic-tab-close-button" onClick={() => this.removeTab(item)}>
+              <div className={`dynamic-tab-select-item`} key={i} onClick={() => this.props.onTabClick(item)}>
+                <div className="dynamic-tab-select-value">{item.label}</div>
+                <button className="button dynamic-tab-close-button" onClick={() => this.props.onRemoveTab(item)}>
                   <FontAwesomeIcon icon="times" />
                 </button>
               </div>
@@ -159,7 +136,7 @@ class ScrollTabPanel extends React.Component {
     return (
       <div className="dynamic-tab-container"> 
         <div className="dynamic-tab-button-group">
-          <button className="button square-button button-transparent" onClick={this.addNewTab} >
+          <button className="button square-button button-transparent" onClick={this.props.onAddTab} >
             <FontAwesomeIcon icon="plus"  fixedWidth />
           </button>
           <button className="button square-button button-transparent" onClick={this.scrollToLeftTabs} >

@@ -51,7 +51,8 @@ class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuLink: '/workspace/report'
+      currentMenuLink: '/workspace/report',
+      showAccountDropdown: false
     }
   }
 
@@ -72,15 +73,34 @@ class Workspace extends React.Component {
 
   handleMenuClick = (menuLink) => {
     this.setState({
-      currentMenuLink: menuLink
+      currentMenuLink: menuLink,
+      showAccountDropdown: false
     });
   }
 
   logout = () => {
     axios.get('/auth/logout')
       .then(res => {
-        this.props.onLogout();
+        this.setState({
+          showAccountDropdown: false
+        }, () => {
+          this.props.onLogout();
+        });
       });
+  }
+
+  onAccountMenuClick = () => {
+    this.setState(prevState => ({
+      showAccountDropdown: !prevState.showAccountDropdown
+    })); 
+  }
+
+  goToAccount = () => {
+    this.setState({
+      showAccountDropdown: false
+    }, () => {
+      this.props.history.push('/workspace/account');
+    });
   }
 
   render() {
@@ -117,7 +137,6 @@ class Workspace extends React.Component {
       );
     }
 
-    const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'menu-item-active' : '';
     return (
       <React.Fragment>
         <div className="workspace-nav">  
@@ -126,15 +145,20 @@ class Workspace extends React.Component {
             {menuItems}
           </ul>
           <div className="workspace-account-menu">
-            <div className={`workspace-account-button inline-block ${isAccountMenuActive}`}>
-              <Link to="/workspace/account" onClick={() => this.handleMenuClick(ACCOUNT_MENU_LINK)}>
-                <FontAwesomeIcon icon="user" fixedWidth />
-                <span className="workspace-nav-menu-text">{username}</span>
-              </Link>
+            <div className="workspace-account-button" onClick={this.onAccountMenuClick}>
+              <FontAwesomeIcon icon="user" fixedWidth />
+              <span className="workspace-nav-menu-text">{username}</span>
             </div>
-            <div className="workspace-logout-button inline-block" onClick={this.logout}>
-              <FontAwesomeIcon icon="sign-out-alt" fixedWidth />
-            </div>
+            { this.state.showAccountDropdown && (
+              <div className="workspace-account-dropdown">
+                <div className="workspace-account-dropdown-button" onClick={this.goToAccount}>
+                  Account
+                </div>
+                <div className="workspace-account-dropdown-button" onClick={this.logout}>
+                  Logout
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="workspace-content">

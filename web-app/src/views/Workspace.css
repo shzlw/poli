@@ -41,6 +41,7 @@
 
 .workspace-nav-menu li a:hover {
   background-color: #003ccb;
+  color: #FFFFFF !important;
 }
 
 .menu-item-active a {
@@ -63,20 +64,34 @@
   float: right;
 }
 
-.workspace-account-button a {
-  display: block;
+.workspace-account-button {
+  display: inline-block;
   color: #ccc;
-  padding: 11px 12px 10px 12px;
-  text-decoration: none;
-}
-
-.workspace-account-button a:hover {
-  background-color: #003ccb;
-}
-
-.workspace-logout-button {
-  color: #ccc;
-  padding: 11px 12px 10px 12px;
+  padding: 11px 10px 10px 10px;
   text-decoration: none;
   cursor: pointer;
+}
+
+.workspace-account-button:hover {
+  background-color: #003ccb;
+  color: #FFFFFF !important;
+}
+
+.workspace-account-dropdown {
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+  background-color: #212121;
+  width: 80px;
+}
+
+.workspace-account-dropdown-button {
+  color: #ccc;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.workspace-account-dropdown-button:hover {
+  background-color: #003ccb;
+  color: #FFFFFF !important;
 }

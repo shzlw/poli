@@ -126,9 +126,6 @@ public class JdbcQueryService {
                                      String sql,
                                      Map<String, Object> namedParameters,
                                      int resultLimit) {
-        // Deprecated
-        int maxQueryRecords = appProperties.getMaximumQueryRecords();
-
         QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override

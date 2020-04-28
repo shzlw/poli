@@ -1,9 +1,4 @@
 
-.toast-msg-body {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  width: 280px;
-}
 
 .authenticating-panel {
   position: fixed;

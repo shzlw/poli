@@ -124,8 +124,35 @@ class Studio extends React.Component {
     });
   }
 
-  loadSchema = () => {
+  onTabClick = (tab) => {
 
+  }
+
+  onRemoveTab = (tab) => {
+
+  }
+
+  onAddTab = () => {
+    /*
+    const {
+      queryTabList
+    } = this.state;
+    const queryTabListClone = [...queryTabList];
+    const id = Math.random();
+    queryTabListClone.push({
+      id: 'id' + index,
+      label: 'New Tab',
+      seletect: true
+    });
+    const newIndex = index + 1;
+    this.setState({
+      tabs: newTabs,
+      index: newIndex
+    }, () => {
+      const $container = document.getElementById('studio-tab-droppable-container');
+      $container.scrollLeft += $container.offsetWidth;
+    });
+    */
   }
 
   render() {
@@ -135,8 +162,16 @@ class Studio extends React.Component {
       jdbcDataSourcesForSelect = [],
       queryResult = [],
       elapsed = 0,
-      selectedJdbcDataSource = {}
+      selectedJdbcDataSource = {},
+      queryTabList = []
     } = this.state;
+
+    const tabs = queryTabList.map((val) => {
+      return {
+        id: val.id,
+        label: val.value
+      };
+    });
 
     const data = Util.jsonToArray(queryResult.data);
     const { 
@@ -198,12 +233,9 @@ class Studio extends React.Component {
                 styles={ReactSelectHelper.CUSTOM_STYLE}
               />
             </div>
-            { selectedJdbcDataSource && (
-              <button className="button" style={{marginLeft: '5px'}} onClick={this.loadSchema}>{t('Schema')}</button>
-            )}
           </div>
           <div>
-            <ScrollTabPanel />
+            <ScrollTabPanel tabs={tabs} />
           </div>
           
           <div className="studio-editor-container">

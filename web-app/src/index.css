@@ -27,7 +27,14 @@ textarea {
   resize: vertical;
 }
 
-/* Charts */
+/* Toastify */
+.Toastify__toast-body {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  width: 260px;
+}
+
+/* Echarts */
 .echarts {
   width: 100% !important;
   height: 100% !important;
