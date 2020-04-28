@@ -8,7 +8,6 @@ import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
-import com.shzlw.poli.util.CommonUtil;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,16 +108,16 @@ public class JdbcQueryService {
 
         // Handle multiple SQL statements.
         // If there are multiple sql statements, only return query results from the last query.
-        List<String> sqls = CommonUtil.getQueryStatements(sql);
+        List<String> sqls = JdbcQueryServiceHelper.getQueryStatements(sql);
         int preQueryNumber = sqls.size() - 1;
         if (appProperties.getAllowMultipleQueryStatements()) {
             for (int i = 0; i < preQueryNumber; i++) {
-                String parsedSql = parseSqlStatementWithParams(sqls.get(i), namedParameters);
+                String parsedSql = JdbcQueryServiceHelper.parseSqlStatementWithParams(sqls.get(i), namedParameters);
                 npjt.execute(parsedSql, (ps) -> ps.execute());
             }
         }
 
-        String parsedSql = parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
+        String parsedSql = JdbcQueryServiceHelper.parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
         return executeQuery(npjt, parsedSql, namedParameters, resultLimit);
     }
 
@@ -126,6 +125,10 @@ public class JdbcQueryService {
                                      String sql,
                                      Map<String, Object> namedParameters,
                                      int resultLimit) {
+
+        // Determine max query result
+        final int maxQueryResult = JdbcQueryServiceHelper.calculateMaxQueryResultLimit(appProperties.getMaximumQueryRecords(), resultLimit);
+
         QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
@@ -157,7 +160,7 @@ public class JdbcQueryService {
                         }
                         array.add(node);
                         rowCount++;
-                        if (resultLimit > 0 && rowCount >= resultLimit) {
+                        if (maxQueryResult != Constants.QUERY_RESULT_NOLIMIT && rowCount >= maxQueryResult) {
                             break;
                         }
                     }
@@ -173,43 +176,6 @@ public class JdbcQueryService {
         return result;
     }
 
-    public static String parseSqlStatementWithParams(String sql, Map<String, Object> params) {
-        StringBuilder sb = new StringBuilder();
-        char[] s = sql.toCharArray();
-        int i = 0;
-        while (i < s.length) {
-            if (s[i] == '{' && (i + 1 < s.length) && s[i + 1] == '{') {
-                int j = i + 2;
-                while (j < s.length) {
-                    if (s[j] == '}' && (j + 1 < s.length) && s[j + 1] == '}') {
-                        String clause = sql.substring(i + 2, j);
-                        boolean hasParam = false;
-                        for (Map.Entry<String, Object> entry : params.entrySet())  {
-                            if (clause.contains(":" + entry.getKey())) {
-                                hasParam = true;
-                                break;
-                            }
-                        }
-
-                        if (hasParam) {
-                            sb.append(clause);
-                        }
-
-                        i = j + 2;
-                        break;
-                    }
-                    j++;
-                }
-            }
-
-            if (i < s.length) {
-                sb.append(s[i]);
-                i++;
-            }
-        }
-
-        return sb.toString();
-    }
 
     public Map<String, Object> getNamedParameters(final List<FilterParameter> filterParams) {
         Map<String, Object> namedParameters = new HashMap<>();
@@ -218,7 +184,7 @@ public class JdbcQueryService {
         }
 
         for (FilterParameter param : filterParams) {
-            if (!isFilterParameterEmpty(param)) {
+            if (!JdbcQueryServiceHelper.isFilterParameterEmpty(param)) {
                 String type = param.getType();
                 String name = param.getParam();
                 String value = param.getValue();
@@ -261,17 +227,6 @@ public class JdbcQueryService {
             }
         }
         return namedParameters;
-    }
-
-    private static boolean isFilterParameterEmpty(FilterParameter p) {
-        if (p == null
-                || StringUtils.isEmpty(p.getType())
-                || StringUtils.isEmpty(p.getParam())
-                || StringUtils.isEmpty(p.getValue())) {
-            return true;
-        }
-
-        return false;
     }
 
     private static String getSimpleError(Exception e) {

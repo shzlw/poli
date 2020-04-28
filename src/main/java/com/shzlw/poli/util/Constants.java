@@ -52,4 +52,7 @@ public final class Constants {
     public static final String ERROR_NO_DATA_SOURCE_FOUND = "No data source found";
     public static final String ERROR_EMPTY_SQL_QUERY = "SQL query cannot be empty";
 
+    public static final int QUERY_RESULT_NOLIMIT = 0;
+    public static final int MAXIMUM_QUERY_RECORDS_NOLIMIT = -1;
+
 }

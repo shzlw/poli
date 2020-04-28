@@ -1,5 +1,13 @@
 # Change Logs
 
+## v0.12.0
+- Upgrade spring boot version and npm packages.
+- Add fixed header option for table component.
+- Update app style so new look & feel.
+- Update new icon.
+- Add french translation provided by @pasqal. Thanks! 
+- Update installation guide
+
 ## v0.11.0
 
 ### New Features
