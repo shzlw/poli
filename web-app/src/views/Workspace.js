@@ -97,6 +97,7 @@ class Workspace extends React.Component {
 
   goToAccount = () => {
     this.setState({
+      currentMenuLink: '',
       showAccountDropdown: false
     }, () => {
       this.props.history.push('/workspace/account');

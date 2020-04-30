@@ -35,6 +35,8 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getServletPath();
 
+        LOGGER.info("AuthFilter - httpRequest: {}", httpRequest);
+
         if (!path.startsWith("/ws/")) {
             chain.doFilter(request, response);
             return;
@@ -127,26 +129,26 @@ public class AuthFilter implements Filter {
     private static boolean validateViewer(String requestMethod, String path) {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.startsWith("/ws/report")
-                    || path.startsWith("/ws/cannedreport")
-                    || path.startsWith("/ws/component/report/")
-                    || path.startsWith("/ws/user/account")
-                    || path.startsWith("/ws/sharedreport/generate-sharekey")) {
+            if (path.startsWith("/ws/reports")
+                    || path.startsWith("/ws/cannedreports")
+                    || path.startsWith("/ws/components/report/")
+                    || path.startsWith("/ws/users/account")
+                    || path.startsWith("/ws/sharedreports/generate-sharekey")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_PUT.equals(requestMethod)) {
-            if (path.startsWith("/ws/user/account")) {
+            if (path.startsWith("/ws/users/account")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
             if (path.startsWith("/ws/jdbcquery")
-                || path.startsWith("/ws/cannedreport")
-                || path.startsWith("/ws/report/favourite")
-                || path.startsWith("/ws/report/pdf")) {
+                || path.startsWith("/ws/cannedreports")
+                || path.startsWith("/ws/reports/favourite")
+                || path.startsWith("/ws/reports/pdf")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {
-            if (path.startsWith("/ws/cannedreport")) {
+            if (path.startsWith("/ws/cannedreports")) {
                 isValid = true;
             }
         }
@@ -156,9 +158,9 @@ public class AuthFilter implements Filter {
     private static boolean validateByApiKey(String requestMethod, String path) {
         boolean isValid = false;
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.startsWith("/ws/report")
-                    || path.startsWith("/ws/cannedreport")
-                    || path.startsWith("/ws/component/report/")) {
+            if (path.startsWith("/ws/reports")
+                    || path.startsWith("/ws/cannedreports")
+                    || path.startsWith("/ws/components/report/")) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
@@ -178,9 +180,9 @@ public class AuthFilter implements Filter {
         long reportId = linkInfo.getReportId();
         Set<String> componentQueryUrls = linkInfo.getComponentQueryUrls();
         if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.equals("/ws/report/" + reportId)
-                    || path.equals("/ws/component/report/" + reportId)
-                    || path.equals("/ws/report/sharekey/" + shareKey)) {
+            if (path.equals("/ws/reports/" + reportId)
+                    || path.equals("/ws/components/report/" + reportId)
+                    || path.equals("/ws/reports/sharekey/" + shareKey)) {
                 isValid = true;
             }
         } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {

@@ -71,7 +71,7 @@ public class AuthFilterTest {
     @Test
     public void testNullCookie() throws IOException, ServletException {
         Cookie[] cookies = null;
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/reports");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
 
         authFilter.doFilter(httpRequest, httpResponse, chain);
@@ -84,7 +84,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = null;
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/reports");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -99,7 +99,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/reports");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -116,7 +116,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/reports");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -133,7 +133,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/report");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/reports");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -150,7 +150,7 @@ public class AuthFilterTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = cookie;
         String sessionKey = "123";
-        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/jdbcdatasource");
+        Mockito.when(httpRequest.getServletPath()).thenReturn("/ws/jdbcdatasources");
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
         Mockito.when(cookie.getName()).thenReturn(Constants.SESSION_KEY);
         Mockito.when(cookie.getValue()).thenReturn(sessionKey);
@@ -169,16 +169,16 @@ public class AuthFilterTest {
         String sessionKey = "123";
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/account"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/sharedreport/generate-sharekey"),
-                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/user/account"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreports"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/components/report/"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/users/account"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/sharedreports/generate-sharekey"),
+                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/users/account"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery"),
-                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/cannedreport"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/cannedreports"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "Report"),
-                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreport")
+                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/cannedreports")
         );
 
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
@@ -203,10 +203,10 @@ public class AuthFilterTest {
         String sessionKey = "123";
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/user/1"),
-                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/report"),
-                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/report"),
-                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/report")
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/users/1"),
+                new AccessRule(Constants.HTTP_METHOD_PUT, "/ws/reports"),
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/reports"),
+                new AccessRule(Constants.HTTP_METHOD_DELETE, "/ws/reports")
         );
 
         Mockito.when(httpRequest.getCookies()).thenReturn(cookies);
@@ -238,9 +238,9 @@ public class AuthFilterTest {
         Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreport"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/cannedreports"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/components/report/"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component")
         );
 
@@ -267,7 +267,7 @@ public class AuthFilterTest {
         Mockito.when(userService.getUserByApiKey(apiKey)).thenReturn(user);
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/report")
+                new AccessRule(Constants.HTTP_METHOD_POST, "/ws/reports")
         );
 
         for (AccessRule rule : accessRules) {
@@ -296,9 +296,9 @@ public class AuthFilterTest {
         Mockito.when(sharedLinkInfo.getComponentQueryUrls()).thenReturn(componentQueryUrls);
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey/" + shareKey),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/" + reportId),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/" + reportId),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports/sharekey/" + shareKey),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports/" + reportId),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/components/report/" + reportId),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/1"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/2"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/3")
@@ -330,9 +330,9 @@ public class AuthFilterTest {
         Mockito.when(sharedLinkInfo.getComponentQueryUrls()).thenReturn(componentQueryUrls);
 
         List<AccessRule> accessRules = Arrays.asList(
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/sharekey/456"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/report/2"),
-                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/component/report/2"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports/sharekey/456"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/reports/2"),
+                new AccessRule(Constants.HTTP_METHOD_GET, "/ws/components/report/2"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/4"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/5"),
                 new AccessRule(Constants.HTTP_METHOD_POST, "/ws/jdbcquery/component/6")
