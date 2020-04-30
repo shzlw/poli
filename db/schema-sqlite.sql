@@ -134,8 +134,8 @@ IF NOT EXISTS p_saved_query (
     datasource_id INTEGER,
     name TEXT,
     sql_query TEXT,
-    http_name TEXT,
-    http_code TEXT
+    endpoint_name TEXT UNIQUE,
+    endpoint_accesscode TEXT
 );
 
 CREATE TABLE
@@ -145,6 +145,8 @@ IF NOT EXISTS p_audit_log (
     type TEXT NOT NULL,
     data TEXT
 );
+
+CREATE INDEX idx_audit_log_created_at ON p_audit_log (created_at);
 
 INSERT INTO p_user(username, temp_password, sys_role)
 VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');
