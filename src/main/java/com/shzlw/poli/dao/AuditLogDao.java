@@ -1,7 +1,7 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.AuditLog;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,7 +56,7 @@ public class AuditLogDao {
             r.setId(rs.getLong(AuditLog.ID));
             r.setType(rs.getString(AuditLog.TYPE));
             long createdAt = rs.getLong(AuditLog.CREATED_AT);
-            r.setCreatedAt(CommonUtil.toReadableDateTime(CommonUtil.fromEpoch(createdAt)));
+            r.setCreatedAt(CommonUtils.toReadableDateTime(CommonUtils.fromEpoch(createdAt)));
             r.setData(rs.getString(AuditLog.DATA));
             return r;
         }

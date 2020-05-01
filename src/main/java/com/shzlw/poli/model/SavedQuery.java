@@ -2,8 +2,12 @@ package com.shzlw.poli.model;
 
 public class SavedQuery {
 
-    public static final String CONTENT_TYPE_JSON = "json";
-    public static final String CONTENT_TYPE_CSV = "csv";
+    public static final String ID = "id";
+    public static final String DATASOURCE_ID = "datasource_id";
+    public static final String NAME = "name";
+    public static final String SQL_QUERY = "sql_query";
+    public static final String ENDPOINT_NAME = "endpoint_name";
+    public static final String ENDPOINT_ACCESSCODE = "endpoint_accesscode";
 
     private long id;
     private String name;

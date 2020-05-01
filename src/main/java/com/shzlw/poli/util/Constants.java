@@ -55,4 +55,6 @@ public final class Constants {
     public static final int QUERY_RESULT_NOLIMIT = 0;
     public static final int MAXIMUM_QUERY_RECORDS_NOLIMIT = -1;
 
+    public static final String CONTENT_TYPE_JSON = "json";
+    public static final String CONTENT_TYPE_CSV = "csv";
 }

@@ -5,6 +5,7 @@ import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
+import com.shzlw.poli.util.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class AuthFilter implements Filter {
     }
 
     private boolean authBySessionKey(HttpServletRequest httpRequest, String path) {
-        String sessionKey = getSessionKey(httpRequest);
+        String sessionKey = HttpUtils.getSessionKey(httpRequest);
         if (sessionKey == null) {
             return false;
         }
@@ -68,7 +69,7 @@ public class AuthFilter implements Filter {
         String sysRole = user.getSysRole();
         boolean isValid = false;
         if (Constants.SYS_ROLE_VIEWER.equals(sysRole)) {
-            isValid = validateViewer(httpRequest.getMethod(), path);
+            isValid = AuthFilterHelper.validateViewer(httpRequest.getMethod(), path);
         } else if (Constants.SYS_ROLE_DEVELOPER.equals(sysRole) || Constants.SYS_ROLE_ADMIN.equals(sysRole)) {
             isValid = true;
         } else {
@@ -89,7 +90,7 @@ public class AuthFilter implements Filter {
         }
 
         httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
-        return validateByApiKey(httpRequest.getMethod(), path);
+        return AuthFilterHelper.validateByApiKey(httpRequest.getMethod(), path);
     }
 
     private boolean authByShareKey(HttpServletRequest httpRequest, String path) {
@@ -110,65 +111,6 @@ public class AuthFilter implements Filter {
 
         httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
         return validateByShareKey(httpRequest.getMethod(), path, linkInfo, shareKey);
-    }
-
-    private static String getSessionKey(HttpServletRequest httpRequest) {
-        Cookie[] cookies = httpRequest.getCookies();
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                String name = cookies[i].getName();
-                String value = cookies[i].getValue();
-                if (Constants.SESSION_KEY.equals(name)) {
-                    return value;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static boolean validateViewer(String requestMethod, String path) {
-        boolean isValid = false;
-        if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.startsWith("/ws/reports")
-                    || path.startsWith("/ws/cannedreports")
-                    || path.startsWith("/ws/components/report/")
-                    || path.startsWith("/ws/users/account")
-                    || path.startsWith("/ws/sharedreports/generate-sharekey")) {
-                isValid = true;
-            }
-        } else if (Constants.HTTP_METHOD_PUT.equals(requestMethod)) {
-            if (path.startsWith("/ws/users/account")) {
-                isValid = true;
-            }
-        } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
-            if (path.startsWith("/ws/jdbcquery")
-                || path.startsWith("/ws/cannedreports")
-                || path.startsWith("/ws/reports/favourite")
-                || path.startsWith("/ws/reports/pdf")) {
-                isValid = true;
-            }
-        } else if (Constants.HTTP_METHOD_DELETE.equals(requestMethod)) {
-            if (path.startsWith("/ws/cannedreports")) {
-                isValid = true;
-            }
-        }
-        return isValid;
-    }
-
-    private static boolean validateByApiKey(String requestMethod, String path) {
-        boolean isValid = false;
-        if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.startsWith("/ws/reports")
-                    || path.startsWith("/ws/cannedreports")
-                    || path.startsWith("/ws/components/report/")) {
-                isValid = true;
-            }
-        } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
-            if (path.startsWith("/ws/jdbcquery/component")) {
-                isValid = true;
-            }
-        }
-        return isValid;
     }
 
     private static boolean validateByShareKey(String requestMethod, String path, SharedLinkInfo linkInfo, String shareKey) {

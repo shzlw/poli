@@ -6,7 +6,7 @@ import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -126,7 +126,7 @@ public class JdbcQueryWsTest {
 
         Assert.assertEquals(2, newFilterParams.size());
         Assert.assertEquals(Constants.FILTER_TYPE_USER_ATTRIBUTE, newFilterParams.get(0).getType());
-        Assert.assertEquals(CommonUtil.getParamByAttrKey(attrKey), newFilterParams.get(0).getParam());
+        Assert.assertEquals(CommonUtils.getParamByAttrKey(attrKey), newFilterParams.get(0).getParam());
         Assert.assertEquals(attrValue, newFilterParams.get(0).getValue());
 
         Assert.assertEquals(Constants.FILTER_TYPE_SINGLE, newFilterParams.get(1).getType());

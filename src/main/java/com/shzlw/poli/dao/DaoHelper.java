@@ -18,4 +18,8 @@ public final class DaoHelper {
     public static int toLimit(int pageSize) {
         return pageSize > 0 ? pageSize : DEFAULT_LIMIT;
     }
+
+    public static String getLikeParam(String val) {
+        return "%" + val + "%";
+    }
 }

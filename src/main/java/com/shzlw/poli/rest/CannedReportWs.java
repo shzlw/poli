@@ -3,7 +3,7 @@ package com.shzlw.poli.rest;
 import com.shzlw.poli.dao.CannedReportDao;
 import com.shzlw.poli.model.CannedReport;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +56,7 @@ public class CannedReportWs {
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         long id = cannedReportDao.insert(user.getId(),
-                CommonUtil.toEpoch(LocalDateTime.now()),
+                CommonUtils.toEpoch(LocalDateTime.now()),
                 cannedReport.getName(),
                 cannedReport.getData());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);

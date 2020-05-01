@@ -132,7 +132,7 @@ CREATE TABLE
 IF NOT EXISTS p_saved_query (
     id INTEGER NOT NULL PRIMARY KEY,
     datasource_id INTEGER,
-    name TEXT,
+    name TEXT NOT NULL UNIQUE,
     sql_query TEXT,
     endpoint_name TEXT UNIQUE,
     endpoint_accesscode TEXT

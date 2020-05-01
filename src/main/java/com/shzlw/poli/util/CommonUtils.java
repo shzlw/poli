@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public final class CommonUtil {
+public final class CommonUtils {
 
-    private CommonUtil() {}
+    private CommonUtils() {}
 
     public static LocalDateTime fromEpoch(long epoch) {
         return Instant.ofEpochMilli(epoch).atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -27,6 +27,10 @@ public final class CommonUtil {
     public static String toReadableDate(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDateTime.format(formatter);
+    }
+
+    public static String getSimpleError(Exception e) {
+        return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
     }
 
     public static String getParamByAttrKey(String attrKey) {

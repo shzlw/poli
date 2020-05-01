@@ -11,7 +11,7 @@ import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class JdbcQueryWs {
         int resultLimit = queryRequest.getResultLimit();
 
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
-        QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, null, resultLimit);
+        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, null, resultLimit);
         return queryResult;
     }
 
@@ -75,7 +75,7 @@ public class JdbcQueryWs {
             DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
             User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
             List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
-            QueryResult queryResult = jdbcQueryService.queryComponentByParams(dataSource, sql, newFilterParams, Constants.QUERY_RESULT_NOLIMIT);
+            QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, newFilterParams, Constants.QUERY_RESULT_NOLIMIT);
             return new ResponseEntity(queryResult, HttpStatus.OK);
         }
 
@@ -114,7 +114,7 @@ public class JdbcQueryWs {
             FilterParameter param = new FilterParameter();
             param.setType(Constants.FILTER_TYPE_USER_ATTRIBUTE);
             // For example: $user_attr[division]
-            param.setParam(CommonUtil.getParamByAttrKey(attr.getAttrKey()));
+            param.setParam(CommonUtils.getParamByAttrKey(attr.getAttrKey()));
             param.setValue(attr.getAttrValue());
             newFilterParams.add(param);
         }
