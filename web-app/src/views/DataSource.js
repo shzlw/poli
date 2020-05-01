@@ -242,7 +242,13 @@ class DataSource extends Component {
     return (
       <div className="full-page-content">
         <div class="row">
-          <div className="float-left" style={{marginRight: '5px'}}>
+          <div className="float-left" style={{lineHeight: '33px', fontWeight: 700, marginRight: '15px'}}>
+            {t('Data Source')}
+          </div>
+          <button className="button float-left" style={{marginRight: '5px'}} onClick={() => this.openEditPanel(null)}>
+            <FontAwesomeIcon icon="plus" /> {t('New')}
+          </button>
+          <div className="float-left">
             <SearchInput 
               name={'searchValue'} 
               value={this.state.searchValue} 
@@ -250,9 +256,6 @@ class DataSource extends Component {
               inputWidth={200}
             />
           </div>
-          <button className="button float-left" onClick={() => this.openEditPanel(null)}>
-            <FontAwesomeIcon icon="plus" /> {t('New')}
-          </button>
         </div>
         <div className="row" style={{marginTop: '8px'}}>
           {jdbcDataSourceItems}

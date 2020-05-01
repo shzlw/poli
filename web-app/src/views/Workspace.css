@@ -12,6 +12,7 @@
   width: 100%;
   height: 40px;
   background-color: #212121;
+  box-sizing: border-box;
 }
 
 .workspace-nav-menu {
@@ -22,29 +23,36 @@
   float: left;
 }
 
-.workspace-nav-menu li {
+.workspace-nav-menu-text {
+  margin-left: 6px;
+}
+
+.workspace-nav-menu-item { 
   display: inline-block;
   list-style: none;
   font-size: 16px; 
 }
 
-.workspace-nav-menu-text {
-  margin-left: 6px;
-}
-
-.workspace-nav-menu li a {
+.workspace-nav-menu-item-value {
   display: block;
   color: #ccc;
-  text-decoration: none;
-  padding: 11px 9px 10px 9px;   
+  padding: 11px 9px 10px 9px; 
+  cursor: pointer; 
 }
 
-.workspace-nav-menu li a:hover {
+.workspace-nav-menu-item-dropdown {
+  position: absolute;
+  z-index: 1;
+  background-color: #212121;
+  min-width: 100px;
+}
+
+.workspace-nav-menu-item-value:hover {
   background-color: #003ccb;
   color: #FFFFFF !important;
 }
 
-.menu-item-active a {
+.menu-item-active {
   background-color: #0065FF;
   color: #FFFFFF !important;
 }
@@ -85,13 +93,13 @@
   width: 80px;
 }
 
-.workspace-account-dropdown-button {
+.workspace-dropdown-button {
   color: #ccc;
   cursor: pointer;
   padding: 8px 12px;
 }
 
-.workspace-account-dropdown-button:hover {
+.workspace-dropdown-button:hover {
   background-color: #003ccb;
   color: #FFFFFF !important;
 }

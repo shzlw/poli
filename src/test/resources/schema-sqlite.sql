@@ -1,4 +1,6 @@
-
+-- For SQLite
+DROP TABLE IF EXISTS p_audit_log;
+DROP TABLE IF EXISTS p_saved_query;
 DROP TABLE IF EXISTS p_shared_report;
 DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_group_report;
@@ -104,7 +106,6 @@ IF NOT EXISTS p_user_attribute (
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
 
--- v0.10.0 new tables
 CREATE TABLE
 IF NOT EXISTS p_user_favourite (
     user_id INTEGER NOT NULL,
@@ -126,6 +127,26 @@ IF NOT EXISTS p_shared_report (
     FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
+
+CREATE TABLE
+IF NOT EXISTS p_saved_query (
+    id INTEGER NOT NULL PRIMARY KEY,
+    datasource_id INTEGER,
+    name TEXT NOT NULL UNIQUE,
+    sql_query TEXT,
+    endpoint_name TEXT UNIQUE,
+    endpoint_accesscode TEXT
+);
+
+CREATE TABLE
+IF NOT EXISTS p_audit_log (
+    id INTEGER NOT NULL PRIMARY KEY,
+    created_at INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    data TEXT
+);
+
+CREATE INDEX idx_audit_log_created_at ON p_audit_log (created_at);
 
 -- In test, set admin password.
 INSERT INTO p_user(username, password, sys_role)
