@@ -24,7 +24,23 @@ public class SavedQueryDao {
     @Autowired
     NamedParameterJdbcTemplate npjt;
 
-    public List<SavedQuery> findAll(int page, int pageSize, String searchValue) {
+    public List<SavedQuery> findAll() {
+        String sql = "SELECT id, name, endpoint_name "
+                    + "FROM p_saved_query "
+                    + "ORDER BY id DESC";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        return npjt.query(sql, params, (rs, i) -> {
+            SavedQuery r = new SavedQuery();
+            r.setId(rs.getLong(SavedQuery.ID));
+            r.setName(rs.getString(SavedQuery.NAME));
+            r.setEndpointName(rs.getString(SavedQuery.ENDPOINT_NAME));
+            return r;
+        });
+    }
+
+    public List<SavedQuery> findAllByPage(int page, int pageSize, String searchValue) {
         String sql = "SELECT id, name, endpoint_name "
                     + "FROM p_saved_query "
                     + "WHERE name LIKE :name "
@@ -80,10 +96,15 @@ public class SavedQueryDao {
         }
     }
 
-    public long insert(String name) {
-        String sql = "INSERT INTO p_saved_query(name) VALUES(:name)";
+    public long insert(SavedQuery savedQuery) {
+        String sql = "INSERT INTO p_saved_query(name, sql_query, datasource_id, endpoint_name, endpoint_accesscode) "
+                    + " VALUES(:name, :sql_query, :datasource_id, :endpoint_name, :endpoint_accesscode)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(SavedQuery.NAME, name);
+        params.addValue(SavedQuery.NAME, savedQuery.getName());
+        params.addValue(SavedQuery.SQL_QUERY, savedQuery.getSqlQuery());
+        params.addValue(SavedQuery.DATASOURCE_ID, savedQuery.getJdbcDataSourceId());
+        params.addValue(SavedQuery.ENDPOINT_NAME, savedQuery.getEndpointName());
+        params.addValue(SavedQuery.ENDPOINT_ACCESSCODE, savedQuery.getEndpointAccessCode());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         npjt.update(sql, params, keyHolder, new String[] { SavedQuery.ID });
@@ -91,7 +112,7 @@ public class SavedQueryDao {
     }
 
     public int update(SavedQuery savedQuery) {
-        String sql = "UPDATE p_saved_query SET datasource_id=?, name=?, sqlQuery=?, endpoint_name=?, endpoint_accesscode=? WHERE id = ?";
+        String sql = "UPDATE p_saved_query SET datasource_id=?, name=?, sql_query=?, endpoint_name=?, endpoint_accesscode=? WHERE id=?";
         return jt.update(sql, new Object[]{
                 savedQuery.getJdbcDataSourceId(),
                 savedQuery.getName(),

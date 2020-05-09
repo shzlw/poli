@@ -20,10 +20,8 @@ public class SavedQueryWs {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public List<SavedQuery> findAll(@RequestParam(name = "search", defaultValue = "", required = false) String searchValue,
-                                    @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                                    @RequestParam(name = "size", defaultValue = "20", required = false) int pageSize) {
-        return savedQueryDao.findAll(page, pageSize, searchValue);
+    public List<SavedQuery> findAll() {
+        return savedQueryDao.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,8 +33,7 @@ public class SavedQueryWs {
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody SavedQuery savedQuery) {
-        String name = savedQuery.getName();
-        long id = savedQueryDao.insert(name);
+        long id = savedQueryDao.insert(savedQuery);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
@@ -52,5 +49,11 @@ public class SavedQueryWs {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         savedQueryDao.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    public List<SavedQuery> findAllByPage(@RequestParam(name = "search", defaultValue = "", required = false) String searchValue,
+                                          @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+                                          @RequestParam(name = "size", defaultValue = "20", required = false) int pageSize) {
+        return savedQueryDao.findAllByPage(page, pageSize, searchValue);
     }
 }

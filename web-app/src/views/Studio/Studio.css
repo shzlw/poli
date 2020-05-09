@@ -6,11 +6,25 @@
   background-color: #FFFFFF;
 }
 
-.studio-sidebar {
-  width: 249px;
-  min-width: 249px;
+.studio-menu-sidebar {
+  width: 199px;
+  min-width: 199px;
   overflow-y: auto;
   border-right: 1px solid #ccc;
+  background-color: #efefef;
+  padding: 5px;
+}
+
+.studio-property-sidebar {
+  width: 199px;
+  min-width: 199px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+  background-color: #efefef;
+}
+
+.studio-property-panel {
+  border-bottom: 1px solid #ccc;
   background-color: #efefef;
   padding: 5px;
 }
@@ -39,8 +53,9 @@
 }
 
 .studio-datasource-container {
-  display: flex;
   padding: 5px 8px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
 }
 
 .studio-datasource-select {

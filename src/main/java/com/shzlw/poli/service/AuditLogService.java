@@ -20,7 +20,7 @@ public class AuditLogService {
         String ip = HttpUtils.getIpAddress(request);
         String ipAddress = ip == null ? "" : ip;
         String type = "query endpoint";
-        String logData = String.format("%s accessed query endpoint: %s", ipAddress, name);
+        String logData = String.format("%s accesses query endpoint: %s", ipAddress, name);
         auditLogDao.insert(now, type, logData);
     }
 }

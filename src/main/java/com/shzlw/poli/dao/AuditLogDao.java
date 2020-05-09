@@ -24,12 +24,16 @@ public class AuditLogDao {
     @Autowired
     NamedParameterJdbcTemplate npjt;
 
-    public List<AuditLog> findAll(int page, int pageSize) {
+    public List<AuditLog> findAll(int page, int pageSize, String searchValue) {
         String sql = "SELECT id, created_at, type, data "
                     + "FROM p_audit_log "
+                    + "WHERE data LIKE :data "
+                    + "OR type LIKE :type "
                     + "ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("data", DaoHelper.getLikeParam(searchValue));
+        params.addValue("type", DaoHelper.getLikeParam(searchValue));
         params.addValue("offset", DaoHelper.toOffset(page, pageSize));
         params.addValue("limit", DaoHelper.toLimit(pageSize));
 

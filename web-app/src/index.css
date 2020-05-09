@@ -109,29 +109,29 @@ hr {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e1e2e1;
+  background: #bdbdbd;
   border: 0px none transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e1e2e1;
+  background: #bdbdbd;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #e1e2e1;
+  background: #bdbdbd;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff;
-  border: 0px none #ffffff;
+  background: transparent;
+  border: 0px none transparent;
 }
 
 ::-webkit-scrollbar-track:hover {
-  background: #ffffff;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track:active {
-  background: #ffffff;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-corner {

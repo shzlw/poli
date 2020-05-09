@@ -1,0 +1,13 @@
+.schema-side-panel {
+  width: 249px;
+  min-width: 249px;
+  overflow-y: auto;
+  border-left: 1px solid #ccc;
+  background-color: #efefef;
+  padding: 5px;
+}
+
+.schema-button {
+  height: 33px;
+  width: 33px;
+}

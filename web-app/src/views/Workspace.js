@@ -10,8 +10,9 @@ import Group from './UserManagement/Group'
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
-import EventView from './EventView';
 import Studio from './Studio/Studio';
+import SharedReportView from './Event/SharedReportView';
+import AuditLog from './Event/AuditLog';
 
 import * as Constants from '../api/Constants';
 import './Workspace.css';
@@ -49,9 +50,18 @@ const MENU_ITEMS = [
     ]
   },
   {
-    link: '/workspace/event',
     value: 'Event',
-    icon: 'search-location'
+    icon: 'search-location',
+    dropdowns: [
+      {
+        link: '/workspace/sharedreport',
+        value: 'Shared Report',
+      },
+      {
+        link: '/workspace/auditlog',
+        value: 'Audit Log',
+      }
+    ]
   }
 ];
 
@@ -259,7 +269,8 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/group" component={Group} />
             <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
-            <Route exact path="/workspace/event" component={EventView} />
+            <Route exact path="/workspace/auditlog" component={AuditLog} />
+            <Route exact path="/workspace/sharedreport" component={SharedReportView} />
             <Route exact path="/workspace/studio" component={Studio} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
             <Route component={PageNotFound} />

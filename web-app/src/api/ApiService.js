@@ -17,7 +17,28 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
   return await httpPost('/ws/jdbcquery/query', requestBody);
 }
 
-const httpGet = async (url, parameters = {}) => {
+export const fetchAuditLogs = async (page, pageSize, searchValue) => {
+  const parameters = {
+    search: searchValue,
+    page,
+    size: pageSize
+  };
+
+  return await httpGet('/ws/audit-logs', parameters);
+}
+
+export const fetchSavedQueries = async (page, pageSize, searchValue) => {
+  const parameters = {
+    search: searchValue,
+    page,
+    size: pageSize
+  };
+
+  return await httpGet('/ws/saved-queries', parameters);
+}
+
+
+export const httpGet = async (url, parameters = {}) => {
   try {
     const response = await axios.get(url, {params: parameters});
     return response;
@@ -27,7 +48,7 @@ const httpGet = async (url, parameters = {}) => {
   }
 }
 
-const httpPost = async (url, requestBody = {}) => {
+export const httpPost = async (url, requestBody = {}) => {
   try {
     const response = await axios.post(url, requestBody);
     return response;
@@ -36,3 +57,24 @@ const httpPost = async (url, requestBody = {}) => {
     return {};
   }
 }
+
+export const httpPut = async (url, requestBody = {}) => {
+  try {
+    const response = await axios.put(url, requestBody);
+    return response;
+  } catch(error) {
+    console.log(error);
+    return {};
+  }
+}
+
+export const httpDelete = async (url, parameters = {}) => {
+  try {
+    const response = await axios.delete(url, {params: parameters});
+    return response;
+  } catch(error) {
+    console.log(error);
+    return {};
+  }
+}
+

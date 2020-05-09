@@ -35,7 +35,7 @@
 
 .workspace-nav-menu-item-value {
   display: block;
-  color: #ccc;
+  color: #FFFFFF;
   padding: 11px 9px 10px 9px; 
   cursor: pointer; 
 }
@@ -74,7 +74,7 @@
 
 .workspace-account-button {
   display: inline-block;
-  color: #ccc;
+  color: #FFFFFF;
   padding: 11px 10px 10px 10px;
   text-decoration: none;
   cursor: pointer;
@@ -94,7 +94,7 @@
 }
 
 .workspace-dropdown-button {
-  color: #ccc;
+  color: #FFFFFF;
   cursor: pointer;
   padding: 8px 12px;
 }

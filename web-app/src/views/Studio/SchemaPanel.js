@@ -17,11 +17,13 @@ class SchemaPanel extends React.Component {
   }
 
   async componentDidMount() { 
+    await this.fetchSchema();
+  }
+
+  fetchSchema = async() => {
     const {
       jdbcDataSourceId
     } = this.props;
-
-    console.log('SchemaPanel redner', jdbcDataSourceId);
 
     if (jdbcDataSourceId) {
       const { data: schemas = [] } = await ApiService.fetchDatabaseSchema(jdbcDataSourceId);
@@ -50,6 +52,7 @@ class SchemaPanel extends React.Component {
       });
     }
   }
+  
 
   render() {
     const {
@@ -95,7 +98,15 @@ class SchemaPanel extends React.Component {
     }
 
     return (
-      <div>
+      <div className="schema-side-panel">
+        <div>
+          <button className="button schema-button" style={{marginRight: '5px'}} onClick={this.fetchSchema}>
+            <FontAwesomeIcon icon="redo-alt" />
+          </button>
+          <button className="button schema-button" onClick={this.props.onClose}>
+            <FontAwesomeIcon icon="times" />
+          </button>
+        </div>
         <div style={{margin: '8px 0px'}}>
           <SearchInput 
             name={'searchSchemaName'} 
