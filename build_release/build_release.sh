@@ -1,4 +1,3 @@
-
 VERSION=$(./version)
 if [ $# -eq 0 ]; then
   echo "No arguments specified. Use default version: $VERSION"
@@ -17,15 +16,17 @@ npm run build
 mkdir ../src/main/resources/static
 cp -r build/* ../src/main/resources/static/
 cd ..
-mvn clean install -DskipTests
+mvn clean package -DskipTests
 
 cp -r export-server $release
 cp target/poli-*.jar $release
 cp -r docs $release
 cp LICENSE $release
 cp -r third-party-license $release
-cp start.sh $release
-cp start.bat $release
+cp build_release/start.sh $release
+cp build_release/start.bat $release
+chmod 755 $release/start.sh
+chmod 755 $release/start.bat
 cp README.md $release
 cp -r upgrade $release
 mkdir $release/jdbc-drivers
