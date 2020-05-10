@@ -106,15 +106,6 @@
   height: 33px;
 }
 
-.square-button-test {
-  width: 33px;
-  height: 33px;
-  border: 0 !important;
-  padding: 0px !important;
-  box-shadow: none !important;
-}
-
-
 .button {
   background-color: #FFFFFF;
   color: #212121;
@@ -410,6 +401,8 @@ h1 {
 
 .button-transparent {
   border: 0 !important;
+  padding: 0px !important;
+  box-shadow: none !important;
   background-color: transparent !important;
   color: #212121;
 }

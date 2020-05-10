@@ -1,14 +1,11 @@
 package com.shzlw.poli.rest.api;
 
-import com.shzlw.poli.dao.AuditLogDao;
 import com.shzlw.poli.dao.SavedQueryDao;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.SavedQuery;
 import com.shzlw.poli.service.AuditLogService;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
-import com.shzlw.poli.util.CommonUtils;
-import com.shzlw.poli.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
