@@ -76,16 +76,16 @@ class SchemaPanel extends React.Component {
           const column = columns[j];
           columnItems.push(
             <div className="row schema-column-row">
-              <div className="float-left schema-column-name">{column.name}</div>
-              <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
+              <div className="float-left schema-column-row-name">{column.name}</div>
+              <div className="float-right schema-column-row-type">{column.dbType}({column.length})</div> 
             </div>
           );
         }
         schemaItems.push(
           <div>
-            <div className="row schema-table-title" onClick={() => this.toggleSchemaColumns(name)}>
-              <div className="float-left">{name}</div>
-              <div className="float-right">{type}</div>
+            <div className="row schema-title-row" onClick={() => this.toggleSchemaColumns(name)}>
+              <div className="float-left schema-title-row-name">{name}</div>
+              <div className="float-right schema-title-row-type">{type}</div>
             </div>
             { showColumns && (
               <div>

@@ -12,7 +12,6 @@
   overflow-y: auto;
   border-right: 1px solid #ccc;
   background-color: #efefef;
-  padding: 5px;
 }
 
 .studio-property-sidebar {
@@ -25,8 +24,8 @@
 
 .studio-property-panel {
   border-bottom: 1px solid #ccc;
-  background-color: #efefef;
-  padding: 5px;
+  background-color: #FFFFFF;
+  padding: 5px 8px 0px 8px;
 }
 
 .studio-body {
@@ -60,4 +59,22 @@
 
 .studio-datasource-select {
   width: 300px;
+}
+
+.studio-query-menu-item {
+  border-left: 3px solid #EBECF0;
+  margin: 5px 0px;
+  padding: 3px 0px 3px 8px;
+  font-weight: 700;
+  color: #8993A4;
+  cursor: pointer;
+}
+
+.studio-query-menu-item:hover {
+  border-left: 3px solid #0065FF;
+}
+
+.studio-query-menu-item-active {
+  border-left: 3px solid #0065FF;
+  color: #0065FF;
 }

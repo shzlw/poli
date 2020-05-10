@@ -36,8 +36,6 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getServletPath();
 
-        LOGGER.info("AuthFilter - httpRequest: {}", httpRequest);
-
         if (!path.startsWith("/ws/")) {
             chain.doFilter(request, response);
             return;

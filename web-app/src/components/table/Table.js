@@ -62,7 +62,7 @@ class Table extends React.Component {
 
     if (data.length === 0 || columns.length === 0) {
       return (
-        <div>No data</div>
+        <div style={{padding: '10px'}}>No data</div>
       );
     }
 

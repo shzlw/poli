@@ -124,7 +124,7 @@ class AuditLog extends React.Component {
           </div>
         </div>
 
-        <div className="poli-table-panel">
+        <div className="poli-table-panel" style={{padding: '10px 0px'}}>
           { auditLogList.length !== 0 ? (
             <table className="poli-table">
               <thead>
@@ -132,7 +132,6 @@ class AuditLog extends React.Component {
                   <th>Created At</th>
                   <th>Type</th>
                   <th>Log</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>

@@ -1,5 +1,10 @@
 .schema-side-panel {
-  width: 249px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  width: 449px;
   min-width: 249px;
   overflow-y: auto;
   border-left: 1px solid #ccc;
@@ -10,4 +15,19 @@
 .schema-button {
   height: 33px;
   width: 33px;
+}
+
+.schema-title-row {
+  padding: 4px 8px;
+  cursor: pointer;
+  margin-bottom: 3px;
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
+}
+
+.schema-column-row-type {
+  color: #8993A4;
 }

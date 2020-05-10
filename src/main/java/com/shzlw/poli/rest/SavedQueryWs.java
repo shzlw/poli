@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class SavedQueryWs {
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody SavedQuery savedQuery) {
+        if (StringUtils.isEmpty(savedQuery.getEndpointName())) {
+            savedQuery.setEndpointName(null);
+        }
         long id = savedQueryDao.insert(savedQuery);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
@@ -40,6 +44,9 @@ public class SavedQueryWs {
     @RequestMapping(method = RequestMethod.PUT)
     @Transactional
     public ResponseEntity<?> update(@RequestBody SavedQuery savedQuery) {
+        if (StringUtils.isEmpty(savedQuery.getEndpointName())) {
+            savedQuery.setEndpointName(null);
+        }
         savedQueryDao.update(savedQuery);
         return new ResponseEntity<String>(HttpStatus.OK);
     }

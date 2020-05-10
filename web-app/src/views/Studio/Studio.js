@@ -167,11 +167,16 @@ class Studio extends React.Component {
 
     if (id === 0) {
       const { data: id = 0 } = await ApiService.httpPost('/ws/saved-queries', body);
+      await this.fetchSavedQueries();
+      if (id !== 0) {
+        toast.success('Success');
+      }
       this.setState({
         id: id
       });
     } else {
       await ApiService.httpPut('/ws/saved-queries', body);
+      toast.success('Success');
     }
   }
 
@@ -240,6 +245,26 @@ class Studio extends React.Component {
     });
   }
 
+  openApiWindow = async () => {
+    const {
+      endpointName,
+      endpointAccessCode
+    } = this.state;
+
+    // If the query is not saved, it will show 404.
+
+    const { location } = window;
+    const host = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+    let url = host + `/api/v1/saved-queries?name=${endpointName}`;
+    if (endpointAccessCode) {
+      url += `&accessCode=${endpointAccessCode}`;
+    }
+
+    if (endpointName) {
+      window.open(url, '_blank');
+    }
+  }
+
   render() {
     const { t } = this.props;
 
@@ -250,6 +275,7 @@ class Studio extends React.Component {
       selectedJdbcDataSource = {},
       savedQueryList = [],
       savedQuerySearchValue = '',
+      id: activeQueryId,
     } = this.state;
 
     const data = Util.jsonToArray(queryResult.data);
@@ -267,10 +293,11 @@ class Studio extends React.Component {
         name,
         endpointName
       } = savedQueryList[i];
+      const menuActive = activeQueryId === id ? 'studio-query-menu-item-active' : '';
       if (!savedQuerySearchValue || (savedQuerySearchValue && name.includes(savedQuerySearchValue))) {
         savedQueryListItems.push(
-          <div key={id} className="row schema-table-title" onClick={() => this.onSelectSavedQuery(id)}>
-            <div className="float-left">{name}</div>
+          <div key={id} className={`row studio-query-menu-item ${menuActive}`} onClick={() => this.onSelectSavedQuery(id)}>
+            <div className="float-left ellipsis" style={{maxWidth: '140px'}}>{name}</div>
             <div className="float-right">
               { endpointName && (
                 <span>API</span>
@@ -286,26 +313,27 @@ class Studio extends React.Component {
     return (
       <div className="studio-container">
         <div className="studio-menu-sidebar">
-          <div>
+          <div style={{margin: '8px 5px 5px 5px'}}>
             <button className="button full-width" onClick={this.newQuery}>
               <FontAwesomeIcon icon="plus" /> {t('New')}
             </button>
+          </div>
+          <div style={{margin: '8px 5px 5px 5px'}}>
             <SearchInput 
               name={'savedQuerySearchValue'} 
               value={this.state.savedQuerySearchValue} 
               onChange={this.handleInputChange} 
             />
           </div>
-          <div>
+          <div style={{margin: '8px 5px 5px 5px'}}>
             {savedQueryListItems}
           </div>
         </div>
 
         <div className="studio-property-sidebar">
           <div className="studio-property-panel">
-            <div>Saved Query</div>
             <div className="form-panel">
-              <label>{t('Name')}</label>
+              <label>{t('Query Name')}</label>
               <input 
                 className="form-input"
                 type="text" 
@@ -317,9 +345,8 @@ class Studio extends React.Component {
           </div>
           
           <div className="studio-property-panel">
-            <div>Endpoint</div>
             <div className="form-panel">
-              <label>{t('Name')}</label>
+              <label>{t('Endpoint Name')}</label>
               <input 
                 className="form-input"
                 type="text" 
@@ -336,14 +363,22 @@ class Studio extends React.Component {
                 value={this.state.endpointAccessCode}
                 onChange={(event) => this.handleInputChange('endpointAccessCode', event.target.value)} 
               />
+
+              { this.state.endpointName && (
+                <div className="row" style={{paddingBottom: '8px'}}>
+                  <button className="button float-right" onClick={this.openApiWindow}>{t('API')}</button>
+                </div>
+              )}
             </div>
           </div>
           
-          <div>
-            <button className="button" style={{marginRight: '5px'}} onClick={this.saveQuery}>{t('Save')}</button>
-            { this.state.id !== 0 && (
-              <button className="button" onClick={this.openConfirmDeletionPanel}>{t('Delete')}</button>
-            )}
+          <div className="row" style={{padding: '8px'}}>
+            <div className="float-right">
+              <button className="button" onClick={this.saveQuery}>{t('Save')}</button>
+              { this.state.id !== 0 && (
+                <button className="button" style={{marginLeft: '5px'}} onClick={this.openConfirmDeletionPanel}>{t('Delete')}</button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -358,7 +393,9 @@ class Studio extends React.Component {
                 styles={ReactSelectHelper.CUSTOM_STYLE}
               />
             </div>
-            <button className="button" style={{marginLeft: '5px'}} onClick={this.toggleSchema}>{t('Schema')}</button>
+            { schemaJdbcDataSourceId && (
+              <button className="button" style={{marginLeft: '5px'}} onClick={this.toggleSchema}>{t('Schema')}</button>
+            )}
           </div>
           
           <div className="studio-editor-container">

@@ -1,4 +1,4 @@
-package com.shzlw.poli.rest;
+package com.shzlw.poli.rest.api;
 
 import com.shzlw.poli.dao.AuditLogDao;
 import com.shzlw.poli.dao.SavedQueryDao;
@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/saved-query")
+@RequestMapping("/api/v1")
 public class SavedQueryEndpointWs {
 
     @Autowired
@@ -39,12 +38,12 @@ public class SavedQueryEndpointWs {
     @Autowired
     AuditLogService auditLogService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/saved-queries", method = RequestMethod.GET)
     @Transactional
-    public ResponseEntity<String> test(@RequestParam("name") String name,
-                                       @RequestParam(name = "accessCode", required = false, defaultValue = "") String accessCode,
-                                       @RequestParam(name = "contentType", required = false, defaultValue = "") String contentType,
-                                       HttpServletRequest request) {
+    public ResponseEntity<String> getSavedQuery(@RequestParam("name") String name,
+                                               @RequestParam(name = "accessCode", required = false, defaultValue = "") String accessCode,
+                                               @RequestParam(name = "contentType", required = false, defaultValue = "") String contentType,
+                                               HttpServletRequest request) {
 
         auditLogService.logQueryEndpointAccess(request, name);
 
@@ -60,6 +59,10 @@ public class SavedQueryEndpointWs {
         }
 
         DataSource dataSource = jdbcDataSourceService.getDataSource(savedQuery.getJdbcDataSourceId());
+        if (dataSource == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
         QueryResult queryResult = jdbcQueryService.executeQuery(dataSource, savedQuery.getSqlQuery(), contentType);
         if (queryResult.getError() != null) {
             return new ResponseEntity<>(queryResult.getError(), HttpStatus.BAD_REQUEST);
