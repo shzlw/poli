@@ -1,4 +1,6 @@
 -- For PostgreSQL
+DROP TABLE IF EXISTS p_audit_log;
+DROP TABLE IF EXISTS p_saved_query;
 DROP TABLE IF EXISTS p_shared_report;
 DROP TABLE IF EXISTS p_user_favourite;
 DROP TABLE IF EXISTS p_group_report;
@@ -126,6 +128,27 @@ IF NOT EXISTS p_shared_report (
     FOREIGN KEY (report_id) REFERENCES p_report(id),
     FOREIGN KEY (user_id) REFERENCES p_user(id)
 );
+
+CREATE TABLE
+IF NOT EXISTS p_saved_query (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    datasource_id INTEGER,
+    name VARCHAR NOT NULL UNIQUE,
+    sql_query VARCHAR,
+    endpoint_name VARCHAR UNIQUE,
+    endpoint_accesscode VARCHAR
+);
+
+CREATE TABLE
+IF NOT EXISTS p_audit_log (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at INTEGER NOT NULL,
+    type VARCHAR NOT NULL,
+    data VARCHAR
+);
+
+CREATE INDEX idx_audit_log_created_at ON p_audit_log (created_at);
+
 
 INSERT INTO p_user(username, temp_password, sys_role)
 VALUES('admin', 'f6fdffe48c908deb0f4c3bd36c032e72', 'admin');

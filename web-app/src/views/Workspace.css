@@ -12,6 +12,7 @@
   width: 100%;
   height: 40px;
   background-color: #212121;
+  box-sizing: border-box;
 }
 
 .workspace-nav-menu {
@@ -22,28 +23,36 @@
   float: left;
 }
 
-.workspace-nav-menu li {
+.workspace-nav-menu-text {
+  margin-left: 6px;
+}
+
+.workspace-nav-menu-item { 
   display: inline-block;
   list-style: none;
   font-size: 16px; 
 }
 
-.workspace-nav-menu-text {
-  margin-left: 6px;
-}
-
-.workspace-nav-menu li a {
+.workspace-nav-menu-item-value {
   display: block;
-  color: #ccc;
-  text-decoration: none;
-  padding: 11px 12px 10px 12px;   
+  color: #FFFFFF;
+  padding: 11px 9px 10px 9px; 
+  cursor: pointer; 
 }
 
-.workspace-nav-menu li a:hover {
+.workspace-nav-menu-item-dropdown {
+  position: absolute;
+  z-index: 1;
+  background-color: #212121;
+  min-width: 100px;
+}
+
+.workspace-nav-menu-item-value:hover {
   background-color: #003ccb;
+  color: #FFFFFF !important;
 }
 
-.menu-item-active a {
+.menu-item-active {
   background-color: #0065FF;
   color: #FFFFFF !important;
 }
@@ -63,20 +72,34 @@
   float: right;
 }
 
-.workspace-account-button a {
-  display: block;
-  color: #ccc;
-  padding: 11px 12px 10px 12px;
-  text-decoration: none;
-}
-
-.workspace-account-button a:hover {
-  background-color: #003ccb;
-}
-
-.workspace-logout-button {
-  color: #ccc;
-  padding: 11px 12px 10px 12px;
+.workspace-account-button {
+  display: inline-block;
+  color: #FFFFFF;
+  padding: 11px 10px 10px 10px;
   text-decoration: none;
   cursor: pointer;
+}
+
+.workspace-account-button:hover {
+  background-color: #003ccb;
+  color: #FFFFFF !important;
+}
+
+.workspace-account-dropdown {
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+  background-color: #212121;
+  width: 80px;
+}
+
+.workspace-dropdown-button {
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.workspace-dropdown-button:hover {
+  background-color: #003ccb;
+  color: #FFFFFF !important;
 }

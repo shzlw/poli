@@ -9,9 +9,9 @@ import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.UUID;
 
-public final class PasswordUtil {
+public final class PasswordUtils {
 
-    private PasswordUtil() {}
+    private PasswordUtils() {}
 
     public static synchronized String getUniqueId() {
         return uuidToBase64(UUID.randomUUID().toString());

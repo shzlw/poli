@@ -13,7 +13,7 @@ import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.HttpClient;
 import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.service.SharedReportService;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -99,7 +99,7 @@ public class ReportWs {
             return null;
         }
 
-        if (sharedReport.getExpiredBy() < CommonUtil.toEpoch(LocalDateTime.now())) {
+        if (sharedReport.getExpiredBy() < CommonUtils.toEpoch(LocalDateTime.now())) {
             return null;
         }
 

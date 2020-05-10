@@ -2,7 +2,7 @@ package com.shzlw.poli.dao;
 
 import com.shzlw.poli.dto.SharedReportRow;
 import com.shzlw.poli.model.SharedReport;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -121,9 +121,9 @@ public class SharedReportDao {
             r.setReportType(rs.getString(SharedReport.REPORT_TYPE));
             r.setCreatedBy(rs.getString(SharedReportRow.CREATED_BY));
             long createdAt = rs.getLong(SharedReport.CREATED_AT);
-            r.setCreateDateTime(CommonUtil.toReadableDateTime(CommonUtil.fromEpoch(createdAt)));
+            r.setCreateDateTime(CommonUtils.toReadableDateTime(CommonUtils.fromEpoch(createdAt)));
             long expiredBy = rs.getLong(SharedReport.EXPIRED_BY);
-            r.setExpirationDate(CommonUtil.toReadableDate(CommonUtil.fromEpoch(expiredBy)));
+            r.setExpirationDate(CommonUtils.toReadableDate(CommonUtils.fromEpoch(expiredBy)));
             return r;
         }
     }

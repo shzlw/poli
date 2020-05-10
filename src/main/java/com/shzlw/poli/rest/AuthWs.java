@@ -6,7 +6,7 @@ import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
-import com.shzlw.poli.util.PasswordUtil;
+import com.shzlw.poli.util.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -142,12 +142,12 @@ public class AuthWs {
     public ResponseEntity<String> generateApiKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
         User user = userDao.findAccountBySessionKey(sessionKey);
         userService.invalidateApiKeyUserCache(user.getApiKey());
-        String apiKey = Constants.API_KEY_PREFIX + PasswordUtil.getUniqueId();
+        String apiKey = Constants.API_KEY_PREFIX + PasswordUtils.getUniqueId();
         userDao.updateApiKey(user.getId(), apiKey);
         return new ResponseEntity<>(apiKey, HttpStatus.OK);
     }
 
     private static String getNewSessionKey() {
-        return Constants.SESSION_KEY_PREFIX + PasswordUtil.getUniqueId();
+        return Constants.SESSION_KEY_PREFIX + PasswordUtils.getUniqueId();
     }
 }

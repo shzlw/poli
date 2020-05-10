@@ -17,11 +17,13 @@ class SchemaPanel extends React.Component {
   }
 
   async componentDidMount() { 
+    await this.fetchSchema();
+  }
+
+  fetchSchema = async() => {
     const {
       jdbcDataSourceId
     } = this.props;
-
-    console.log('SchemaPanel redner', jdbcDataSourceId);
 
     if (jdbcDataSourceId) {
       const { data: schemas = [] } = await ApiService.fetchDatabaseSchema(jdbcDataSourceId);
@@ -50,6 +52,7 @@ class SchemaPanel extends React.Component {
       });
     }
   }
+  
 
   render() {
     const {
@@ -73,16 +76,16 @@ class SchemaPanel extends React.Component {
           const column = columns[j];
           columnItems.push(
             <div className="row schema-column-row">
-              <div className="float-left schema-column-name">{column.name}</div>
-              <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
+              <div className="float-left schema-column-row-name">{column.name}</div>
+              <div className="float-right schema-column-row-type">{column.dbType}({column.length})</div> 
             </div>
           );
         }
         schemaItems.push(
           <div>
-            <div className="row schema-table-title" onClick={() => this.toggleSchemaColumns(name)}>
-              <div className="float-left">{name}</div>
-              <div className="float-right">{type}</div>
+            <div className="row schema-title-row" onClick={() => this.toggleSchemaColumns(name)}>
+              <div className="float-left schema-title-row-name">{name}</div>
+              <div className="float-right schema-title-row-type">{type}</div>
             </div>
             { showColumns && (
               <div>
@@ -95,7 +98,15 @@ class SchemaPanel extends React.Component {
     }
 
     return (
-      <div>
+      <div className="schema-side-panel">
+        <div>
+          <button className="button square-button" style={{marginRight: '5px'}} onClick={this.fetchSchema}>
+            <FontAwesomeIcon icon="redo-alt" />
+          </button>
+          <button className="button square-button" onClick={this.props.onClose}>
+            <FontAwesomeIcon icon="times" />
+          </button>
+        </div>
         <div style={{margin: '8px 0px'}}>
           <SearchInput 
             name={'searchSchemaName'} 

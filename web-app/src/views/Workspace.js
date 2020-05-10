@@ -5,12 +5,14 @@ import { withTranslation } from 'react-i18next';
 
 import DataSource from './DataSource';
 import Report from './Report/Report';
-import UserManagement from './UserManagement/UserManagement';
+import User from './UserManagement/User';
+import Group from './UserManagement/Group'
 import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
-import EventView from './EventView';
 import Studio from './Studio/Studio';
+import SharedReportView from './Event/SharedReportView';
+import AuditLog from './Event/AuditLog';
 
 import * as Constants from '../api/Constants';
 import './Workspace.css';
@@ -34,14 +36,32 @@ const MENU_ITEMS = [
     icon: 'database'
   }, 
   {
-    link: '/workspace/usermanagement',
     value: 'User Management',
-    icon: 'users-cog'
+    icon: 'users-cog',
+    dropdowns: [
+      {
+        link: '/workspace/group',
+        value: 'Group',
+      },
+      {
+        link: '/workspace/user',
+        value: 'User',
+      }
+    ]
   },
   {
-    link: '/workspace/event',
     value: 'Event',
-    icon: 'search-location'
+    icon: 'search-location',
+    dropdowns: [
+      {
+        link: '/workspace/sharedreport',
+        value: 'Shared Report',
+      },
+      {
+        link: '/workspace/auditlog',
+        value: 'Audit Log',
+      }
+    ]
   }
 ];
 
@@ -51,18 +71,23 @@ class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenuLink: '/workspace/report'
+      currentMenuLink: '/workspace/report',
+      showAccountDropdown: false,
+      menutItems: MENU_ITEMS
     }
   }
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
-    let link;
+    let link = '';
     if (pathname.startsWith(ACCOUNT_MENU_LINK)) {
       link = ACCOUNT_MENU_LINK;
     } else {
-      const menuItem = MENU_ITEMS.find(m => pathname.startsWith(m.link));
-      link = menuItem.link;
+      const { menutItems } = this.state; 
+      const index = menutItems.findIndex(m => pathname.startsWith(m.link));
+      if (index !== -1) {
+        link = menutItems[index].link;
+      }
     }
 
     this.setState({
@@ -70,17 +95,81 @@ class Workspace extends React.Component {
     });
   }
 
-  handleMenuClick = (menuLink) => {
-    this.setState({
-      currentMenuLink: menuLink
-    });
+  handleMenuClick = (menu) => {
+    const { menutItems } = this.state;
+    const menutItemsClone = [...menutItems];
+
+    if (menu.dropdowns) {
+      for (let i = 0; i < menutItemsClone.length; i++) {
+        if (menutItemsClone[i].value === menu.value) {
+          menutItemsClone[i].showDropdown = !menutItemsClone[i].showDropdown;
+        } else {
+          menutItemsClone[i].showDropdown = false;
+        }
+      }
+      
+      this.setState({
+        menuItems: menutItemsClone
+      });
+    } else {
+      for (let i = 0; i < menutItemsClone.length; i++) {
+        menutItemsClone[i].showDropdown = false;
+      }
+        
+      this.setState({
+        currentMenuLink: menu.link,
+        menutItems: menutItemsClone,
+        showAccountDropdown: false
+      }, () => {
+        this.props.history.push(menu.link);
+      });
+    }
   }
 
   logout = () => {
     axios.get('/auth/logout')
       .then(res => {
-        this.props.onLogout();
+        this.setState({
+          showAccountDropdown: false
+        }, () => {
+          this.props.onLogout();
+        });
       });
+  }
+
+  onAccountMenuClick = () => {
+    this.setState(prevState => ({
+      showAccountDropdown: !prevState.showAccountDropdown
+    })); 
+  }
+
+  goToSubLink = (link) => {
+    const { menutItems } = this.state;
+    const menutItemsClone = [...menutItems];
+    for (let i = 0; i < menutItemsClone.length; i++) {
+      menutItemsClone[i].showDropdown = false;
+    }
+      
+    this.setState({
+      currentMenuLink: '',
+      menutItems: menutItemsClone,
+      showAccountDropdown: false
+    }, () => {
+      this.props.history.push(link);
+    });
+  }
+
+  closeMenuDropdown = () => {
+    const { menutItems } = this.state;
+    const menutItemsClone = [...menutItems];
+    for (let i = 0; i < menutItemsClone.length; i++) {
+      menutItemsClone[i].showDropdown = false;
+    }
+      
+    this.setState({
+      menutItems: menutItemsClone,
+      showAccountDropdown: false
+    });
   }
 
   render() {
@@ -88,6 +177,7 @@ class Workspace extends React.Component {
     
     const {
       currentMenuLink,
+      menutItems
     } = this.state;
     
     const {
@@ -98,43 +188,65 @@ class Workspace extends React.Component {
     let menuItems = [];
     let menuList = [];
     if (sysRole === Constants.SYS_ROLE_VIEWER) {
-      menuList = MENU_ITEMS.filter(m => m.link === '/workspace/report');
+      menuList = menutItems.filter(m => m.link === '/workspace/report');
     } else {
-      menuList = MENU_ITEMS;
+      menuList = menutItems;
     }
     for (let i = 0; i < menuList.length; i++) {
       const menu = menuList[i];
       const active = currentMenuLink === menu.link ? 'menu-item-active' : '';
+
+      const {
+        dropdowns = []
+      } = menu;
+      const dropdownItems = dropdowns.map(d => {
+        return (
+          <div className="workspace-dropdown-button" onClick={() => this.goToSubLink(d.link)}>
+            {d.value}
+          </div>
+        );
+      });
+
+
       menuItems.push(
         (
-          <li key={menu.link} className={active}>
-            <Link to={menu.link} onClick={() => this.handleMenuClick(menu.link)}>
+          <div key={menu.link} className={`workspace-nav-menu-item ${active}`}>
+            <div className="workspace-nav-menu-item-value" onClick={() => this.handleMenuClick(menu)}>
               <FontAwesomeIcon icon={menu.icon} fixedWidth />
               <span className="workspace-nav-menu-text">{t(menu.value)}</span>
-            </Link>
-          </li>
+            </div>
+            { menu.showDropdown && (
+              <div className="workspace-nav-menu-item-dropdown">
+                {dropdownItems}
+              </div>
+            )}
+          </div>
         )
       );
     }
 
-    const isAccountMenuActive = currentMenuLink === ACCOUNT_MENU_LINK ? 'menu-item-active' : '';
     return (
       <React.Fragment>
         <div className="workspace-nav">  
           <div className="workspace-name">{t('Poli')}</div>
-          <ul className="workspace-nav-menu">
+          <div className="workspace-nav-menu">
             {menuItems}
-          </ul>
+          </div>
           <div className="workspace-account-menu">
-            <div className={`workspace-account-button inline-block ${isAccountMenuActive}`}>
-              <Link to="/workspace/account" onClick={() => this.handleMenuClick(ACCOUNT_MENU_LINK)}>
-                <FontAwesomeIcon icon="user" fixedWidth />
-                <span className="workspace-nav-menu-text">{username}</span>
-              </Link>
+            <div className="workspace-account-button" onClick={this.onAccountMenuClick}>
+              <FontAwesomeIcon icon="user" fixedWidth />
+              <span className="workspace-nav-menu-text">{username}</span>
             </div>
-            <div className="workspace-logout-button inline-block" onClick={this.logout}>
-              <FontAwesomeIcon icon="sign-out-alt" fixedWidth />
-            </div>
+            { this.state.showAccountDropdown && (
+              <div className="workspace-account-dropdown">
+                <div className="workspace-dropdown-button" onClick={() => this.goToSubLink('/workspace/account')}>
+                  Account
+                </div>
+                <div className="workspace-dropdown-button" onClick={this.logout}>
+                  Logout
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="workspace-content">
@@ -142,8 +254,10 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/datasource" component={DataSource} />
             <Route exact path="/workspace/account" component={Account} />
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
-            <Route exact path="/workspace/usermanagement" render={() => <UserManagement {...this.props} />} />
-            <Route exact path="/workspace/event" component={EventView} />
+            <Route exact path="/workspace/group" component={Group} />
+            <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
+            <Route exact path="/workspace/auditlog" component={AuditLog} />
+            <Route exact path="/workspace/sharedreport" component={SharedReportView} />
             <Route exact path="/workspace/studio" component={Studio} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
             <Route component={PageNotFound} />

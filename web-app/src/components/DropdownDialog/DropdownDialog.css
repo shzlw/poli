@@ -10,11 +10,12 @@
 .dropdown-panel {
   position: fixed;
   z-index: 151;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
   border-radius: 4px;
-  top: 80px;
+  top: 85px;
   right: 35px;
   background-color: #FFFFFF;
+  border: 1px solid #e0e0e0;
 }
 
 .dropdown-body {

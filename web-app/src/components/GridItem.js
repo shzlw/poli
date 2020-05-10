@@ -16,7 +16,7 @@ import Iframe from './widgets/Iframe';
 import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
-import Kanban from '../components/kanban/Kanban';
+import Kanban from './Kanban/Kanban';
 
 class GridItem extends React.Component {
 

@@ -1,5 +1,28 @@
 # Change Logs
 
+## v0.12.0
+
+### Upgrade Steps
+- New databse tables need to be loaded in order to support saved query and audit log. 
+
+  ```sh
+  ./sqlite3 poli.db
+
+  -- File is located at upgrade/poli_upgrade_v0.12.0.sql
+  sqlite> .read poli_upgrade_v0.12.0.sql
+  ```
+
+### Improvements
+- Upgrade spring boot version and npm packages.
+- Add fixed header option for table component.
+- Update app style so new look & feel.
+- Update app icon.
+- Add french translation provided by @pasqal. Thanks! 
+- Update installation guide.
+- Add new kanban component.
+- Add new studio page to save used Query and turn SQL Query into a HTTP endpoint.
+- Add new audit log page.
+
 ## v0.11.0
 
 ### New Features

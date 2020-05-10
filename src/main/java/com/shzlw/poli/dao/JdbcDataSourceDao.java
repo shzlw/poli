@@ -1,7 +1,7 @@
 package com.shzlw.poli.dao;
 
 import com.shzlw.poli.model.JdbcDataSource;
-import com.shzlw.poli.util.PasswordUtil;
+import com.shzlw.poli.util.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,7 +51,7 @@ public class JdbcDataSourceDao {
 
     public long insert(JdbcDataSource ds) {
         String rawPassword = ds.getPassword();
-        String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
+        String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
         String sql = "INSERT INTO p_datasource(name, connection_url, driver_class_name, username, password, ping) "
                     + "VALUES(:name, :connection_url, :driver_class_name, :username, :password, :ping)";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -80,7 +80,7 @@ public class JdbcDataSourceDao {
                     ds.getId()
             });
         } else {
-            String encryptedPassword = PasswordUtil.getEncryptedPassword(rawPassword);
+            String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
             String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, password=?, ping=? WHERE id=?";
             return jt.update(sql, new Object[]{
                     ds.getName(),
@@ -123,7 +123,7 @@ public class JdbcDataSourceDao {
             ds.setDriverClassName(rs.getString(JdbcDataSource.DRIVER_CLASS_NAME));
             ds.setUsername(rs.getString(JdbcDataSource.USERNAME));
             String encryptedPassword = rs.getString(JdbcDataSource.PASSWORD);
-            String rawPassword = PasswordUtil.getDecryptedPassword(encryptedPassword);
+            String rawPassword = PasswordUtils.getDecryptedPassword(encryptedPassword);
             ds.setPassword(rawPassword);
             ds.setPing(rs.getString(JdbcDataSource.PING));
             return ds;

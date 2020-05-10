@@ -256,7 +256,7 @@ class App extends React.Component {
         </Switch>
         <ToastContainer
           position="top-center"
-          autoClose={false}
+          autoClose={3000}
           draggable={false}
           hideProgressBar
           closeOnClick

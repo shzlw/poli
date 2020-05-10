@@ -8,11 +8,12 @@ import com.shzlw.poli.dto.Column;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.dto.Table;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.Nullable;
@@ -58,7 +59,7 @@ public class JdbcQueryService {
             }
             return Constants.SUCCESS;
         } catch (Exception e) {
-            return getSimpleError(e);
+            return CommonUtils.getSimpleError(e);
         }
     }
 
@@ -92,7 +93,7 @@ public class JdbcQueryService {
         }
     }
 
-    public QueryResult queryComponentByParams(
+    public QueryResult queryByParams(
             DataSource dataSource,
             String sql,
             List<FilterParameter> filterParams,
@@ -109,65 +110,40 @@ public class JdbcQueryService {
 
         // Handle multiple SQL statements.
         // If there are multiple sql statements, only return query results from the last query.
-        List<String> sqls = CommonUtil.getQueryStatements(sql);
+        List<String> sqls = JdbcQueryServiceHelper.getQueryStatements(sql);
         int preQueryNumber = sqls.size() - 1;
         if (appProperties.getAllowMultipleQueryStatements()) {
             for (int i = 0; i < preQueryNumber; i++) {
-                String parsedSql = parseSqlStatementWithParams(sqls.get(i), namedParameters);
+                String parsedSql = JdbcQueryServiceHelper.parseSqlStatementWithParams(sqls.get(i), namedParameters);
                 npjt.execute(parsedSql, (ps) -> ps.execute());
             }
         }
 
-        String parsedSql = parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
+        String parsedSql = JdbcQueryServiceHelper.parseSqlStatementWithParams(sqls.get(preQueryNumber), namedParameters);
         return executeQuery(npjt, parsedSql, namedParameters, resultLimit);
     }
 
-    private QueryResult executeQuery(NamedParameterJdbcTemplate npjt,
-                                     String sql,
-                                     Map<String, Object> namedParameters,
-                                     int resultLimit) {
-        // Deprecated
-        int maxQueryRecords = appProperties.getMaximumQueryRecords();
+    public QueryResult executeQuery(DataSource dataSource, String sql, String contentType) {
+        JdbcTemplate jt = new JdbcTemplate(dataSource);
+        final int maxQueryResult = JdbcQueryServiceHelper.calculateMaxQueryResultLimit(appProperties.getMaximumQueryRecords(), Constants.QUERY_RESULT_NOLIMIT);
 
-        QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
+        QueryResult result = jt.query(sql, new Object[] {}, new ResultSetExtractor<QueryResult>() {
             @Nullable
             @Override
             public QueryResult extractData(ResultSet rs) {
                 try {
                     ResultSetMetaData metadata = rs.getMetaData();
-                    int columnCount = metadata.getColumnCount();
-                    String[] columnNames = new String[columnCount + 1];
-                    List<Column> columns = new ArrayList<>();
-                    for (int i = 1; i <= columnCount; i++) {
-                        int columnType = metadata.getColumnType(i);
-                        String dbType = metadata.getColumnTypeName(i);
-                        int length = metadata.getColumnDisplaySize(i);
-                        // Use column label to fetch the column alias instead of using column name.
-                        // If there is no alias, column label is the same as column name.
-                        String columnLabel = metadata.getColumnLabel(i);
-                        columnNames[i] = columnLabel;
-                        columns.add(new Column(columnLabel, JDBC_TYPE_MAP.get(columnType), dbType, length));
+                    String[] columnNames = getColumnNames(metadata);
+                    List<Column> columns = getColumnList(metadata);
+                    String data;
+                    if (Constants.CONTENT_TYPE_CSV.equals(contentType)) {
+                        data = resultSetToCsvString(rs, columnNames, maxQueryResult);
+                    } else {
+                        data = resultSetToJsonString(rs, columnNames, maxQueryResult);
                     }
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    ArrayNode array = mapper.createArrayNode();
-
-                    int rowCount = 0;
-                    while (rs.next()) {
-                        ObjectNode node = mapper.createObjectNode();
-                        for (int i = 1; i <= columnCount; i++) {
-                            node.put(columnNames[i], rs.getString(i));
-                        }
-                        array.add(node);
-                        rowCount++;
-                        if (resultLimit > 0 && rowCount >= resultLimit) {
-                            break;
-                        }
-                    }
-                    String data = array.toString();
                     return QueryResult.ofData(data, columns);
                 } catch (Exception e) {
-                    String error = getSimpleError(e);
+                    String error = CommonUtils.getSimpleError(e);
                     return QueryResult.ofError(error);
                 }
             }
@@ -176,42 +152,31 @@ public class JdbcQueryService {
         return result;
     }
 
-    public static String parseSqlStatementWithParams(String sql, Map<String, Object> params) {
-        StringBuilder sb = new StringBuilder();
-        char[] s = sql.toCharArray();
-        int i = 0;
-        while (i < s.length) {
-            if (s[i] == '{' && (i + 1 < s.length) && s[i + 1] == '{') {
-                int j = i + 2;
-                while (j < s.length) {
-                    if (s[j] == '}' && (j + 1 < s.length) && s[j + 1] == '}') {
-                        String clause = sql.substring(i + 2, j);
-                        boolean hasParam = false;
-                        for (Map.Entry<String, Object> entry : params.entrySet())  {
-                            if (clause.contains(":" + entry.getKey())) {
-                                hasParam = true;
-                                break;
-                            }
-                        }
+    private QueryResult executeQuery(NamedParameterJdbcTemplate npjt,
+                                     String sql,
+                                     Map<String, Object> namedParameters,
+                                     int resultLimit) {
+        // Determine max query result
+        final int maxQueryResult = JdbcQueryServiceHelper.calculateMaxQueryResultLimit(appProperties.getMaximumQueryRecords(), resultLimit);
 
-                        if (hasParam) {
-                            sb.append(clause);
-                        }
-
-                        i = j + 2;
-                        break;
-                    }
-                    j++;
+        QueryResult result = npjt.query(sql, namedParameters, new ResultSetExtractor<QueryResult>() {
+            @Nullable
+            @Override
+            public QueryResult extractData(ResultSet rs) {
+                try {
+                    ResultSetMetaData metadata = rs.getMetaData();
+                    String[] columnNames = getColumnNames(metadata);
+                    List<Column> columns = getColumnList(metadata);
+                    String data = resultSetToJsonString(rs, columnNames, maxQueryResult);
+                    return QueryResult.ofData(data, columns);
+                } catch (Exception e) {
+                    String error = CommonUtils.getSimpleError(e);
+                    return QueryResult.ofError(error);
                 }
             }
+        });
 
-            if (i < s.length) {
-                sb.append(s[i]);
-                i++;
-            }
-        }
-
-        return sb.toString();
+        return result;
     }
 
     public Map<String, Object> getNamedParameters(final List<FilterParameter> filterParams) {
@@ -221,7 +186,7 @@ public class JdbcQueryService {
         }
 
         for (FilterParameter param : filterParams) {
-            if (!isFilterParameterEmpty(param)) {
+            if (!JdbcQueryServiceHelper.isFilterParameterEmpty(param)) {
                 String type = param.getType();
                 String name = param.getParam();
                 String value = param.getValue();
@@ -266,18 +231,72 @@ public class JdbcQueryService {
         return namedParameters;
     }
 
-    private static boolean isFilterParameterEmpty(FilterParameter p) {
-        if (p == null
-                || StringUtils.isEmpty(p.getType())
-                || StringUtils.isEmpty(p.getParam())
-                || StringUtils.isEmpty(p.getValue())) {
-            return true;
+    private String[] getColumnNames(ResultSetMetaData metadata) throws SQLException {
+        int columnCount = metadata.getColumnCount();
+        String[] columnNames = new String[columnCount + 1];
+        for (int i = 1; i <= columnCount; i++) {
+            // Use column label to fetch the column alias instead of using column name.
+            // If there is no alias, column label is the same as column name.
+            String columnLabel = metadata.getColumnLabel(i);
+            columnNames[i] = columnLabel;
         }
-
-        return false;
+        return columnNames;
     }
 
-    private static String getSimpleError(Exception e) {
-        return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
+    private List<Column> getColumnList(ResultSetMetaData metadata) throws SQLException {
+        int columnCount = metadata.getColumnCount();
+        List<Column> columns = new ArrayList<>();
+        for (int i = 1; i <= columnCount; i++) {
+            int columnType = metadata.getColumnType(i);
+            String dbType = metadata.getColumnTypeName(i);
+            int length = metadata.getColumnDisplaySize(i);
+            // Use column label to fetch the column alias instead of using column name.
+            // If there is no alias, column label is the same as column name.
+            String columnLabel = metadata.getColumnLabel(i);
+            columns.add(new Column(columnLabel, JDBC_TYPE_MAP.get(columnType), dbType, length));
+        }
+        return columns;
+    }
+
+    private String resultSetToJsonString(ResultSet rs, String[] columnNames, int maxQueryResult) throws SQLException {
+        int columnCount = columnNames.length - 1;
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode array = mapper.createArrayNode();
+        int rowCount = 0;
+        while (rs.next()) {
+            ObjectNode node = mapper.createObjectNode();
+            for (int i = 1; i <= columnCount; i++) {
+                node.put(columnNames[i], rs.getString(i));
+            }
+            array.add(node);
+            rowCount++;
+            if (maxQueryResult != Constants.QUERY_RESULT_NOLIMIT && rowCount >= maxQueryResult) {
+                break;
+            }
+        }
+        return array.toString();
+    }
+
+    private String resultSetToCsvString(ResultSet rs, String[] columnNames, int maxQueryResult) throws SQLException {
+        int columnCount = columnNames.length - 1;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= columnCount; i++) {
+            sb.append(columnNames[i]).append(",");
+        }
+        sb.append("\r\n");
+
+        int rowCount = 0;
+        while (rs.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                // TODO: handle quotation marks
+                sb.append(rs.getString(i)).append(",");
+            }
+            sb.append("\r\n");
+            rowCount++;
+            if (maxQueryResult != Constants.QUERY_RESULT_NOLIMIT && rowCount >= maxQueryResult) {
+                break;
+            }
+        }
+        return sb.toString();
     }
 }

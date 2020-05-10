@@ -2,7 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.SharedReport;
-import com.shzlw.poli.util.CommonUtil;
+import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class SharedReportWsTest extends AbstractWsTest {
         SharedReport sharedReport = new SharedReport();
         sharedReport.setReportId(reportId);
         sharedReport.setReportType("adhoc");
-        sharedReport.setExpiredBy(CommonUtil.toEpoch(tenDaysFromNow));
+        sharedReport.setExpiredBy(CommonUtils.toEpoch(tenDaysFromNow));
 
         body = mapper.writeValueAsString(sharedReport);
         mvcResult = mvc.perform(

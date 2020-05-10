@@ -55,12 +55,11 @@ class Kanban extends React.Component {
         const blockRowItems = [];
         let blockTitleValue = null;
         for (let [key, value] of Object.entries(blocks[j])) {
-          // console.log(`${key}: ${value}`);
           if (key === blockTitleField) {
             blockTitleValue = value;
           } else if (key !== groupByField) {
             blockRowItems.push(
-              <div>{value}</div>
+              <div className="kanban-block-body-row">{value}</div>
             );
           }
         }
