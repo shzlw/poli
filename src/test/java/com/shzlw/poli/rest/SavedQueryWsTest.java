@@ -56,8 +56,7 @@ public class SavedQueryWsTest extends AbstractWsTest {
         Assert.assertEquals(newQuery.getSqlQuery(), saved.getSqlQuery());
         Assert.assertEquals(newQuery.getJdbcDataSourceId(), saved.getJdbcDataSourceId());
         Assert.assertEquals(newQuery.getEndpointName(), saved.getEndpointName());
-        // Endpoint accesscode is not exposed.
-        Assert.assertNull(saved.getEndpointAccessCode());
+        Assert.assertEquals(newQuery.getEndpointAccessCode(), saved.getEndpointAccessCode());
 
         // Verify the list
         mvcResult = mvc.perform(
@@ -99,8 +98,7 @@ public class SavedQueryWsTest extends AbstractWsTest {
         Assert.assertEquals(q2.getSqlQuery(), saved.getSqlQuery());
         Assert.assertEquals(q2.getJdbcDataSourceId(), saved.getJdbcDataSourceId());
         Assert.assertEquals(q2.getEndpointName(), saved.getEndpointName());
-        // Endpoint accesscode is not exposed.
-        Assert.assertNull(saved.getEndpointAccessCode());
+        Assert.assertEquals(q2.getEndpointAccessCode(), saved.getEndpointAccessCode());
 
         // ********** Delete **********
         mvcResult = mvc.perform(

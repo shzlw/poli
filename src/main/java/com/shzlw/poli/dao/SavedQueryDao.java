@@ -61,7 +61,7 @@ public class SavedQueryDao {
     }
 
     public SavedQuery find(long id) {
-        String sql = "SELECT id, name, endpoint_name, sql_query, datasource_id "
+        String sql = "SELECT id, name, endpoint_name, endpoint_accesscode, sql_query, datasource_id "
                     + "FROM p_saved_query "
                     + "WHERE id = ?";
         try {
@@ -70,6 +70,7 @@ public class SavedQueryDao {
                 r.setId(rs.getLong(SavedQuery.ID));
                 r.setName(rs.getString(SavedQuery.NAME));
                 r.setEndpointName(rs.getString(SavedQuery.ENDPOINT_NAME));
+                r.setEndpointAccessCode(rs.getString(SavedQuery.ENDPOINT_ACCESSCODE));
                 r.setSqlQuery(rs.getString(SavedQuery.SQL_QUERY));
                 r.setJdbcDataSourceId(rs.getLong(SavedQuery.DATASOURCE_ID));
                 return r;
