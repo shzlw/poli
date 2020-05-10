@@ -1,0 +1,51 @@
+.kanban-container {
+  width: inherit;
+  height: inherit;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.kanban-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-group-title {
+  flex: 0 1 auto;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.kanban-group-panel {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.kanban-block {
+  box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
+  border: 1px solid #e0e0e0;
+  outline: 0;
+  border-radius: 4px;
+  padding: 5px;
+  margin: 8px 5px;
+  background-color: #FFFFFF;
+  text-align: center;
+}
+
+.kanban-block-title {
+  font-weight: bold;
+  font-size: 16px;
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+}
+
+.kanban-block-body {
+  padding-top: 5px;
+}
+
+.kanban-block-body-row {
+  padding-bottom: 5px;
+}
