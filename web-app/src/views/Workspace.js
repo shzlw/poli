@@ -77,19 +77,6 @@ class Workspace extends React.Component {
     }
   }
 
-  get initialState() {
-    return {
-      showUpdatePassword: false,
-      id: null,
-      name: '',
-      connectionUrl: '',
-      driverClassName: '',
-      username: '',
-      password: '',
-      ping: ''
-    };
-  }
-
   componentDidMount() {
     const pathname = this.props.location.pathname;
     let link = '';
@@ -99,7 +86,7 @@ class Workspace extends React.Component {
       const { menutItems } = this.state; 
       const index = menutItems.findIndex(m => pathname.startsWith(m.link));
       if (index !== -1) {
-        link = menutItems[index];
+        link = menutItems[index].link;
       }
     }
 

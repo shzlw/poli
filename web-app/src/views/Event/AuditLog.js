@@ -107,18 +107,18 @@ class AuditLog extends React.Component {
             />
           </div>
           <button className="button float-left" style={{marginLeft: '5px'}} onClick={this.search}>Search</button>
-          <div className="page-button-group">
+          <div className="page-button-group float-right">
             { page !== 1 && (
-              <button className="button prev-button" onClick={this.prevPage}>
-                <FontAwesomeIcon icon="chevron-left" size="lg" fixedWidth />
+              <button className="button square-button" style={{marginRight: '8px'}} onClick={this.prevPage}>
+                <FontAwesomeIcon icon="chevron-left" />
               </button>
             )}
             { page !== 1 && lastPage !== 1 && (
-              <span>page</span>
+              <span>{this.state.page}</span>
             )}
             { page !== lastPage && (
-              <button className="button next-button" onClick={this.nextPage}>
-                <FontAwesomeIcon icon="chevron-right" size="lg" fixedWidth />
+              <button className="button square-button" style={{marginLeft: '8px'}} onClick={this.nextPage}>
+                <FontAwesomeIcon icon="chevron-right" />
               </button>
             )}
           </div>

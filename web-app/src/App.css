@@ -104,10 +104,16 @@
 .square-button {
   width: 33px;
   height: 33px;
+}
+
+.square-button-test {
+  width: 33px;
+  height: 33px;
   border: 0 !important;
   padding: 0px !important;
   box-shadow: none !important;
 }
+
 
 .button {
   background-color: #FFFFFF;
@@ -344,7 +350,7 @@ h1 {
 
 .poli-table th, td {
   font-size: 15px;
-  padding: 3px 5px;
+  padding: 5px 8px;
   vertical-align: inherit;
   white-space: nowrap;
 }
@@ -357,7 +363,7 @@ h1 {
 
 .poli-table th {
   font-size: 16px !important;
-  padding: 4px 6px;
+  padding: 5px 8px;
   font-weight: bold;
 }
 

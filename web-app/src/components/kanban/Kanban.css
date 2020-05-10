@@ -26,12 +26,12 @@
 
 .kanban-block {
   box-shadow: rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px;
-  border: 0;
+  border: 1px solid #e0e0e0;
   outline: 0;
   border-radius: 4px;
   padding: 5px;
   margin: 8px 5px;
-  background-color: #f6f9fc;
+  background-color: #FFFFFF;
   text-align: center;
 }
 
@@ -39,8 +39,13 @@
   font-weight: bold;
   font-size: 16px;
   border-bottom: 1px solid black;
+  padding-bottom: 5px;
 }
 
 .kanban-block-body {
+  padding-top: 5px;
+}
 
+.kanban-block-body-row {
+  padding-bottom: 5px;
 }

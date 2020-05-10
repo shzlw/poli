@@ -100,10 +100,10 @@ class SchemaPanel extends React.Component {
     return (
       <div className="schema-side-panel">
         <div>
-          <button className="button schema-button" style={{marginRight: '5px'}} onClick={this.fetchSchema}>
+          <button className="button square-button" style={{marginRight: '5px'}} onClick={this.fetchSchema}>
             <FontAwesomeIcon icon="redo-alt" />
           </button>
-          <button className="button schema-button" onClick={this.props.onClose}>
+          <button className="button square-button" onClick={this.props.onClose}>
             <FontAwesomeIcon icon="times" />
           </button>
         </div>

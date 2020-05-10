@@ -749,7 +749,7 @@ class ReportEditView extends React.Component {
 
     const inEditModeButtonPanel = (
       <React.Fragment>
-        <button className="button button-transparent ml-4" onClick={() => this.openComponentEditPanel(null)}>
+        <button className="button ml-4" onClick={() => this.openComponentEditPanel(null)}>
           <FontAwesomeIcon icon="calendar-plus"  fixedWidth /> {t('New Component')}
         </button>
         <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>

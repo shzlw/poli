@@ -62,7 +62,7 @@ public class SavedQueryEndpointWs {
         if (dataSource == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        
+
         QueryResult queryResult = jdbcQueryService.executeQuery(dataSource, savedQuery.getSqlQuery(), contentType);
         if (queryResult.getError() != null) {
             return new ResponseEntity<>(queryResult.getError(), HttpStatus.BAD_REQUEST);
