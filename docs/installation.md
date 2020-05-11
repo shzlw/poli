@@ -20,8 +20,7 @@
 2. Go to the github [release page](https://github.com/shzlw/poli/releases). Click the poli-x.y.z.zip file under the Assets section to download the lastest release.
 3. Unzip the poli-x.y.z.zip to a location.
 
-    #### Windows
-    For instance, unzip to C drive. 
+    Windows. For instance, unzip to C drive. 
 
     The folder structure should look like this under: C:\poli-x.y.z\
 
@@ -34,8 +33,7 @@
     ...
     ```
 
-    #### Linux
-    For instance, unzip to /home/poli. 
+    Linux. For instance, unzip to /home/poli. 
 
     The folder structure should look like this under: /home/poli/poli-x.y.z/
 
@@ -54,14 +52,12 @@
 
     > Use absolute path to point to the poli.db file.
 
-    #### Windows
-    For example:
+    Windows. For example:
     ```
     spring.datasource.url= jdbc:sqlite:c:/poli-x.y.z/db/poli.db
     ```
 
-    #### Linux
-    For example:
+    Linux. For example:
     ```
     spring.datasource.url= jdbc:sqlite:/home/poli/poli-x.y.z/db/poli.db
     ```
@@ -82,12 +78,12 @@
 
 6. Run the start script to start the server.
 
-    #### Windows
+    Windows
     ```
     start.bat
     ```
 
-    #### Linux
+    Linux
     ```bash
     start.sh
     ```
