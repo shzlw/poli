@@ -207,43 +207,41 @@ const getBarOption = (data, config, title) => {
     colorPlatte = 'default'
   } = config;
 
-  const legendData = new Set();
-  const xAxisData = hasMultiSeries ? new Set() : [];
-  const seriesData = [];
   const type = 'bar';
-  
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    if (hasMultiSeries) {
-      const xAxisVal = row[xAxis];
-      const legendVal = row[legend];
-      const yAxisVal = row[yAxis];
-      xAxisData.add(xAxisVal);
-      legendData.add(legendVal);
-      const index = seriesData.findIndex(s => s.name === legendVal);
-      if (index === -1) {
-        const series = {
-          name: legendVal,
-          type: type,
-          data: [yAxisVal]
-        };
-        
-        if (isStacked) {
-          series.stack = title || 'Empty';
-        } 
-        seriesData.push(series);
-      } else {
-        seriesData[index].data.push(yAxisVal);
+  const seriesData = [];
+
+  if (hasMultiSeries) {  
+    const {
+      legendList,
+      xAxisList,
+      grid 
+    } = dataListToGrid(data, xAxis, yAxis, legend);
+
+    // From grid to series list.
+    for (let i = 0; i < legendList.length; i++) {
+      const series = {
+        name: legendList[i],
+        type: type,
+        data: []
+      };
+      if (isStacked) {
+        series.stack = title || 'Empty';
+      } 
+      for (let j = 0; j < xAxisList.length; j++) {
+        series.data.push(grid[i][j]);
       }
-    } else {
+      seriesData.push(series);
+    }
+
+    return getBarOptionTemplate(colorPlatte, legendList, xAxisList, seriesData, config);
+  } else {
+    const xAxisData = [];
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
       xAxisData.push(row[xAxis]);
       seriesData.push(row[yAxis]);
     }
-  }
 
-  if (hasMultiSeries) {
-    return getBarOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
-  } else {
     const series = {
       data: seriesData,
       type: type
@@ -307,40 +305,39 @@ const getLineOption = (data, config) => {
     colorPlatte = 'default'
   } = config;
 
-  const legendData = new Set();
-  const xAxisData = hasMultiSeries ? new Set() : [];
   const seriesData = [];
   const type = 'line';
-  
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    if (hasMultiSeries) {
-      const xAxisVal = row[xAxis];
-      const legendVal = row[legend];
-      const yAxisVal = row[yAxis];
-      xAxisData.add(xAxisVal);
-      legendData.add(legendVal);
-      const index = seriesData.findIndex(s => s.name === legendVal);
-      if (index === -1) {
-        const series = {
-          name: legendVal,
-          type: type,
-          data: [yAxisVal],
-          smooth: isSmooth
-        };
-        seriesData.push(series);
-      } else {
-        seriesData[index].data.push(yAxisVal);
+
+  if (hasMultiSeries) { 
+    const {
+      legendList,
+      xAxisList,
+      grid 
+    } = dataListToGrid(data, xAxis, yAxis, legend);
+
+    // From grid to series list.
+    for (let i = 0; i < legendList.length; i++) {
+      const series = {
+        name: legendList[i],
+        type: type,
+        data: [],
+        smooth: isSmooth
+      };
+      for (let j = 0; j < xAxisList.length; j++) {
+        series.data.push(grid[i][j]);
       }
-    } else {
+      seriesData.push(series);
+    }
+
+    return getLineOptionTemplate(colorPlatte, legendList, xAxisList, seriesData, config);
+  } else {
+    const xAxisData = [];
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
       xAxisData.push(row[xAxis]);
       seriesData.push(row[yAxis]);
     }
-  }
 
-  if (hasMultiSeries) {
-    return getLineOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
-  } else {
     const series = {
       data: seriesData,
       type: type,
@@ -404,41 +401,39 @@ const getAreaOption = (data, config) => {
     colorPlatte = 'default'
   } = config;
 
-  const legendData = new Set();
-  const xAxisData = hasMultiSeries ? new Set() : [];
   const seriesData = [];
   const type = 'line';
-  
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    if (hasMultiSeries) {
-      const xAxisVal = row[xAxis];
-      const legendVal = row[legend];
-      const yAxisVal = row[yAxis];
-      xAxisData.add(xAxisVal);
-      legendData.add(legendVal);
-      const index = seriesData.findIndex(s => s.name === legendVal);
-      if (index === -1) {
-        const series = {
-          name: legendVal,
-          type: type,
-          data: [yAxisVal],
-          areaStyle: {},
-          smooth: isSmooth
-        };
-        seriesData.push(series);
-      } else {
-        seriesData[index].data.push(yAxisVal);
+
+  if (hasMultiSeries) {
+    const {
+      legendList,
+      xAxisList,
+      grid 
+    } = dataListToGrid(data, xAxis, yAxis, legend);
+
+    // From grid to series list.
+    for (let i = 0; i < legendList.length; i++) {
+      const series = {
+        name: legendList[i],
+        type: type,
+        data: [],
+        areaStyle: {},
+        smooth: isSmooth
+      };
+      for (let j = 0; j < xAxisList.length; j++) {
+        series.data.push(grid[i][j]);
       }
-    } else {
+      seriesData.push(series);
+    }
+
+    return getAreaOptionTemplate(colorPlatte, legendList, xAxisList, seriesData, config);
+  } else {
+    const xAxisData = [];
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
       xAxisData.push(row[xAxis]);
       seriesData.push(row[yAxis]);
     }
-  }
-
-  if (hasMultiSeries) {
-    return getAreaOptionTemplate(colorPlatte, Array.from(legendData), Array.from(xAxisData), seriesData, config);
-  } else {
     const series = {
       data: seriesData,
       type: type,
@@ -747,3 +742,40 @@ const getTimeLineOptionTemplate = (seriesData) => {
     ]
   }
 };
+
+
+const dataListToGrid = (dataList = [], xAxis, yAxis, legend) => {
+  const legendData = new Set();
+  const xAxisData = new Set();
+
+  for (let i = 0; i < dataList.length; i++) {
+    const row = dataList[i];
+    const xAxisVal = row[xAxis];
+    const legendVal = row[legend];
+    xAxisData.add(xAxisVal);
+    legendData.add(legendVal);
+  }
+
+  const legendList = Array.from(legendData);
+  const xAxisList = Array.from(xAxisData);
+
+  // Row: legend, Column: xAxis
+  const grid = new Array(legendList.length);
+  for (let i = 0; i < grid.length; i++) { 
+    grid[i] = new Array(xAxisList.length); 
+  } 
+
+  // Empty element in the grid is undefined.
+  for (let i = 0; i < dataList.length; i++) {
+    const row = dataList[i];
+    const x = legendList.findIndex(val => val === row[legend]);
+    const y = xAxisList.findIndex(val => val === row[xAxis]);
+    grid[x][y] = row[yAxis];
+  }
+
+  return {
+    legendList,
+    xAxisList,
+    grid
+  };
+}
