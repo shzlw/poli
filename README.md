@@ -1,6 +1,6 @@
 # **Poli（魄力）**
 
-[![Version](https://img.shields.io/badge/Version-0.12.0-0065FF.svg)](#)
+[![Version](https://img.shields.io/badge/Version-0.12.1-0065FF.svg)](#)
 [![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://img.shields.io/github/downloads/shzlw/poli/total.svg?color=6554C0)](https://github.com/shzlw/poli/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/zhonglu/poli.svg)](https://cloud.docker.com/u/zhonglu/repository/docker/zhonglu/poli)
@@ -56,13 +56,13 @@ Auto refresh, drill through, fullscreen, embeds, color themes + more features in
 Windows/Linux
 
 ```sh
-java -jar poli-0.12.0.jar
+java -jar poli-0.12.1.jar
 ```
 
 Docker
 
 ```sh
-docker run -d -p 6688:6688 --name poli zhonglu/poli:0.12.0
+docker run -d -p 6688:6688 --name poli zhonglu/poli:0.12.1
 ```
 
 Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.

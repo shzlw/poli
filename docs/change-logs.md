@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.12.1
+
+### Bug Fixes
+- Fix the issue that bar, line and area chart display wrong data when multi series option is checked in the chart option.
+
 ## v0.12.0
 
 ### Upgrade Steps
