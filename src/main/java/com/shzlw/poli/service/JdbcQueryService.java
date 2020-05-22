@@ -79,7 +79,7 @@ public class JdbcQueryService {
                 List<Column> columns = new ArrayList<>();
 
                 while (rs.next()) {
-                    String columnName = rs.getString("COLUMN_NAME");
+                    String columnName = rs.getString("columnLabel");
                     int javaType = rs.getInt("DATA_TYPE");
                     String dbType = rs.getString("TYPE_NAME");
                     int length = rs.getInt("COLUMN_SIZE");
@@ -139,7 +139,7 @@ public class JdbcQueryService {
                     if (Constants.CONTENT_TYPE_CSV.equals(contentType)) {
                         data = resultSetToCsvString(rs, columnNames, maxQueryResult);
                     } else {
-                        data = resultSetToJsonString(rs, columnNames, maxQueryResult);
+                        data = resultSetToJsonString(rs, metadata, maxQueryResult);
                     }
                     return QueryResult.ofData(data, columns);
                 } catch (Exception e) {
@@ -167,7 +167,7 @@ public class JdbcQueryService {
                     ResultSetMetaData metadata = rs.getMetaData();
                     String[] columnNames = getColumnNames(metadata);
                     List<Column> columns = getColumnList(metadata);
-                    String data = resultSetToJsonString(rs, columnNames, maxQueryResult);
+                    String data = resultSetToJsonString(rs, metadata, maxQueryResult);
                     return QueryResult.ofData(data, columns);
                 } catch (Exception e) {
                     String error = CommonUtils.getSimpleError(e);
@@ -247,7 +247,7 @@ public class JdbcQueryService {
         int columnCount = metadata.getColumnCount();
         List<Column> columns = new ArrayList<>();
         for (int i = 1; i <= columnCount; i++) {
-            int columnType = metadata.getColumnType(i);
+            int columnType = metadata.getColumnType(i);;
             String dbType = metadata.getColumnTypeName(i);
             int length = metadata.getColumnDisplaySize(i);
             // Use column label to fetch the column alias instead of using column name.
@@ -258,15 +258,52 @@ public class JdbcQueryService {
         return columns;
     }
 
-    private String resultSetToJsonString(ResultSet rs, String[] columnNames, int maxQueryResult) throws SQLException {
-        int columnCount = columnNames.length - 1;
+    private String resultSetToJsonString(ResultSet rs, ResultSetMetaData metadata, int maxQueryResult) throws SQLException {
+        int columnCount = metadata.getColumnCount();
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode array = mapper.createArrayNode();
         int rowCount = 0;
         while (rs.next()) {
             ObjectNode node = mapper.createObjectNode();
             for (int i = 1; i <= columnCount; i++) {
-                node.put(columnNames[i], rs.getString(i));
+                String columnLabel = metadata.getColumnLabel(i);
+                int columnType = metadata.getColumnType(i);
+                switch (columnType) {
+                    case java.sql.Types.VARCHAR:
+                    case java.sql.Types.CHAR:
+                    case java.sql.Types.LONGVARCHAR:
+                        node.put(columnLabel, rs.getString(i));
+                        break;
+                    case java.sql.Types.TINYINT:
+                    case java.sql.Types.SMALLINT:
+                    case java.sql.Types.INTEGER:
+                        node.put(columnLabel, rs.getInt(i));
+                        break;
+                    case java.sql.Types.NUMERIC:
+                    case java.sql.Types.DECIMAL:
+                        node.put(columnLabel, rs.getBigDecimal(i));
+                        break;
+                    case java.sql.Types.DOUBLE:
+                    case java.sql.Types.FLOAT:
+                    case java.sql.Types.REAL:
+                        node.put(columnLabel, rs.getDouble(i));
+                        break;
+                    case java.sql.Types.BOOLEAN:
+                    case java.sql.Types.BIT:
+                        node.put(columnLabel, rs.getBoolean(i));
+                        break;
+                    case java.sql.Types.BIGINT:
+                        node.put(columnLabel, rs.getLong(i));
+                        break;
+                    case java.sql.Types.NVARCHAR:
+                    case java.sql.Types.NCHAR:
+                        node.put(columnLabel, rs.getNString(i));
+                        break;
+                    default:
+                        // Unhandled types
+                        node.put(columnLabel, rs.getString(i));
+                        break;
+                }
             }
             array.add(node);
             rowCount++;
@@ -276,6 +313,7 @@ public class JdbcQueryService {
         }
         return array.toString();
     }
+
 
     private String resultSetToCsvString(ResultSet rs, String[] columnNames, int maxQueryResult) throws SQLException {
         int columnCount = columnNames.length - 1;
