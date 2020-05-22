@@ -175,9 +175,7 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
     }
   }
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
 
   return {
     color: getColorPlatte(colorPlatte),
@@ -268,9 +266,7 @@ const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
   } : {};
 
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
 
   return {
     color: getColorPlatte(colorPlatte),
@@ -365,9 +361,7 @@ const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     interval: 0
   } : {};
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
   return {
     color: getColorPlatte(colorPlatte),
     tooltip: {
@@ -782,4 +776,16 @@ const dataListToGrid = (dataList = [], xAxis, yAxis, legend, defaultValue = 0) =
     xAxisList,
     grid
   };
+}
+
+const parseLegendData = (legendData) => {
+  if (legendData !== null) {
+    const list = legendData || [];
+    const dataList = list.map(val => String(val)); 
+    return {
+      data: dataList
+    }
+  } else {
+    return {};
+  }
 }
