@@ -4,7 +4,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import './Table.css';
 
-class Table extends React.Component {
+class Table extends React.PureComponent {
 
   static propTypes = {
     data: PropTypes.array.isRequired,
