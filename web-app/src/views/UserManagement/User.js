@@ -324,13 +324,16 @@ class User extends React.Component {
 
     const userItems = [];
     for (let i = 0; i < users.length; i++) {
-      const user = users[i];
-      const name = user.name;
+      const user = users[i]
+      const {
+        id,
+        name 
+      }= user;
       const username = user.username;
       if (!searchValue || (searchValue && (username.includes(searchValue) || name.includes(searchValue)))) {
         userItems.push(
           (
-            <div key={i} className="card float-left">
+            <div key={id} className="card float-left">
               <div className="card-header ellipsis">
                 {user.username}
               </div>

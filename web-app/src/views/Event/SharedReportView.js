@@ -76,7 +76,7 @@ class SharedReportView extends React.Component {
     );
 
     const sharedReportRowItems = sharedReportRows.map((sharedReport, index) => 
-      <tr key={index}>
+      <tr key={sharedReport.id}>
         <td>{sharedReport.reportName}</td>
         <td>{sharedReport.reportType}</td>
         <td>{sharedReport.createdBy}</td>

@@ -611,13 +611,13 @@ const getHeatmapOption = (data, config) => {
     const yAxisVal = row[yAxis];
     const seriesVal = Number(row[series]);
     
-    let xIndex = xAxisData.findIndex(a => a == xAxisVal);
+    let xIndex = xAxisData.findIndex(a => a === xAxisVal);
     if (xIndex === -1) {
       xAxisData.push(xAxisVal);
       xIndex = xAxisData.length - 1;
     }
 
-    let yIndex = yAxisData.findIndex(a => a == yAxisVal);
+    let yIndex = yAxisData.findIndex(a => a === yAxisVal);
     if (yIndex === -1) {
       yAxisData.push(yAxisVal);
       yIndex = yAxisData.length - 1;
