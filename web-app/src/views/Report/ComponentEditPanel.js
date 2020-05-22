@@ -376,8 +376,9 @@ class ComponentEditPanel extends React.Component {
       legend,
       yAxis,
       hasMultiSeries = false,
+      multiSeriesDefaultValue = 0
     } = data;
-    const seriesChartPanel = (
+    const multiSeriesChartPanel = (
       <div>
         <label>{t('X-Axis')}</label>
         <Select
@@ -414,6 +415,14 @@ class ComponentEditPanel extends React.Component {
               options={columns}
               optionDisplay={'name'}
               optionValue={'name'}
+            />
+
+            <label>{t('Default value')}</label>
+            <input 
+              className="form-input"
+              type="text"
+              value={multiSeriesDefaultValue}
+              onChange={(event) => this.handleComponentDataChange('multiSeriesDefaultValue', event.target.value)} 
             />
           </div>
         )}
@@ -549,7 +558,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          {seriesChartPanel}
+          {multiSeriesChartPanel}
 
           <label>{t('Is Smooth')}</label>
           <div style={{marginBottom: '8px'}}>
@@ -575,7 +584,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          {seriesChartPanel}
+          {multiSeriesChartPanel}
 
           {hasMultiSeries && (
             <div>

@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.12.2
+
+### Bug Fixes
+- Add default value option for multi series charts (bar, line and area).
+
+
 ## v0.12.1
 
 ### Bug Fixes
