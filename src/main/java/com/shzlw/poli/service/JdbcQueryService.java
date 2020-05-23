@@ -79,7 +79,7 @@ public class JdbcQueryService {
                 List<Column> columns = new ArrayList<>();
 
                 while (rs.next()) {
-                    String columnName = rs.getString("columnLabel");
+                    String columnName = rs.getString("COLUMN_NAME");
                     int javaType = rs.getInt("DATA_TYPE");
                     String dbType = rs.getString("TYPE_NAME");
                     int length = rs.getInt("COLUMN_SIZE");

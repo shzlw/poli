@@ -41,7 +41,9 @@ class Studio extends React.Component {
       endpointAccessCode: '',
       // Run query
       resultLimit: 100,
-      queryResult: [],
+      queryResultData: [],
+      queryResultColumns: [],
+      queryResultError: null,
       isRunning: false,
       elapsed: 0,
       // Search
@@ -118,7 +120,9 @@ class Studio extends React.Component {
 
   onSelectSavedQuery = (id) => {
     this.setState({
-      queryResult: [],
+      queryResultData: [],
+      queryResultColumns: [],
+      queryResultError: null,
       id: 0,
       name: '',
       sqlQuery: '',
@@ -208,13 +212,22 @@ class Studio extends React.Component {
     this.setState({
       elapsed: 0,
       isRunning: true,
-      queryResult: []
+      queryResultData: [],
+      queryResultColumns: [],
+      queryResultError: null
     });
     const { data: queryResult = []} = await ApiService.runQuery(jdbcDataSourceId, sqlQuery, resultLimit);
+    const data = Util.jsonToArray(queryResult.data);
+    const { 
+      columns = [],
+      error
+    } = queryResult;
     const millis = Date.now() - start;
     const elapsed = (millis / 1000).toFixed(2);
     this.setState({
-      queryResult,
+      queryResultData: data,
+      queryResultColumns: columns,
+      queryResultError: error,
       elapsed,
       isRunning: false
     });
@@ -270,19 +283,12 @@ class Studio extends React.Component {
 
     const {
       jdbcDataSourcesForSelect = [],
-      queryResult = [],
       elapsed = 0,
       selectedJdbcDataSource = {},
       savedQueryList = [],
       savedQuerySearchValue = '',
       id: activeQueryId,
     } = this.state;
-
-    const data = Util.jsonToArray(queryResult.data);
-    const { 
-      columns = [],
-      error
-    } = queryResult;
 
     const runQueryButtonText = this.state.isRunning ? 'Running...' : 'Run';
 
@@ -432,7 +438,7 @@ class Studio extends React.Component {
                 style={{width: '60px', marginLeft: '4px'}}
               />
               <button className="button button-blue" 
-                style={{width: '80px', margin: '0px 8px 0px 4px'}} 
+                style={{width: '90px', margin: '0px 8px 0px 4px'}} 
                 onClick={this.runQuery}>{t(runQueryButtonText)}</button>
               <div className="form-text">
                 { elapsed !== 0 && (
@@ -444,10 +450,10 @@ class Studio extends React.Component {
 
           <div className="studio-result-container">
             <Table
-              data={data}
+              data={this.state.queryResultData}
               defaultPageSize={10}
-              columns={columns}
-              errorMsg={error}
+              columns={this.state.queryResultColumns}
+              errorMsg={this.state.queryResultError}
             />
           </div>
         </div>
