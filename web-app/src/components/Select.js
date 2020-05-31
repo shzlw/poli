@@ -54,7 +54,7 @@ class Select extends React.Component {
       }
       
       optionList.push(
-        <option value={value} key={index}>{display}</option>
+        <option value={value} key={value}>{display}</option>
       ) 
     });
 

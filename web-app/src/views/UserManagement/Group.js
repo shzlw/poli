@@ -226,11 +226,14 @@ class Group extends React.Component {
     const groupItems = [];
     for (let i = 0; i < groups.length; i++) {
       const group = groups[i];
-      const name = group.name;
+      const {
+        id,
+        name 
+      } = group;
       if (!searchValue || (searchValue && name.includes(searchValue))) {
         groupItems.push(
           (
-            <div key={i} className="card float-left">
+            <div key={id} className="card float-left">
               <div className="card-header ellipsis">
                 {name}
               </div>

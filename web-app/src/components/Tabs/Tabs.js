@@ -34,7 +34,7 @@ class Tabs extends React.Component {
         }
 
         tabHeaders.push(
-          <li className={`tab-header-item ${active}`} style={tabStyle} key={i} onClick={() => this.handleTabClick(title)}>
+          <li className={`tab-header-item ${active}`} style={tabStyle} key={title} onClick={() => this.handleTabClick(title)}>
             { iconOnly ? (
               <FontAwesomeIcon icon={icon} size="lg" />
             ) : (

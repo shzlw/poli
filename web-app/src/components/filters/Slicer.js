@@ -62,16 +62,18 @@ class Slicer extends React.Component {
 
     const checkBoxItems = [];
     for (let i = 0; i < checkBoxes.length; i++) {
-      const checkBox = checkBoxes[i];
-      const value = checkBox.value;
+      const { 
+        value,
+        isChecked 
+      } = checkBoxes[i];
       if (!searchValue || (searchValue && value.includes(searchValue))) {
         checkBoxItems.push(
           (
             <Checkbox 
-              key={i} 
-              name={checkBox.value} 
-              value={checkBox.value} 
-              checked={checkBox.isChecked} 
+              key={value} 
+              name={value} 
+              value={value} 
+              checked={isChecked} 
               onChange={this.handleCheckBoxChange} 
               readOnly={readOnly}
             />

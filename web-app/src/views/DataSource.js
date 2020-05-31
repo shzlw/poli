@@ -211,11 +211,14 @@ class DataSource extends Component {
     const jdbcDataSourceItems = [];
     for (let i = 0; i < jdbcDataSources.length; i++) {
       const ds = jdbcDataSources[i];
-      const name = ds.name;
+      const { 
+        id,
+        name 
+      } = ds;
       if (!searchValue || (searchValue && name.includes(searchValue))) {
         jdbcDataSourceItems.push(
           (
-            <div key={i} className="card float-left">
+            <div key={id} className="card float-left">
               <div className="card-header ellipsis">
                 {name}
               </div>

@@ -39,7 +39,10 @@ class ComponentEditPanel extends React.Component {
       title: '',
       sqlQuery: '',
       jdbcDataSourceId: '',
-      queryResult: {},
+      // Query result
+      queryResultData: [],
+      queryResultColumns: [],
+      queryResultError: null,
       type: Constants.STATIC,
       subType: Constants.TEXT,
       style: this.initialStyle,
@@ -280,8 +283,16 @@ class ComponentEditPanel extends React.Component {
     axios.post('/ws/jdbcquery/query', queryRequest)
       .then(res => {
         const result = res.data;
+
+        const queryResultData = Util.jsonToArray(result.data);
+        const { 
+          columns = [],
+          error
+        } = result;
         this.setState({
-          queryResult: result
+          queryResultData,
+          queryResultColumns: columns,
+          queryResultError: error
         });
       });
   }
@@ -351,10 +362,9 @@ class ComponentEditPanel extends React.Component {
     const { t } = this.props;
     const { 
       subType,
-      queryResult = {},
+      queryResultColumns: columns = [],
       data = {}
     } = this.state;
-    const columns = queryResult.columns || [];
 
     const { 
       colorPlatte = 'default' 
@@ -376,8 +386,9 @@ class ComponentEditPanel extends React.Component {
       legend,
       yAxis,
       hasMultiSeries = false,
+      multiSeriesDefaultValue = 0
     } = data;
-    const seriesChartPanel = (
+    const multiSeriesChartPanel = (
       <div>
         <label>{t('X-Axis')}</label>
         <Select
@@ -414,6 +425,14 @@ class ComponentEditPanel extends React.Component {
               options={columns}
               optionDisplay={'name'}
               optionValue={'name'}
+            />
+
+            <label>{t('Default value')}</label>
+            <input 
+              className="form-input"
+              type="text"
+              value={multiSeriesDefaultValue}
+              onChange={(event) => this.handleComponentDataChange('multiSeriesDefaultValue', event.target.value)} 
             />
           </div>
         )}
@@ -549,7 +568,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          {seriesChartPanel}
+          {multiSeriesChartPanel}
 
           <label>{t('Is Smooth')}</label>
           <div style={{marginBottom: '8px'}}>
@@ -575,7 +594,7 @@ class ComponentEditPanel extends React.Component {
 
       chartConfigPanel = (
         <div>
-          {seriesChartPanel}
+          {multiSeriesChartPanel}
 
           {hasMultiSeries && (
             <div>
@@ -874,7 +893,6 @@ class ComponentEditPanel extends React.Component {
     const { 
       type,
       subType,
-      queryResult,
       jdbcDataSources = [],
       drillThrough = [],
       drillReports = [],
@@ -882,12 +900,6 @@ class ComponentEditPanel extends React.Component {
       schemas = [],
       searchSchemaName
     } = this.state;
-
-    const data = Util.jsonToArray(queryResult.data);
-    const { 
-      columns = [],
-      error
-    } = queryResult;
 
     // Render the drill through list.
     const drillItems = [];
@@ -914,7 +926,7 @@ class ComponentEditPanel extends React.Component {
     }
 
     // Render the column list.
-    const columnItems = columns.map(column =>
+    const columnItems = this.state.queryResultColumns.map(column =>
       <div className="row schema-column-row" key={column.name}>
         <div className="float-left schema-column-name">{column.name}</div>
         <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
@@ -1088,15 +1100,15 @@ class ComponentEditPanel extends React.Component {
                             />
 
                             <label style={{marginTop: '10px'}}>{t('Result')}</label>
-                            { error ? (
+                            { this.state.queryResultError ? (
                                 <div>
-                                  {error}
+                                  {this.state.queryResultError}
                                 </div>
                               ) : (
                                 <Table
-                                  data={data}
+                                  data={this.state.queryResultData}
                                   defaultPageSize={10}
-                                  columns={columns}
+                                  columns={this.state.queryResultColumns}
                                 />
                             )}
                           </div>
@@ -1173,7 +1185,7 @@ class ComponentEditPanel extends React.Component {
                     <Select
                       name={'drillColumnName'}
                       value={this.state.drillColumnName}
-                      options={columns}
+                      options={this.state.queryResultColumns}
                       onChange={this.handleOptionChange}
                       optionDisplay={'name'}
                       optionValue={'name'}

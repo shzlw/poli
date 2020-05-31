@@ -175,9 +175,7 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
     }
   }
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
 
   return {
     color: getColorPlatte(colorPlatte),
@@ -204,7 +202,8 @@ const getBarOption = (data, config, title) => {
     yAxis,
     hasMultiSeries = false,
     isStacked = true,
-    colorPlatte = 'default'
+    colorPlatte = 'default',
+    multiSeriesDefaultValue = 0
   } = config;
 
   const type = 'bar';
@@ -215,7 +214,7 @@ const getBarOption = (data, config, title) => {
       legendList,
       xAxisList,
       grid 
-    } = dataListToGrid(data, xAxis, yAxis, legend);
+    } = dataListToGrid(data, xAxis, yAxis, legend, multiSeriesDefaultValue);
 
     // From grid to series list.
     for (let i = 0; i < legendList.length; i++) {
@@ -267,9 +266,7 @@ const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
   } : {};
 
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
 
   return {
     color: getColorPlatte(colorPlatte),
@@ -302,7 +299,8 @@ const getLineOption = (data, config) => {
     yAxis,
     hasMultiSeries = false,
     isSmooth = false,
-    colorPlatte = 'default'
+    colorPlatte = 'default',
+    multiSeriesDefaultValue = 0
   } = config;
 
   const seriesData = [];
@@ -313,7 +311,7 @@ const getLineOption = (data, config) => {
       legendList,
       xAxisList,
       grid 
-    } = dataListToGrid(data, xAxis, yAxis, legend);
+    } = dataListToGrid(data, xAxis, yAxis, legend, multiSeriesDefaultValue);
 
     // From grid to series list.
     for (let i = 0; i < legendList.length; i++) {
@@ -363,9 +361,7 @@ const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
     interval: 0
   } : {};
 
-  const legend = legendData !== null ? {
-    data: legendData
-  }: {};
+  const legend = parseLegendData(legendData);
   return {
     color: getColorPlatte(colorPlatte),
     tooltip: {
@@ -398,7 +394,8 @@ const getAreaOption = (data, config) => {
     yAxis,
     hasMultiSeries = false,
     isSmooth = false,
-    colorPlatte = 'default'
+    colorPlatte = 'default',
+    multiSeriesDefaultValue = 0
   } = config;
 
   const seriesData = [];
@@ -409,7 +406,7 @@ const getAreaOption = (data, config) => {
       legendList,
       xAxisList,
       grid 
-    } = dataListToGrid(data, xAxis, yAxis, legend);
+    } = dataListToGrid(data, xAxis, yAxis, legend, multiSeriesDefaultValue);
 
     // From grid to series list.
     for (let i = 0; i < legendList.length; i++) {
@@ -614,13 +611,13 @@ const getHeatmapOption = (data, config) => {
     const yAxisVal = row[yAxis];
     const seriesVal = Number(row[series]);
     
-    let xIndex = xAxisData.findIndex(a => a == xAxisVal);
+    let xIndex = xAxisData.findIndex(a => a === xAxisVal);
     if (xIndex === -1) {
       xAxisData.push(xAxisVal);
       xIndex = xAxisData.length - 1;
     }
 
-    let yIndex = yAxisData.findIndex(a => a == yAxisVal);
+    let yIndex = yAxisData.findIndex(a => a === yAxisVal);
     if (yIndex === -1) {
       yAxisData.push(yAxisVal);
       yIndex = yAxisData.length - 1;
@@ -744,7 +741,7 @@ const getTimeLineOptionTemplate = (seriesData) => {
 };
 
 
-const dataListToGrid = (dataList = [], xAxis, yAxis, legend) => {
+const dataListToGrid = (dataList = [], xAxis, yAxis, legend, defaultValue = 0) => {
   const legendData = new Set();
   const xAxisData = new Set();
 
@@ -763,6 +760,7 @@ const dataListToGrid = (dataList = [], xAxis, yAxis, legend) => {
   const grid = new Array(legendList.length);
   for (let i = 0; i < grid.length; i++) { 
     grid[i] = new Array(xAxisList.length); 
+    grid[i].fill(defaultValue);
   } 
 
   // Empty element in the grid is undefined.
@@ -778,4 +776,16 @@ const dataListToGrid = (dataList = [], xAxis, yAxis, legend) => {
     xAxisList,
     grid
   };
+}
+
+const parseLegendData = (legendData) => {
+  if (legendData !== null) {
+    const list = legendData || [];
+    const dataList = list.map(val => String(val)); 
+    return {
+      data: dataList
+    }
+  } else {
+    return {};
+  }
 }

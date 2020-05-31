@@ -18,7 +18,7 @@ import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
 import Kanban from './Kanban/Kanban';
 
-class GridItem extends React.Component {
+class GridItem extends React.PureComponent {
 
   constructor(props) {
     super(props);
