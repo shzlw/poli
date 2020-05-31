@@ -4,7 +4,8 @@
 
 ### Bug Fixes
 - Add default value option for multi series charts (bar, line and area).
-
+- Fix the issue that table column is not sorted correctly if the data type is number.
+- Fix the query editor input lagging.
 
 ## v0.12.1
 
