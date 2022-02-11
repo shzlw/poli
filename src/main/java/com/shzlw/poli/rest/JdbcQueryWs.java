@@ -49,9 +49,9 @@ public class JdbcQueryWs {
         long dataSourceId = queryRequest.getJdbcDataSourceId();
         String sql = queryRequest.getSqlQuery();
         int resultLimit = queryRequest.getResultLimit();
-
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
-        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, null, resultLimit);
+        String enc_sql = EncryptQuery.rewrite_query(sql, jdbcDataSourceService.getDBName(dataSourceId));
+        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, enc_sql, null, resultLimit);
         return queryResult;
     }
 

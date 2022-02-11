@@ -14,7 +14,8 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
     sqlQuery: sqlQuery,
     resultLimit: resultLimit
   };
-  return await httpPost('/ws/jdbcquery/query', requestBody);
+  // return await httpPost('/ws/jdbcquery/query', requestBody);
+  return await httpPost('http://localhost:8888/vue_query', requestBody);
 }
 
 export const fetchAuditLogs = async (page, pageSize, searchValue) => {

@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>log/server.log</file>
+<configuration debug="true">
+    <property name="LOG_FILE" value="${LOG_FILE}"/>
 
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
-            </Pattern>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} [%line] - %msg%n</pattern>
         </encoder>
+    </appender>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>3MB</maxFileSize>
-            <maxHistory>5</maxHistory>
-            <totalSizeCap>15MB</totalSizeCap>
-        </rollingPolicy>
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="ROLLING" />
+    <logger name="noModule" level="info"/>
+    <logger name="org.codehaus" level="info"/>
+    <logger name="org.apache" level="info"/>
+    <logger name="org.springframework" level="info"/>
+    <logger name="druid.sql" level="info"/>
+    <logger name="com.alibaba" level="debug">
+        <appender-ref ref="stdout"/>
+    </logger>
+    <logger name="com.springboot" level="debug"/>
+    <root level="info">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="ROLLING"/>
     </root>
 </configuration>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--<configuration>-->
+        <!--    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+
+        <!--        <file>log/server.log</file>-->
+
+        <!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+        <!--            <Pattern>-->
+        <!--                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n-->
+        <!--            </Pattern>-->
+        <!--        </encoder>-->
+
+        <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+        <!--            <fileNamePattern>log/server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+        <!--            <maxFileSize>3MB</maxFileSize>-->
+        <!--            <maxHistory>5</maxHistory>-->
+        <!--            <totalSizeCap>15MB</totalSizeCap>-->
+        <!--        </rollingPolicy>-->
+
+        <!--    </appender>-->
+
+        <!--    <root level="INFO">-->
+        <!--        <appender-ref ref="ROLLING" />-->
+        <!--    </root>-->
+        <!--</configuration>-->

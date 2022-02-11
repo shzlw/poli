@@ -84,4 +84,12 @@ public class JdbcDataSourceService {
             return null;
         }
     }
+
+    public String getDBName(long dataSourceId){
+        if (dataSourceId == 0) {
+            return null;
+        }
+        JdbcDataSource dataSource = jdbcDataSourceDao.findById(dataSourceId);
+        return dataSource.getName();
+    }
 }
