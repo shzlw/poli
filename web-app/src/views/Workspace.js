@@ -18,6 +18,7 @@ import * as Constants from '../api/Constants';
 import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CreateTable from './CreateTable';
 
 const MENU_ITEMS = [
   {
@@ -29,6 +30,11 @@ const MENU_ITEMS = [
     link: '/workspace/report',
     value: 'Report',
     icon: 'chalkboard',
+  }, 
+  {
+    link: '/workspace/createtable',
+    value: 'Create Table',
+    icon: 'database'
   }, 
   {
     link: '/workspace/datasource',
@@ -252,6 +258,7 @@ class Workspace extends React.Component {
         <div className="workspace-content">
           <Switch>
             <Route exact path="/workspace/datasource" component={DataSource} />
+            <Route exact path="/workspace/createtable" component={CreateTable} />
             <Route exact path="/workspace/account" component={Account} />
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/group" component={Group} />
