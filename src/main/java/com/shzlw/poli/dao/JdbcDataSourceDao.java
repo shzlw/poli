@@ -51,7 +51,7 @@ public class JdbcDataSourceDao {
 
     public long insert(JdbcDataSource ds) {
         String rawPassword = ds.getPassword();
-        String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
+//        String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
         String sql = "INSERT INTO p_datasource(name, connection_url, driver_class_name, username, password, ping) "
                     + "VALUES(:name, :connection_url, :driver_class_name, :username, :password, :ping)";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -59,7 +59,8 @@ public class JdbcDataSourceDao {
         params.addValue(JdbcDataSource.CONNECTION_URL, ds.getConnectionUrl());
         params.addValue(JdbcDataSource.DRIVER_CLASS_NAME, ds.getDriverClassName());
         params.addValue(JdbcDataSource.USERNAME, ds.getUsername());
-        params.addValue(JdbcDataSource.PASSWORD, encryptedPassword);
+//        params.addValue(JdbcDataSource.PASSWORD, encryptedPassword);
+        params.addValue(JdbcDataSource.PASSWORD, rawPassword);
         params.addValue(JdbcDataSource.PING, ds.getPing());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -80,14 +81,15 @@ public class JdbcDataSourceDao {
                     ds.getId()
             });
         } else {
-            String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
+//            String encryptedPassword = PasswordUtils.getEncryptedPassword(rawPassword);
             String sql = "UPDATE p_datasource SET name=?, connection_url=?, driver_class_name=?, username=?, password=?, ping=? WHERE id=?";
             return jt.update(sql, new Object[]{
                     ds.getName(),
                     ds.getConnectionUrl(),
                     ds.getDriverClassName(),
                     ds.getUsername(),
-                    encryptedPassword,
+//                    encryptedPassword,
+                    rawPassword,
                     ds.getPing(),
                     ds.getId()
             });
@@ -122,8 +124,9 @@ public class JdbcDataSourceDao {
             ds.setConnectionUrl(rs.getString(JdbcDataSource.CONNECTION_URL));
             ds.setDriverClassName(rs.getString(JdbcDataSource.DRIVER_CLASS_NAME));
             ds.setUsername(rs.getString(JdbcDataSource.USERNAME));
-            String encryptedPassword = rs.getString(JdbcDataSource.PASSWORD);
-            String rawPassword = PasswordUtils.getDecryptedPassword(encryptedPassword);
+//            String encryptedPassword = rs.getString(JdbcDataSource.PASSWORD);
+//            String rawPassword = PasswordUtils.getDecryptedPassword(encryptedPassword);
+            String rawPassword = rs.getString(JdbcDataSource.PASSWORD);
             ds.setPassword(rawPassword);
             ds.setPing(rs.getString(JdbcDataSource.PING));
             return ds;
