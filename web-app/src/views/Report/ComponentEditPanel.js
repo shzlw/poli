@@ -281,7 +281,7 @@ class ComponentEditPanel extends React.Component {
     };
 
     // axios.post('/ws/jdbcquery/query', queryRequest)
-    axios.post('http://localhost:8888/vue_query', queryRequest)
+    axios.post('http://localhost:8888/js_query', queryRequest)
       .then(res => {
         const result = res.data;
 
