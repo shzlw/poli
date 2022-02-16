@@ -34,7 +34,7 @@ const MENU_ITEMS = [
   {
     link: '/workspace/createtable',
     value: 'Create Table',
-    icon: 'database'
+    icon: 'table-cells'
   }, 
   {
     link: '/workspace/datasource',

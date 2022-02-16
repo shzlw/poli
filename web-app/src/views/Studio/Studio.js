@@ -372,7 +372,7 @@ class Studio extends React.Component {
 
               { this.state.endpointName && (
                 <div className="row" style={{paddingBottom: '8px'}}>
-                  <button className="button float-right" onClick={this.openApiWindow}>{t('API')}</button>
+                  <button className="button float-right" onClick={this.openApiWindow} disabled="true">{t('API')}</button>
                 </div>
               )}
             </div>
