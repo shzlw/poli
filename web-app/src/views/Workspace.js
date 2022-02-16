@@ -23,7 +23,7 @@ import CreateTable from './CreateTable';
 const MENU_ITEMS = [
   {
     link: '/workspace/studio',
-    value: 'Studio',
+    value: 'SQL Editor',
     icon: 'bolt',
   }, 
   {

@@ -132,7 +132,7 @@ class CreateTable extends Component {
         <Modal 
           show={this.state.showEditPanel}
           onClose={this.closeEditPanel}
-          modalClass={'small-modal-panel'}
+          modalClass={'ct-modal-panel'}
           title={t('New')} >
 
           <div className="form-panel">
@@ -144,11 +144,11 @@ class CreateTable extends Component {
                 options={jdbcDataSourcesForSelect}
                 styles={ReactSelectHelper.CUSTOM_STYLE}
             />
-            <label>{t('Create Table')} <span className="required">*</span></label>
+            <label style={{'marginTop': '7px'}}>{t('Create Table')} <span className="required">*</span></label>
             <textarea
               className="form-input"
-              rows="10"
-              cols="40"
+              rows="15"
+              cols="50"
               type="text"
               name="create_table" 
               placeholder="eg: create table test(id varchar(20), name varchar(20), number int)"
@@ -160,11 +160,12 @@ class CreateTable extends Component {
             <label>{t('Encrypted Columns')}</label>
             <textarea
               className="form-input"
-              rows="6"
-              cols="40"
+              rows="10"
+              cols="50"
               type="text"
               name="encrypted_columns" 
-              placeholder='{
+              placeholder='eg: 
+              {
                 "id": {
                     "fuzzy": True,
                     "arithmetic": False,
@@ -177,7 +178,7 @@ class CreateTable extends Component {
                     "fuzzy": True,
                     "arithmetic": False
                 }
-            }'
+              }'
               value={this.state.encrypted_columns}
               onChange={this.handleInputChange} >
             </textarea>

@@ -51,6 +51,14 @@
   margin-left: -150px;
 }
 
+.ct-modal-panel {
+  width: 500px;
+  position: absolute;
+  left: 50%;
+  top: 50px;
+  margin-left: -250px;
+}
+
 .mid-modal-panel {
   left: 50%;
   width: 500px;
