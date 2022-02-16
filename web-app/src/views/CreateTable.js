@@ -27,7 +27,7 @@ class CreateTable extends Component {
 
   handleInputChange = (event) => {
     this.setState({
-      [event.target.create_table]: event.target.value
+      [event.target.name]: event.target.value
     });
   }
 
@@ -104,7 +104,7 @@ class CreateTable extends Component {
               className="form-input"
               rows="10"
               cols="40"
-              type="text" 
+              type="text"
               name="create_table" 
               value={this.state.create_table}
               onChange={this.handleInputChange} >
@@ -115,7 +115,7 @@ class CreateTable extends Component {
               className="form-input"
               rows="6"
               cols="40"
-              type="text" 
+              type="text"
               name="encrypted_columns" 
               value={this.state.encrypted_columns}
               onChange={this.handleInputChange} >
