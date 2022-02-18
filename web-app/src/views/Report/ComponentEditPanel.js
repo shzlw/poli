@@ -21,6 +21,7 @@ import SelectButtons from '../../components/SelectButtons/SelectButtons';
 import InputRange from '../../components/filters/InputRange';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Checkbox from '../../components/Checkbox/Checkbox';
+import {encrypted_db} from '../../config'
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -281,7 +282,7 @@ class ComponentEditPanel extends React.Component {
     };
 
     // axios.post('/ws/jdbcquery/query', queryRequest)
-    axios.post('/api/js_query', queryRequest)
+    axios.post(encrypted_db + '/js_query', queryRequest)
       .then(res => {
         const result = res.data;
 

@@ -3,7 +3,7 @@ import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import axios from 'axios';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
-  faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
+  faChalkboard, faDatabase, faTable, faUsersCog, faPlus, faTimes,
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
@@ -33,7 +33,7 @@ import * as Constants from './api/Constants';
 import * as Util from './api/Util';
 
 
-library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
+library.add(faChalkboard, faDatabase, faTable, faUsersCog, faPlus, faTimes, 
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt, 
   faTv, faPlug, faUser, faSignOutAlt, faCompress, faExpandArrowsAlt,
   faFileExport, faFileCsv, faCircleNotch, faSearch, faSave, 
@@ -160,7 +160,7 @@ class App extends React.Component {
         sysRole: loginResponse.sysRole,
         isAuthorizing: false
       }, () => {
-        let directUrl = '/workspace/report';
+        let directUrl = '/workspace/studio';
         if (pathname !== '/' && pathname !== '/login') {
           directUrl = pathname;
         }

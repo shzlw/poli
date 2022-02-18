@@ -26,35 +26,35 @@ const MENU_ITEMS = [
     value: 'SQL Editor',
     icon: 'bolt',
   }, 
-  {
-    link: '/workspace/report',
-    value: 'Report',
-    icon: 'chalkboard',
-  }, 
+  // {
+  //   link: '/workspace/report',
+  //   value: 'Report',
+  //   icon: 'chalkboard',
+  // }, 
   {
     link: '/workspace/createtable',
     value: 'Create Table',
-    icon: 'table-cells'
+    icon: 'table'
   }, 
   {
     link: '/workspace/datasource',
     value: 'Data Source',
     icon: 'database'
   }, 
-  {
-    value: 'User Management',
-    icon: 'users-cog',
-    dropdowns: [
-      {
-        link: '/workspace/group',
-        value: 'Group',
-      },
-      {
-        link: '/workspace/user',
-        value: 'User',
-      }
-    ]
-  },
+  // {
+  //   value: 'User Management',
+  //   icon: 'users-cog',
+  //   dropdowns: [
+  //     {
+  //       link: '/workspace/group',
+  //       value: 'Group',
+  //     },
+  //     {
+  //       link: '/workspace/user',
+  //       value: 'User',
+  //     }
+  //   ]
+  // },
   {
     value: 'Event',
     icon: 'search-location',

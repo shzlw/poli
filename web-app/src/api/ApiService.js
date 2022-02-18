@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {encrypted_db} from '../config'
 
 export const fetchJdbcdatasources = async () => {
   return await httpGet('/ws/jdbcdatasources');
@@ -15,7 +16,7 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
     resultLimit: resultLimit
   };
   // return await httpPost('/ws/jdbcquery/query', requestBody);
-  return await httpPost('/api/js_query', requestBody);
+  return await httpPost(encrypted_db + '/js_query', requestBody);
 }
 
 export const fetchAuditLogs = async (page, pageSize, searchValue) => {

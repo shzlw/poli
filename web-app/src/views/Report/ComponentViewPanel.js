@@ -15,6 +15,7 @@ import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import InputRange from '../../components/filters/InputRange';
 import Modal from '../../components/Modal/Modal';
 import GridLayout from '../../components/GridLayout';
+import {encrypted_db} from '../../config'
 
 const BASE_WIDTH = 1200;
 
@@ -246,7 +247,7 @@ class ComponentViewPanel extends React.Component {
   queryChart(componentId, filterParams) {
     const params = filterParams === null ? [] : filterParams;
     const { components } = this.state;
-    axios.post(`/ws/jdbcquery/component/${componentId}`, params)
+    axios.post(`${encrypted_db}/jdbc_query/component/${componentId}`, params)
       .then(res => {
         const queryResult = res.data;
         const index = components.findIndex(w => w.id === componentId);
@@ -275,7 +276,7 @@ class ComponentViewPanel extends React.Component {
   _queryFilter(componentId, subType) {
     const { components } = this.state;
     if (subType === Constants.SLICER) {
-      return axios.post(`/ws/jdbcquery/component/${componentId}`, [])
+      return axios.post(`${encrypted_db}/jdbc_query/component/${componentId}`, [])
         .then(res => {
           const queryResult = res.data;
           const queryResultData = Util.jsonToArray(queryResult.data);

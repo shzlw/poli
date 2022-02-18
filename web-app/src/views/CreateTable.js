@@ -9,6 +9,7 @@ import * as ReactSelectHelper from './Studio/ReactSelectHelper';
 
 import * as ApiService from '../api/ApiService';
 import Modal from '../components/Modal/Modal';
+import {encrypted_db} from '../config'
 
 class CreateTable extends Component {
 
@@ -94,7 +95,7 @@ class CreateTable extends Component {
       selectedJdbcDataSource: selectedJdbcDataSource,
     };
 
-    axios.post('/api/js_query', ds)
+    axios.post(encrypted_db + '/js_query', ds)
     .then(res => {
         this.closeEditPanel();
     })
