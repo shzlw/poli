@@ -16,7 +16,7 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
     resultLimit: resultLimit
   };
   // return await httpPost('/ws/jdbcquery/query', requestBody);
-  return await httpPost(encrypted_db + '/js_query', requestBody);
+  return await httpPost(encrypted_db + '/jdbc_query', requestBody);
 }
 
 export const fetchAuditLogs = async (page, pageSize, searchValue) => {

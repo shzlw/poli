@@ -95,7 +95,7 @@ class CreateTable extends Component {
       selectedJdbcDataSource: selectedJdbcDataSource,
     };
 
-    axios.post(encrypted_db + '/js_query', ds)
+    axios.post(encrypted_db + '/jdbc_query', ds)
     .then(res => {
         this.closeEditPanel();
     })

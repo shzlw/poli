@@ -1,0 +1,1 @@
+export let encrypted_db = 'http://localhost:8888';

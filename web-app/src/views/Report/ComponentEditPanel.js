@@ -282,7 +282,7 @@ class ComponentEditPanel extends React.Component {
     };
 
     // axios.post('/ws/jdbcquery/query', queryRequest)
-    axios.post(encrypted_db + '/js_query', queryRequest)
+    axios.post(encrypted_db + '/jdbc_query', queryRequest)
       .then(res => {
         const result = res.data;
 
