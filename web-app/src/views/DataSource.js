@@ -277,6 +277,7 @@ class DataSource extends Component {
               type="text" 
               name="name" 
               value={this.state.name}
+              placeholder='eg:points'
               onChange={this.handleInputChange} 
             />
 
@@ -286,6 +287,7 @@ class DataSource extends Component {
               rows="4"
               type="text" 
               name="connectionUrl" 
+              placeholder='eg:jdbc:mysql://127.0.0.1:3306/points'
               value={this.state.connectionUrl}
               onChange={this.handleInputChange} >
             </textarea>
@@ -297,6 +299,7 @@ class DataSource extends Component {
               name="driverClassName" 
               value={this.state.driverClassName}
               onChange={this.handleInputChange} 
+              placeholder='eg:com.mysql.jdbc.Driver'
             />
 
             <label>{t('Username')}</label>
@@ -306,6 +309,7 @@ class DataSource extends Component {
               name="username" 
               value={this.state.username}
               onChange={this.handleInputChange} 
+              placeholder='database username eg:root'
             />
             
             { mode === 'Edit' && (
@@ -316,11 +320,12 @@ class DataSource extends Component {
 
             { (mode === 'New' || showUpdatePassword) && ( 
               <div>
-                <label>{t('New Password')}</label>
+                <label>{t('Password')}</label>
                 <input 
                   className="form-input"
                   type="password" 
                   name="password" 
+                  placeholder='database user password eg:root'
                   value={this.state.password}
                   onChange={this.handleInputChange} 
                 />
@@ -333,6 +338,7 @@ class DataSource extends Component {
               type="text" 
               name="ping" 
               value={this.state.ping}
+              placeholder='Do not fill the blank unless it is needed!'
               onChange={this.handleInputChange} 
             />
             <button className="button mt-3 button-green" onClick={this.save}>
