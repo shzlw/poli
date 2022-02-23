@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS p_canned_report;
 DROP TABLE IF EXISTS p_group_user;
 DROP TABLE IF EXISTS p_user;
 DROP TABLE IF EXISTS p_group;
+DROP TABLE IF EXISTS p_db_meta;
 
 CREATE TABLE
 IF NOT EXISTS p_datasource (
@@ -144,6 +145,16 @@ IF NOT EXISTS p_audit_log (
     created_at INTEGER NOT NULL,
     type TEXT NOT NULL,
     data TEXT
+);
+
+CREATE TABLE
+IF NOT EXISTS p_db_meta (
+    database_name TEXT,
+    database_type TEXT,
+    table_name TEXT ,
+    table_anonymous TEXT,
+    col_info TEXT,
+    key_info TEXT
 );
 
 CREATE INDEX idx_audit_log_created_at ON p_audit_log (created_at);
