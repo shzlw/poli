@@ -1,6 +1,6 @@
 
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Popconfirm, Form } from 'antd';
+import { Table, Input, Popconfirm, Form, Select, Menu } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const EditableContext = React.createContext(null);
 
@@ -14,10 +14,12 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+const { Option } = Select;
 
 const EditableCell = ({
   title,
   editable,
+  selected,
   children,
   dataIndex,
   record,
@@ -53,32 +55,71 @@ const EditableCell = ({
   let childNode = children;
 
   if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
+      if (selected == '0'){
+        childNode = editing ? (
+            <Form.Item
+              style={{
+                margin: 0,
+              }}
+              name={dataIndex}
+              rules={[
+                {
+                  required: true,
+                  message: `${title} is required.`,
+                },
+              ]}
+            >
+                <Select
+                    showSearch
+                    placeholder="Select a type"
+                    onChange={save}
+                    ref={inputRef}
+                >
+                    <Option value="VARCHAR">VARCHAR</Option>
+                    <Option value="INT">INT</Option>
+                </Select>
+            </Form.Item>
+          ) : (
+            <div
+              className="editable-cell-value-wrap"
+              style={{
+                paddingRight: 24,
+              }}
+              onClick={toggleEdit}
+            >
+              {children}
+            </div>
+          );
+      }
+      else{
+        childNode = editing ? (
+            <Form.Item
+              style={{
+                margin: 0,
+              }}
+              name={dataIndex}
+              rules={[
+                {
+                  required: true,
+                  message: `${title} is required.`,
+                },
+              ]}
+            >
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          ) : (
+            <div
+              className="editable-cell-value-wrap"
+              style={{
+                paddingRight: 24,
+              }}
+              onClick={toggleEdit}
+            >
+              {children}
+            </div>
+          );
+      }
+    
   }
 
   return <td {...restProps}>{childNode}</td>;
@@ -99,6 +140,7 @@ class EditableTable extends React.Component {
         dataIndex: 'type',
         width: '20%',
         editable: true,
+        selected: '0',
       },
       {
         title: 'length',
@@ -202,6 +244,7 @@ class EditableTable extends React.Component {
           record,
           editable: col.editable,
           dataIndex: col.dataIndex,
+          selected: col.selected,
           title: col.title,
           handleSave: this.handleSave,
         }),
