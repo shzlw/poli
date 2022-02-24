@@ -1,5 +1,7 @@
+
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Table, Input, Popconfirm, Form } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {
@@ -89,16 +91,38 @@ class EditableTable extends React.Component {
       {
         title: 'name',
         dataIndex: 'name',
-        width: '30%',
+        width: '20%',
         editable: true,
       },
       {
-        title: 'age',
-        dataIndex: 'age',
+        title: 'type',
+        dataIndex: 'type',
+        width: '20%',
+        editable: true,
       },
       {
-        title: 'address',
-        dataIndex: 'address',
+        title: 'length',
+        dataIndex: 'length',
+        width: '20%',
+        editable: true,
+      },
+      {
+        title: 'encryption',
+        dataIndex: 'encryption',
+        width: '20%',
+        editable: true,
+      },
+      {
+        title: 'fuzzy',
+        dataIndex: 'fuzzy',
+        width: '20%',
+        editable: true,
+      },
+      {
+        title: 'arithmetic',
+        dataIndex: 'arithmetic',
+        width: '20%',
+        editable: true,
       },
       {
         title: 'operation',
@@ -115,18 +139,15 @@ class EditableTable extends React.Component {
       dataSource: [
         {
           key: '0',
-          name: 'Edward King 0',
-          age: '32',
-          address: 'London, Park Lane no. 0',
-        },
-        {
-          key: '1',
-          name: 'Edward King 1',
-          age: '32',
-          address: 'London, Park Lane no. 1',
+          name: 'null',
+          type: 'VARCHAR',
+          length: '60',
+          encryption: 'true',
+          fuzzy: 'true',
+          arithmetic: 'true',
         },
       ],
-      count: 2,
+      count: 1,
     };
   }
 
@@ -140,9 +161,12 @@ class EditableTable extends React.Component {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      name: `Edward King ${count}`,
-      age: '32',
-      address: `London, Park Lane no. ${count}`,
+      name: 'null',
+      type: 'VARCHAR',
+      length: '60',
+      encryption: 'true',
+      fuzzy: 'true',
+      arithmetic: 'true',
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -185,15 +209,11 @@ class EditableTable extends React.Component {
     });
     return (
       <div>
-        <Button
-          onClick={this.handleAdd}
-          type="primary"
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          Add a row
-        </Button>
+        <div class="row">               
+          <button type="primary" className="button float-left" style={{marginRight: '5px'}} onClick={this.handleAdd}>
+            <FontAwesomeIcon icon="plus" /> New column
+          </button>
+        </div>
         <Table
           components={components}
           rowClassName={() => 'editable-row'}
@@ -206,4 +226,4 @@ class EditableTable extends React.Component {
   }
 }
 
-export default (withTranslation()(EditableTable));
+export default EditableTable;

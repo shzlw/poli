@@ -19,6 +19,7 @@ import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateTable from './CreateTable';
+import EditableTable from './VisualTable';
 
 const MENU_ITEMS = [
   {
@@ -32,15 +33,20 @@ const MENU_ITEMS = [
   //   icon: 'chalkboard',
   // }, 
   {
-    link: '/workspace/createtable',
-    value: 'Create Table',
-    icon: 'table'
-  }, 
-  {
     link: '/workspace/datasource',
     value: 'Data Source',
     icon: 'database'
   }, 
+  {
+    link: '/workspace/createtable',
+    value: 'Table SQL',
+    icon: 'table'
+  }, 
+  {
+    link: '/workspace/visualtable',
+    value: 'Table Design',
+    icon: 'table'
+  },
   // {
   //   value: 'User Management',
   //   icon: 'users-cog',
@@ -265,6 +271,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
             <Route exact path="/workspace/auditlog" component={AuditLog} />
             <Route exact path="/workspace/sharedreport" component={SharedReportView} />
+            <Route exact path="/workspace/visualtable" component={EditableTable} />
             <Route exact path="/workspace/studio" component={Studio} />
             <Route path="/workspace/report" render={() => <Report {...this.props} />} />
             <Route component={PageNotFound} />
