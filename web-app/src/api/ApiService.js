@@ -6,7 +6,7 @@ export const fetchJdbcdatasources = async () => {
 }
 
 export const fetchDatabaseSchema = async (jdbcDataSourceId) => {
-  return await httpGet(`/ws/jdbcdatasources/schema/${jdbcDataSourceId}`);
+  return await httpGet(`${encrypted_db }/jdbc_query/schema/${jdbcDataSourceId}`);
 }
 
 export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) => {
