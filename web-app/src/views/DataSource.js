@@ -231,7 +231,8 @@ class DataSource extends Component {
                   <button className="icon-button card-icon-button" onClick={() => this.openConfirmDeletionPanel(ds)}>
                     <FontAwesomeIcon icon="trash-alt"  />
                   </button>
-                  <button className="icon-button card-icon-button" onClick={() => this.ping(ds.id)}>
+                  {/* <button className="icon-button card-icon-button" onClick={() => this.ping(ds.id)}> */}
+                  <button className="icon-button card-icon-button">
                     <FontAwesomeIcon icon="plug"  />
                   </button>
                 </div>
