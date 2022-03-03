@@ -11,3 +11,4 @@ jdbc-drivers/*
 src/main/resources/static
 
 release/
+node_modules

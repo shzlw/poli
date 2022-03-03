@@ -7,8 +7,8 @@ class VisualTable extends React.Component {
     return (
         <div className="table-control-container">
             <div className="display-flex">
-              <div className="form-text">
-              <div className="margin2">
+              <div style={{width:'100%'}}>
+              <div className="margin1">
                 <EditableTable />
             </div>
               </div>

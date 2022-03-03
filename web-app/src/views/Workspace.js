@@ -42,39 +42,39 @@ const MENU_ITEMS = [
     value: 'Create Table SQL',
     icon: 'table'
   }, 
-  // {
-  //   link: '/workspace/visualtable',
-  //   value: 'Table Design',
-  //   icon: 'table'
-  // },
-  // {
-  //   value: 'User Management',
-  //   icon: 'users-cog',
-  //   dropdowns: [
-  //     {
-  //       link: '/workspace/group',
-  //       value: 'Group',
-  //     },
-  //     {
-  //       link: '/workspace/user',
-  //       value: 'User',
-  //     }
-  //   ]
-  // },
-  // {
-  //   value: 'Event',
-  //   icon: 'search-location',
-  //   dropdowns: [
-  //     {
-  //       link: '/workspace/sharedreport',
-  //       value: 'Shared Report',
-  //     },
-  //     {
-  //       link: '/workspace/auditlog',
-  //       value: 'Audit Log',
-  //     }
-  //   ]
-  // }
+  {
+    link: '/workspace/visualtable',
+    value: 'Table Design',
+    icon: 'table'
+  },
+  {
+    value: 'User Management',
+    icon: 'users-cog',
+    dropdowns: [
+      {
+        link: '/workspace/group',
+        value: 'Group',
+      },
+      {
+        link: '/workspace/user',
+        value: 'User',
+      }
+    ]
+  },
+  {
+    value: 'Event',
+    icon: 'search-location',
+    dropdowns: [
+      {
+        link: '/workspace/sharedreport',
+        value: 'Shared Report',
+      },
+      {
+        link: '/workspace/auditlog',
+        value: 'Audit Log',
+      }
+    ]
+  }
 ];
 
 const ACCOUNT_MENU_LINK = '/workspace/account';
