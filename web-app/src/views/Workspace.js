@@ -19,7 +19,7 @@ import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateTable from './CreateTable';
-import VisualTable from './VisualTable';
+import EditableTable from './EditableTable'
 
 const MENU_ITEMS = [
   {
@@ -39,14 +39,14 @@ const MENU_ITEMS = [
   }, 
   {
     link: '/workspace/createtable',
-    value: 'Create Table SQL',
+    value: 'Table SQL',
     icon: 'table'
   }, 
-  // {
-  //   link: '/workspace/visualtable',
-  //   value: 'Table Design',
-  //   icon: 'table'
-  // },
+  {
+    link: '/workspace/visualtable',
+    value: 'Table Design',
+    icon: 'table'
+  },
   // {
   //   value: 'User Management',
   //   icon: 'users-cog',
@@ -61,20 +61,20 @@ const MENU_ITEMS = [
   //     }
   //   ]
   // },
-  // {
-  //   value: 'Event',
-  //   icon: 'search-location',
-  //   dropdowns: [
-  //     {
-  //       link: '/workspace/sharedreport',
-  //       value: 'Shared Report',
-  //     },
-  //     {
-  //       link: '/workspace/auditlog',
-  //       value: 'Audit Log',
-  //     }
-  //   ]
-  // }
+  {
+    value: 'Event',
+    icon: 'search-location',
+    dropdowns: [
+      {
+        link: '/workspace/sharedreport',
+        value: 'Shared Report',
+      },
+      {
+        link: '/workspace/auditlog',
+        value: 'Audit Log',
+      }
+    ]
+  }
 ];
 
 const ACCOUNT_MENU_LINK = '/workspace/account';
@@ -269,7 +269,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/group" component={Group} />
             <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
-            <Route exact path="/workspace/visualtable" component={VisualTable} />
+            <Route exact path="/workspace/visualtable" component={EditableTable} />
             <Route exact path="/workspace/auditlog" component={AuditLog} />
             <Route exact path="/workspace/sharedreport" component={SharedReportView} />
             <Route exact path="/workspace/studio" component={Studio} />
