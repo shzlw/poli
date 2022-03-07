@@ -449,10 +449,10 @@ class Studio extends React.Component {
                 value={this.state.resultLimit} 
                 onChange={(event) => this.handleInputChange('resultLimit', event.target.value, true)} 
                 className="form-input"
-                style={{width: '60px', marginLeft: '4px'}}
+                style={{width: '60px', marginLeft: '4px', height: '33px'}}
               />
               <button className="button button-blue" 
-                style={{width: '90px', margin: '0px 8px 0px 4px'}} 
+                style={{width: '90px', margin: '0px 8px 0px 4px',     border: 'none'}} 
                 onClick={this.runQuery}>{t(runQueryButtonText)}</button>
               <div className="form-text">
                 { elapsed !== 0 && (

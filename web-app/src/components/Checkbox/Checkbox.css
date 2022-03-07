@@ -2,6 +2,9 @@
   display: flex;
   flex-flow: row;
   height: 20px;
+  align-items: center;
+  align-items: center;
+  display: flex;
 }
 
 .checkbox-checkmark {
@@ -9,6 +12,8 @@
   height: 20px;
   flex: 0 1 auto;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .checkbox-label {

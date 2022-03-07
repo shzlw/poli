@@ -1,10 +1,11 @@
 export const CUSTOM_STYLE = {
   control: (provided, state) => ({
     ...provided,
+    width: '100%',
     background: '#ffffff',
     borderColor: state.isSelected ? '#bdbdbd' : '#e0e0e0',
-    minHeight: '32px',
-    height: '32px',
+    minHeight: '33px',
+    height: '33px',
     boxShadow: 'rgba(50, 50, 93, 0.149) 0px 1px 3px, rgba(0, 0, 0, 0.0196) 0px 1px 0px',
     '&:hover': {
       borderColor: state.isFocused ? '#bdbdbd' : '#e0e0e0'
@@ -12,12 +13,14 @@ export const CUSTOM_STYLE = {
   }),
   valueContainer: (provided, state) => ({
     ...provided,
-    height: '32px',
-    padding: '0 6px'
+    height: '33px',
+    padding: '0 6px',
+    width: '100%',
   }),
   indicatorsContainer: (provided, state) => ({
     ...provided,
-    height: '32px',
+    height: '33px',
+    width: '100%',
   }),
   singleValue: (provided, state) => ({
     ...provided,

@@ -43,6 +43,7 @@ textarea {
 /* Utility */
 .display-flex {
   display: flex;
+  align-items: center;
 }
 
 .row:after {

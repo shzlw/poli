@@ -1,12 +1,12 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {encrypted_db} from '../config';
-import { default as ReactSelect } from 'react-select';
-import * as ApiService from '../api/ApiService';
-import * as ReactSelectHelper from './Studio/ReactSelectHelper';
-import { toast } from 'react-toastify';
+import React, { useContext, useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { Table, Input, Button, Popconfirm, Form } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { encrypted_db } from "../config";
+import { default as ReactSelect } from "react-select";
+import * as ApiService from "../api/ApiService";
+import * as ReactSelectHelper from "./Studio/ReactSelectHelper";
+import { toast } from "react-toastify";
 
 const EditableContext = React.createContext(null);
 
@@ -52,7 +52,7 @@ const EditableCell = ({
       toggleEdit();
       handleSave({ ...record, ...values });
     } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+      console.log("Save failed:", errInfo);
     }
   };
 
@@ -95,42 +95,45 @@ class EditableTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: 'name',
-        dataIndex: 'name',
-        width: '20%',
+        title: "name",
+        dataIndex: "name",
+        width: "20%",
         editable: true,
       },
       {
-        title: 'type',
-        dataIndex: 'type',
+        title: "type",
+        dataIndex: "type",
         editable: true,
       },
       {
-        title: 'length',
-        dataIndex: 'length',
+        title: "length",
+        dataIndex: "length",
         editable: true,
       },
       {
-        title: 'encryption',
-        dataIndex: 'encryption',
+        title: "encryption",
+        dataIndex: "encryption",
         editable: true,
       },
       {
-        title: 'fuzzy',
-        dataIndex: 'fuzzy',
+        title: "fuzzy",
+        dataIndex: "fuzzy",
         editable: true,
       },
       {
-        title: 'keys',
-        dataIndex: 'keys',
+        title: "keys",
+        dataIndex: "keys",
         editable: true,
       },
       {
-        title: 'operation',
-        dataIndex: 'operation',
+        title: "operation",
+        dataIndex: "operation",
         render: (_, record) =>
           this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => this.handleDelete(record.key)}
+            >
               <a>Delete</a>
             </Popconfirm>
           ) : null,
@@ -139,53 +142,49 @@ class EditableTable extends React.Component {
     this.state = {
       dataSource: [
         {
-          key: '0',
-          name: 'id',
-          type: 'INT',
-          length: '10',
-          encryption: 'True',
-          fuzzy: 'True',
-          keys: 'poli',
+          key: "0",
+          name: "id",
+          type: "INT",
+          length: "10",
+          encryption: "True",
+          fuzzy: "True",
+          keys: "poli",
         },
         {
-          key: '1',
-          name: 'name',
-          type: 'VARCHAR',
-          length: '10',
-          encryption: 'False',
-          fuzzy: 'False',
-          keys: 'null',
+          key: "1",
+          name: "name",
+          type: "VARCHAR",
+          length: "10",
+          encryption: "False",
+          fuzzy: "False",
+          keys: "null",
         },
       ],
       count: 2,
-      table_name: '',
+      table_name: "",
       selectedJdbcDataSource: null,
       jdbcDataSourcesForSelect: [],
     };
   }
 
-  async componentDidMount() { 
-    const { data: jdbcDataSources = [] } = await ApiService.fetchJdbcdatasources();
+  async componentDidMount() {
+    const { data: jdbcDataSources = [] } =
+      await ApiService.fetchJdbcdatasources();
     const jdbcDataSourcesForSelect = jdbcDataSources.map((val) => {
       return {
         label: val.name,
-        value: val.id
-      }
+        value: val.id,
+      };
     });
 
     this.setState({
-      jdbcDataSourcesForSelect
+      jdbcDataSourcesForSelect,
     });
-
   }
 
-  save = () => {  
-    const {
-      dataSource,
-      table_name,
-      count,
-      selectedJdbcDataSource,
-    } = this.state;
+  save = () => {
+    const { dataSource, table_name, count, selectedJdbcDataSource } =
+      this.state;
 
     let ds = {
       dataSource: dataSource,
@@ -193,25 +192,26 @@ class EditableTable extends React.Component {
       count: count,
       selectedJdbcDataSource: selectedJdbcDataSource,
     };
-    axios.post(encrypted_db + '/create_table', ds)
-    .then(res => {
-      toast.success('Success');
-    })
-    .catch(error => {
+    axios
+      .post(encrypted_db + "/create_table", ds)
+      .then((res) => {
+        toast.success("Success");
+      })
+      .catch((error) => {
         console.log(error);
-    });
-  }
+      });
+  };
 
   handleInputChange = (table_name, value, isNumber = false) => {
-    let v = isNumber ? (parseInt(value, 10) || 0) : value;
+    let v = isNumber ? parseInt(value, 10) || 0 : value;
     this.setState({
-      [table_name]: v
+      [table_name]: v,
     });
-  }
+  };
 
   handleJdbcDataSourceChange = (selectedOption) => {
-    this.setState({ 
-      selectedJdbcDataSource: selectedOption
+    this.setState({
+      selectedJdbcDataSource: selectedOption,
     });
   };
 
@@ -225,12 +225,12 @@ class EditableTable extends React.Component {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      name: 'null',
-      type: 'VARCHAR',
-      length: '10',
-      encryption: 'False',
-      fuzzy:'False',
-      keys: 'poli',
+      name: "null",
+      type: "VARCHAR",
+      length: "10",
+      encryption: "False",
+      fuzzy: "False",
+      keys: "poli",
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -248,11 +248,7 @@ class EditableTable extends React.Component {
   };
 
   render() {
-
-    const { 
-      dataSource,
-      jdbcDataSourcesForSelect = [] 
-    } = this.state;
+    const { dataSource, jdbcDataSourcesForSelect = [] } = this.state;
 
     const components = {
       body: {
@@ -279,35 +275,53 @@ class EditableTable extends React.Component {
     });
     return (
       <div className="full-page-content">
-
-        <label>Data Source <span className="required">*</span></label>
-        <ReactSelect
-            placeholder={'Select Data Source...'}
-            value={this.state.selectedJdbcDataSource}
-            onChange={this.handleJdbcDataSourceChange}
-            options={jdbcDataSourcesForSelect}
-            styles={ReactSelectHelper.CUSTOM_STYLE}
+        <div className="display-flex" style={{margin: '0 0 10px 0'}}>
+          <div className="table-lable display-flex" style={{flex: '1'}}>
+            <label style={{margin: '0 15px 0 0',whiteSpace: 'nowrap'}}>
+              Data Source <span className="required">*</span>
+            </label>
+            <div  style={{width: '100%'}}>
+              <ReactSelect
+                placeholder={"Select Data Source..."}
+                value={this.state.selectedJdbcDataSource}
+                onChange={this.handleJdbcDataSourceChange}
+                options={jdbcDataSourcesForSelect}
+                styles={ReactSelectHelper.CUSTOM_STYLE}
             />
-        <div className="table-property-panel">
-          <div className="form-panel">
-                <label>Table Name</label>
-                <input 
-                  className="form-input"
-                  type="text" 
-                  name="table_name" 
-                  value={this.state.table_name}
-                  onChange={(event) => this.handleInputChange('table_name', event.target.value)} 
-                />
+            </div>
           </div>
-        </div>
-        <div class="row">               
-          <button className="button float-left" style={{marginRight: '5px'}} onClick={this.handleAdd}>
-            <FontAwesomeIcon icon="plus" /> Add a column
-          </button>
-          <button className="button button-blue" 
-                style={{width: '90px', margin: '0px 8px 0px 4px'}} 
-                onClick={this.save}> Save 
-          </button>
+          <div className="table-property-panel" style={{flex: '1'}}>
+            <div className="form-panel" style={{display: 'flex',alignItems: 'center',height: '33px'}}>
+              <label style={{width: 'auto',whiteSpace: 'nowrap', margin: '0 20px'}}>Table Name</label>
+              <input
+                className="form-input"
+                type="text"
+                name="table_name"
+                style={{height: '33px', margin: '0px'}}
+                value={this.state.table_name}
+                onChange={(event) =>
+                  this.handleInputChange("table_name", event.target.value)
+                }
+              />
+            </div>
+          </div>
+          <div class="row" style={{flex: '1',display: 'flex',justifyContent:'flex-end',}}>
+            <button
+              className="button float-left"
+              style={{ margin: "0 10px",padding: "0 15px" }}
+              onClick={this.handleAdd}
+            >
+              <FontAwesomeIcon icon="plus" /> Add a column
+            </button>
+            <button
+              className="button button-blue"
+              style={{ padding: '0 20px' }}
+              onClick={this.save}
+            >
+              {" "}
+              Save
+            </button>
+          </div>
         </div>
         {/* <Button
           onClick={this.handleAdd}
@@ -320,7 +334,7 @@ class EditableTable extends React.Component {
         </Button> */}
         <Table
           components={components}
-          rowClassName={() => 'editable-row'}
+          rowClassName={() => "editable-row"}
           bordered
           dataSource={dataSource}
           columns={columns}
