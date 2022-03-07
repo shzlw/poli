@@ -1,4 +1,4 @@
-import EditableTable from "./EditableTable/EditableTable";
+import EditableTable from "./VisualTable/EditableTable";
 import React from "react";
 import "./VisualTable.css";
 

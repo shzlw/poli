@@ -19,7 +19,7 @@ import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateTable from './CreateTable';
-import VisualTable from './VisualTable';
+import EditableTable from './EditableTable'
 
 const MENU_ITEMS = [
   {
@@ -39,7 +39,7 @@ const MENU_ITEMS = [
   }, 
   {
     link: '/workspace/createtable',
-    value: 'Create Table SQL',
+    value: 'Table SQL',
     icon: 'table'
   }, 
   {
@@ -47,20 +47,20 @@ const MENU_ITEMS = [
     value: 'Table Design',
     icon: 'table'
   },
-  {
-    value: 'User Management',
-    icon: 'users-cog',
-    dropdowns: [
-      {
-        link: '/workspace/group',
-        value: 'Group',
-      },
-      {
-        link: '/workspace/user',
-        value: 'User',
-      }
-    ]
-  },
+  // {
+  //   value: 'User Management',
+  //   icon: 'users-cog',
+  //   dropdowns: [
+  //     {
+  //       link: '/workspace/group',
+  //       value: 'Group',
+  //     },
+  //     {
+  //       link: '/workspace/user',
+  //       value: 'User',
+  //     }
+  //   ]
+  // },
   {
     value: 'Event',
     icon: 'search-location',
@@ -269,7 +269,7 @@ class Workspace extends React.Component {
             <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
             <Route exact path="/workspace/group" component={Group} />
             <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
-            <Route exact path="/workspace/visualtable" component={VisualTable} />
+            <Route exact path="/workspace/visualtable" component={EditableTable} />
             <Route exact path="/workspace/auditlog" component={AuditLog} />
             <Route exact path="/workspace/sharedreport" component={SharedReportView} />
             <Route exact path="/workspace/studio" component={Studio} />

@@ -61,6 +61,10 @@
   width: 300px;
 }
 
+.studio-cipher-select {
+  width:90px;
+}
+
 .studio-query-menu-item {
   border-left: 3px solid #EBECF0;
   margin: 5px 0px;
