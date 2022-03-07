@@ -193,12 +193,13 @@ class EditableTable extends React.Component {
       count: count,
       selectedJdbcDataSource: selectedJdbcDataSource,
     };
-    try {
-      axios.post(encrypted_db + '/create_table', ds)
+    axios.post(encrypted_db + '/create_table', ds)
+    .then(res => {
       toast.success('Success');
-    }catch(error){
-      console.log(error);
-    }
+    })
+    .catch(error => {
+        console.log(error);
+    });
   }
 
   handleInputChange = (table_name, value, isNumber = false) => {

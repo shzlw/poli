@@ -17,6 +17,7 @@ import Table from '../../components/table/Table';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Modal from '../../components/Modal/Modal';
 import SchemaPanel from './SchemaPanel';
+import Checkbox from '../../components/Checkbox/Checkbox';
 
 import './Studio.css';
 
@@ -46,6 +47,7 @@ class Studio extends React.Component {
       queryResultError: null,
       isRunning: false,
       elapsed: 0,
+      ciphertext: true,
       // Search
       savedQuerySearchValue: ''
     }
@@ -104,6 +106,12 @@ class Studio extends React.Component {
       selectedJdbcDataSource: selectedOption
     });
   };
+
+  handleCheckBoxChange = (name, isChecked) => {
+    this.setState({
+      [name]: isChecked
+    });
+  }
 
   handleInputChange = (name, value, isNumber = false) => {
     let v = isNumber ? (parseInt(value, 10) || 0) : value;
@@ -189,7 +197,8 @@ class Studio extends React.Component {
       selectedJdbcDataSource = {},
       sqlQuery,
       resultLimit,
-      isRunning = false
+      isRunning = false,
+      ciphertext
     } = this.state;
 
     if (!selectedJdbcDataSource) {
@@ -216,7 +225,7 @@ class Studio extends React.Component {
       queryResultColumns: [],
       queryResultError: null
     });
-    const { data: queryResult = []} = await ApiService.runQuery(jdbcDataSourceId, sqlQuery, resultLimit);
+    const { data: queryResult = []} = await ApiService.runQuery(jdbcDataSourceId, sqlQuery, ciphertext, resultLimit);
     const data = Util.jsonToArray(queryResult.data);
     const { 
       columns = [],
@@ -389,7 +398,12 @@ class Studio extends React.Component {
         </div>
 
         <div className="studio-body">
+
           <div className="studio-datasource-container">
+            <div className="studio-cipher-select">
+              <Checkbox name="ciphertext" value={t('ciphertext')} height='40px' 
+              checked={this.state.ciphertext} onChange={this.handleCheckBoxChange} />
+            </div>
             <div className="studio-datasource-select">
               <ReactSelect
                 placeholder={'Select Data Source...'}

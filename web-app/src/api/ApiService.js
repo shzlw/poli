@@ -9,11 +9,12 @@ export const fetchDatabaseSchema = async (jdbcDataSourceId) => {
   return await httpGet(`${encrypted_db }/jdbc_query/schema/${jdbcDataSourceId}`);
 }
 
-export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) => {
+export const runQuery = async (jdbcDataSourceId, sqlQuery, ciphertext, resultLimit = 100) => {
   const requestBody = {
     jdbcDataSourceId: jdbcDataSourceId,
     sqlQuery: sqlQuery,
-    resultLimit: resultLimit
+    resultLimit: resultLimit,
+    ciphertext: ciphertext
   };
   // return await httpPost('/ws/jdbcquery/query', requestBody);
   return await httpPost(encrypted_db + '/jdbc_query', requestBody);
